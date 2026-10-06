@@ -1073,6 +1073,13 @@
   .kuri-svg .kd.g{ fill:none; stroke:var(--fish-b); opacity:.35; }
   .kuri-svg .kx{ stroke:var(--fish-b); stroke-width:3; stroke-linecap:round; opacity:.7; }
   .kuri-svg .kl{ font-size:13px; font-weight:700; fill:var(--ink-soft); text-anchor:middle; }
+  .bk-btns.buy{ align-items:center; gap:22px; }
+  .bk-btns.buy .btn:first-child{ flex:2; padding:17px 12px; font-size:18px; }
+  .bk-btns.buy .btn:last-child{ flex:1; padding:10px 8px; font-size:13px; }
+  .buy-pic{ width:76px; margin:0 auto 8px; }
+  .buy-pic svg{ display:block; width:100%; height:auto; }
+  .buy-sum{ text-align:center; font-size:14px; line-height:1.7; }
+  .buy-sum b{ font-size:20px; }
   .kuri-list{ margin:0 0 8px; font-size:12.5px; font-weight:900; color:var(--ink); }
   .kuri-time{ font-weight:900; }
   .fish-q .kq{ white-space:nowrap; }
@@ -2108,6 +2115,19 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     f.className = 'coin-float'; f.textContent = '+'+n;
     pill.appendChild(f);
     setTimeout(function(){ f.remove(); }, 900);
+  }
+  /* ---------- 買い物の確認 ---------- */
+  var buyOK = false;
+  function buyGate(price, title, pic, okLabel, retry){
+    var c = getCoins();
+    if(c < price){ toast('あと '+(price-c)+'コイン 足りないよ'); return false; }
+    if(buyOK){ buyOK = false; return spend(price); }
+    openBk('<div class="bk-title">'+title+'</div><div class="buy-sum">' + (pic ? '<div class="buy-pic">'+pic+'</div>' : '') +
+      '<b class="num">'+price+'</b> コイン つかうよ<br>いま '+c+' → のこり '+(c-price)+'</div>',
+      [{ label:'やめる', primary:true, onClick:closeBk },
+       { label:okLabel, onClick:function(){ closeBk(); buyOK = true; try{ retry(); }finally{ buyOK = false; } } }]);
+    $('bkBtns').classList.add('buy');
+    return false;
   }
   function spend(n){
     var c = getCoins();
@@ -3204,15 +3224,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var owned = getGems();
     if(gem.limited && owned.indexOf(gem.id)<0){ toast('スタンプを 10こ ためると もらえるよ'); return; }
     if(owned.indexOf(gem.id)>=0){ toast(gem.name+'は もう 持ってるよ'); return; }
-    if(!spend(gem.price)){ toast('あと '+(gem.price-getCoins())+'コイン 足りないよ'); return; }
+    if(!buyGate(gem.price, gem.name+'を かう?', gemSVG(gem.color), 'かう', function(){ buyGem(gem); })) return;
     owned.push(gem.id); safeSet('keisan_gems', owned);
     renderShop();
     showModal({ gem:gem.color, title:gem.name+'を ゲット!', text:'宝石ショップに かざったよ。タップすると '+petName(activePet().sp)+'に つけられるよ!' });
   }
-  $('growBtn').addEventListener('click', function(){
+  function growGo(){
     var pets = getPets(); var a = activePet();
     if(a.lv>=3) return;
-    if(!spend(GROW_COST[a.lv])) return;
+    if(!buyGate(GROW_COST[a.lv], petName(a.sp)+'を そだてる?', Pet.svg(a.sp, a.lv+1), 'そだてる', growGo)) return;
     pets.owned[a.sp] = a.lv+1; savePets(pets);
     renderShop();
     showModal({
@@ -3220,7 +3240,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       title:petName(a.sp)+'が Lv.'+(a.lv+1)+' '+Pet.LV_NAMES[a.lv+1]+'に なった!',
       text:'新しい 宝石の かざりが ついたよ。'
     });
-  });
+  }
+  $('growBtn').addEventListener('click', growGo);
   function ownedCount(pets){ return Object.keys((pets||getPets()||{owned:{}}).owned).filter(function(k){ return PARTNERS.indexOf(k) >= 0; }).length; }
   function recruitCost(pets){ return RECRUIT_COST + RECRUIT_STEP * Math.max(0, ownedCount(pets) - 1); }
   function eggPrice(pets){ return Math.round(recruitCost(pets) * EGG_OFF / 5) * 5; }
@@ -3237,7 +3258,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var left = notOwned(pets);
     if(!left.length || !isEggDay() || safeGet('keisan_egg') === todayKey()) return;
     var price = eggPrice(pets);
-    if(!spend(price)){ toast('あと '+(price-getCoins())+'コイン 足りないよ'); return; }
+    if(!buyGate(price, 'たまごを かう?', EGG_SVG, 'かう', buyEgg)) return;
     var sp = any(left);
     pets.owned[sp] = 0; pets.active = sp; savePets(pets);
     safeSet('keisan_egg', todayKey());
@@ -3247,7 +3268,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function recruit(sp){
     var pets = getPets();
     if(pets.owned.hasOwnProperty(sp)) return;
-    if(!spend(recruitCost(pets))) return;
+    if(!buyGate(recruitCost(pets), Pet.SPECIES[sp].name+'を むかえる?', Pet.svg(sp, 0), 'むかえる', function(){ recruit(sp); })) return;
     pets.owned[sp] = 0; pets.active = sp; savePets(pets);
     renderShop();
     showModal({ pet:{ sp:sp, lv:0 }, title:Pet.SPECIES[sp].name+'が 仲間に なった!', text:'これからは '+Pet.SPECIES[sp].name+'と いっしょに 計算するよ。', ok:'よろしくね!' });
@@ -3304,7 +3325,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function buyToy(toy){
     var owned = getToys();
     if(owned.indexOf(toy.id) >= 0) return;
-    if(!spend(toy.price)){ toast('あと '+(toy.price-getCoins())+'コイン 足りないよ'); return; }
+    if(!buyGate(toy.price, toy.name+'を かう?', toy.svg, 'かう', function(){ buyToy(toy); })) return;
     owned.push(toy.id); safeSet('keisan_toys', owned);
     var a = activePet(), feel = toyFeel(a.sp, toy.id);
     renderToy(feel === 'fav' ? petName(a.sp)+'「やったー!はやく あそぼう!」' : toy.name+'を 買ったよ!');
@@ -4527,7 +4548,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var a = activePet();
     var hunger = getHunger(a.sp);
     if(hunger >= 100){ toast('おなか いっぱいだよ。また あとでね'); return; }
-    if(!spend(f.price)){ toast('あと '+(f.price-getCoins())+'コイン 足りないよ'); return; }
+    if(!buyGate(f.price, f.name+'を あげる?', foodSVG(f), 'あげる', function(){ feed(f); })) return;
     feeding = true;
     var fav = FAVORITE[a.sp] === f.id;
     setHunger(a.sp, hunger + f.fill + (fav?20:0));
@@ -6113,7 +6134,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   function openBk(bodyHtml, buttons){
     $('bkBody').innerHTML = bodyHtml;
-    var box = $('bkBtns'); box.innerHTML = '';
+    var box = $('bkBtns'); box.innerHTML = ''; box.classList.remove('buy');
     buttons.forEach(function(b){
       var el = document.createElement('button');
       el.className = 'btn ' + (b.primary ? 'btn-primary' : 'btn-ghost');
