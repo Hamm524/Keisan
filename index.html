@@ -6421,6 +6421,19 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     goHome();
     showModal({ title:'記録を もどしたよ!', text:backupSummary(r.data), ok:'OK' });
   }
+  /* start a brand-new record on this device; the old one stays in the cloud under its code */
+  function openNewRecord(){
+    var old = cloud.uid;
+    openBk('<div class="bk-title">あたらしい 記録で はじめる?</div><div class="bk-body">この 端末を、まっさらな 記録で はじめるよ。いまの 記録は 消えないで、合言葉で いつでも もどせるよ。<br><br>いまの 合言葉(メモしてね):<br><b class="cloud-code">' + showCode(old) + '</b></div>',
+      [{ label:'やめる', primary:true, onClick:closeBk }, { label:'あたらしく はじめる', onClick:function(){
+        closeBk();
+        var b = new Uint8Array(10); crypto.getRandomValues(b);
+        var c = ''; for(var i=0;i<10;i++) c += CODE_ABC.charAt(b[i] % CODE_ABC.length);
+        switchCode(c, { data:{}, parts:{} });
+        try{ localStorage.removeItem(COIN_BASE_KEY); }catch(e){}
+        showModal({ title:'あたらしい 記録だよ', text:'前の 記録の 合言葉は ' + showCode(old) + ' だよ。メモしてね。「保存・もどす」から もどせるよ。', ok:'OK' });
+      } }]);
+  }
   function trialLink(){ return location.href.split('#')[0] + '#t=' + cloud.uid; }
   function openBackupMore(){
     if(TRIAL_ON){
@@ -6434,11 +6447,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       (fsReady() ? '<button id="bmCode">🔑 合言葉で もどす</button>' : '') +
       (cloud.on ? '<button id="bmLink">🔗 もどす リンクを おくる<small>メモや LINE に のこしておくと、ひらくだけで もどせるよ</small></button>' : '') +
       (cloud.on ? '<button id="bmTry">👀 おためし用リンク<small>記録は 変わらないよ。おうちの人が かくにん する ときの 用</small></button>' : '') +
+      (cloud.on ? '<button id="bmNew">🆕 あたらしい 記録で はじめる<small>べつの 人が あそぶとき。今の 記録は 合言葉で もどせるよ</small></button>' : '') +
       (cloud.on ? '<button id="bmCodeCopy">📋 合言葉を コピー</button>' : '') +
       '<button id="bmFile">📂 ファイルから もどす</button>' +
       '<button id="bmPaste">📋 はりつけて もどす</button>' +
       (has ? '<button id="bmCopy">📝 文字で コピーして 保存<small>ファイルに 保存 できない ときの よび</small></button>' : '') +
       '</div>', [{ label:'とじる', onClick:closeBk }]);
+    if($('bmNew')) $('bmNew').onclick = function(){ closeBk(); openNewRecord(); };
     if($('bmCode')) $('bmCode').onclick = function(){ closeBk(); openCodeRestore(); };
     if($('bmLink')) $('bmLink').onclick = async function(){
       var u = linkFor();
