@@ -5828,13 +5828,26 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(cloud.on && c === cloud.uid){ toast('今 使っている 合言葉だよ'); return; }
         var r;
         try{ r = await fsLoad(c); }catch(e){ oops('インターネットに つながって いるか たしかめてね。'); return; }
-        if(!hasData(r.data)){ oops('その 合言葉の 記録が 見つからないよ。'); return; }
-        if(!getPets()){ switchCode(c, r); return; }
-        var esc = function(x){ return String(x).replace(/[<>&"]/g, ''); };
-        openBk('<div class="bk-title">記録を 入れかえる?</div><div class="bk-body">今の 記録を、合言葉の 記録に 入れかえるよ。<br><br>' +
-          '<b>今:</b>' + esc(backupSummary(snapshot())) + '<br><b>合言葉の 記録:</b>' + esc(backupSummary(r.data)) + '</div>',
-          [{ label:'やめる', onClick:closeBk }, { label:'入れかえる', primary:true, onClick:function(){ closeBk(); switchCode(c, r); } }]);
+        offerSwitch(c, r);
       } }]);
+  }
+  function offerSwitch(c, r){
+    if(!hasData(r.data)){ oops('その 合言葉の 記録が 見つからないよ。'); return; }
+    if(!getPets()){ switchCode(c, r); return; }
+    var esc = function(x){ return String(x).replace(/[<>&"]/g, ''); };
+    openBk('<div class="bk-title">記録を 入れかえる?</div><div class="bk-body">今の 記録を、合言葉の 記録に 入れかえるよ。<br><br>' +
+      '<b>今:</b>' + esc(backupSummary(snapshot())) + '<br><b>合言葉の 記録:</b>' + esc(backupSummary(r.data)) + '</div>',
+      [{ label:'やめる', onClick:closeBk }, { label:'入れかえる', primary:true, onClick:function(){ closeBk(); switchCode(c, r); } }]);
+  }
+  /* a link ending in #c=<code> restores that record on open (no typing, nothing to memorise) */
+  function linkFor(){ return location.href.split('#')[0] + '#c=' + cloud.uid; }
+  function checkHashCode(){
+    var m = /[#&]c=([a-z2-9]{10})/.exec(location.hash || '');
+    if(!m) return;
+    try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){}
+    var c = m[1];
+    if(cloud.on && c === cloud.uid) return;
+    fsLoad(c).then(function(r){ offerSwitch(c, r); }).catch(function(){ oops('インターネットに つながって いるか たしかめてね。'); });
   }
   function switchCode(c, r){
     clearTimeout(cloud.timer); cloud.timer = null; cloud.dirty = {};
@@ -5857,12 +5870,20 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       : '<p class="cloud-state"><b>☁ 自動保存:オフ</b><br>インターネットに つながると 自動で 保存するよ。今は この 端末の 中だけに 保存しているよ。</p>';
     openBk('<div class="bk-title">保存・もどす</div>' + cs + '<div class="backup-more">' +
       (fsReady() ? '<button id="bmCode">🔑 合言葉で もどす</button>' : '') +
+      (cloud.on ? '<button id="bmLink">🔗 もどす リンクを おくる<small>メモや LINE に のこしておくと、ひらくだけで もどせるよ</small></button>' : '') +
       (cloud.on ? '<button id="bmCodeCopy">📋 合言葉を コピー</button>' : '') +
       '<button id="bmFile">📂 ファイルから もどす</button>' +
       '<button id="bmPaste">📋 はりつけて もどす</button>' +
       (has ? '<button id="bmCopy">📝 文字で コピーして 保存<small>ファイルに 保存 できない ときの よび</small></button>' : '') +
       '</div>', [{ label:'とじる', onClick:closeBk }]);
     if($('bmCode')) $('bmCode').onclick = function(){ closeBk(); openCodeRestore(); };
+    if($('bmLink')) $('bmLink').onclick = async function(){
+      var u = linkFor();
+      try{ if(navigator.share){ await navigator.share({ url:u }); return; } }catch(e){ if(e && e.name === 'AbortError') return; }
+      var ok = false;
+      try{ await navigator.clipboard.writeText(u); ok = true; }catch(e){}
+      toast(ok ? 'リンクを コピーしたよ' : u);
+    };
     if($('bmCodeCopy')) $('bmCodeCopy').onclick = async function(){
       var t = showCode(cloud.uid), ok = false;
       try{ await navigator.clipboard.writeText(t); ok = true; }catch(e){}
@@ -5898,6 +5919,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var bm = $('bootMsg'); if(bm) bm.remove();
       renderCoins();
       goHome();
+      checkHashCode();
       if(fromCloud && !restored) toast('記録を 読みこんだよ');
       else if(restored) toast('記録を もとに もどしたよ');
     });
