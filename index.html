@@ -1692,7 +1692,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   var PRINT_SIZES = [10, 20, 50];
   var SIZE_UP_PASSES = 5;    // この回数 合格すると 問題数が ふえる
   var PASS_ACC = 90;
-  var WEEKEND_N = 100, WEEKEND_BONUS = 15, WEEKEND_ACC = 80;
+  var WEEKEND_N = 100, WEEKEND_BONUS = 5, WEEKEND_ACC = 80;
   var BONUS_SPEED_BEST = 2; // スピードモード 自己ベスト更新
   var LEVELUP_BONUS = 5;
   var JUMP_COUNT = 5, JUMP_PASS = 4;
@@ -2395,8 +2395,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     return null;
   }
-  function isWeekend(){ if(window.KC_FORCE_WEEKEND) return true; var d = new Date().getDay(); return d===0 || d===6; }
-  function weekendKey(){ var d = new Date(); d.setDate(d.getDate() - ((d.getDay()+1)%7)); return dayKeyOf(d); } /* the Saturday */
+  function isWeekend(){ return true; }   /* daily now */
+  function weekendKey(){ return dayKeyOf(new Date()); }   /* today */
   function weekendDone(){ return safeGet('keisan_weekend') === weekendKey(); }
   function startPrint(op, n, kind, lv){
     state.op = op;
@@ -2497,11 +2497,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     c.className = 'weekend';
     if(weekendDone()){
-      c.innerHTML = '<span class="wk-ico">🏆</span><span class="wk-text"><b>100問チャレンジ クリア!</b>今週の ごほうびは もらったよ。また来週!</span>';
+      c.innerHTML = '<span class="wk-ico">🏆</span><span class="wk-text"><b>100問チャレンジ クリア!</b>今日の ごほうびは もらったよ。また明日!</span>';
       return;
     }
     var name = op==='mix' ? '混ぜて' : OP_META[op].label;
-    c.innerHTML = '<span class="wk-ico">🏆</span><span class="wk-text"><b>週末の100問チャレンジ</b>'+name+'を100問。正解'+WEEKEND_ACC+'%以上で <span class="coin" style="width:12px;height:12px;vertical-align:-2px"></span> ＋'+WEEKEND_BONUS+'</span><button class="wk-btn" id="weekendBtn">挑戦する</button>';
+    c.innerHTML = '<span class="wk-ico">🏆</span><span class="wk-text"><b>今日の100問チャレンジ</b>'+name+'を100問。正解'+WEEKEND_ACC+'%以上で <span class="coin" style="width:12px;height:12px;vertical-align:-2px"></span> ＋'+WEEKEND_BONUS+'</span><button class="wk-btn" id="weekendBtn">挑戦する</button>';
     $('weekendBtn').onclick = function(){ startPrint(state.homeOp || 'add', WEEKEND_N, 'weekend'); };
   }
   function rb(t){ return String(t).replace(/桁/g, '<ruby>桁<rt>けた</rt></ruby>'); }
@@ -4911,7 +4911,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     // weekend 100
     if(pr && pr.kind==='weekend' && accuracy >= WEEKEND_ACC && !weekendDone()){
       safeSet('keisan_weekend', weekendKey());
-      bonuses.push({ label:'週末100問チャレンジ', n:WEEKEND_BONUS });
+      bonuses.push({ label:'毎日100問チャレンジ', n:WEEKEND_BONUS });
     }
 
     if(isCh && passed && !challengeDone()){
