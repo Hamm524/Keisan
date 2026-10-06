@@ -5095,7 +5095,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var base = Math.round(state.questions.reduce(function(s,q){ return s+coinPer(q); },0) * (pr && pr.kind==='weekend' && weekendDone() ? 10 / N : 1));
       state.sessionCoins += base; state.baseCoins += base; earn(base);
     }
-    if(accuracy===100) bonuses.push({ label:'かんぺき', n:BONUS_PERFECT });
+    if(accuracy===100){ bonuses.push({ label:'かんぺき', n:BONUS_PERFECT }); bonuses.push({ label:'ノーミス', n:2 }); }
     else if(accuracy>=90) bonuses.push({ label:'すごく せいかく', n:BONUS_GREAT });
     if(fast && accuracy>=LEVEL_UNLOCK) bonuses.push({ label:'速い', n:BONUS_FAST });
 
