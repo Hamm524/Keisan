@@ -1059,6 +1059,23 @@
   .fish-prompt .arrow{ font-size:22px; color:var(--ink-soft); }
   .fish-prompt .lineup{ display:inline-flex; gap:3px; }
   .fish-prompt .lineup b{ border:2px dashed var(--line); border-radius:10px; padding:0 8px; font-weight:600; }
+  #kuriPC{ gap:8px; padding:14px 12px 16px; position:relative; }
+  #kuriPad{ margin-top:12px; gap:8px; }
+  #kuriPad .key{ height:54px; font-size:28px; }
+  #kuriSay{ margin:8px 0 0; align-self:center; border-radius:14px; }
+  #kuriCard, #view-kuri{ --op-mul:var(--op-add); }
+  #kuriCard.kuri-sub, #view-kuri.kuri-sub{ --op-mul:var(--op-sub); }
+  .kuri-svg{ display:block; width:100%; height:auto; }
+  .kuri-svg .fr{ fill:none; stroke:var(--line); stroke-width:2; }
+  .kuri-svg .kd{ fill:none; stroke:var(--line); stroke-width:2; }
+  .kuri-svg .kd.a{ fill:var(--fish-a); stroke:var(--fish-a); }
+  .kuri-svg .kd.b{ fill:var(--fish-b); stroke:var(--fish-b); }
+  .kuri-svg .kd.g{ fill:none; stroke:var(--fish-b); opacity:.35; }
+  .kuri-svg .kx{ stroke:var(--fish-b); stroke-width:3; stroke-linecap:round; opacity:.7; }
+  .kuri-svg .kl{ font-size:13px; font-weight:700; fill:var(--ink-soft); text-anchor:middle; }
+  .kuri-list{ margin:0 0 8px; font-size:12.5px; font-weight:900; color:var(--ink); }
+  .kuri-time{ font-weight:900; }
+  .fish-q .kq{ white-space:nowrap; }
   .fish-next{ margin-top:14px; width:100%; }
   .fish-how .demo-btn{ display:block; width:100%; margin-top:10px; border:none; border-radius:100px; background:var(--op-mul); color:#fff; font:inherit; font-size:15px; font-weight:700; padding:11px; cursor:pointer; }
 </style>
@@ -1117,6 +1134,7 @@
 
     <section class="challenge" id="challengeCard" hidden></section>
     <section class="fish-card" id="fishCard" hidden></section>
+    <section class="fish-card" id="kuriCard" hidden></section>
     <section class="weekend" id="weekendCard" hidden></section>
 
     <div class="save-band" id="saveBand" hidden>
@@ -1266,6 +1284,51 @@
         <button class="key ok" id="fishOk" aria-label="答える" disabled>✓</button>
       </div>
       <button class="btn btn-primary fish-next" id="fishNext" hidden></button>
+    </div>
+  </main>
+  <main id="view-kuri" class="view" hidden>
+    <div id="kuriMenu">
+      <div class="shop-head">
+        <button class="icon-btn" id="kuriBack" aria-label="もどる">←</button>
+        <h1 id="kuriTitle">くりあがり・くりさがり</h1>
+      </div>
+      <section class="fish-how" id="kuriHow"></section>
+      <h2 class="sec-title">れんしゅうを えらぶ</h2>
+      <p class="sec-sub">合格すると 次の だんが ひらくよ。</p>
+      <div class="fish-stages" id="kuriStages"></div>
+    </div>
+    <div id="kuriPlay" hidden>
+      <p class="level-tag" id="kuriTag"></p>
+      <div class="play-top">
+        <button class="icon-btn" id="kuriQuit" aria-label="やめる">✕</button>
+        <div class="dots" id="kuriDots"></div>
+      </div>
+      <div class="problem-card" id="kuriPC">
+        <div class="fish-pet" id="kuriPet"></div>
+        <div class="fish-q num" id="kuriQ"></div>
+        <div class="fish-chips" id="kuriChips"></div>
+        <div class="fish-strip" id="kuriStrip"></div>
+        <p class="fish-cap" id="kuriCap"></p>
+        <div class="fish-prompt num" id="kuriPrompt"></div>
+        <div class="fish-pic" id="kuriPic"></div>
+        <p class="fish-note" id="kuriNote"></p>
+      </div>
+      <div class="bubble" id="kuriSay" hidden></div>
+      <div class="numpad" id="kuriPad">
+        <button class="key num" data-k="1">1</button>
+        <button class="key num" data-k="2">2</button>
+        <button class="key num" data-k="3">3</button>
+        <button class="key num" data-k="4">4</button>
+        <button class="key num" data-k="5">5</button>
+        <button class="key num" data-k="6">6</button>
+        <button class="key num" data-k="7">7</button>
+        <button class="key num" data-k="8">8</button>
+        <button class="key num" data-k="9">9</button>
+        <button class="key del" id="kuriDel" aria-label="1文字消す">⌫</button>
+        <button class="key num" data-k="0">0</button>
+        <button class="key ok" id="kuriOk" aria-label="答える" disabled>✓</button>
+      </div>
+      <button class="btn btn-primary fish-next" id="kuriNext" hidden></button>
     </div>
   </main>
 
@@ -2270,7 +2333,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     speed:{ timerId:null, endAt:0, correct:0, attempted:0, streak:0, maxStreak:0 }
   };
 
-  var views = { pick:$('view-pick'), setup:$('view-setup'), shop:$('view-shop'), food:$('view-food'), toy:$('view-toy'), mode:$('view-mode'), play:$('view-play'), result:$('view-result'), fish:$('view-fish') };
+  var views = { pick:$('view-pick'), setup:$('view-setup'), shop:$('view-shop'), food:$('view-food'), toy:$('view-toy'), mode:$('view-mode'), play:$('view-play'), result:$('view-result'), fish:$('view-fish'), kuri:$('view-kuri') };
   function showView(name){
     Object.keys(views).forEach(function(k){ views[k].hidden = (k!==name); });
     window.scrollTo(0,0);
@@ -2652,6 +2715,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     renderToday(sel);
     renderChallenge();
     renderFishCard();
+    renderKuriCard();
     renderCollection();
     renderSaveBand(true);
   }
@@ -2664,6 +2728,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     renderTabs(state.homeOp, recommendOp());
     setLive(state.homeOp);
     renderToday(state.homeOp);
+    renderKuriCard();
     Pet.tap($('homePet'));
   });
   $('todayBtn').addEventListener('click', function(){
@@ -3195,7 +3260,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   $('openShop').addEventListener('click', openShop);
   $('coinPill').addEventListener('click', function(){
-    if(!views.play.hidden || !views.pick.hidden || (!views.fish.hidden && !$('fishPlay').hidden)) return;
+    if(!views.play.hidden || !views.pick.hidden || (!views.fish.hidden && !$('fishPlay').hidden) || (!views.kuri.hidden && !$('kuriPlay').hidden)) return;
     openShop();
   });
   $('shopBack').addEventListener('click', goHome);
@@ -5602,6 +5667,308 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       levelNoteHtml: null,
       retryLabel: next ? 'つぎの だんへ' : 'もう一回',
       retry: function(){ startFish(next ? idx + 1 : idx); }
+    });
+  }
+
+  /* ---------- くりあがり・くりさがり ---------- */
+  var KURI = {
+    friend:{ name:'10の なかま', ops:['add','sub'], stages:[
+      { kind:'step',  n:5,  pass:4,  coin:2, label:'せつめいつき', desc:'10この わくを 見て、あと いくつで 10か 考えよう' },
+      { kind:'plain', n:10, pass:9,  coin:3, label:'せつめいなし', desc:'わくは なし。10の なかまを 思い出そう' },
+      { kind:'timed', sec:60, pass:12, coin:4, label:'1分チャレンジ', desc:'1分で 12問 正解を めざそう' } ] },
+    make10:{ name:'10を 作って たす', ops:['add'], stages:[
+      { kind:'step',  n:5, pass:4, coin:3, label:'せつめいつき', desc:'8＋5 は 8＋2＝10、10＋3＝13。わくを 見ながら 3つの 手順で' },
+      { kind:'plain', n:8, pass:7, coin:4, label:'せつめいなし', desc:'同じ 3つの 手順。わくは なしで とこう' },
+      { kind:'timed', sec:60, pass:8, coin:5, label:'1分チャレンジ', desc:'1分で 8問、こたえだけ 入れよう' } ] },
+    sub10:{ name:'10から ひく', ops:['sub'], stages:[
+      { kind:'step',  n:5, pass:4, coin:3, label:'せつめいつき', desc:'13－8 は 10－8＝2、2＋3＝5。わくを 見ながら 3つの 手順で' },
+      { kind:'plain', n:8, pass:7, coin:4, label:'せつめいなし', desc:'同じ 3つの 手順。わくは なしで とこう' },
+      { kind:'timed', sec:60, pass:8, coin:5, label:'1分チャレンジ', desc:'1分で 8問、こたえだけ 入れよう' } ] }
+  };
+  var KURI_ORDER = { add:['friend','make10'], sub:['friend','sub10'] };
+  var kuri = null, kuriR = 0, kuriOp = 'add', kuriTimer = null;
+  function getKuri(){
+    var k = safeGet('keisan_kuri'); if(!k || typeof k !== 'object') k = {};
+    if(!k.open) k.open = {}; if(!k.pass) k.pass = {};
+    Object.keys(KURI).forEach(function(t){ if(typeof k.open[t] !== 'number') k.open[t] = 0; if(!k.pass[t]) k.pass[t] = {}; });
+    return k;
+  }
+  function kRand(lo, hi){ return lo + Math.floor(Math.random()*(hi-lo+1)); }
+  function kuriMake(track, prev){
+    var p, tries = 0;
+    do{
+      if(track === 'friend'){
+        var n = kRand(1, 9), add = Math.random() < .5;
+        p = { track:track, n:n, key:'f'+n+(add?'a':'s'), steps:[{ ans:10-n, pre: add ? n+' ＋ ' : '10 － '+n+' ＝ ', post: add ? ' ＝ 10' : '', note: add ? n+'に あと いくつで 10?' : '10から '+n+'を ひくと?', exp: add ? n+' ＋ '+(10-n)+' ＝ 10' : '10 － '+n+' ＝ '+(10-n) }] };
+        p.head = ''; p.n = n;
+      }else if(track === 'make10'){
+        var a = kRand(3, 9), b = kRand(Math.max(2, 11-a), 9), x = 10-a, y = b-x;
+        p = { track:track, a:a, b:b, x:x, y:y, key:'m'+a+'_'+b, head:a+' ＋ '+b, steps:[
+          { ans:x, pre:a+' ＋ ', post:' ＝ 10', note:a+'に あと いくつで 10?', exp:a+' ＋ '+x+' ＝ 10' },
+          { ans:y, pre:b+' ＝ '+x+' ＋ ', post:'', note:b+'を '+x+'と のこりに わけよう', exp:b+' ＝ '+x+' ＋ '+y },
+          { ans:a+b, pre:'10 ＋ '+y+' ＝ ', post:'', note:'10に のこりを たそう', exp:'10 ＋ '+y+' ＝ '+(a+b) } ] };
+      }else{
+        var m = kRand(11, 18), t = m-10, s = kRand(Math.max(2, t+1), 9), u = 10-s;
+        p = { track:track, m:m, s:s, t:t, u:u, key:'s'+m+'_'+s, head:m+' － '+s, steps:[
+          { ans:t, pre:m+' ＝ 10 ＋ ', post:'', note:m+'を 10と のこりに わけよう', exp:m+' ＝ 10 ＋ '+t },
+          { ans:u, pre:'10 － '+s+' ＝ ', post:'', note:'10から '+s+'を ひこう', exp:'10 － '+s+' ＝ '+u },
+          { ans:m-s, pre:u+' ＋ '+t+' ＝ ', post:'', note:'のこった 数を たそう', exp:u+' ＋ '+t+' ＝ '+(m-s) } ] };
+      }
+      tries++;
+    }while(prev && p.key === prev.key && tries < 20);
+    p.miss = 0;
+    return p;
+  }
+  function kuriMental(p){   /* timed: one step, answer only */
+    if(p.track === 'friend') return p;
+    var tot = p.steps[2].ans;
+    p.steps = [{ ans:tot, pre:p.head+' ＝ ', post:'', note:'', exp:p.head+' ＝ '+tot }];
+    return p;
+  }
+  function kuriList(track, st){
+    var list = [], n = st.kind === 'timed' ? 60 : st.n, prev = null;
+    for(var i=0;i<n;i++){ var p = kuriMake(track, prev); if(st.kind === 'timed') kuriMental(p); list.push(p); prev = p; }
+    return list;
+  }
+  /* ten-frames: 2 rows x 5 */
+  function kuriFrame(x, cells){
+    var s = '<rect class="fr" x="'+x+'" y="6" width="150" height="66" rx="8"/>';
+    for(var i=0;i<10;i++){
+      var cx = x + 15 + (i%5)*30, cy = 21 + Math.floor(i/5)*30, c = cells[i] || 'o';
+      s += '<circle class="kd '+(c==='o'?'':c)+'" cx="'+cx+'" cy="'+cy+'" r="11"/>';
+      if(c === 'g') s += '<path class="kx" d="M'+(cx-7)+','+(cy-7)+' L'+(cx+7)+','+(cy+7)+' M'+(cx+7)+','+(cy-7)+' L'+(cx-7)+','+(cy+7)+'"/>';
+    }
+    return s;
+  }
+  function kuriPic(p, si){
+    var c1 = [], c2 = [], i, lab1 = '', lab2 = '';
+    if(p.track === 'friend'){
+      for(i=0;i<p.n;i++) c1[i] = 'a';
+      lab1 = p.n+' こ';
+      return '<svg class="kuri-svg" viewBox="0 0 170 92" aria-hidden="true">'+kuriFrame(10, c1)+'<text class="kl" x="85" y="88">'+lab1+'</text></svg>';
+    }
+    if(p.track === 'make10'){
+      for(i=0;i<p.a;i++) c1[i] = 'a';
+      if(si >= 1) for(i=0;i<p.x;i++) c1[p.a+i] = 'b';
+      if(si >= 2) for(i=0;i<p.y;i++) c2[i] = 'b';
+      return '<svg class="kuri-svg" viewBox="0 0 340 92" aria-hidden="true">'+kuriFrame(10, c1)+kuriFrame(180, c2)+
+        '<text class="kl" x="85" y="88">'+p.a+(si>=1?' ＋ '+p.x+' ＝ 10':'')+'</text><text class="kl" x="255" y="88">'+(si>=2?'のこり '+p.y:'')+'</text></svg>';
+    }
+    for(i=0;i<10;i++) c1[i] = 'b';
+    if(si === 0){ for(i=0;i<p.t;i++) c2[i] = 'a'; }
+    else{ for(i=0;i<p.s;i++) c1[9-i] = 'g'; if(si >= 2) for(i=0;i<p.t;i++) c2[i] = 'a'; }
+    return '<svg class="kuri-svg" viewBox="0 0 340 92" aria-hidden="true">'+kuriFrame(10, c1)+kuriFrame(180, c2)+
+      '<text class="kl" x="85" y="88">'+(si>=1?'10 から '+p.s+' ひく → '+p.u:'10')+'</text><text class="kl" x="255" y="88">'+(si===0||si>=2?'のこり '+p.t:'')+'</text></svg>';
+  }
+  function kuriStatus(track){
+    var k = getKuri(), st = KURI[track].stages;
+    return Math.min(k.open[track], st.length-1) + 1;
+  }
+  function renderKuriCard(){
+    var c = $('kuriCard'); if(!c) return;
+    var op = state.homeOp;
+    if(op !== 'add' && op !== 'sub'){ c.hidden = true; return; }
+    var k = getKuri(), tr = KURI_ORDER[op], segs = '', line = [];
+    tr.forEach(function(t){
+      var n = KURI[t].stages.length;
+      for(var i=0;i<n;i++) segs += '<i class="'+(i < k.open[t] || (k.pass[t][n-1] && i===n-1) ? 'on' : '')+'"></i>';
+      line.push(KURI[t].name+' '+kuriStatus(t)+'だん目');
+    });
+    c.className = 'fish-card' + (op === 'sub' ? ' kuri-sub' : '');
+    c.innerHTML = '<span class="fc-ico">'+kuriPic({ track:'friend', n:7 }, 0)+'</span>' +
+      '<span class="fc-text"><b>くりあがり・くりさがり</b>'+line.join(' / ')+'<span class="fc-segs">'+segs+'</span></span>' +
+      '<button class="fc-go" id="kuriGo">れんしゅう</button>';
+    c.hidden = false;
+  }
+  $('kuriCard').addEventListener('click', function(e){ if(e.target.closest('#kuriGo')) openKuriMenu(state.homeOp); });
+  function kuriStop(){ if(kuriTimer){ clearInterval(kuriTimer); kuriTimer = null; } }
+  function openKuriMenu(op){
+    kuriR++; kuri = null; kuriStop();
+    kuriOp = op === 'sub' ? 'sub' : 'add';
+    setLive(kuriOp);
+    var v = $('view-kuri'); v.classList.toggle('kuri-sub', kuriOp === 'sub');
+    $('kuriTitle').textContent = kuriOp === 'sub' ? 'くりさがり' : 'くりあがり';
+    var how = kuriOp === 'sub'
+      ? '<div class="fh-pic">'+kuriPic({ track:'sub10', m:13, s:8, t:3, u:2 }, 2)+'</div><p>れい: <b class="num">13 － 8</b>。1の位の 3 から 8 は ひけないので、<b>10から</b> ひくよ。</p><ol><li>13 ＝ <span class="cb">10</span> ＋ <span class="ca">3</span> に わける</li><li>10 － 8 ＝ 2</li><li>2 ＋ 3 ＝ <b>5</b></li></ol>'
+      : '<div class="fh-pic">'+kuriPic({ track:'make10', a:8, b:5, x:2, y:3 }, 2)+'</div><p>れい: <b class="num">8 ＋ 5</b>。まず <b>10に する</b>と かんたん。</p><ol><li>8 ＋ <span class="cb">2</span> ＝ 10 (5を 2と 3に わける)</li><li>のこりは <span class="cb">3</span></li><li>10 ＋ 3 ＝ <b>13</b></li></ol>';
+    $('kuriHow').innerHTML = how;
+    var k = getKuri(), h = '';
+    KURI_ORDER[kuriOp].forEach(function(t){
+      h += '<p class="kuri-list">'+KURI[t].name+'</p>';
+      KURI[t].stages.forEach(function(st, i){
+        var locked = i > k.open[t], n = k.pass[t][i] || 0;
+        h += '<button class="fish-stage'+(locked?' locked':'')+'" data-t="'+t+'" data-i="'+i+'"><span class="fs-n">'+(locked?'🔒':(i+1))+'</span>' +
+          '<span class="fs-t"><b>'+(i+1)+'だん目 '+st.label+'</b>'+st.desc+'。'+(st.kind==='timed' ? '' : st.n+'問中 '+st.pass+'問で 合格')+'</span>' +
+          '<span class="fs-r">'+(locked ? '' : n ? '合格 '+n+'回' : 'まだ')+'</span></button>';
+      });
+    });
+    $('kuriStages').innerHTML = h;
+    $('kuriMenu').hidden = false; $('kuriPlay').hidden = true;
+    showView('kuri');
+  }
+  $('kuriBack').addEventListener('click', goHome);
+  $('kuriStages').addEventListener('click', function(e){
+    var b = e.target.closest('.fish-stage'); if(!b) return;
+    var t = b.getAttribute('data-t'), i = +b.getAttribute('data-i');
+    if(b.classList.contains('locked')){ toast(i+'だん目に 合格すると ひらくよ'); return; }
+    startKuri(t, i);
+  });
+  $('kuriQuit').addEventListener('click', function(){ openKuriMenu(kuriOp); });
+  $('kuriPet').addEventListener('click', function(){ Pet.tap($('kuriPet')); });
+  function startKuri(track, idx){
+    var st = KURI[track].stages[idx];
+    kuriR++; kuriStop();
+    kuri = { track:track, idx:idx, st:st, list:kuriList(track, st), qi:0, si:0, input:'', busy:false, ok:0, startTime:Date.now() };
+    $('kuriTag').textContent = KURI[track].name+' '+(idx+1)+'だん目 '+st.label;
+    var a = activePet(); Pet.mount($('kuriPet'), a.sp, a.lv);
+    $('kuriMenu').hidden = true; $('kuriPlay').hidden = false;
+    $('kuriSay').hidden = true; $('kuriPad').hidden = false; $('kuriNext').hidden = true;
+    showView('kuri');
+    if(st.kind === 'timed'){
+      kuri.deadline = Date.now() + st.sec*1000;
+      var R = kuriR;
+      kuriTimer = setInterval(function(){
+        if(kuriR !== R || !kuri){ kuriStop(); return; }
+        if(Date.now() >= kuri.deadline){ kuriStop(); finishKuri(); return; }
+        kuriTick();
+      }, 250);
+    }
+    kuriRender();
+  }
+  function kuriTick(){
+    if(!kuri || kuri.st.kind !== 'timed') return;
+    var left = Math.max(0, Math.ceil((kuri.deadline - Date.now())/1000));
+    $('kuriTag').innerHTML = KURI[kuri.track].name+' 1分チャレンジ　<span class="kuri-time num">のこり '+left+'秒</span>　正解 '+kuri.ok;
+  }
+  function kuriSay(msg){
+    var b = $('kuriSay'); b.textContent = msg; b.hidden = false;
+    b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+  }
+  var KURI_ANS = '<span class="answer-box num" id="kuriAns"></span>';
+  function kuriRender(){
+    var F = kuri, p = F.list[F.qi], s = p.steps[F.si], timed = F.st.kind === 'timed', guide = F.st.kind === 'step';
+    var d = '';
+    if(!timed) F.list.forEach(function(q, i){ d += '<span class="dot-item'+(i < F.qi ? (q.miss ? ' retry' : ' done') : i===F.qi ? ' active' : '')+'"></span>'; });
+    $('kuriDots').innerHTML = d; $('kuriDots').hidden = timed;
+    var single = p.steps.length === 1;
+    $('kuriQ').innerHTML = p.head && !(timed && p.track !== 'friend') ? '<span class="kq">'+p.head+'</span>' : '';
+    $('kuriQ').hidden = !$('kuriQ').innerHTML;
+    var chips = '';
+    if(!single && !timed) chips = ['①','②','③'].map(function(n, i){ return '<span class="'+(i === F.si ? 'on' : i < F.si ? 'done' : '')+'">'+n+'</span>'; }).join('');
+    $('kuriChips').innerHTML = chips; $('kuriChips').hidden = !chips;
+    $('kuriStrip').innerHTML = ''; $('kuriStrip').hidden = true;
+    $('kuriCap').innerHTML = guide && s.note ? s.note : ''; $('kuriCap').hidden = !$('kuriCap').innerHTML;
+    $('kuriPrompt').innerHTML = s.pre + KURI_ANS + s.post; $('kuriPrompt').hidden = false;
+    var pic = guide ? kuriPic(p, p.track === 'friend' ? 0 : F.si) : '';
+    $('kuriPic').innerHTML = pic; $('kuriPic').hidden = !pic;
+    $('kuriNote').textContent = '';
+    if(timed) kuriTick();
+    kuriShowInput();
+  }
+  function kuriShowInput(){
+    var F = kuri, el = $('kuriAns');
+    if(el){ el.textContent = F.input || '?'; el.classList.toggle('placeholder', !F.input); }
+    $('kuriOk').disabled = !F.input || F.busy;
+  }
+  function kuriPush(k){
+    if(!kuri || kuri.busy) return;
+    if(kuri.input.length >= 2) return;
+    kuri.input = (kuri.input === '0' ? '' : kuri.input) + k; kuriShowInput();
+  }
+  function kuriPop(){ if(!kuri || kuri.busy) return; kuri.input = kuri.input.slice(0, -1); kuriShowInput(); }
+  function kuriSubmit(){
+    if(!kuri || kuri.busy || !kuri.input) return;
+    var F = kuri, R = kuriR, p = F.list[F.qi], s = p.steps[F.si], timed = F.st.kind === 'timed';
+    var good = +F.input === s.ans, last = F.si === p.steps.length-1;
+    F.busy = true; $('kuriOk').disabled = true;
+    var card = $('kuriPC');
+    card.classList.remove('flash-good','flash-bad'); void card.offsetWidth;
+    card.classList.add(good ? 'flash-good' : 'flash-bad');
+    F.input = '';
+    $('kuriAns').textContent = s.ans; $('kuriAns').classList.remove('placeholder');
+    var wait;
+    if(good){
+      Pet.cheer($('kuriPet'));
+      if(last && !p.miss){ F.ok++; }
+      if(!timed) kuriSay(last ? any(SAY_GOOD) : any(['いいね!','そう!','その ちょうし!']));
+      wait = timed ? 250 : (last ? 900 : 550);
+    }else{
+      p.miss++;
+      Pet.oops($('kuriPet'));
+      if(!timed) kuriSay('おしい! '+s.exp);
+      wait = timed ? 450 : 2200;
+    }
+    function go(){
+      if(kuriR !== R || views.kuri.hidden || !kuri) return;
+      F.hold = null;
+      $('kuriPad').hidden = false; $('kuriNext').hidden = true;
+      card.classList.remove('flash-good','flash-bad');
+      F.busy = false;
+      if(!last){ F.si++; kuriRender(); return; }
+      F.qi++; F.si = 0;
+      if(F.qi >= F.list.length){ kuriStop(); finishKuri(); return; }
+      $('kuriSay').hidden = true;
+      kuriRender();
+    }
+    if(good || timed){ setTimeout(go, wait); return; }
+    F.hold = go;
+    $('kuriPad').hidden = true;
+    $('kuriNext').textContent = last && F.qi === F.list.length-1 ? 'わかった (おわり)' : 'わかった、つぎへ';
+    $('kuriNext').hidden = false;
+  }
+  $('kuriNext').addEventListener('click', function(){ if(kuri && kuri.hold) kuri.hold(); });
+  $('kuriPad').addEventListener('click', function(e){
+    var b = e.target.closest('.key'); if(!b) return;
+    if(b.id === 'kuriDel') kuriPop();
+    else if(b.id === 'kuriOk'){ if(!b.disabled) kuriSubmit(); }
+    else kuriPush(b.getAttribute('data-k'));
+  });
+  document.addEventListener('keydown', function(e){
+    if(views.kuri.hidden || $('kuriPlay').hidden || !$('modal').hidden) return;
+    if(kuri && kuri.hold){ if(e.key==='Enter'){ e.preventDefault(); $('kuriNext').click(); } return; }
+    if(e.key>='0' && e.key<='9') kuriPush(e.key);
+    else if(e.key==='Backspace'){ kuriPop(); e.preventDefault(); }
+    else if(e.key==='Enter'){ e.preventDefault(); kuriSubmit(); }
+  });
+  function finishKuri(){
+    var F = kuri, st = F.st, idx = F.idx, track = F.track, timed = st.kind === 'timed';
+    var ok = timed ? F.ok : F.list.filter(function(p){ return !p.miss; }).length;
+    var N = timed ? Math.max(1, F.qi) : F.list.length;
+    var passed = ok >= st.pass, elapsed = Date.now() - F.startTime;
+    kuriR++; kuri = null; kuriStop();
+    var lastOp = safeGet('keisan_last_op');
+    state.op = kuriOp; state.mode = 'kuri'; state.print = null; state.chGot = null;
+    state.questions = F.list.slice(0, N); state.sessionCoins = 0; state.baseCoins = 0;
+    var base = timed ? (passed ? st.coin : 0) : Math.round(st.coin * ok / N);
+    if(base > 0){ state.sessionCoins += base; state.baseCoins += base; earn(base); }
+    var k = getKuri(), bonuses = [], banners = [], stages = KURI[track].stages;
+    if(passed){
+      k.pass[track][idx] = (k.pass[track][idx] || 0) + 1;
+      if(idx + 1 < stages.length && k.open[track] < idx + 1){
+        k.open[track] = idx + 1;
+        banners.push({ type:'level', title:'レベルアップ! '+(idx+2)+'だん目が ひらいたよ', text:stages[idx+1].label+'。'+stages[idx+1].desc+'。' });
+        bonuses.push({ label:'レベルアップ', n:LEVELUP_BONUS });
+      }
+      safeSet('keisan_kuri', k);
+    }
+    addMission(bonuses);
+    if(lastOp != null) safeSet('keisan_last_op', lastOp);
+    giveBonuses(bonuses);
+    if(state.sessionCoins > 0) banners.push(coinBanner(bonuses));
+    var next = passed && idx + 1 < stages.length;
+    renderResult({
+      stars: timed ? (passed ? (ok >= st.pass*1.5 ? 3 : 2) : ok > 0 ? 1 : 0) : (ok===N ? 3 : passed ? 2 : ok > 0 ? 1 : 0),
+      title: passed ? (!timed && ok===N ? 'ぜんぶ 正解!' : '合格!') : 'もう少し!',
+      sub: KURI[track].name+' '+(idx+1)+'だん目' + (passed ? '' : '\n'+(timed ? st.sec+'秒で '+st.pass+'問 正解で 合格だよ' : st.pass+'問 正解で 合格だよ')),
+      stats: [
+        { label:'正解', value:ok, unit:timed ? '問' : '/'+N, main:true },
+        { label:'だん', value:idx+1 },
+        { label:'時間', value:fmtTimeShort(elapsed) }
+      ],
+      banners: banners,
+      levelNoteHtml: null,
+      retryLabel: next ? 'つぎの だんへ' : 'もう一回',
+      retry: function(){ startKuri(track, next ? idx + 1 : idx); }
     });
   }
 
