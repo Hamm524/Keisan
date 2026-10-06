@@ -2746,7 +2746,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       return;
     }
     var name = op==='mix' ? '混ぜて' : OP_META[op].label;
-    c.innerHTML = '<span class="wk-ico">🏆</span><span class="wk-text"><b>今日の100問チャレンジ</b>'+name+'を100問。正解'+WEEKEND_ACC+'%以上で <span class="coin" style="width:12px;height:12px;vertical-align:-2px"></span> ＋'+WEEKEND_BONUS+'</span><button class="wk-btn" id="weekendBtn">挑戦する</button>';
+    c.innerHTML = '<span class="wk-ico">🏆</span><span class="wk-text"><b>今日の100問チャレンジ</b>'+name+'を100問。正解'+WEEKEND_ACC+'%以上で <span class="coin" style="width:12px;height:12px;vertical-align:-2px"></span> ＋'+WEEKEND_BONUS+' と 100問ぶんのコイン(50問の2倍!)</span><button class="wk-btn" id="weekendBtn">挑戦する</button>';
     $('weekendBtn').onclick = function(){ startPrint(state.homeOp || 'add', WEEKEND_N, 'weekend'); };
   }
   function rb(t){ return String(t).replace(/桁/g, '<ruby>桁<rt>けた</rt></ruby>'); }
@@ -5092,7 +5092,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var bonuses = [], banners = [];
     // prints pay once: the same as a 10-question round at this level, whatever the length
     {
-      var base = Math.round(state.questions.reduce(function(s,q){ return s+coinPer(q); },0) * (pr && pr.kind==='weekend' ? 10 / N : 1));
+      var base = Math.round(state.questions.reduce(function(s,q){ return s+coinPer(q); },0) * (pr && pr.kind==='weekend' && weekendDone() ? 10 / N : 1));
       state.sessionCoins += base; state.baseCoins += base; earn(base);
     }
     if(accuracy===100) bonuses.push({ label:'かんぺき', n:BONUS_PERFECT });
