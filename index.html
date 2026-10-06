@@ -2446,7 +2446,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     p.op = op; p.lv = lv;
     return p;
   }
-  function coinPer(q){ return ((q.lv|0) + 3) / 10; }   /* 10問で Lv1=3〜Lv4=6コイン */
+  /* 10問で Lv1=3〜Lv4=6コイン。自分の いまの レベルより 2つ以上 下の問題は すこし少なめ(RPGの けいけんち): 2つ下=7わり、3つ以下=5わり */
+  function lowLvFactor(q){
+    if(!q || !q.op || !LEVELS[q.op]) return 1;
+    var d = currentLevelIndex(q.op) - (q.lv|0);
+    return d <= 1 ? 1 : (d === 2 ? 0.7 : 0.5);
+  }
+  function coinPer(q){ return ((q.lv|0) + 3) / 10 * lowLvFactor(q); }
   function genProblem(selectedOp){
     var op = selectedOp==='mix' ? ['add','sub','mul','div'][pick(0,3)] : selectedOp;
     return genForOp(op);
@@ -4844,6 +4850,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   /* ---------- accuracy mode ---------- */
   function beginRound(mode, questions){
     state.mode = mode;
+    state.lowLv = false;
     state.sessionCoins = 0;
     state.baseCoins = 0;
     state.questions = questions;
@@ -5056,7 +5063,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var remain = t.price - getCoins();
       txt += remain>0 ? '次のお宝「'+t.name+'」まで あと'+remain+'コイン。' : '「'+t.name+'」と こうかん できるよ!';
     }
-    return { type:'coin', title:'コイン +'+state.sessionCoins+' の 内わけ', text:chips+'<span style="display:block;margin-top:6px">'+txt+'</span>' };
+    var low = state.lowLv ? '<span style="display:block;margin-top:6px">れんしゅう中の レベルだから、コインは すこし 少なめだよ。上の レベルに すすむと もっと もらえるよ!</span>' : '';
+    return { type:'coin', title:'コイン +'+state.sessionCoins+' の 内わけ', text:chips+low+'<span style="display:block;margin-top:6px">'+txt+'</span>' };
   }
   function giveBonuses(list){
     list.forEach(function(b){ state.sessionCoins += b.n; });
@@ -5093,6 +5101,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     // prints pay once: the same as a 10-question round at this level, whatever the length
     {
       var base = Math.round(state.questions.reduce(function(s,q){ return s+coinPer(q); },0) * (pr && pr.kind==='weekend' && weekendDone() ? 10 / N : 1));
+      state.lowLv = state.questions.some(function(q){ return lowLvFactor(q) < 1; });
       state.sessionCoins += base; state.baseCoins += base; earn(base);
     }
     if(accuracy===100){ bonuses.push({ label:'かんぺき', n:BONUS_PERFECT }); bonuses.push({ label:'ノーミス', n:2 }); }
