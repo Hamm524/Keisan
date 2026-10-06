@@ -1876,8 +1876,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   var PREFIX = 'keisan_';
   var CHANGED_KEY = 'keisan_changed_at', BACKUP_AT_KEY = 'keisan_backup_at';
   var META = { keisan_changed_at:1, keisan_backup_at:1 };
+  var TRIAL_M = /[#&]t=([a-z2-9]{10})/.exec(location.hash || '');
+  var TRIAL_ON = !!TRIAL_M, TRIAL_CODE = TRIAL_M ? TRIAL_M[1] : null;   /* おためしモード: 何も書かない */
   var LS = null;
   try{ LS = window.localStorage; LS.getItem('x'); }catch(e){ LS = null; }
+  if(TRIAL_ON) LS = null;
   var memStore = {};
   function rawGet(k){ if(LS){ try{ return LS.getItem(k); }catch(e){} } return memStore.hasOwnProperty(k) ? memStore[k] : null; }
   function rawSet(k, v){ memStore[k] = String(v); if(LS){ try{ LS.setItem(k, String(v)); }catch(e){} } cloudQueue(k); }
@@ -1903,7 +1906,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   function writeMirror(){
     mirrorTimer = null;
-    if(!mirrorOn) return;
+    if(!mirrorOn || TRIAL_ON) return;
     var snap = snapshot();
     if(!hasData(snap)) return;   /* never replace a good mirror with an empty one */
     openDb().then(function(db){
@@ -1926,6 +1929,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function storageBoot(done){
     var called = false;
     function finish(r){ if(called) return; called = true; mirrorOn = true; if(hasData(snapshot())) scheduleMirror(); done(r); }
+    if(TRIAL_ON){ finish(false); return; }
     try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function(){}); }catch(e){}
     if(hasData(snapshot()) || typeof indexedDB === 'undefined'){ finish(false); return; }
     setTimeout(function(){ finish(false); }, 2500);
@@ -1958,16 +1962,46 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   async function cloudFlush(){
     cloud.timer = null;
     if(!cloud.on || cloud.busy) return;
+    cloud.busy = true;
+    if(!cloud.skipSync){ try{ await cloudSync(true); }catch(e){} }
     var keys = Object.keys(cloud.dirty);
-    if(!keys.length) return;
-    cloud.busy = true; cloud.dirty = {};
+    if(!keys.length){ cloud.busy = false; return; }
+    cloud.dirty = {};
     for(var i=0;i<keys.length;i++){
       var k = keys[i], v = rawGet(k), col = cloudCol(), had = cloud.parts[k] || 1;
       try{
         var n = v == null ? 0 : Math.max(1, Math.ceil(v.length / CLOUD_CHUNK));
+        if(n === 1 && had <= 1){
+          var v0 = v, done = false, rem = null;
+          for(var tries = 0; tries < 6 && !done; tries++){
+            rem = await fsGetDoc(k);
+            if(rem && rem.n > 1) break;
+            var mv = rem ? cloudMerge(k, v0, rem.v) : v0;
+            done = await fsSetIf(k, { v:mv, n:1, at:Date.now() }, rem ? rem.ut : null);
+            if(done) v = mv;
+          }
+          if(done){
+            cloud.parts[k] = 1;
+            if(k === 'keisan_coins'){ try{ coinBaseSet(+JSON.parse(v)); }catch(e){} }
+            if(canon(v) !== canon(v0)){
+              var cur2 = rawGet(k);
+              cloud.mute = true;
+              if(cur2 === v0 || cur2 == null) rawSet(k, v);
+              else if(k === 'keisan_coins'){
+                rawSet(k, JSON.stringify(Math.max(0, (+JSON.parse(cur2) || 0) + ((+JSON.parse(v) || 0) - (+JSON.parse(v0) || 0)))));
+                cloud.dirty[k] = 1;
+              }else cloud.dirty[k] = 1;
+              cloud.mute = false;
+              cloud.pulled = true;
+            }
+            continue;
+          }
+          if(!rem || rem.n <= 1){ cloud.dirty[k] = 1; continue; }   /* too much contention: try again later */
+        }
         for(var j=0;j<n;j++) await col.doc(j ? k + '~' + j : k).set(j ? { v:v.substr(j*CLOUD_CHUNK, CLOUD_CHUNK) } : { v:v.substr(0, CLOUD_CHUNK), n:n, at:Date.now() });
         for(var x=Math.max(n, 0);x<had;x++) await col.doc(x ? k + '~' + x : k).delete();
         cloud.parts[k] = n;
+        if(k === 'keisan_coins' && v != null){ try{ coinBaseSet(+JSON.parse(v)); }catch(e){} }
       }catch(e){
         var c = e && e.code;
         if(c === 'unavailable' || c === 'resource_exhausted'){ cloud.dirty[k] = 1; }
@@ -1975,7 +2009,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         else if(c === 'invalid_argument'){ cloud.on = false; break; }   /* this viewer may not write */
       }
     }
-    cloud.busy = false;
+    cloud.busy = false; cloud.skipSync = false;
+    if(cloud.pulled){ cloud.pulled = false; scheduleMirror(); cloudRefreshUI(); }
+    if(keys.indexOf(CHANGED_KEY) >= 0 && cloud.on) cloud.seenAt = rawGet(CHANGED_KEY) || '';
     if(cloud.on && Object.keys(cloud.dirty).length){ clearTimeout(cloud.timer); cloud.timer = setTimeout(cloudFlush, 4000); }
     try{ renderSaveBand(); }catch(e){}
   }
@@ -2034,6 +2070,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   function showCode(c){ return c ? c.slice(0, 5) + '-' + c.slice(5) : ''; }
   function appCode(){
+    if(TRIAL_CODE) return TRIAL_CODE;
     var c = null;
     try{ c = normCode(localStorage.getItem(CODE_KEY)); }catch(e){}
     if(!c){
@@ -2051,28 +2088,153 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       return x === 'late' ? { late:go } : x;
     });
   }
-  /* returns true when the cloud copy replaced the local one */
+  /* ---------- 2台同時でも 巻き戻らない: 混ぜる ----------
+     コインは「増えた分・使った分」を足し合わせる(前に合わせた値 base からの差)。
+     持ち物は和集合、レベルや記録は大きい方、日付つきの記録は新しい日。 */
+  var COIN_BASE_KEY = 'kapp_coinbase';
+  function coinBaseGet(){ try{ var v = parseFloat(localStorage.getItem(COIN_BASE_KEY)); return isNaN(v) ? null : v; }catch(e){ return null; } }
+  function coinBaseSet(n){ if(TRIAL_ON) return; try{ localStorage.setItem(COIN_BASE_KEY, String(n)); }catch(e){} }
+  var KEEP_LOCAL = { keisan_stamps:1, keisan_print_passes:1, keisan_last_op:1, keisan_print_size:1, keisan_print_pick:1, keisan_cape:1 };
+  function dnum(s){ var m = /^(\d+)-(\d+)-(\d+)$/.exec(String(s)); return m ? (+m[1])*10000 + (+m[2])*100 + (+m[3]) : null; }
+  function canon(s){
+    try{
+      return JSON.stringify(JSON.parse(s), function(k, v){
+        if(v && typeof v === 'object' && !Array.isArray(v)){ var o = {}; Object.keys(v).sort().forEach(function(x){ o[x] = v[x]; }); return o; }
+        return v;
+      });
+    }catch(e){ return s; }
+  }
+  function mergeData(a, b){
+    if(a === undefined || a === null) return b;
+    if(b === undefined || b === null) return a;
+    var ta = typeof a;
+    if(ta !== typeof b || Array.isArray(a) !== Array.isArray(b)) return a;
+    if(ta === 'number') return Math.max(a, b);
+    if(ta === 'boolean') return a || b;
+    if(ta === 'string'){ var da = dnum(a), db = dnum(b); return (da != null && db != null && db > da) ? b : a; }
+    if(Array.isArray(a)){
+      var prim = a.concat(b).every(function(x){ return x === null || typeof x !== 'object'; });
+      if(!prim) return b.length > a.length ? b : a;
+      var seen = {}, out = [];
+      a.concat(b).forEach(function(x){ var s = JSON.stringify(x); if(!seen[s]){ seen[s] = 1; out.push(x); } });
+      var dates = out.length > 0 && out.every(function(x){ return dnum(x) != null; });
+      out.sort(dates ? function(x, y){ return dnum(x) - dnum(y); } : function(x, y){ return String(x) < String(y) ? -1 : String(x) > String(y) ? 1 : 0; });
+      return out;
+    }
+    if(typeof a.t === 'number' && typeof b.t === 'number') return b.t > a.t ? b : a;
+    if(typeof a.d === 'string' && typeof b.d === 'string' && dnum(a.d) != null && dnum(b.d) != null && a.d !== b.d) return dnum(b.d) > dnum(a.d) ? b : a;
+    var o = {};
+    Object.keys(b).forEach(function(x){ o[x] = b[x]; });
+    Object.keys(a).forEach(function(x){ o[x] = (x in b) ? mergeData(a[x], b[x]) : a[x]; });
+    return o;
+  }
+  function cloudMerge(k, l, r){
+    if(l === undefined) return r;
+    if(r === undefined) return l;
+    if(l === r && !(k === 'keisan_coins' && coinBaseGet() != null && coinBaseGet() !== +l)) return l;
+    if(k === 'keisan_coins'){
+      var L = +JSON.parse(l) || 0, R = +JSON.parse(r) || 0, base = coinBaseGet();
+      return JSON.stringify(base == null ? Math.max(L, R) : Math.max(0, R + (L - base)));
+    }
+    if(KEEP_LOCAL[k]) return l;
+    try{
+      var m = mergeData(JSON.parse(l), JSON.parse(r));
+      if(k === 'keisan_days' && Array.isArray(m)) m = m.slice(-30);
+      return JSON.stringify(m);
+    }catch(e){ return l; }
+  }
+  /* remote = {key: string}; returns true when this device's records changed */
+  function cloudMergeIn(remote){
+    var local = snapshot(), keys = {}, changed = false, pushed = false;
+    Object.keys(local).forEach(function(k){ keys[k] = 1; });
+    Object.keys(remote).forEach(function(k){ keys[k] = 1; });
+    cloud.mute = true;
+    Object.keys(keys).forEach(function(k){
+      if(!cloudKeyOk(k) || k === CHANGED_KEY) return;
+      var l = local[k], r = remote[k], m = cloudMerge(k, l, r);
+      if(m === undefined) return;
+      if(l === undefined || canon(m) !== canon(l)){ rawSet(k, m); changed = true; }
+      if(r === undefined || canon(m) !== canon(r)){ cloud.dirty[k] = 1; pushed = true; }
+    });
+    var lc = parseInt(local[CHANGED_KEY], 10) || 0, rc = parseInt(remote[CHANGED_KEY], 10) || 0, mc = Math.max(lc, rc);
+    if(changed || pushed) mc = Math.max(mc, Date.now());
+    if(mc !== lc && mc) rawSet(CHANGED_KEY, String(mc));
+    if(mc !== rc && mc) cloud.dirty[CHANGED_KEY] = 1;
+    cloud.mute = false;
+    var cm = rawGet('keisan_coins');
+    /* base = いまクラウドにあるコイン。手元はそこに「自分の差」を足した値になった */
+    if(remote.keisan_coins != null){ try{ coinBaseSet(+JSON.parse(remote.keisan_coins)); }catch(e){} }
+    else if(cm != null && !cloud.dirty.keisan_coins){ try{ coinBaseSet(+JSON.parse(cm)); }catch(e){} }
+    return changed;
+  }
+  async function fsGetAt(){
+    var r = await fetch(fsBase(cloud.uid) + '/keisan_changed_at?key=' + encodeURIComponent(APP_CFG.apiKey));
+    if(r.status === 404) return '';
+    if(!r.ok) throw new Error('fs ' + r.status);
+    var j = await r.json();
+    return (j && j.fields && j.fields.v && j.fields.v.stringValue) || '';
+  }
+  async function fsGetDoc(k){
+    var r = await fetch(fsBase(cloud.uid) + '/' + encodeURIComponent(k) + '?key=' + encodeURIComponent(APP_CFG.apiKey));
+    if(r.status === 404) return null;
+    if(!r.ok) throw fsErr(r.status);
+    var j = await r.json(), f = (j && j.fields) || {};
+    return { v:(f.v && f.v.stringValue) || '', n:f.n ? parseInt(f.n.integerValue, 10) : 1, ut:j.updateTime || null };
+  }
+  /* write only if nobody changed the document since we read it; false = someone did (read again and retry) */
+  async function fsSetIf(k, o, ut){
+    var url = fsBase(cloud.uid) + '/' + encodeURIComponent(k) + '?key=' + encodeURIComponent(APP_CFG.apiKey) +
+      (ut ? '&currentDocument.updateTime=' + encodeURIComponent(ut) : '&currentDocument.exists=false');
+    var r;
+    try{ r = await fetch(url, { method:'PATCH', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify(fsVal(o)) }); }catch(e){ throw fsErr(0); }
+    if(r.ok) return true;
+    var body = null; try{ body = await r.json(); }catch(e){}
+    var st = body && body.error && body.error.status;
+    if(r.status === 409 || st === 'FAILED_PRECONDITION' || st === 'ABORTED' || st === 'ALREADY_EXISTS') return false;
+    throw fsErr(r.status);
+  }
+  function cloudRefreshUI(){
+    try{ renderCoins(); }catch(e){}
+    try{ if(!$('view-setup').hidden) refreshHome(); }catch(e){}
+  }
+  /* pull the other device's changes in (one cheap read when nothing changed) */
+  async function cloudSync(fromFlush){
+    if(!cloud.on || cloud.syncing || cloud.skipSync || TRIAL_ON) return false;
+    if(cloud.busy && fromFlush !== true) return false;
+    cloud.syncing = true;
+    try{
+      var at = await fsGetAt();
+      if(at === (cloud.seenAt || '')) return false;
+      var r = await fsLoad(cloud.uid);
+      cloud.parts = r.parts || cloud.parts;
+      var ch = cloudMergeIn(r.data || {});
+      cloud.seenAt = (r.data || {})[CHANGED_KEY] || '';
+      if(ch){ scheduleMirror(); cloudRefreshUI(); }
+      if(Object.keys(cloud.dirty).length && !cloud.busy){ clearTimeout(cloud.timer); cloud.timer = setTimeout(cloudFlush, 300); }
+      return ch;
+    }catch(e){ return false; }
+    finally{ cloud.syncing = false; }
+  }
+  /* returns true when this device's records changed because of the cloud copy */
   function cloudAdopt(res){
+    if(TRIAL_ON){
+      if(!res || !res.db) return false;
+      var d = res.data || {};
+      Object.keys(d).forEach(function(k){ if(cloudKeyOk(k)) memStore[k] = d[k]; });
+      return true;
+    }
     if(!res || !res.db) return false;
     cloud.db = res.db; cloud.uid = res.uid; cloud.parts = res.parts || {};
-    var local = snapshot(), remote = res.data || {};
-    var lc = parseInt(local[CHANGED_KEY], 10) || 0, rc = parseInt(remote[CHANGED_KEY], 10) || 0;
-    var useRemote = hasData(remote) && (!hasData(local) || rc > lc);
-    if(useRemote){
-      cloud.mute = true;
-      Object.keys(local).forEach(function(k){ if(k !== BACKUP_AT_KEY && !remote.hasOwnProperty(k)) rawDel(k); });
-      Object.keys(remote).forEach(function(k){ if(cloudKeyOk(k)) rawSet(k, remote[k]); });
-      cloud.mute = false;
-      mirrorOn = true; writeMirror();
-    }
     cloud.on = true;
-    if(!useRemote && hasData(local)){
-      Object.keys(local).forEach(function(k){ if(cloudKeyOk(k) && remote[k] !== local[k]) cloud.dirty[k] = 1; });
-      Object.keys(remote).forEach(function(k){ if(cloudKeyOk(k) && !local.hasOwnProperty(k)) cloud.dirty[k] = 1; });
-      cloudFlush();
-    }
-    return useRemote;
+    var changed = cloudMergeIn(res.data || {});
+    cloud.seenAt = (res.data || {})[CHANGED_KEY] || '';
+    mirrorOn = true; writeMirror();
+    if(Object.keys(cloud.dirty).length) cloudFlush();
+    return changed;
   }
+  setInterval(function(){ if(document.visibilityState === 'visible') cloudSync(); }, 30000);
+  document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible') cloudSync(); });
+  window.addEventListener('online', function(){ cloudSync(); });
   document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'hidden' && cloud.timer){ clearTimeout(cloud.timer); cloudFlush(); } });
 
   function safeGet(key){
@@ -6015,6 +6177,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var band = $('saveBand');
     if(!getPets()){ band.hidden = true; return; }
     band.hidden = false;
+    if(TRIAL_ON){
+      band.className = 'save-band cloud';
+      $('saveBandTitle').textContent = '👀 おためしモード(記録は 変わらないよ)';
+      $('saveBandSub').textContent = '';
+      return;
+    }
     if(cloud.on){
       band.className = 'save-band cloud';
       $('saveBandTitle').textContent = '☁ 自動で 保存中・合言葉 ' + showCode(cloud.uid);
@@ -6158,6 +6326,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       Object.keys(data).forEach(function(k){ if(k.indexOf(PREFIX)===0 && !META[k]) rawSet(k, data[k]); });
       rawSet(CHANGED_KEY, String(Date.now()));
       rawSet(BACKUP_AT_KEY, String(Date.now() + 1));
+      cloud.skipSync = true;
       writeMirrorNow();
       renderCoins();
       goHome();
@@ -6252,13 +6421,19 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     goHome();
     showModal({ title:'記録を もどしたよ!', text:backupSummary(r.data), ok:'OK' });
   }
+  function trialLink(){ return location.href.split('#')[0] + '#t=' + cloud.uid; }
   function openBackupMore(){
+    if(TRIAL_ON){
+      openBk('<div class="bk-title">おためしモード</div><div class="bk-body">今は 見るだけ・ためすだけの モードだよ。ここで 何を しても、娘さんの 記録は 変わらないよ。もとの アプリで ひらくと ふつうに 使えるよ。</div>', [{ label:'とじる', onClick:closeBk }]);
+      return;
+    }
     var has = !!getPets();
     var cs = cloud.on ? '<p class="cloud-state"><b>☁ 自動保存:オン</b><br>合言葉 <b class="cloud-code">' + showCode(cloud.uid) + '</b><br>記録が 消えた ときや ほかの 端末では、この 合言葉で もどせるよ。おうちの 人に メモして もらってね。</p>'
       : '<p class="cloud-state"><b>☁ 自動保存:オフ</b><br>インターネットに つながると 自動で 保存するよ。今は この 端末の 中だけに 保存しているよ。</p>';
     openBk('<div class="bk-title">保存・もどす</div>' + cs + '<div class="backup-more">' +
       (fsReady() ? '<button id="bmCode">🔑 合言葉で もどす</button>' : '') +
       (cloud.on ? '<button id="bmLink">🔗 もどす リンクを おくる<small>メモや LINE に のこしておくと、ひらくだけで もどせるよ</small></button>' : '') +
+      (cloud.on ? '<button id="bmTry">👀 おためし用リンク<small>記録は 変わらないよ。おうちの人が かくにん する ときの 用</small></button>' : '') +
       (cloud.on ? '<button id="bmCodeCopy">📋 合言葉を コピー</button>' : '') +
       '<button id="bmFile">📂 ファイルから もどす</button>' +
       '<button id="bmPaste">📋 はりつけて もどす</button>' +
@@ -6271,6 +6446,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var ok = false;
       try{ await navigator.clipboard.writeText(u); ok = true; }catch(e){}
       toast(ok ? 'リンクを コピーしたよ' : u);
+    };
+    if($('bmTry')) $('bmTry').onclick = async function(){
+      var u = trialLink();
+      try{ if(navigator.share){ await navigator.share({ url:u }); return; } }catch(e){ if(e && e.name === 'AbortError') return; }
+      var ok = false;
+      try{ await navigator.clipboard.writeText(u); ok = true; }catch(e){}
+      toast(ok ? 'おためし用リンクを コピーしたよ' : u);
     };
     if($('bmCodeCopy')) $('bmCodeCopy').onclick = async function(){
       var t = showCode(cloud.uid), ok = false;
@@ -6289,14 +6471,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function cloudLate(r){
     if(!r || cloud.on) return;
     var onHome = !$('view-setup').hidden || !$('view-pick').hidden;
-    if(!onHome && r.data && (parseInt(r.data[CHANGED_KEY], 10) || 0) > (parseInt(rawGet(CHANGED_KEY), 10) || 0)){
-      r.data = {};   /* mid-play: keep this device's record and send it up */
-    }
-    if(cloudAdopt(r)){ renderCoins(); goHome(); toast('記録を 読みこんだよ'); }
+    if(cloudAdopt(r)){ renderCoins(); if(onHome){ goHome(); toast('記録を 読みこんだよ'); } }
     else renderSaveBand();
   }
   window.addEventListener('online', function(){
-    if(cloud.on || !fsReady()) return;
+    if(cloud.on || !fsReady() || TRIAL_ON) return;
     cloudConnect().then(function(r){ if(r && r.late) r.late.then(cloudLate); else cloudLate(r); });
   });
   storageBoot(function(restored){
