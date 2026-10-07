@@ -1588,11 +1588,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function oshPlace(it, cx, cy, size){
     return '<svg class="ta" x="'+(cx-size/2)+'" y="'+(cy-size/2)+'" width="'+size+'" height="'+size+'" viewBox="'+it.vb+'" overflow="visible">'+it.inner+'</svg>';
   }
+  /* e が ない 古い コードでも、漢字アプリの 新しい ぼうし・リボンなら 同じ 所に のせる */
+  function oshFit(it){
+    if(it.e) return it.e;
+    if(it.s !== 'head' || it.vb !== '0 0 64 64') return null;
+    var t = it.inner || '';
+    if(/ぼうし$/.test(it.n) && t.indexOf('rotate(14 32 40)') >= 0) return [1.4, -10, -30, 6];
+    if(/ぼうし$/.test(it.n) && t.indexOf('M12.5 44C12.5 31') >= 0) return [1.55, -10, -26, 18];
+    if(/リボン$/.test(it.n) && t.indexOf('#fffdf6') >= 0) return [1.6, 0, 0, 18];
+    return null;
+  }
   function oshDraw(it, d){
     var ex = d.eyeX || [75, 125];
-    if(it.s === 'head' && it.pos === 'ear' && it.e){
+    var fit = it.pos === 'ear' ? oshFit(it) : null;
+    if(fit){
       /* 漢字アプリの ぼうし・リボン：耳の つけねに ななめに のせる */
-      var e = it.e, w = 64 / e[0], o = 32 - 32 / e[0];
+      var e = fit, w = 64 / e[0], o = 32 - 32 / e[0];
       return oshPlace({ vb:(o - e[1])+' '+(o - e[2])+' '+w+' '+w, inner:'<g transform="rotate('+e[3]+' 32 44)">'+it.inner+'</g>' }, d.clipAt[0], d.clipAt[1], 44);
     }
     if(it.s === 'head' && it.pos === 'ear') return oshPlace(it, d.clipAt[0], d.clipAt[1], 44);
@@ -1701,7 +1712,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* 頭の おしゃれを 耳の横に つけた ときは、いつもの リボンと 交換する */
     if(lv >= 1 && !osh.some(function(it){ return it.s === 'head' && it.pos === 'ear'; })) out += bow(d.clipAt[0], d.clipAt[1], gc);
     /* てっぺんの おしゃれ・耳の横の ぼうしが ある ときは、Lv3の 王冠は 出さない(ぼうしと 重なるので) */
-    var oshHead = osh.some(function(it){ return it.s === 'head' && (it.pos !== 'ear' || (it.e && /ぼうし/.test(it.n))); });
+    var oshHead = osh.some(function(it){ return it.s === 'head' && (it.pos !== 'ear' || (oshFit(it) && /ぼうし/.test(it.n))); });
     if(lv >= 3 && !oshHead) out += crown(d.crownT);
     osh.forEach(function(it){ if(it.s !== 'back') out += oshDraw(it, d); });
     out += '</g></g></g>';
@@ -2143,6 +2154,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       return JSON.stringify(base == null ? Math.max(L, R) : Math.max(0, R + (L - base)));
     }
     if(KEEP_LOCAL[k]) return l;
+    /* おしゃれは 新しい ほうを まるごと 使う(まぜると、しまった ものや はずした ものが もどって きて しまう) */
+    if(k === 'keisan_oshare'){
+      try{
+        var OL = JSON.parse(l), OR = JSON.parse(r);
+        var lt = OL && typeof OL.t === 'number' ? OL.t : 0, rt = OR && typeof OR.t === 'number' ? OR.t : 0;
+        if(lt || rt) return rt > lt ? r : l;
+      }catch(e){}
+    }
     try{
       var m = mergeData(JSON.parse(l), JSON.parse(r));
       if(k === 'keisan_days' && Array.isArray(m)) m = m.slice(-30);
@@ -3044,6 +3063,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   var OSH_ATTRS = { d:1, cx:1, cy:1, r:1, rx:1, ry:1, x:1, y:1, x1:1, y1:1, x2:1, y2:1, width:1, height:1, viewbox:1, points:1,
     fill:1, 'fill-opacity':1, 'fill-rule':1, stroke:1, 'stroke-width':1, 'stroke-linecap':1, 'stroke-linejoin':1, 'stroke-opacity':1, 'stroke-dasharray':1,
     opacity:1, transform:1, id:1, offset:1, 'stop-color':1, 'stop-opacity':1, gradientunits:1, gradienttransform:1, 'clip-path':1, fx:1, fy:1 };
+  /* t: さいごに 変えた 時こく(クラウドで 新しい ほうを 使う ため) */
+  function oshStamp(o){ o.t = Date.now(); return o; }
   function getOshare(){
     var o = safeGet('keisan_oshare') || {};
     if(!o.items || typeof o.items !== 'object') o.items = {};
@@ -3156,7 +3177,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     else if(it.s === 'head'){ chooseOshPos(id); return; }
     else { w[it.s] = id; toast(name+'に '+it.n+'を つけたよ!'); }
     if(Object.keys(w).length) o.wear[a.sp] = w; else delete o.wear[a.sp];
-    safeSet('keisan_oshare', o);
+    safeSet('keisan_oshare', oshStamp(o));
     renderShop();
     Pet.cheer($('shopPet'));
   }
@@ -3177,7 +3198,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       closeBk();
       var o2 = getOshare(), w = o2.wear[a.sp] || {};
       w.head = id; o2.wear[a.sp] = w; o2.pos[a.sp] = pos;
-      safeSet('keisan_oshare', o2);
+      safeSet('keisan_oshare', oshStamp(o2));
       toast(name+'の '+OSH_POS[pos]+'に '+it.n+'を つけたよ!');
       renderShop();
       Pet.cheer($('shopPet'));
@@ -3205,7 +3226,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           Object.keys(w).forEach(function(slot){ if(w[slot] === id) delete w[slot]; });
           if(!Object.keys(w).length) delete o2.wear[sp];
         });
-        safeSet('keisan_oshare', o2);
+        safeSet('keisan_oshare', oshStamp(o2));
         renderShop();
       } }]);
   }
@@ -3221,13 +3242,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var o = getOshare(), id = oshId(it), a = activePet();
     o.items[id] = it;
     if(it.s === 'head'){
-      safeSet('keisan_oshare', o);
+      safeSet('keisan_oshare', oshStamp(o));
       renderShop();
       chooseOshPos(id);
       return;
     }
     var w = o.wear[a.sp] || {}; w[it.s] = id; o.wear[a.sp] = w;
-    safeSet('keisan_oshare', o);
+    safeSet('keisan_oshare', oshStamp(o));
     renderShop();
     Pet.cheer($('shopPet'));
     showModal({ title:it.n+'が とどいたよ!', text:petName(a.sp)+'が 身に つけたよ。ほかの 仲間にも つけられるよ。', ok:'OK' });
