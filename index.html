@@ -848,6 +848,7 @@
   .hs-op{ color:var(--live); }
   .hs-line{ height:3px; background:var(--ink); border-radius:2px; margin:4px 0 8px; }
   .hs-ans .hs-c{ height:1.3em; color:var(--live); display:flex; align-items:center; justify-content:center; }
+  .hs-ans .hs-c{ cursor:pointer; -webkit-tap-highlight-color:transparent; }
   .hs-ans .hs-c::before{ content:''; position:absolute; inset:0 3px; border-radius:10px; background:var(--surface-2); border:2px solid var(--line); z-index:0; }
   .hs-ans .hs-c.next::before{ border-color:var(--live); }
   .hs-ans .hs-c span{ position:relative; z-index:1; }
@@ -1385,7 +1386,7 @@
       <div class="problem-card" id="problemCard">
         <div class="equation num" id="equation"></div>
         <div class="answer-box num placeholder" id="answerBox">?</div>
-        <div class="hs-tip" id="hsTip" hidden>一の位から 入れよう</div>
+        <div class="hs-tip" id="hsTip" hidden>一の位から 入れよう(マスを タップして えらべるよ)</div>
         <button class="hs-switch" id="hsSwitch" hidden></button>
       </div>
       <div class="feedback-flag" id="feedbackFlag"></div>
@@ -4967,7 +4968,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function canHissan(q){ return (q.op==='add' || q.op==='sub' || q.op==='mul') && Math.max(q.a, q.b) >= 10; }
   function renderProblem(){
     if(state.print && state.print.kind==='challenge') updateLevelTag();
-    state.inputBuf = '';
+    state.inputBuf = ''; state.hsCells = null; state.hsSel = 0;
     var q = state.current;
     var meta = OP_META[q.op];
     if(q.hs == null) q.hs = useHissan(q);   /* 自動で決めて、ボタンで切りかえられる */
@@ -4976,12 +4977,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var a = String(q.a), b = String(q.b);
       var ansW = q.op==='sub' ? a.length : (q.op==='add' ? Math.max(a.length, b.length)+1 : a.length+b.length);
       var w = Math.max(a.length, b.length+1, ansW);
-      state.hsW = ansW;
+      state.hsW = ansW; state.hsCells = []; for(var ci=0; ci<ansW; ci++) state.hsCells.push(''); state.hsSel = ansW-1;
       $('equation').innerHTML = '<div class="hissan">' +
         '<div class="hs-row">'+hsCells(a, w)+'</div>' +
         '<div class="hs-row"><span class="hs-c hs-op">'+meta.symbol+'</span>'+hsCells(b, w-1)+'</div>' +
         '<div class="hs-line"></div>' +
         '<div class="hs-row hs-ans" id="hsAns"></div></div>';
+      $('equation').querySelector('#hsAns').addEventListener('click', function(e){
+        var c = e.target.closest ? e.target.closest('.hs-c') : null;
+        if(!c || c.dataset.i == null || busy) return;
+        state.hsSel = +c.dataset.i; updateAnswerBox();
+      });
     }else{
       $('equation').innerHTML = q.a + ' <span class="op-sym">'+meta.symbol+'</span> ' + q.b + ' =';
     }
@@ -4996,13 +5002,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   function updateAnswerBox(){
     if(state.hissan){
-      var buf = state.inputBuf, w = state.hsW, h = '';
+      var cells = state.hsCells, w = state.hsW, h = '';
       for(var i=0;i<w;i++){
-        var k = i - (w - buf.length);
-        h += '<span class="hs-c'+(i === w-buf.length-1 ? ' next' : '')+'"><span>'+(k>=0 ? buf[k] : '')+'</span></span>';
+        h += '<span class="hs-c'+(i === state.hsSel ? ' next' : '')+'" data-i="'+i+'"><span>'+cells[i]+'</span></span>';
       }
       $('hsAns').innerHTML = h;
-      $('okKey').disabled = buf.length===0;
+      /* 左はしの空きは そのまま。数字が とびとびなら まだ 答えられない */
+      var first = 0; while(first<w && cells[first]==='') first++;
+      var okAns = first<w && cells.slice(first).every(function(x){ return x!==''; });
+      state.inputBuf = okAns ? cells.slice(first).join('') : '';
+      $('okKey').disabled = !okAns;
       return;
     }
     var box = $('answerBox');
@@ -5018,8 +5027,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   function pushDigit(d){
     if(state.hissan){
-      if(state.inputBuf.length >= state.hsW) return;
-      state.inputBuf = d + state.inputBuf;   /* 一の位から 左へ */
+      state.hsCells[state.hsSel] = String(d);   /* えらんだ マスに 入れて、自動で 左へ */
+      if(state.hsSel > 0) state.hsSel--;
       updateAnswerBox();
       return;
     }
@@ -5028,7 +5037,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     updateAnswerBox();
   }
   function popDigit(){
-    state.inputBuf = state.hissan ? state.inputBuf.slice(1) : state.inputBuf.slice(0,-1);
+    if(state.hissan){
+      var c = state.hsCells;
+      if(c[state.hsSel] === '' && state.hsSel < state.hsW-1) state.hsSel++;   /* からっぽなら 右の マスの 数字を 消す */
+      c[state.hsSel] = '';
+    }else state.inputBuf = state.inputBuf.slice(0,-1);
     updateAnswerBox();
   }
 
