@@ -1700,7 +1700,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(lv >= 2){ out += necklace(); if(d.front2) out += d.front2; }
     /* 頭の おしゃれを 耳の横に つけた ときは、いつもの リボンと 交換する */
     if(lv >= 1 && !osh.some(function(it){ return it.s === 'head' && it.pos === 'ear'; })) out += bow(d.clipAt[0], d.clipAt[1], gc);
-    var oshHead = osh.some(function(it){ return it.s === 'head' && it.pos !== 'ear'; });
+    /* てっぺんの おしゃれ・耳の横の ぼうしが ある ときは、Lv3の 王冠は 出さない(ぼうしと 重なるので) */
+    var oshHead = osh.some(function(it){ return it.s === 'head' && (it.pos !== 'ear' || (it.e && /ぼうし/.test(it.n))); });
     if(lv >= 3 && !oshHead) out += crown(d.crownT);
     osh.forEach(function(it){ if(it.s !== 'back') out += oshDraw(it, d); });
     out += '</g></g></g>';
