@@ -1590,6 +1590,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   function oshDraw(it, d){
     var ex = d.eyeX || [75, 125];
+    if(it.s === 'head' && it.pos === 'ear' && it.e){
+      /* 漢字アプリの ぼうし・リボン：耳の つけねに ななめに のせる */
+      var e = it.e, w = 64 / e[0], o = 32 - 32 / e[0];
+      return oshPlace({ vb:(o - e[1])+' '+(o - e[2])+' '+w+' '+w, inner:'<g transform="rotate('+e[3]+' 32 44)">'+it.inner+'</g>' }, d.clipAt[0], d.clipAt[1], 44);
+    }
     if(it.s === 'head' && it.pos === 'ear') return oshPlace(it, d.clipAt[0], d.clipAt[1], 44);
     if(it.s === 'head') return '<g transform="'+(d.crownT||'')+'">'+oshPlace(it, 100, 22, 56)+'</g>';
     if(it.s === 'eyes'){ var k = (ex[1]-ex[0])/26; return oshPlace(it, 100, d.eyeY - 2*k, 64*k); }
@@ -3099,7 +3104,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     for(var c = root.firstElementChild; c; c = c.nextElementSibling) inner += oshClean(c);
     if(!inner) return null;
     oshLastErr = '';
-    return { n: obj.n.slice(0, 40).replace(/[<>&"]/g, ''), s: obj.s, vb: vb, inner: inner };
+    var res = { n: obj.n.slice(0, 40).replace(/[<>&"]/g, ''), s: obj.s, vb: vb, inner: inner };
+    /* e: 耳の横に つける ときの [倍率, 横, たて, 回転](漢字アプリの ぼうし・リボン) */
+    var e = obj.e;
+    if(obj.s === 'head' && vb === '0 0 64 64' && Array.isArray(e) && e.length === 4 && e.every(function(x){ return typeof x === 'number' && isFinite(x); }) &&
+       e[0] >= .5 && e[0] <= 3 && Math.abs(e[1]) <= 64 && Math.abs(e[2]) <= 64 && Math.abs(e[3]) <= 90) res.e = e;
+    return res;
   }
   function oshId(it){
     var str = it.n + '|' + it.s + '|' + it.inner, h = 5381;
@@ -3111,7 +3121,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var o = getOshare(), w = o.wear[sp] || {}, out = [];
     Object.keys(w).forEach(function(slot){
       var it = o.items[w[slot]];
-      if(it && it.s === slot) out.push(slot === 'head' ? { n:it.n, s:it.s, vb:it.vb, inner:it.inner, pos:oshPosOf(o, sp, it) } : it);
+      if(it && it.s === slot) out.push(slot === 'head' ? { n:it.n, s:it.s, vb:it.vb, inner:it.inner, e:it.e, pos:oshPosOf(o, sp, it) } : it);
     });
     return out;
   });
@@ -3156,7 +3166,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function look(pos){
       var w = o.wear[a.sp] || {}, list = [];
       Object.keys(w).forEach(function(slot){ var x = o.items[w[slot]]; if(x && x.s === slot && slot !== 'head') list.push(x); });
-      list.push({ n:it.n, s:'head', vb:it.vb, inner:it.inner, pos:pos });
+      list.push({ n:it.n, s:'head', vb:it.vb, inner:it.inner, e:it.e, pos:pos });
       oshPreview = { sp:a.sp, list:list };
       var svg = Pet.svg(a.sp, a.lv);
       oshPreview = null;
