@@ -1086,6 +1086,144 @@
   .fish-q .kq{ white-space:nowrap; }
   .fish-next{ margin-top:14px; width:100%; }
   .fish-how .demo-btn{ display:block; width:100%; margin-top:10px; border:none; border-radius:100px; background:var(--op-mul); color:#fff; font:inherit; font-size:15px; font-weight:700; padding:11px; cursor:pointer; }
+
+  /* ===== home: today's adventure road ===== */
+  :root{ --boss:var(--op-mix); }
+  #view-setup{ padding-bottom:calc(84px + env(safe-area-inset-bottom,0px)); }
+  .me-card{ background:var(--surface-2); border-radius:22px; padding:10px 14px 12px; margin-bottom:12px; }
+  .me-card .today-pet{ width:96px; margin:-8px -6px -8px -8px; }
+  .me-card .today-talk .buddy-say{ box-shadow:none; }
+  .me-card .today-foot{ margin-top:8px; padding-top:8px; }
+  .s-dots span.hana i{ width:18px; height:18px; margin:-2px 0; background:var(--surface); border:2px solid var(--bad); color:var(--bad); font-style:normal; font-size:9px; font-weight:900; display:flex; align-items:center; justify-content:center; box-shadow:none; }
+  .home-sec{ font-size:13px; color:var(--ink-soft); letter-spacing:.06em; margin:16px 2px 8px; }
+
+  .road{ position:relative; padding-left:34px; }
+  .rail{ position:absolute; left:13px; top:30px; bottom:20px; border-left:4px dotted var(--line); }
+  .st{ position:relative; margin-bottom:12px; }
+  .pin{ position:absolute; left:-34px; top:10px; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Fredoka',sans-serif; font-weight:700; font-size:15px; box-shadow:0 0 0 4px var(--bg); z-index:1; background:var(--live); }
+  #pin2{ background:var(--boss); } #pin3{ background:var(--gold-deep); }
+  .st.is-next .pin{ opacity:.55; }
+  .st.is-done .pin{ background:var(--good) !important; font-size:14px; }
+  .st.is-cur .pin{ visibility:hidden; }
+  .pin.flag{ background:var(--surface); border:3px dashed var(--line); color:var(--ink-soft); font-size:13px; top:0; }
+  .goal{ position:relative; font-size:12.5px; font-weight:700; color:var(--ink-soft); padding:4px 0 0; min-height:30px; }
+  .road-pet{ position:absolute; left:-44px; top:-6px; width:62px; height:62px; z-index:3; pointer-events:none; filter:drop-shadow(0 4px 3px rgba(0,0,0,.08)); }
+  .road-pet svg{ width:100%; height:100%; }
+  .road-bubble{ position:absolute; left:26px; top:8px; z-index:3; background:var(--surface); border:1.5px solid var(--line); border-radius:12px; padding:2px 10px; font-weight:900; font-size:12.5px; white-space:nowrap; pointer-events:none; }
+  .road-bubble::after{ content:""; position:absolute; left:-6px; top:50%; margin-top:-5px; width:9px; height:9px; background:var(--surface); border-left:1.5px solid var(--line); border-bottom:1.5px solid var(--line); transform:rotate(45deg); }
+  .st.is-cur{ padding-top:44px; }
+
+  /* the current step is the one big card; the rest are flat rows */
+  .st .cur-tag{ display:none; }
+  .st.is-cur .cur-tag{ display:block; position:absolute; top:-12px; right:16px; background:var(--live); color:#fff; font-size:11.5px; font-weight:900; border-radius:100px; padding:2px 12px; }
+  .st.is-cur > .today{ border:3px solid var(--live); background:linear-gradient(170deg, color-mix(in srgb, var(--live) 9%, var(--surface)), var(--surface) 60%); box-shadow:0 14px 30px -18px var(--live); }
+  .st.is-done > .today{ margin-top:8px; }
+  .st.is-cur > .challenge{ border:3px solid var(--boss); background:linear-gradient(170deg, color-mix(in srgb, var(--boss) 10%, var(--surface)), var(--surface) 60%); box-shadow:0 14px 30px -18px var(--boss); }
+  .st.is-cur > .challenge .ch-btn{ border:none; background:var(--boss); color:#fff; padding:14px; font-size:17px; box-shadow:0 5px 0 color-mix(in srgb, var(--boss) 60%, #000); }
+  .st.is-cur > .challenge .ch-btn:active{ transform:translateY(3px); box-shadow:0 2px 0 color-mix(in srgb, var(--boss) 60%, #000); }
+  .challenge .cur-tag, .weekend .cur-tag{ background:var(--boss) !important; }
+  .weekend .cur-tag{ background:var(--gold-deep) !important; }
+  .st.is-cur > .challenge, .st.is-cur > .weekend{ position:relative; margin-bottom:0; }
+  .st-row{ display:none; align-items:center; gap:10px; border-radius:18px; padding:9px 12px; background:var(--surface-2); min-height:48px; }
+  .st.is-next .st-row, .st.is-done .st-row{ display:flex; }
+  .st.is-next .st-row{ opacity:.8; }
+  #st2 .st-row{ background:color-mix(in srgb, var(--boss) 12%, var(--bg)); }
+  #st3 .st-row{ background:color-mix(in srgb, var(--gold) 18%, var(--bg)); }
+  .st-row .sr-t{ flex:1; min-width:0; font-size:11.5px; color:var(--ink-soft); font-weight:700; line-height:1.45; }
+  .st-row .sr-t b{ display:block; font-size:14.5px; color:var(--ink); font-weight:900; }
+  .st-row .sr-r{ flex:none; text-align:right; font-size:11px; color:var(--ink-soft); font-weight:700; line-height:1.3; }
+  .st-row .sr-r strong{ display:block; font-family:'Fredoka',sans-serif; font-size:17px; color:var(--gold-deep); }
+  .st-row .sr-btn{ flex:none; border:2px solid var(--line); background:var(--surface); color:var(--ink); border-radius:12px; padding:6px 12px; font:inherit; font-size:13px; font-weight:900; cursor:pointer; }
+  .st.is-next > .today, .st.is-next > .challenge, .st.is-next > .weekend,
+  .st.is-done > .challenge, .st.is-done > .weekend{ display:none !important; }
+  .st.is-done:not(.open) > .today{ display:none; }
+
+  /* 100 problems: record card */
+  .weekend.rec{ display:block; border-radius:24px; padding:14px 16px; }
+  .st.is-cur > .weekend.rec{ border:3px solid var(--gold-deep); background:linear-gradient(170deg, color-mix(in srgb, var(--gold) 16%, var(--surface)), var(--surface) 60%); box-shadow:0 14px 30px -18px var(--gold-deep); }
+  .rec-h{ font-size:21px; font-weight:900; margin:0; line-height:1.3; }
+  .rec-sub{ font-size:12px; color:var(--ink-soft); font-weight:700; margin:2px 0 10px; line-height:1.55; }
+  .rec-ops{ display:flex; gap:6px; margin-bottom:10px; }
+  .rec-ops button{ flex:1; border:2px solid var(--line); background:var(--surface); border-radius:12px; padding:4px 0; font-family:'Fredoka',sans-serif; font-weight:600; font-size:18px; color:var(--ink-soft); cursor:pointer; }
+  .rec-ops button[aria-pressed="true"]{ border-color:var(--gold-deep); color:var(--gold-deep); }
+  .rec-graph{ background:var(--surface); border-radius:16px; padding:10px 10px 6px; border:1.5px solid var(--line); }
+  .rec-graph .rg-head{ display:flex; align-items:baseline; gap:8px; font-size:12px; font-weight:900; }
+  .rec-graph .rg-head .num{ margin-left:auto; font-size:20px; color:var(--gold-deep); }
+  .rg-bars{ display:flex; align-items:flex-end; gap:6px; height:86px; margin-top:6px; }
+  .rg-bars span{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; gap:2px; font-size:9.5px; color:var(--ink-soft); font-family:'Fredoka',sans-serif; min-width:0; }
+  .rg-bars i{ display:block; width:100%; max-width:30px; border-radius:7px 7px 3px 3px; background:color-mix(in srgb, var(--gold) 45%, var(--line)); }
+  .rg-bars span.best i{ background:var(--gold-deep); }
+  .rg-bars span.best{ color:var(--gold-deep); font-weight:700; }
+  .rg-empty{ font-size:12px; color:var(--ink-soft); font-weight:700; padding:16px 4px; text-align:center; line-height:1.6; }
+  .rec-rule{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin:8px 0 10px; line-height:1.6; }
+  .rec-go{ width:100%; border:none; border-radius:18px; padding:15px; font:inherit; font-size:18px; font-weight:900; color:#fff; background:var(--gold-deep); box-shadow:0 5px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); cursor:pointer; }
+  .rec-go:active{ transform:translateY(3px); box-shadow:0 2px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); }
+
+  /* all three done */
+  .hero{ position:relative; overflow:hidden; border-radius:28px; padding:20px 16px 16px; text-align:center; background:radial-gradient(circle at 50% 18%, color-mix(in srgb, var(--gold) 22%, var(--surface)) 0, color-mix(in srgb, var(--gold) 30%, var(--surface)) 45%, var(--surface) 100%); border:3px solid var(--gold-deep); box-shadow:0 18px 36px -20px var(--gold-deep); }
+  .hero > *:not(.cf){ position:relative; z-index:1; }
+  .hero .cf{ position:absolute; width:8px; height:14px; border-radius:3px; opacity:.85; z-index:0; }
+  .hero .cf.st1{ width:auto; height:auto; background:none !important; color:var(--gold-deep); font-size:17px; }
+  .hero .tag{ display:inline-block; background:var(--gold-deep); color:#fff; font-weight:900; font-size:12px; border-radius:100px; padding:2px 14px; letter-spacing:.06em; }
+  .hero .stage{ display:flex; justify-content:center; align-items:flex-end; gap:6px; margin-top:6px; }
+  .hero .hp{ width:116px; height:116px; transform:translateY(-8px); }
+  .hero .hp svg{ width:100%; height:100%; }
+  .hero .hana{ width:92px; height:92px; transform:rotate(-12deg); }
+  .hero h2{ margin:8px 0 2px; font-size:24px; line-height:1.35; font-weight:900; }
+  .hero p{ margin:0; font-size:13px; color:var(--ink-soft); font-weight:700; }
+  .hero .steps3{ display:flex; justify-content:center; gap:8px; margin:12px 0; flex-wrap:wrap; }
+  .hero .steps3 span{ display:flex; align-items:center; gap:5px; font-size:12.5px; font-weight:700; background:var(--surface); border-radius:100px; padding:3px 10px 3px 4px; }
+  .hero .steps3 i{ width:20px; height:20px; border-radius:50%; display:grid; place-items:center; color:#fff; font-style:normal; font-size:12px; }
+  .hero .rw{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .hero .rw div{ background:var(--surface); border-radius:16px; padding:8px 4px; }
+  .hero .rw b{ display:block; font-family:'Fredoka',sans-serif; font-size:20px; line-height:1.2; }
+  .hero .rw small{ font-size:10.5px; color:var(--ink-soft); font-weight:700; }
+  .hero .rw .big b{ color:var(--gold-deep); }
+  .again{ display:flex; align-items:center; gap:10px; background:var(--surface-2); border-radius:18px; padding:10px 14px; margin-top:12px; }
+  .again b{ font-size:14.5px; }
+  .again small{ display:block; font-size:11.5px; color:var(--ink-soft); font-weight:700; }
+  .again button{ margin-left:auto; flex:none; border:none; border-radius:14px; padding:10px 14px; font:inherit; font-weight:900; font-size:14px; color:#fff; background:var(--live); box-shadow:0 4px 0 color-mix(in srgb, var(--live) 60%, #000); cursor:pointer; }
+  .bye{ font-size:12.5px; color:var(--ink-soft); text-align:center; margin:10px 0 0; font-weight:700; }
+  #allClear .today{ margin-top:12px; border:3px solid var(--live); }
+  #allClear .today .cur-tag{ display:none; }
+
+  /* training: two small cards side by side */
+  .train{ display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; }
+  .train .fish-card{ margin:0; flex-direction:column; align-items:stretch; gap:6px; padding:10px 12px 12px; box-shadow:none; border:1.5px solid var(--line); }
+  .train .fish-card .fc-ico{ display:none; }
+  .train .fish-card .fc-text{ font-size:11px; }
+  .train .fish-card .fc-text b{ font-size:14.5px; }
+  .train .fish-card .fc-go{ border-radius:12px; padding:8px; font-size:14px; font-weight:900; }
+  .train #kuriCard .fc-segs i.on{ background:var(--op-add); }
+  .train #kuriCard .fc-go{ background:var(--op-add); }
+  .train #kuriCard.kuri-sub .fc-segs i.on, .train #kuriCard.kuri-sub .fc-go{ background:var(--op-sub); }
+  .home-side .collect{ box-shadow:none; border:1.5px solid var(--line); }
+  .home-side .save-band{ margin-top:12px; }
+
+  /* bottom navigation (home only) */
+  .home-nav{ position:fixed; left:0; right:0; bottom:0; z-index:20; margin:0; display:flex; justify-content:center; gap:4px; background:var(--surface); border-top:1.5px solid var(--line); padding:6px 8px calc(8px + env(safe-area-inset-bottom,0px)); }
+  .home-nav .care{ flex:0 1 110px; order:0; box-shadow:none; background:none; border-radius:14px; padding:4px 2px; align-items:center; gap:3px; grid-column:auto; }
+  .home-nav .care-head{ flex-direction:column; gap:1px; font-size:11.5px; font-weight:700; color:var(--ink-soft); }
+  .home-nav .care-ico{ font-size:22px; line-height:1.1; height:26px; display:flex; align-items:center; }
+  .home-nav .care-wide .care-ico{ width:26px; height:26px; }
+  .home-nav .care-sub, .home-nav .care-go, .home-nav .treasure-track{ display:none; }
+  .home-nav .hunger-track{ width:34px; height:4px; flex:none; }
+  .home-nav .nav-home .care-head{ color:var(--ink); }
+  .home-nav .nav-home{ background:var(--surface-2); }
+
+  /* tablets */
+  @media (min-width:700px){
+    .app:has(#view-setup:not([hidden])){ max-width:620px; }
+    .home-nav{ gap:10px; padding-top:8px; }
+    .home-nav .care{ flex:0 1 150px; flex-direction:row; justify-content:center; }
+    .home-nav .care-head{ flex-direction:row; gap:8px; font-size:14px; }
+  }
+  @media (min-width:1000px){
+    .app:has(#view-setup:not([hidden])){ max-width:1080px; }
+    .home-grid{ display:grid; grid-template-columns:1.15fr 1fr; gap:22px; align-items:start; }
+    .home-side .home-sec:first-child{ margin-top:4px; }
+  }
+  @media (prefers-reduced-motion: reduce){ .road-pet{ transition:none; } }
 </style>
 
 <div class="app" id="app">
@@ -1116,7 +1254,7 @@
 
   <!-- HOME -->
   <main id="view-setup" class="view" hidden>
-    <section class="today" id="todayCard">
+    <section class="me-card">
       <div class="today-top">
         <div class="today-pet" id="homePet" aria-label="相棒を なでる"></div>
         <div class="today-talk">
@@ -1124,6 +1262,20 @@
           <p class="buddy-say" id="homeSay"></p>
         </div>
       </div>
+      <div class="today-foot">
+        <div class="foot-row"><span class="foot-label">今日のミッション</span><span class="m-dots" id="missionDots"></span><span class="foot-note" id="missionNote"></span></div>
+        <div class="foot-row"><span class="foot-label" id="streakNum"></span><span class="s-dots" id="streakDots"></span></div>
+      </div>
+    </section>
+    <div class="home-grid">
+    <div class="home-main">
+    <div class="road" id="road">
+      <div class="rail"></div>
+      <div class="road-pet" id="roadPet" aria-hidden="true"></div>
+      <div class="road-bubble" id="roadBubble"></div>
+      <div class="st" id="st1"><span class="pin" id="pin1">1</span><div class="st-row" id="row1"></div>
+    <section class="today" id="todayCard">
+      <span class="cur-tag">ここから やろう!</span>
       <div class="today-label">何を練習する?</div>
       <div class="op-tabs" id="opTabs" role="tablist"></div>
       <div class="today-main" id="todayMain"></div>
@@ -1134,23 +1286,35 @@
       <p class="size-note" id="sizeNote"></p>
       <button class="today-btn" id="todayBtn"></button>
       <button class="today-alt" id="todayAlt">とび級・スピードで遊ぶ ›</button>
-      <div class="today-foot">
-        <div class="foot-row"><span class="foot-label">今日のミッション</span><span class="m-dots" id="missionDots"></span><span class="foot-note" id="missionNote"></span></div>
-        <div class="foot-row"><span class="foot-label" id="streakNum"></span><span class="s-dots" id="streakDots"></span></div>
-      </div>
     </section>
-
+      </div>
+      <div class="st" id="st2"><span class="pin" id="pin2">2</span><div class="st-row" id="row2"></div>
     <section class="challenge" id="challengeCard" hidden></section>
+      </div>
+      <div class="st" id="st3"><span class="pin" id="pin3">3</span><div class="st-row" id="row3"></div>
+    <section class="weekend" id="weekendCard" hidden></section>
+      </div>
+      <div class="goal"><span class="pin flag">🏁</span><span id="goalText">全部 おわると 今日の 花丸!</span></div>
+    </div>
+    <div id="allClear" hidden></div>
+    </div>
+    <div class="home-side">
+    <h2 class="home-sec"><ruby>特訓<rt>とっくん</rt></ruby></h2>
+    <div class="train">
     <section class="fish-card" id="fishCard" hidden></section>
     <section class="fish-card" id="kuriCard" hidden></section>
-    <section class="weekend" id="weekendCard" hidden></section>
-
+    </div>
+    <h2 class="home-sec">コレクション</h2>
+    <button class="collect" id="collectRow"></button>
     <div class="save-band" id="saveBand" hidden>
       <div class="save-band-text"><b id="saveBandTitle"></b><span class="sb-sub" id="saveBandSub"></span><br class="sb-br"><button class="save-band-link" id="backupMoreBtn">元にもどす・他の方法</button></div>
       <button class="save-band-btn" id="backupExportBtn">保存する</button>
     </div>
+    </div>
+    </div>
 
-    <div class="care-row">
+    <nav class="care-row home-nav">
+      <button class="care nav-home" id="navHome" aria-current="page"><span class="care-head"><span class="care-ico">🏠</span>ホーム</span></button>
       <button class="care" id="openFood">
         <span class="care-head"><span class="care-ico">🍙</span>ごはん<span class="care-go">›</span></span>
         <span class="care-sub">おなか</span>
@@ -1164,11 +1328,7 @@
         <span class="care-sub" id="treasureLabel"></span>
         <span class="treasure-track"><span class="treasure-fill" id="treasureFill"></span></span>
       </button>
-    </div>
-
-
-    <h2 class="home-sec">コレクション</h2>
-    <button class="collect" id="collectRow"></button>
+    </nav>
   </main>
 
   <!-- SHOP -->
@@ -1780,7 +1940,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   var PRINT_SIZES = [10, 20, 50];
   var SIZE_UP_PASSES = 5;    // この回数 合格すると 問題数が ふえる
   var PASS_ACC = 90;
-  var WEEKEND_N = 100, WEEKEND_BONUS = 5, WEEKEND_ACC = 80;
+  var WEEKEND_N = 100, WEEKEND_BONUS = 5, WEEKEND_ACC = 80, BEST100_BONUS = 10, ALLCLEAR_BONUS = 20;
   var BONUS_SPEED_BEST = 2; // スピードモード 自己ベスト更新
   var LEVELUP_BONUS = 5;
   var JUMP_COUNT = 5, JUMP_PASS = 4;
@@ -2735,15 +2895,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var done = challengeDone(), n = getStamps(), ops = challengeOps(), nx = nextStampReward(n);
     var opsTxt = OP_META[ops[0]].label + 'と ' + OP_META[ops[1]].label;
     var hardN = ops.filter(function(o){ return currentLevelIndex(o) < LEVELS[o].length-1; }).length;
-    var h = '<div class="ch-top"><span class="ch-coin">'+SPECIAL_SVG+'</span><span class="ch-text"><b>きょうの ちょうせん</b>' +
+    var h = '<div class="ch-top"><span class="ch-coin">'+SPECIAL_SVG+'</span><span class="ch-text"><b>今日の <ruby>挑戦<rt>ちょうせん</rt></ruby>・ボス戦</b>' +
       (done ? '今日は クリア!また 明日 ちょうせんしてね。'
             : opsTxt+'の まぜまぜ '+CH_N+'問。'+(hardN ? '1つ上の レベルの 問題も '+hardN+'問 入ってるよ。' : '')+'正解'+CH_ACC+'%以上で クリア!') + '</span></div>';
     if(!done) h += '<div class="ch-reward">クリアで <span class="ch-mini">'+SPECIAL_SVG+'</span><b>スペシャルコイン</b>(5コイン分)と <span class="ch-mini">'+STAMP_SVG+'</span><b>スタンプ</b></div>';
     h += '<div class="ch-stamps"><div class="ch-stamp-head"><b>スタンプカード</b><span class="num">'+n+'こ'+(n>=STAMP_PER_CARD ? '・うまった カード '+Math.floor(n/STAMP_PER_CARD)+'まい' : '')+'</span><button class="ch-link" id="stampInfo">ごほうびを 見る ›</button></div>' + stampCardHTML(n) +
       '<div class="ch-next">'+(nx ? 'あと <b class="num">'+(nx.at-n)+'</b>こで <b>'+nx.name+'</b>(スタンプだけの ごほうび)' : '限定の ごほうびは 全部 もらったよ!10こ ごとに ＋'+CARD_BONUS+'コイン')+'</div></div>';
-    if(!done) h += '<button class="ch-btn" id="challengeBtn">ちょうせんする</button>';
+    if(!done) h += '<button class="ch-btn" id="challengeBtn">ボスに <ruby>挑<rt>いど</rt></ruby>む</button>';
     c.className = 'challenge' + (done ? ' done' : '');
-    c.innerHTML = h; c.hidden = false;
+    c.innerHTML = '<span class="cur-tag">ここから やろう!</span>' + h; c.hidden = false;
     if(!done) $('challengeBtn').onclick = startChallenge;
     $('stampInfo').onclick = showStampInfo;
   }
@@ -2763,23 +2923,108 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
               : '<div class="pi"><b>－</b><span>前回の記録</span></div>';
     $('printInfo').innerHTML = h;
   }
+  function log100(op){ return printLog().filter(function(e){ return e.n === WEEKEND_N && e.op === op && (!e.k || e.k === 'weekend'); }); }
+  function best100(op){
+    var b = null;
+    log100(op).forEach(function(e){ if(e.ok/e.n*100 >= WEEKEND_ACC && (!b || e.ms < b.ms)) b = e; });
+    return b;
+  }
+  function fmtClock(ms){ var t = Math.round(ms/1000), m = Math.floor(t/60), x = t%60; return m+':'+(x<10?'0':'')+x; }
   function renderWeekend(op){
     var c = $('weekendCard');
     c.hidden = false;
-    if(!isWeekend()){
-      var dd = 6 - new Date().getDay();
-      c.className = 'weekend off';
-      c.innerHTML = '<span class="wk-ico">🏆</span><span class="wk-text"><b>週末の100問チャレンジ</b>　土曜日まで あと'+dd+'日</span>';
-      return;
-    }
-    c.className = 'weekend';
-    if(weekendDone()){
-      c.innerHTML = '<span class="wk-ico">🏆</span><span class="wk-text"><b>100問チャレンジ クリア!</b>今日の ごほうびは もらったよ。また明日!</span>';
-      return;
-    }
+    op = state.homeOp || op || 'add';
     var name = op==='mix' ? '混ぜて' : OP_META[op].label;
-    c.innerHTML = '<span class="wk-ico">🏆</span><span class="wk-text"><b>今日の100問チャレンジ</b>'+name+'を100問。正解'+WEEKEND_ACC+'%以上で <span class="coin" style="width:12px;height:12px;vertical-align:-2px"></span> ＋'+WEEKEND_BONUS+' と 100問ぶんのコイン(50問の2倍!)</span><button class="wk-btn" id="weekendBtn">挑戦する</button>';
-    $('weekendBtn').onclick = function(){ startPrint(state.homeOp || 'add', WEEKEND_N, 'weekend'); };
+    var best = best100(op), hist = log100(op).slice(-7), h = '';
+    h += '<span class="cur-tag">ここから やろう!</span><h3 class="rec-h">100問 <ruby>記録<rt>きろく</rt></ruby></h3>' +
+      '<p class="rec-sub">'+name+'を 100問。自分の 記録を こえよう!</p><div class="rec-ops">';
+    SINGLE_OPS.concat(['mix']).forEach(function(o){
+      h += '<button data-op100="'+o+'" aria-pressed="'+(o===op)+'">'+(o==='mix' ? 'M' : OP_META[o].symbol)+'</button>';
+    });
+    h += '</div><div class="rec-graph"><div class="rg-head">'+name+'の 自己ベスト<span class="num">'+(best ? fmtClock(best.ms) : '－')+'</span></div>';
+    if(hist.length){
+      var mx = Math.max.apply(null, hist.map(function(e){ return e.ms; })), mn = Math.min.apply(null, hist.map(function(e){ return e.ms; }));
+      h += '<div class="rg-bars">';
+      hist.forEach(function(e){
+        var pct = Math.round(35 + 65 * (mx === mn ? 1 : (mx - e.ms) / (mx - mn)));
+        h += '<span class="'+(best && e.ms === best.ms && e.d === best.d ? 'best' : '')+'"><i style="height:'+pct+'%"></i>'+fmtClock(e.ms)+'</span>';
+      });
+      h += '</div><div class="rg-empty" style="padding:4px 0 0;text-align:left">速いほど 高く なるよ。</div>';
+    }else h += '<div class="rg-empty">まだ 記録が ないよ。<br>1回目が 自己ベストに なるよ!</div>';
+    h += '</div><p class="rec-rule">正解'+WEEKEND_ACC+'%以上で <span class="coin" style="width:12px;height:12px;vertical-align:-2px"></span> ＋'+WEEKEND_BONUS+'。自己ベストを こえると さらに ＋'+BEST100_BONUS+'!</p>' +
+      '<button class="rec-go" id="weekendBtn">100問に 挑戦する</button>';
+    c.className = 'weekend rec';
+    c.innerHTML = h;
+    $('weekendBtn').onclick = function(){ startPrint(op, WEEKEND_N, 'weekend'); };
+  }
+  $('weekendCard').addEventListener('click', function(e){
+    var b = e.target.closest('[data-op100]'); if(!b) return;
+    state.homeOp = b.getAttribute('data-op100'); state.review = null;
+    safeSet('keisan_last_op', state.homeOp);
+    setLive(state.homeOp);
+    renderTabs(state.homeOp, recommendOp()); renderToday(state.homeOp); renderKuriCard(); renderRoad();
+  });
+  function dayState(){
+    var t = todayKey();
+    var p = printLog().some(function(e){ return e.d === t && (e.k ? (e.k === 'daily' || e.k === 'review') : e.n !== WEEKEND_N); });
+    return { p:p, c:challengeDone(), w:weekendDone() };
+  }
+  function allDoneToday(){ var d = dayState(); return d.p && d.c && d.w; }
+  var HANAMARU_SVG = '<svg class="hana" viewBox="0 0 80 80" aria-label="花丸"><g fill="none" stroke="#E5484D" stroke-width="3.2" stroke-linecap="round"><circle cx="40" cy="14" r="9"/><circle cx="58" cy="22" r="9"/><circle cx="66" cy="40" r="9"/><circle cx="58" cy="58" r="9"/><circle cx="40" cy="66" r="9"/><circle cx="22" cy="58" r="9"/><circle cx="14" cy="40" r="9"/><circle cx="22" cy="22" r="9"/><path d="M40 40 m-5 0 a5 5 0 1 1 10 0 a10 10 0 1 1 -20 0 a15 15 0 1 1 30 0"/></g></svg>';
+  function confettiHTML(){
+    var cols = ['var(--op-add)','var(--op-mul)','var(--op-div)','var(--op-mix)','var(--gold)','var(--op-sub)'], h = '', seed = 7;
+    function rnd(n){ seed = (seed * 9301 + 49297) % 233280; return Math.floor(seed / 233280 * n); }
+    for(var i=0;i<26;i++) h += '<span class="cf" style="left:'+(3+rnd(91))+'%;top:'+(2+rnd(36))+'%;background:'+cols[i%cols.length]+';transform:rotate('+(rnd(120)-60)+'deg)"></span>';
+    [[8,20],[88,16],[16,36],[80,34],[50,3]].forEach(function(q){ h += '<span class="cf st1" style="left:'+q[0]+'%;top:'+q[1]+'%">✦</span>'; });
+    return h;
+  }
+  function renderRoad(){
+    var d = dayState(), done = [d.p, d.c, d.w], cur = done.indexOf(false);
+    var road = $('road'), ac = $('allClear'), card = $('todayCard');
+    var n = getStamps(), best = best100(state.homeOp || 'add');
+    if(cur < 0){
+      road.hidden = true;
+      var a = activePet(), sc = streakCount();
+      ac.innerHTML = '<div class="hero">'+confettiHTML()+'<span class="tag">全部 クリア!</span>' +
+        '<div class="stage"><div class="hp" id="heroPet"></div>'+HANAMARU_SVG+'</div>' +
+        '<h2>今日の <ruby>冒険<rt>ぼうけん</rt></ruby> 花丸!</h2><p>プリントも 挑戦も 100問も、全部 やりとげたね</p>' +
+        '<div class="steps3"><span><i style="background:var(--op-mul)">✓</i>プリント</span><span><i style="background:var(--boss)">✓</i>挑戦</span><span><i style="background:var(--gold-deep)">✓</i>100問</span></div>' +
+        '<div class="rw"><div class="big"><b>＋'+ALLCLEAR_BONUS+'</b><small>ボーナス コイン</small></div><div><b>'+sc+'日</b><small>🔥 連続</small></div><div><b>'+(n % STAMP_PER_CARD || (n ? STAMP_PER_CARD : 0))+'/'+STAMP_PER_CARD+'</b><small>★ スタンプ</small></div></div></div>' +
+        '<div class="again"><div><b>もう1枚 やる?</b><small>今日の プリントは 何枚でも OK</small></div><button id="againBtn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button></div>' +
+        '<p class="bye">明日も また 会おうね。明日の 挑戦は 新しい 問題だよ!</p>';
+      Pet.mount($('heroPet'), a.sp, a.lv);
+      var sv = $('heroPet').querySelector('svg'); if(sv) sv.classList.add('happy');
+      if(state.printOpen) ac.appendChild(card);
+      $('againBtn').onclick = function(){ state.printOpen = !state.printOpen; renderRoad(); };
+      ac.hidden = false;
+      var now = document.querySelector('#streakDots .now'); if(now){ now.classList.add('hana'); now.querySelector('i').textContent = '花'; }
+      $('roadPet').innerHTML = '';
+      return;
+    }
+    if(card.parentNode !== $('st1')) $('st1').appendChild(card);
+    road.hidden = false; ac.hidden = true; ac.innerHTML = '';
+    for(var i=0;i<3;i++){
+      var st = $('st'+(i+1));
+      st.className = 'st ' + (i === cur ? 'is-cur' : done[i] ? 'is-done' : 'is-next') + (i === 0 && done[0] && state.printOpen ? ' open' : '');
+      $('pin'+(i+1)).textContent = done[i] ? '✓' : (i+1);
+    }
+    var wait = cur === 0 ? 'プリントの あとで' : '挑戦の あとで';
+    var name = (state.homeOp && state.homeOp !== 'mix') ? OP_META[state.homeOp].label : '混ぜて';
+    $('row1').innerHTML = done[0] ? '<span class="sr-t"><b>プリント できた!</b>今日の 練習は 何枚でも OK</span><button class="sr-btn" id="row1Btn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button>' : '';
+    if($('row1Btn')) $('row1Btn').onclick = function(){ state.printOpen = !state.printOpen; renderRoad(); };
+    $('row2').innerHTML = done[1]
+      ? '<span class="sr-t"><b>今日の <ruby>挑戦<rt>ちょうせん</rt></ruby> クリア!</b>スタンプ '+n+'こ</span><button class="sr-btn" id="row2Btn">カード</button>'
+      : '<span class="sr-t"><b>今日の <ruby>挑戦<rt>ちょうせん</rt></ruby></b>ボス戦・'+CH_N+'問・スタンプ '+(n % STAMP_PER_CARD)+'/'+STAMP_PER_CARD+'</span><span class="sr-r">'+wait.replace('の ', 'の<br>')+'</span>';
+    if($('row2Btn')) $('row2Btn').onclick = showStampInfo;
+    $('row3').innerHTML = done[2]
+      ? '<span class="sr-t"><b>100問 <ruby>記録<rt>きろく</rt></ruby> できた!</b>また 明日 記録を こえよう</span><span class="sr-r">自己ベスト<strong class="num">'+(best ? fmtClock(best.ms) : '－')+'</strong></span>'
+      : '<span class="sr-t"><b>100問 <ruby>記録<rt>きろく</rt></ruby></b>'+(cur === 0 ? '🔒 プリントを 1枚 やると 開く' : name+'を 100問')+'</span><span class="sr-r">自己ベスト<strong class="num">'+(best ? fmtClock(best.ms) : '－')+'</strong></span>';
+    // the partner stands at the step to do now
+    var a2 = activePet(), rp = $('roadPet'), rbb = $('roadBubble'), cs = $('st'+(cur+1));
+    if(!rp.firstChild) Pet.mount(rp, a2.sp, a2.lv);
+    if(rp.parentNode !== cs){ cs.insertBefore(rbb, cs.firstChild); cs.insertBefore(rp, cs.firstChild); }
+    rbb.textContent = ['まずは プリント!', 'ボスに 挑もう!', '100問に 挑戦!'][cur];
+    $('goalText').textContent = '全部 おわると 今日の 花丸!(＋'+ALLCLEAR_BONUS+'コイン)';
   }
   function rb(t){ return String(t).replace(/桁/g, '<ruby>桁<rt>けた</rt></ruby>'); }
   function cheerFor(op){
@@ -2833,7 +3078,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var rdef = LEVELS[rec][rv];
         $('todayMain').innerHTML = '<span class="sym num">'+meta.symbol+'</span><span><span class="t1">'+meta.label+'の 復習</span><br><span class="t2">Lv.'+(rv+1)+' '+rdef.name+'・'+rb(rdef.desc)+'</span></span>';
         $('todayGoal').innerHTML = '<div class="review-box"><span><b>Lv.'+(rv+1)+' '+rdef.name+'</b>で 復習するよ。マスは 進まないけど、コインは もらえるよ。</span><button id="reviewOff">今の レベルに もどす</button></div>';
-        $('reviewOff').onclick = function(){ state.review = null; renderToday(rec); };
+        $('reviewOff').onclick = function(){ state.review = null; renderToday(rec); renderRoad(); };
         $('todayBtn').innerHTML = rdef.name+'で 復習する';
         $('sizeNote').innerHTML = '';
         $('todayAlt').hidden = true;
@@ -2932,6 +3177,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     renderKuriCard();
     renderCollection();
     renderSaveBand(true);
+    $('roadPet').innerHTML = '';
+    renderRoad();
   }
   $('opTabs').addEventListener('click', function(e){
     var b = e.target.closest('.op-tab'); if(!b) return;
@@ -2943,6 +3190,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     setLive(state.homeOp);
     renderToday(state.homeOp);
     renderKuriCard();
+    renderRoad();
     Pet.tap($('homePet'));
   });
   $('todayBtn').addEventListener('click', function(){
@@ -2955,6 +3203,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(!b) return;
     safeSet('keisan_print_pick', +b.getAttribute('data-size'));
     renderToday(state.homeOp);
+    renderRoad();
   });
   // drag the pet along the sugoroku: drop on a passed level = review it, drop back on its own square = today's level
   var mapDragged = false;
@@ -3011,6 +3260,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   });
   $('todayAlt').addEventListener('click', function(){ state.op = state.homeOp || 'add'; openModeSelect(); });
   $('collectRow').addEventListener('click', function(){ openShop(); });
+  $('navHome').addEventListener('click', function(){ window.scrollTo({ top:0, behavior:'smooth' }); });
   $('homePet').addEventListener('click', function(){
     Pet.tap($('homePet'));
     $('homeSay').textContent = any(SAY_HOME);
@@ -5172,7 +5422,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     if(pr){
       var log = printLog();
-      var entry = { d:todayKey(), op:state.op, n:N, ok:firstTry, ms:elapsed, pass:passed };
+      var prevBest100 = pr.kind === 'weekend' ? best100(state.op) : null;
+      var entry = { d:todayKey(), op:state.op, n:N, ok:firstTry, ms:elapsed, pass:passed, k:pr.kind };
       if(isReview) entry.rv = pr.lv;
       log.push(entry);
       safeSet('keisan_print_log', log.slice(-200));
@@ -5215,11 +5466,21 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       safeSet('keisan_weekend', weekendKey());
       bonuses.push({ label:'毎日100問チャレンジ', n:WEEKEND_BONUS });
     }
+    if(pr && pr.kind==='weekend' && accuracy >= WEEKEND_ACC && prevBest100 && elapsed < prevBest100.ms){
+      bonuses.push({ label:'100問 自己ベスト 更新', n:BEST100_BONUS });
+      banners.push({ type:'level', title:'自己ベスト 更新!', text:'100問を '+fmtClock(elapsed)+'で クリア!前の ベストは '+fmtClock(prevBest100.ms)+'。' });
+    }
 
     if(isCh && passed && !challengeDone()){
       safeSet('keisan_challenge', { d:todayKey(), done:true });
       bonuses.push({ label:'スペシャルコイン(5コイン分)', n:SPECIAL_VALUE });
       state.chGot = addStamp(bonuses);
+    }
+    if(pr && allDoneToday() && safeGet('keisan_allclear') !== todayKey()){
+      safeSet('keisan_allclear', todayKey());
+      bonuses.push({ label:'今日の 冒険 花丸', n:ALLCLEAR_BONUS });
+      banners.push({ type:'level', title:'今日の 冒険 花丸!', text:'プリント・挑戦・100問 全部 クリア!ボーナス ＋'+ALLCLEAR_BONUS+'コイン' });
+      state.printOpen = false;
     }
     addMission(bonuses);
     giveBonuses(bonuses);
