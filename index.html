@@ -1186,10 +1186,9 @@
   .hero .cf{ transform:rotate(var(--r,0deg)); }
   .hero .hana{ cursor:pointer; }
   .cf-rain{ position:fixed; inset:0; pointer-events:none; z-index:60; overflow:hidden; }
-  .cf-rain span{ position:absolute; top:-20px; width:9px; height:15px; border-radius:3px; opacity:0; animation:cf-rain var(--t,3s) cubic-bezier(.3,.4,.6,1) var(--d,0ms) forwards; }
-  @keyframes cf-rain{ 0%{ transform:translate(0,0) rotate(0deg); opacity:1; } 80%{ opacity:1; } 100%{ transform:translate(var(--x,0px),105vh) rotate(var(--r,360deg)); opacity:0; } }
-  .hero.play .cf{ animation:cf-fall 1.4s cubic-bezier(.25,.7,.35,1) var(--d,0ms) both; }
-  @keyframes cf-fall{ 0%{ transform:translateY(-150px) rotate(calc(var(--r,0deg) + 220deg)); opacity:0; } 15%{ opacity:.9; } 100%{ transform:translateY(0) rotate(var(--r,0deg)); opacity:.85; } }
+  .cf-rain i{ position:absolute; left:0; top:0; border-radius:2px; will-change:transform; }
+  .hero.play .cf{ animation:cf-in .9s ease-out calc(1.6s + var(--d,0ms)) both; }
+  @keyframes cf-in{ 0%{ transform:translate(-14px,-26px) rotate(calc(var(--r,0deg) - 90deg)); opacity:0; } 100%{ transform:translate(0,0) rotate(var(--r,0deg)); opacity:.85; } }
   .hero.play .hana .hs{ stroke-dasharray:1; stroke-dashoffset:1; opacity:0; animation:hs-draw .32s ease-out calc(1500ms + var(--i,0)*150ms) forwards; }
   .hero.play .hana .hs.sp{ animation:hs-draw .7s ease-in-out .75s forwards; }
   @keyframes hs-draw{ from{ opacity:1; } to{ stroke-dashoffset:0; opacity:1; } }
@@ -3007,14 +3006,45 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     hero.classList.remove('play'); void hero.offsetWidth; hero.classList.add('play');
     try{ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; }catch(e){}
     var old = document.querySelector('.cf-rain'); if(old) old.remove();
-    var rain = document.createElement('div'), cols = ['var(--op-add)','var(--op-mul)','var(--op-div)','var(--op-mix)','var(--gold)','var(--op-sub)'], h = '';
+    // paper confetti: two poppers at the bottom corners shoot it up, then each piece flutters down side to side
+    var rain = document.createElement('div'), cols = ['#FF6F4C','#1FA98E','#5B7CFA','#9B6BE8','#FFC53D','#F2A134','#FF8FB1'];
     rain.className = 'cf-rain';
-    for(var i=0;i<46;i++){
-      h += '<span style="left:'+Math.round(Math.random()*98)+'%;background:'+cols[i%cols.length]+';--d:'+Math.round(Math.random()*1100)+'ms;--t:'+(2.4+Math.random()*1.4).toFixed(2)+'s;--x:'+Math.round(Math.random()*80-40)+'px;--r:'+Math.round(Math.random()*720-360)+'deg;'+(i%3===0 ? 'width:7px;height:7px;border-radius:50%;' : '')+'"></span>';
-    }
-    rain.innerHTML = h;
     document.body.appendChild(rain);
-    setTimeout(function(){ rain.remove(); }, 5200);
+    var W = window.innerWidth, H = window.innerHeight, ps = [], N = W > 700 ? 120 : 90;
+    for(var i=0;i<N;i++){
+      var el = document.createElement('i'), side = i % 2, round = i % 5 === 0;
+      var w = round ? 8 : 7 + Math.random()*5, hh = round ? 8 : 10 + Math.random()*6;
+      el.style.cssText = 'width:'+w.toFixed(1)+'px;height:'+hh.toFixed(1)+'px;background:'+cols[i%cols.length]+(round ? ';border-radius:50%' : '');
+      rain.appendChild(el);
+      var ang = (50 + Math.random()*30) * Math.PI/180, sp = H * (1.55 + Math.random()*0.6);
+      ps.push({ el:el, x: side ? W + 6 : -6, y: H + 6, vx: (side ? -1 : 1) * Math.cos(ang) * sp, vy: -Math.sin(ang) * sp,
+        t0: (i >= N*0.6 ? 0.32 : 0) + Math.random()*0.12, term: 70 + Math.random()*70,
+        sw: 1.6 + Math.random()*2.2, amp: 26 + Math.random()*46, ph: Math.random()*6.3,
+        flip: 5 + Math.random()*7, rz: Math.random()*360, vz: (Math.random()-0.5)*260 });
+    }
+    var start = null, END = 5.6;
+    function step(ts){
+      if(!rain.isConnected) return;
+      if(start === null) start = ts;
+      var t = (ts - start) / 1000;
+      if(t > END){ rain.remove(); return; }
+      ps.forEach(function(p){
+        var lt = t - p.t0;
+        if(lt < 0){ p.el.style.opacity = 0; p.last = t; return; }
+        var dt = Math.min(0.1, t - (p.last == null ? t : p.last)); p.last = t;
+        if(p.vy < 0){ p.vy += H*1.1*dt; p.vy *= Math.exp(-0.7*dt); }      // flying up
+        else p.vy = Math.min(p.term, p.vy + H*0.6*dt);                       // floating down slowly
+        p.vx *= Math.exp(-1.5*dt);
+        p.x += (p.vx + Math.cos(lt*p.sw + p.ph) * p.amp * p.sw * (p.vy > 0 ? 1 : 0.2)) * dt;
+        p.y += p.vy * dt;
+        p.rz += p.vz * dt;
+        var fx = Math.cos(lt*p.flip + p.ph);                                  // paper turning over
+        p.el.style.opacity = t > END - 1 ? Math.max(0, END - t) : 1;
+        p.el.style.transform = 'translate3d('+p.x.toFixed(1)+'px,'+p.y.toFixed(1)+'px,0) rotate('+p.rz.toFixed(0)+'deg) scale('+(0.35+0.65*Math.abs(Math.sin(lt*p.flip*0.6+p.ph))).toFixed(2)+','+fx.toFixed(2)+')';
+      });
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
   }
   function renderRoad(){
     var d = dayState(), done = [d.p, d.c, d.w], cur = done.indexOf(false);
