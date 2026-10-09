@@ -783,6 +783,9 @@
   .toy-feed[hidden]{ display:none; }
   .t-sbub{ position:absolute; left:0; bottom:0; border-radius:50%; pointer-events:none; background:radial-gradient(circle at 32% 30%, #fff 0 12%, rgba(191,230,255,.55) 13% 60%, rgba(255,214,236,.6) 100%); box-shadow:inset 0 0 0 1.5px rgba(120,170,220,.55); }
   .t-fball.t-frisb{ width:50px; height:50px; margin-left:-25px; transform-origin:50% 50%; }
+  .t-laser{ position:absolute; left:0; bottom:0; width:14px; height:14px; margin:0 0 -7px -7px; border-radius:50%; pointer-events:none; background:radial-gradient(circle, #fff 0 18%, #FF2E2E 30% 55%, rgba(255,46,46,0) 72%); box-shadow:0 0 10px 4px rgba(255,40,40,.45); }
+  .t-mouse{ position:absolute; left:0; bottom:0; width:46px; height:30px; margin-left:-23px; pointer-events:none; transform-origin:50% 100%; }
+  .t-mouse svg{ width:100%; height:100%; display:block; }
   .t-fball.t-kfish{ width:74px; height:74px; margin-left:-37px; transform-origin:50% 60%; }
   .t-peye{ transform-box:fill-box; transform-origin:center; animation:p-blink 3.2s infinite; }
   .t-sbox{ position:absolute; left:0; bottom:8px; width:96px; height:59px; margin-left:-48px; transform-origin:50% 100%; pointer-events:none; }
@@ -2293,6 +2296,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     { id:'jara',   name:'ねこじゃらし',   price:30,  svg:'<svg viewBox="0 0 40 40"><path d="M36,36 L14,14" stroke="#B8844E" stroke-width="3" stroke-linecap="round"/><g fill="#9BD66B"><ellipse cx="11" cy="11" rx="8" ry="4" transform="rotate(45 11 11)"/><ellipse cx="9" cy="13" rx="6" ry="2.6" transform="rotate(20 9 13)"/><ellipse cx="13" cy="9" rx="6" ry="2.6" transform="rotate(70 13 9)"/></g><ellipse cx="11" cy="11" rx="5" ry="2" transform="rotate(45 11 11)" fill="#D6F2A0"/></svg>' },
     { id:'chew',   name:'木のおもちゃ',       price:30,  svg:'<svg viewBox="0 0 40 40"><g transform="rotate(-25 20 20)"><rect x="4" y="15" width="32" height="10" rx="5" fill="#C99A62"/><ellipse cx="33.5" cy="20" rx="3" ry="5" fill="#E8C597"/><circle cx="33.5" cy="20" r="1.5" fill="#C99A62"/><path d="M9,18 L20,18 M13,22 L26,22" stroke="#A77A45" stroke-width="1.3" stroke-linecap="round"/></g></svg>' },
     { id:'bubble', name:'シャボン玉',     price:40,  svg:'<svg viewBox="0 0 40 40"><path d="M34,36 L22,22" stroke="#F2A134" stroke-width="3" stroke-linecap="round"/><circle cx="17" cy="17" r="7" fill="none" stroke="#F2A134" stroke-width="3"/><circle cx="9" cy="7" r="5" fill="#BFE6FF" opacity=".7"/><circle cx="29" cy="9" r="3.5" fill="#FFD6EC" opacity=".8"/><circle cx="8" cy="7" r="1.4" fill="#fff"/></svg>' },
+    { id:'laser',  name:'レーザーポインター', price:40, svg:'<svg viewBox="0 0 40 40"><g transform="rotate(-35 20 20)"><rect x="6" y="16" width="24" height="8" rx="4" fill="#5C6B7A"/><rect x="26" y="16.5" width="5" height="7" rx="1.5" fill="#C9D3DD"/><rect x="12" y="14.5" width="5" height="3" rx="1.5" fill="#FF6F4C"/></g><circle cx="33" cy="9" r="6" fill="#FF3B3B" opacity=".25"/><circle cx="33" cy="9" r="3" fill="#FF3B3B"/><circle cx="32.2" cy="8.2" r="1" fill="#fff" opacity=".8"/></svg>' },
     { id:'dig',    name:'ほりほりマット', price:40,  svg:'<svg viewBox="0 0 40 40"><ellipse cx="20" cy="29" rx="17" ry="7" fill="#9BD66B"/><g fill="#7CC050"><path d="M8,28 L10,19 L12,28 Z"/><path d="M14,29 L17,16 L19,29 Z"/><path d="M21,29 L24,17 L26,29 Z"/><path d="M28,28 L31,20 L32,28 Z"/></g><circle cx="20" cy="31" r="2.6" fill="#E0A060"/></svg>' },
     { id:'bell',   name:'つりさげの鈴',   price:40,  svg:'<svg viewBox="0 0 40 40"><path d="M20,0 L20,11" stroke="#B9B2A6" stroke-width="1.6"/><path d="M11,27 Q11,11 20,11 Q29,11 29,27 L31,30 L9,30 Z" fill="#FFC53D"/><circle cx="20" cy="32" r="3" fill="#E0A21E"/><path d="M14,19 Q15,15 18,14" stroke="#FFE59A" stroke-width="2" fill="none" stroke-linecap="round"/></svg>' },
     { id:'yarn',   name:'毛糸玉',         price:50,  svg:'<svg viewBox="0 0 40 40"><circle cx="20" cy="21" r="14" fill="#B79CF0"/><g stroke="#8F72D6" stroke-width="1.8" fill="none" stroke-linecap="round"><path d="M9,14 Q20,22 31,12"/><path d="M7,22 Q20,30 33,20"/><path d="M12,31 Q18,20 16,8"/><path d="M24,34 Q28,22 26,8"/></g><path d="M33,26 Q38,30 36,36" stroke="#B79CF0" stroke-width="2" fill="none" stroke-linecap="round"/></svg>' },
@@ -4287,7 +4291,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     touchPlay();
     var layer = $('toyLayer'), under = $('toyUnder'), wrap = $('toyPetWrap'), pet = $('toyPet'), W = $('toyStage').clientWidth;
     if(curFeel === 'fav') Pet.cheer(pet);
-    if(['jara','ball','rc','bubble','fris','yarn','kick'].indexOf(id) >= 0){ toyBusy = false; chaseToy(id, a); return; }
+    if(['jara','ball','rc','bubble','fris','yarn','kick','laser'].indexOf(id) >= 0){ toyBusy = false; chaseToy(id, a); return; }
     if(id === 'tunnel'){ toyBusy = false; tunnelGame(a); return; }
     if(['bell','dig','box','tire','wheel','swing','chew'].indexOf(id) >= 0){ toyBusy = false; playToy2(id, a); return; }
     if(id === 'ball'){
@@ -4818,6 +4822,95 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           var th = document.getElementById('yarnThread'); if(!th) return;
           var pts = trail.concat([{ x:yn.x, d:yn.d }]);
           th.setAttribute('d', pts.map(function(p, i){ return (i ? 'L' : 'M') + p.x.toFixed(1) + ',' + (H - floorOf(p.d) - 8 * scaleOf(p.d)).toFixed(1); }).join(' '));
+        }
+      });
+    }else if(id === 'laser'){
+      // a red dot: trace with a finger (on the floor or up the wall); with no finger it scurries, stops and darts like a mouse.
+      // It can never be caught, so every few pounces a felt mouse appears: put the dot on it and the pet really catches it.
+      var dot = document.createElement('div'); dot.className = 't-laser'; layer.appendChild(dot);
+      var mz = document.createElement('div'); mz.className = 't-mouse'; mz.style.display = 'none';
+      mz.innerHTML = '<svg viewBox="0 0 46 30"><path d="M8,22 Q-2,24 2,14" stroke="#B9A9A0" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="24" cy="20" rx="16" ry="9" fill="#A8A0A8"/><circle cx="34" cy="11" r="5" fill="#A8A0A8"/><circle cx="34" cy="11" r="2.6" fill="#F4B8C8"/><circle cx="38" cy="18" r="1.6" fill="#3B3550"/><circle cx="41" cy="22" r="1.6" fill="#F48FAF"/></svg>';
+      layer.appendChild(mz);
+      var LF = FAR, lp = { x:W * .7, y:30 }, lgoal = { x:W * .7, y:30 }, lfing = null, lidle = 0, lstop = 0, lmode = 'stop', lflee = 0, lpounce = { now:false, h:40 };
+      var mouse = null, glareAt = 0, lcatch = 0, caught = false;
+      function onWall(p){ return p.y > LF; }
+      function dotD(p){ return onWall(p) ? 1 : Math.max(0, p.y / LF); }
+      function pickGoal(now){
+        var r = Math.random();
+        if(mouse && !mouse.got){ lgoal = { x:mouse.x, y:floorOf(mouse.d) + 6 }; lmode = 'run'; return; }
+        if(r < .18) lgoal = { x:24 + Math.random() * (W - 48), y:Math.min(H - 24, 145 + Math.random() * Math.max(10, H - 175)) };
+        else lgoal = { x:24 + Math.random() * (W - 48), y:4 + Math.random() * (LF - 8) };
+        lmode = 'run';
+      }
+      function spawnMouse(){
+        var d = Math.random() * .6, x = lp.x < W/2 ? W * (.62 + Math.random() * .25) : W * (.13 + Math.random() * .25);
+        mouse = { x:x, d:d, got:false }; mz.style.display = '';
+        anim(mz, [{ opacity:0 }, { opacity:1 }], { duration:300 });
+        $('toySay').textContent = lfing ? 'ねずみの おもちゃが 出てきた!赤い 点を 当ててみて' : 'あっ、ねずみの おもちゃ!';
+      }
+      function dotOnMouse(){ return mouse && !mouse.got && Math.abs(lp.x - mouse.x) < 26 && Math.abs(lp.y - (floorOf(mouse.d) + 6)) < 22; }
+      $('toySay').textContent = name+'「赤い 点、どこ どこ?」';
+      $('toyHint').textContent = 'ステージを 指で なぞると 赤い 点が 動くよ。かべに 当てると ジャンプ!ときどき 止めると とびかかるよ。相棒の 目には 当てないでね';
+      st.onpointerdown = function(e){ lfing = stagePoint(e); try{ st.setPointerCapture(e.pointerId); }catch(_){} };
+      st.onpointermove = function(e){ if(lfing || e.pointerType === 'mouse'){ lfing = stagePoint(e); lidle = performance.now() + 1500; } };
+      st.onpointerup = st.onpointercancel = function(){ lfing = null; lidle = performance.now() + 1500; lstop = performance.now() + 400; lmode = 'stop'; };
+      chaseRun({
+        speed: 380,
+        pounce: lpounce,
+        target: function(now, dt, c){
+          if(lfing){
+            lp.x = Math.max(8, Math.min(W - 8, lfing.x)); lp.y = Math.max(2, Math.min(H - 8, lfing.y));
+          }else if(now > lidle){
+            if(lmode === 'run'){
+              var gx = lgoal.x - lp.x, gy = lgoal.y - lp.y, dist = Math.hypot(gx, gy), v = (now < lflee ? 900 : 380) * dt;
+              if(dist <= v){ lp.x = lgoal.x; lp.y = lgoal.y; lmode = 'stop'; lstop = now + (mouse && !mouse.got ? 2600 : 400 + Math.random() * 1100); }
+              else { lp.x += gx / dist * v + Math.sin(now / 70) * 1.2; lp.y += gy / dist * v; }
+            }else if(now > lstop) pickGoal(now);
+            else if(Math.random() < dt * 2.5){ lp.x += Math.random() * 10 - 5; lp.y = Math.max(2, lp.y + Math.random() * 6 - 3); }
+          }
+          var d = dotD(lp);
+          if(mouse && !mouse.got && dotOnMouse()) return { x:mouse.x, y:floorOf(mouse.d), d:mouse.d };
+          return { x:lp.x, y:onWall(lp) ? lp.y : floorOf(d), d:d };
+        },
+        hit: function(c, tg){
+          var s = scaleOf(c.d), fl = floorOf(c.d), ph = PET_H * s, dx = lp.x - c.x, now = performance.now();
+          // light in the pet's eyes: it squints and steps back instead of chasing
+          if(lfing && c.jy === 0 && Math.abs(dx) < 26 * s && lp.y > fl + ph * .5 && lp.y < fl + ph * .85 && now > glareAt){
+            glareAt = now + 2600; c.vx = (dx >= 0 ? -1 : 1) * 260;
+            $('toySay').textContent = name+'「まぶしい!目には 当てないでね」';
+            return false;
+          }
+          if(mouse && !mouse.got && dotOnMouse()) return Math.abs(c.x - mouse.x) < 30 * s + 8 && Math.abs(c.d - mouse.d) < .14;
+          if(onWall(lp)) return Math.abs(dx) < 34 * s + 12 && lp.y > fl + c.jy + ph * .25 && lp.y < fl + c.jy + ph + 22;
+          return Math.abs(dx) < 30 * s + 6 && Math.abs(c.d - dotD(lp)) < .12;
+        },
+        onHit: function(c){
+          var now = performance.now();
+          if(mouse && !mouse.got && dotOnMouse()){
+            mouse.got = true; caught = true; Pet.cheer($('toyPet')); hearts(fav ? 4 : 3);
+            cheer(name+'「ほんとに つかまえた!」');
+            later(function(){ anim(mz, [{ opacity:1 }, { opacity:0 }], { duration:400, fill:'forwards' }); }, 1300);
+            later(function(){ mz.style.display = 'none'; mz.getAnimations && mz.getAnimations().forEach(function(a){ a.cancel(); }); mouse = null; caught = false; lcatch = 0; }, 1750);
+            return;
+          }
+          if(!onWall(lp)) lpounce.now = true;
+          lcatch++;
+          cheer(any(['えいっ!','あれ? いない…','つかまえ… たかな?','にげた!','まてまてー!']));
+          if(!lfing){ lmode = 'stop'; lstop = now + 220; lflee = now + 700; }
+          if(lcatch >= 4 && !mouse) later(spawnMouse, 700);
+        },
+        draw: function(now, c){
+          var wall = onWall(lp), d = dotD(lp), s = wall ? 1 : scaleOf(d), flick = .85 + Math.random() * .15;
+          var hide = caught;
+          dot.style.opacity = hide ? '0' : flick.toFixed(2);
+          dot.style.transform = 'translate(' + lp.x.toFixed(1) + 'px,' + (-lp.y).toFixed(1) + 'px) scale(' + (wall ? s : s * 1.25).toFixed(2) + ',' + (wall ? s : s * .7).toFixed(2) + ')';
+          if(mouse){
+            var ms = scaleOf(mouse.d), mx = mouse.got ? c.x + 10 * scaleOf(c.d) : mouse.x, my = mouse.got ? floorOf(c.d) + c.jy + PET_H * scaleOf(c.d) * .3 : floorOf(mouse.d);
+            mz.style.transform = 'translate(' + mx.toFixed(1) + 'px,' + (-my).toFixed(1) + 'px) scale(' + (mouse.got ? scaleOf(c.d) * .8 : ms).toFixed(3) + ')';
+            var mpar = !mouse.got && mouse.d > chase.d + .03 ? $('toyUnder') : layer; if(mz.parentNode !== mpar) mpar.appendChild(mz);
+          }
+          // the dot is light: always drawn on top
+          if(dot.parentNode !== layer || dot !== layer.lastChild) layer.appendChild(dot);
         }
       });
     }else if(id === 'kick'){
