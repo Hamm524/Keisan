@@ -120,6 +120,11 @@
   .pet.hungry:not(.happy) .wet{ display:inline; }
   .pet.hungry .p-breathe{ animation-duration:5.8s; }
   .pet.hungry .eyes{ animation-duration:3.2s; }
+  /* おなかが すいたとき: 困り眉と への字口の 悲しい顔(にっこり口の 線だけ への字に かえる。鼻・くちばしは そのまま) */
+  .pet.hungry:not(.happy) .face-s{ display:inline; }
+  .pet .face-hs{ display:none; }
+  .pet.hungry:not(.happy):not(.sad) .face-hs{ display:inline; }
+  .pet.hungry:not(.happy) .mq{ display:none; }
   .pet.happy .face-n{ display:none; }
   .pet .face-s{ display:none; }
   .pet.sad .face-s, .pet.sad .wet{ display:inline; }
@@ -2151,7 +2156,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var en = d.eyesC ? '<g class="eyes face-n" style="animation-delay:'+(-Math.random()*4).toFixed(2)+'s">'+d.eyesC+wetG(d.eyeY, ex[0], ex[1])+'</g>' : eyesN(d.eyeY, ex[0], ex[1]);
     out += dressed.defs + dressed.back + dressed.body + en + eyesH(d.eyeY, ex[0], ex[1], d.eyeInk) + dressed.deco;
     var mN = d.mouthN || '', flipM = /<path[^>]*Q/.test(mN) ? ' flip' : '', ey = d.eyeY;
-    out += '<g class="face-n"><g class="m-n' + flipM + '">' + mN + '</g></g><g class="face-h">' + (d.mouthH||'') + '</g>';
+    // おなかが すいたときの への字口: にっこり口の 線(Q の 曲線)の 場所に かく
+    var mqx = [], mqy = [];
+    mN = mN.replace(/<path\b([^>]*)>/g, function(tag, at){
+      var dm = /\sd="([^"]*)"/.exec(at);
+      if(!dm || dm[1].indexOf('Q') < 0 || !/fill="none"/.test(at)) return tag;
+      var nums = dm[1].match(/-?\d+(\.\d+)?/g) || [];
+      for(var ni = 0; ni + 1 < nums.length; ni += 2){ mqx.push(+nums[ni]); mqy.push(+nums[ni+1]); }
+      return '<path class="mq"' + at + '>';
+    });
+    var faceHs = '';
+    if(mqx.length){
+      var mx0 = Math.min.apply(null, mqx), mx1 = Math.max.apply(null, mqx), my0 = Math.min.apply(null, mqy), my1 = Math.max.apply(null, mqy);
+      var fmx = (mx0 + mx1) / 2, fmy = Math.max(my0 + 2, (my0 + my1) / 2), fhw = Math.max(6, Math.min(9, (mx1 - mx0) / 2));
+      faceHs = '<g class="face-hs"><path d="M'+(fmx-fhw).toFixed(1)+','+(fmy+3).toFixed(1)+' Q'+fmx.toFixed(1)+','+(fmy-4).toFixed(1)+' '+(fmx+fhw).toFixed(1)+','+(fmy+3).toFixed(1)+'" stroke="'+INK+'" stroke-width="2.6" fill="none" stroke-linecap="round"/></g>';
+    }
+    out += '<g class="face-n"><g class="m-n' + flipM + '">' + mN + '</g>' + faceHs + '</g><g class="face-h">' + (d.mouthH||'') + '</g>';
     out += '<g class="face-s" stroke="' + (d.eyeInk || INK) + '" stroke-width="3.6" stroke-linecap="round" fill="none"><path d="M'+(ex[0]-10)+','+(ey-18)+' L'+(ex[0]+7)+','+(ey-24)+'"/><path d="M'+(ex[1]-7)+','+(ey-24)+' L'+(ex[1]+10)+','+(ey-18)+'"/></g>';
     var gc = (wearFn && wearFn(sp)) || d.gem;
     if(gc === 'rainbow'){
