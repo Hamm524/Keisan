@@ -5589,7 +5589,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(state.hissan){
       var a = String(q.a), b = String(q.b);
       var ansW = q.op==='sub' ? a.length : (q.op==='add' ? Math.max(a.length, b.length)+1 : a.length+b.length);
-      var w = Math.max(a.length, b.length+1, ansW);
+      var w = Math.max(a.length+1, b.length+1, ansW);   /* 記号は いつも 数字の 左の 自分の 列に(3桁－2桁で 百の位に かさならないように) */
       var showCarry = hasCarry(q) && carryOn();
       /* くり上がりは 一の位 いがいの 位に 入る(マスの 数 = かけられる数の 桁 - 1) */
       if(showCarry){ state.hsCarry = []; for(var k=0; k<a.length-1; k++) state.hsCarry.push(''); state.hsCOff = w - a.length; state.hsWAll = w; }
