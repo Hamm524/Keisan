@@ -5540,6 +5540,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   function renderDots(){
     var wrap = $('dots'); wrap.innerHTML = '';
+    if(state.print && state.print.kind==='weekend') return;   /* 100問: のこりが 多く 見えて しんどいので 進み具合は 出さない */
     if(state.questions.length > 20){
       var done = state.questions.filter(function(q){ return q.solved; }).length, N = state.questions.length;
       wrap.innerHTML = '<div class="pbar-wrap"><div class="pbar"><i style="width:'+(done/N*100)+'%"></i></div><span class="pcount">'+done+'/'+N+'</span></div>';
