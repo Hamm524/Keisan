@@ -2596,6 +2596,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     if(KEEP_LOCAL[k]) return l;
     /* おしゃれは 新しい ほうを まるごと 使う(まぜると、しまった ものや はずした ものが もどって きて しまう) */
+    /* 色・もよう・宝石の つけかえも、新しく えらんだ ほうを まるごと 使う(まぜると「もと」に もどしたのが もどって くる) */
+    if(k === 'keisan_skin' || k === 'keisan_wear'){
+      try{
+        var SL = JSON.parse(l), SR = JSON.parse(r);
+        var slt = SL && typeof SL.t === 'number' ? SL.t : 0, srt = SR && typeof SR.t === 'number' ? SR.t : 0;
+        if(slt || srt) return srt > slt ? r : l;
+      }catch(e){}
+    }
     if(k === 'keisan_oshare'){
       try{
         var OL = JSON.parse(l), OR = JSON.parse(r);
@@ -3991,6 +3999,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var all = safeGet('keisan_skin') || {}, s = all[sp] || {};
     if('c' in ch) s.c = ch.c; if('p' in ch) s.p = ch.p;
     if(!s.c && !s.p) delete all[sp]; else all[sp] = s;
+    all.t = Date.now();   /* クラウドと まぜる とき、新しい ほうを まるごと 使う(「もと」に もどしたのが 消えないように) */
     safeSet('keisan_skin', all);
     renderShop();
     Pet.cheer($('shopPet'));
@@ -3999,6 +4008,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var a = activePet(), all = safeGet('keisan_wear') || {}, name = petName(a.sp);
     if(all[a.sp] === gem.id){ delete all[a.sp]; toast(name+'の 宝石を もとに もどしたよ'); }
     else { all[a.sp] = gem.id; toast(name+'に '+gem.name+'を つけたよ!'); }
+    all.t = Date.now();
     safeSet('keisan_wear', all);
     renderShop();
     Pet.cheer($('shopPet'));
