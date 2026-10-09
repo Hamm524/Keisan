@@ -2938,6 +2938,20 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return d <= 1 ? 1 : (d === 2 ? 0.7 : 0.5);
   }
   function coinPer(q){ return ((q.lv|0) + 3) / 10 * lowLvFactor(q); }
+  /* 100問は 速さの 練習: たし算・ひき算は 2桁と 1桁まで、かけ算・わり算は 九九の はんい。横書きで 暗算 */
+  var EASY100 = {
+    add:{ desc:'2桁 ＋ 1桁まで', gen:function(){ var b=pick(1,9),a=pick(1,99-b); return {a:a,b:b,answer:a+b}; } },
+    sub:{ desc:'2桁 － 1桁まで', gen:function(){ var b=pick(1,9),a=pick(b+1,99); return {a:a,b:b,answer:a-b}; } },
+    mul:{ desc:'九九', gen:function(){ return LEVELS.mul[1].gen(); } },
+    div:{ desc:'九九の はんたい', gen:function(){ return LEVELS.div[1].gen(); } }
+  };
+  function gen100(selectedOp){
+    var op = selectedOp==='mix' ? ['add','sub','mul','div'][pick(0,3)] : selectedOp;
+    var p = EASY100[op].gen();
+    p.op = op; p.lv = currentLevelIndex(op);   /* コインは 今までと 同じ */
+    p.hs = false;
+    return p;
+  }
   function genProblem(selectedOp){
     var op = selectedOp==='mix' ? ['add','sub','mul','div'][pick(0,3)] : selectedOp;
     return genForOp(op);
@@ -3139,7 +3153,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     state.print = { n:n, kind:kind, lv:(kind==='review' ? lv : null) };
     setLive(op==='mix' ? 'add' : op);
     var qs = [];
-    for(var i=0;i<n;i++){ var q = kind==='review' ? genForOp(op, lv) : genProblem(op); q.id = i; q.solved = false; q.mistakes = 0; qs.push(q); }
+    for(var i=0;i<n;i++){ var q = kind==='review' ? genForOp(op, lv) : (kind==='weekend' ? gen100(op) : genProblem(op)); q.id = i; q.solved = false; q.mistakes = 0; qs.push(q); }
     beginRound('accuracy', qs);
   }
   function getStamps(){ return safeGet('keisan_stamps') || 0; }
@@ -3240,7 +3254,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var name = op==='mix' ? '混ぜて' : OP_META[op].label;
     var best = best100(op), hist = log100(op).slice(-7), h = '';
     h += '<span class="cur-tag">ここから やろう!</span><h3 class="rec-h">100問 <ruby>記録<rt>きろく</rt></ruby></h3>' +
-      '<p class="rec-sub">'+name+'を 100問。自分の 記録を こえよう!</p><div class="rec-ops">';
+      '<p class="rec-sub">'+name+'を 100問('+(op==='mix' ? '九九と 2桁 ± 1桁まで' : EASY100[op].desc)+')。自分の 記録を こえよう!</p><div class="rec-ops">';
     SINGLE_OPS.concat(['mix']).forEach(function(o){
       h += '<button data-op100="'+o+'" aria-pressed="'+(o===op)+'">'+(o==='mix' ? 'M' : OP_META[o].symbol)+'</button>';
     });
