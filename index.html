@@ -1799,7 +1799,6 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return '';
   }
   // きせかえ (Lv.3): body colour + pattern
-  var SKIN_COLORS = { pink:[340,.82,.86], sky:[200,.78,.80], mint:[158,.52,.76], lav:[265,.68,.85], lemon:[48,.9,.76], cocoa:[24,.36,.56] };
   function hexHsl(hx){
     var r = parseInt(hx.substr(1,2),16)/255, g = parseInt(hx.substr(3,2),16)/255, b = parseInt(hx.substr(5,2),16)/255;
     var mx = Math.max(r,g,b), mn = Math.min(r,g,b), l = (mx+mn)/2, h = 0, s = 0, dd = mx-mn;
@@ -1834,6 +1833,43 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(c[1] > .15 && dh < 26) return hslHex(T[0], T[1], lit(c[2]));
       return hx;
     });
+  }
+  /* 生き物ごとの 自然な 体の色 [id, 名前, 色相, さいど, 明るさ, (かえる元の色)]。前の 色(pink など)は いちばん 近い 色に 読みかえる */
+  var NAT_COLORS = {
+    cat:     [['shiro','しろ',36,.25,.95],['kuro','くろ',250,.08,.3],['chatora','ちゃトラ',28,.85,.66],['gray','グレー',220,.1,.64],['kogecha','こげちゃ',24,.38,.44]],
+    tiger:   [['white','ホワイト',40,.25,.93],['kin','きんいろ',42,.82,.68],['koi','こいオレンジ',24,.86,.58]],
+    dog:     [['shiro','しろ',38,.3,.95],['kuro','くろ',250,.08,.3],['aka','あかしば',26,.78,.64],['cha','ちゃいろ',28,.48,.52],['gray','グレー',220,.08,.66]],
+    fox:     [['kiiro','きつね色',36,.78,.64],['gin','ぎんいろ',220,.07,.5],['shiro','しろ',210,.15,.95]],
+    wolf:    [['shiro','しろ',210,.15,.94],['kuro','くろ',230,.08,.32],['cha','ちゃいろ',30,.3,.56]],
+    bear:    [['kuro','くろ',250,.08,.28],['shiro','しろ',45,.35,.94],['aka','あかちゃ',20,.46,.5],['kogecha','こげちゃ',24,.38,.36]],
+    panda:   [['qinling','ちゃいろ',22,.32,.4,'#2E2A3D']],
+    rabbit:  [['kuro','くろ',250,.08,.32],['cha','ちゃいろ',28,.42,.62],['gray','グレー',230,.08,.68],['cream','クリーム',40,.6,.86]],
+    hamster: [['golden','ゴールデン',30,.72,.64],['shiro','しろ',40,.3,.95],['gray','グレー',215,.14,.72],['pudding','プディング',42,.72,.78]],
+    chick:   [['kuro','くろ',250,.08,.32],['cha','ちゃいろ',30,.5,.6],['shiro','しろ',48,.45,.92]],
+    owl:     [['shiro','しろ',40,.15,.94],['gray','グレー',30,.06,.6],['kogecha','こげちゃ',24,.4,.38]],
+    penguin: [['kuro','くろ',240,.1,.22],['ao','あお',212,.45,.5]],
+    seal:    [['shiro','しろ',210,.25,.95],['koi','こいグレー',215,.14,.5],['cha','ちゃいろ',30,.25,.58]],
+    dolphin: [['gray','グレー',210,.12,.62],['pink','ピンク',345,.6,.8],['koi','こいあお',214,.6,.5]],
+    whale:   [['ao','あお',214,.5,.6],['shiro','しろ',200,.25,.94],['kuro','くろ',230,.12,.3]],
+    snake:   [['kiiro','きいろ',50,.8,.62],['cha','ちゃいろ',30,.45,.5],['ao','あおみどり',170,.4,.5],['shiro','しろ',50,.2,.92]],
+    dragon:  [['midori','みどり',110,.45,.6],['aka','あか',5,.62,.6],['ao','あお',210,.6,.64],['murasaki','むらさき',270,.42,.68],['kin','きんいろ',45,.78,.62]],
+    unicorn: [['kuri','くりげ',25,.5,.55],['ashige','あしげ',220,.08,.76],['kuro','くろ',240,.1,.3]]
+  };
+  var OLD_COLORS = { pink:[340,.82,.86], sky:[200,.78,.80], mint:[158,.52,.76], lav:[265,.68,.85], lemon:[48,.9,.76], cocoa:[24,.36,.56] };
+  /* 体と ちがう 色みだけど いっしょに かえたい 所(あざらしの ひれ) */
+  var NAT_RECOLOR = { seal:['#B4C2DA'] };
+  function natColor(sp, c){
+    if(!c) return null;
+    var L = NAT_COLORS[sp] || [], i;
+    for(i = 0; i < L.length; i++) if(L[i][0] === c) return L[i];
+    var o = OLD_COLORS[c]; if(!o || !L.length) return null;
+    var best = null, bd = 1e9;
+    L.forEach(function(x){
+      var dh = Math.abs(x[2]-o[0]); dh = Math.min(dh, 360-dh)/180;
+      var dd = dh*Math.min(x[3], o[1])*2 + Math.abs(x[4]-o[2])*1.5 + Math.abs(x[3]-o[1])*.5;
+      if(dd < bd){ bd = dd; best = x; }
+    });
+    return best;
   }
   /* 生き物ごとの 自然な もよう(Lv.3 きせかえ)。
      f(c) → { h:頭・耳もふくむ 体の色の所, b:体だけ(頭の うしろ), ob:おなかの 上, o:いちばん上(目の 下) }
@@ -2030,7 +2066,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   function dressBody(d, sk, sp){
     var M = mainColor(d), body = d.body, back = d.back || '', cur = M, T = null;
-    if(sk.c && SKIN_COLORS[sk.c]){ T = SKIN_COLORS[sk.c]; body = recolor(body, M, T); back = recolor(back, M, T); cur = hslHex(T[0], T[1], T[2]); }
+    var nc = natColor(sp, sk.c);
+    var extra = { back2:d.back2 || '', deco:d.deco || '', front2:d.front2 || '' };
+    if(nc){
+      T = [nc[2], nc[3], nc[4]]; var F = nc[5] || M;
+      var rc = function(str){ str = recolor(str, F, T); (NAT_RECOLOR[sp] || []).forEach(function(h){ str = str.split(h).join(hslHex(T[0], T[1], T[2] - .06)); }); return str; };
+      body = rc(body); back = rc(back);
+      for(var k in extra) extra[k] = rc(extra[k]);
+      if(!nc[5]) cur = hslHex(T[0], T[1], T[2]); else T = null;
+    }
     var defs = '', pat = natPat(sp, sk.p);
     if(pat){
       var fills = [cur.toUpperCase()].concat((NAT_CLIP[sp] || []).map(function(h){ return (T ? recolor(h, M, T) : h).toUpperCase(); }));
@@ -2066,7 +2110,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         }
       }
     }
-    return { body: body, back: back, defs: defs };
+    return { body: body, back: back, defs: defs, back2: extra.back2, deco: extra.deco, front2: extra.front2 };
   }
   /* きせかえの ボタン用: 目の ない 小さな 体 */
   function patThumb(sp, sk){
@@ -2087,11 +2131,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(capeOn) out += CAPE;
     var osh = oshareFn ? (oshareFn(sp) || []) : [];
     osh.forEach(function(it){ if(it.s === 'back') out += oshDraw(it, d); });
-    if(lv >= 2 && d.back2) out += d.back2;
+    var sk = (skinFn && lv >= 3) ? skinFn(sp) : null, dressed = sk ? dressBody(d, sk, sp) : { body:d.body, back:d.back||'', defs:'', back2:d.back2||'', deco:d.deco||'', front2:d.front2||'' };
+    if(lv >= 2 && dressed.back2) out += dressed.back2;
     var ex = d.eyeX || [75, 125];
     var en = d.eyesC ? '<g class="eyes face-n" style="animation-delay:'+(-Math.random()*4).toFixed(2)+'s">'+d.eyesC+wetG(d.eyeY, ex[0], ex[1])+'</g>' : eyesN(d.eyeY, ex[0], ex[1]);
-    var sk = (skinFn && lv >= 3) ? skinFn(sp) : null, dressed = sk ? dressBody(d, sk, sp) : { body:d.body, back:d.back||'', defs:'' };
-    out += dressed.defs + dressed.back + dressed.body + en + eyesH(d.eyeY, ex[0], ex[1], d.eyeInk) + (d.deco||'');
+    out += dressed.defs + dressed.back + dressed.body + en + eyesH(d.eyeY, ex[0], ex[1], d.eyeInk) + dressed.deco;
     var mN = d.mouthN || '', flipM = /<path[^>]*Q/.test(mN) ? ' flip' : '', ey = d.eyeY;
     out += '<g class="face-n"><g class="m-n' + flipM + '">' + mN + '</g></g><g class="face-h">' + (d.mouthH||'') + '</g>';
     out += '<g class="face-s" stroke="' + (d.eyeInk || INK) + '" stroke-width="3.6" stroke-linecap="round" fill="none"><path d="M'+(ex[0]-10)+','+(ey-18)+' L'+(ex[0]+7)+','+(ey-24)+'"/><path d="M'+(ex[1]-7)+','+(ey-24)+' L'+(ex[1]+10)+','+(ey-18)+'"/></g>';
@@ -2102,7 +2146,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       gc = 'url(#'+rid+')';
     }
     out += gem(d.gemAt[0], d.gemAt[1], lv >= 1 ? 18 : 14, gc);
-    if(lv >= 2){ out += necklace(); if(d.front2) out += d.front2; }
+    if(lv >= 2){ out += necklace(); if(dressed.front2) out += dressed.front2; }
     /* 頭の おしゃれを 耳の横に つけた ときは、いつもの リボンと 交換する */
     if(lv >= 1 && !osh.some(function(it){ return it.s === 'head' && it.pos === 'ear'; })) out += bow(d.clipAt[0], d.clipAt[1], gc);
     /* てっぺんの おしゃれ・耳の横の ぼうしが ある ときは、Lv3の 王冠は 出さない(ぼうしと 重なるので) */
@@ -2140,8 +2184,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     natPats: function(sp){ return natPats(sp).map(function(p){ return { id:p.id, name:p.n }; }); },
     natPat: function(sp, p){ var x = natPat(sp, p); return x ? x.id : ''; },
     patThumb: patThumb,
-    SKIN_COLORS: SKIN_COLORS,
-    dressColor: function(sp, c){ var d = SPECIES[sp] || SPECIES.cat, T = SKIN_COLORS[c]; return T ? hslHex(T[0], T[1], T[2]) : mainColor(d); },
+    natColors: function(sp){ return (NAT_COLORS[sp] || []).map(function(x){ return { id:x[0], name:x[1] }; }); },
+    natColor: function(sp, c){ var x = natColor(sp, c); return x ? x[0] : ''; },
     svg: svg,
     mount: mount,
     cheer: function(el){ play(el, 'hop happy', 1100); },
@@ -3919,21 +3963,18 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       f.appendChild(card);
     });
   }
-  var SKIN_NAMES = { pink:'ピンク', sky:'水色', mint:'ミント', lav:'ラベンダー', lemon:'レモン', cocoa:'ココア' };
   function renderSkin(a){
     var ok = a.lv >= 3, s = getSkin(a.sp) || {};
     $('skinNote').textContent = ok ? 'スターの ごほうび!'+petName(a.sp)+'の 色と もようを かえられるよ。'
                                    : 'Lv.3 スターまで 育てると、体の 色と もようを かえられるよ。';
     $('skinPick').hidden = !ok;
     if(!ok) return;
-    var cs = $('skinColors'); cs.innerHTML = '';
-    [''].concat(Object.keys(SKIN_NAMES)).forEach(function(c){
+    var cs = $('skinColors'), curC = Pet.natColor(a.sp, s.c); cs.innerHTML = '';
+    [{ id:'', name:'もと' }].concat(Pet.natColors(a.sp)).forEach(function(c){
       var b = document.createElement('button');
-      b.className = 'sw' + ((s.c||'') === c ? ' on' : ''); b.setAttribute('data-skin', c||'orig');
-      b.style.background = Pet.dressColor(a.sp, c);
-      b.setAttribute('aria-label', c ? SKIN_NAMES[c] : 'もとの 色');
-      if(!c) b.innerHTML = '<span class="sw-t">もと</span>';
-      b.addEventListener('click', function(){ setSkin(a.sp, { c:c }); });
+      b.className = 'pat' + (curC === c.id ? ' on' : ''); b.setAttribute('data-skin', c.id||'orig');
+      b.innerHTML = Pet.patThumb(a.sp, { c:c.id, p:s.p }) + c.name;
+      b.addEventListener('click', function(){ setSkin(a.sp, { c:c.id }); });
       cs.appendChild(b);
     });
     var ps = $('skinPats'); ps.innerHTML = '';
