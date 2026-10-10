@@ -1164,9 +1164,15 @@
   .st.is-cur > .weekend.rec{ border:3px solid var(--gold-deep); background:linear-gradient(170deg, color-mix(in srgb, var(--gold) 16%, var(--surface)), var(--surface) 60%); box-shadow:0 14px 30px -18px var(--gold-deep); }
   .rec-h{ font-size:21px; font-weight:900; margin:0; line-height:1.3; }
   .rec-sub{ font-size:12px; color:var(--ink-soft); font-weight:700; margin:2px 0 10px; line-height:1.55; }
-  .rec-ops{ display:flex; gap:6px; margin-bottom:10px; }
-  .rec-ops button{ flex:1; border:2px solid var(--line); background:var(--surface); border-radius:12px; padding:4px 0; font-family:'Fredoka',sans-serif; font-weight:600; font-size:18px; color:var(--ink-soft); cursor:pointer; }
-  .rec-ops button[aria-pressed="true"]{ border-color:var(--gold-deep); color:var(--gold-deep); }
+  .rec-goal{ background:var(--surface); border-radius:16px; padding:8px 10px; border:1.5px solid var(--line); margin-bottom:10px; }
+  .rec-goal .rgo-h{ font-size:12px; font-weight:900; margin-bottom:4px; line-height:1.5; }
+  .rec-goal .rgo-h small{ display:block; font-size:11px; color:var(--ink-soft); font-weight:700; }
+  .rgo-row{ display:flex; align-items:center; gap:8px; padding:4px 0; font-size:12px; font-weight:700; color:var(--ink-soft); }
+  .rgo-row + .rgo-row{ border-top:1px dashed var(--line); }
+  .rgo-row .sym{ font-family:'Fredoka',sans-serif; font-weight:600; font-size:18px; width:22px; text-align:center; }
+  .rgo-row .rgo-r{ margin-left:auto; font-family:'Fredoka',sans-serif; }
+  .rgo-row.now{ color:var(--gold-deep); }
+  .rgo-row.ok .rgo-r{ color:var(--op-mul); font-weight:600; }
   .rec-graph{ background:var(--surface); border-radius:16px; padding:10px 10px 6px; border:1.5px solid var(--line); }
   .rec-graph .rg-head{ display:flex; align-items:baseline; gap:8px; font-size:12px; font-weight:900; }
   .rec-graph .rg-head .num{ margin-left:auto; font-size:20px; color:var(--gold-deep); }
@@ -3273,19 +3279,32 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     log100(op).forEach(function(e){ if(e.ok/e.n*100 >= WEEKEND_ACC && (!b || e.ms < b.ms)) b = e; });
     return b;
   }
+  /* 100問は まず × と ÷ の 九九で 力を つける。両方 目標(正解95%以上・5分以内)を こえたら、そのあとは いつも ＋－×÷を 混ぜて 出す(かんたんな 計算ばかり 選ばないように、種類は 選べない) */
+  var MIX100_ACC = 95, MIX100_MS = 5*60*1000, MIX100_OPS = ['mul', 'div'];
+  function goal100Met(op){ return log100(op).some(function(e){ return e.ok/e.n*100 >= MIX100_ACC && e.ms <= MIX100_MS; }); }
+  function op100(){
+    for(var i=0;i<MIX100_OPS.length;i++) if(!goal100Met(MIX100_OPS[i])) return MIX100_OPS[i];
+    return 'mix';
+  }
   function fmtClock(ms){ var t = Math.round(ms/1000), m = Math.floor(t/60), x = t%60; return m+':'+(x<10?'0':'')+x; }
   function renderWeekend(op){
     var c = $('weekendCard');
     c.hidden = false;
-    op = state.homeOp || op || 'add';
-    var name = op==='mix' ? '混ぜて' : OP_META[op].label;
+    op = op100();
+    var name = op==='mix' ? '＋－×÷ ミックス' : OP_META[op].label;
     var best = best100(op), hist = log100(op).slice(-7), h = '';
     h += '<span class="cur-tag">ここから やろう!</span><h3 class="rec-h">100問 <ruby>記録<rt>きろく</rt></ruby></h3>' +
-      '<p class="rec-sub">'+name+'を 100問('+(op==='mix' ? '九九と 2桁 ± 1桁まで' : EASY100[op].desc)+')。自分の 記録を こえよう!</p><div class="rec-ops">';
-    SINGLE_OPS.concat(['mix']).forEach(function(o){
-      h += '<button data-op100="'+o+'" aria-pressed="'+(o===op)+'">'+(o==='mix' ? 'M' : OP_META[o].symbol)+'</button>';
-    });
-    h += '</div><div class="rec-graph"><div class="rg-head">'+name+'の 自己ベスト<span class="num">'+(best ? fmtClock(best.ms) : '－')+'</span></div>';
+      '<p class="rec-sub">'+name+'を 100問('+(op==='mix' ? '九九と 2桁 ± 1桁まで' : EASY100[op].desc)+')。自分の 記録を こえよう!</p>';
+    if(op !== 'mix'){
+      h += '<div class="rec-goal"><div class="rgo-h">ミックスへの 道<small>× と ÷ で 正解'+MIX100_ACC+'%以上・'+fmtClock(MIX100_MS)+'以内が できたら、100問が ＋－×÷の ミックスに なるよ</small></div>';
+      MIX100_OPS.forEach(function(o){
+        var ok = goal100Met(o), b = best100(o);
+        h += '<div class="rgo-row'+(ok ? ' ok' : o === op ? ' now' : '')+'"><span class="sym">'+OP_META[o].symbol+'</span>'+EASY100[o].desc+(o === op ? ' ← 今は ここ' : '')+
+          '<span class="rgo-r">'+(ok ? '✓ クリア' : 'ベスト '+(b ? fmtClock(b.ms) : '－'))+'</span></div>';
+      });
+      h += '</div>';
+    }
+    h += '<div class="rec-graph"><div class="rg-head">'+name+'の 自己ベスト<span class="num">'+(best ? fmtClock(best.ms) : '－')+'</span></div>';
     if(hist.length){
       var mx = Math.max.apply(null, hist.map(function(e){ return e.ms; })), mn = Math.min.apply(null, hist.map(function(e){ return e.ms; }));
       h += '<div class="rg-bars">';
@@ -3301,13 +3320,6 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     c.innerHTML = h;
     $('weekendBtn').onclick = function(){ startPrint(op, WEEKEND_N, 'weekend'); };
   }
-  $('weekendCard').addEventListener('click', function(e){
-    var b = e.target.closest('[data-op100]'); if(!b) return;
-    state.homeOp = b.getAttribute('data-op100'); state.review = null;
-    safeSet('keisan_last_op', state.homeOp);
-    setLive(state.homeOp);
-    renderTabs(state.homeOp, recommendOp()); renderToday(state.homeOp); renderKuriCard(); renderRoad();
-  });
   function dayState(){
     var t = todayKey();
     var p = printLog().some(function(e){ return e.d === t && (e.k ? (e.k === 'daily' || e.k === 'review') : e.n !== WEEKEND_N); });
@@ -3369,7 +3381,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function renderRoad(){
     var d = dayState(), done = [d.p, d.c, d.w], cur = done.indexOf(false);
     var road = $('road'), ac = $('allClear'), card = $('todayCard');
-    var n = getStamps(), best = best100(state.homeOp || 'add');
+    var n = getStamps(), best = best100(op100());
     if(cur < 0){
       road.hidden = true;
       var a = activePet(), sc = streakCount();
@@ -3410,7 +3422,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('pin'+(i+1)).textContent = done[i] ? '✓' : (i+1);
     }
     var wait = cur === 0 ? 'プリントの あとで' : '挑戦の あとで';
-    var name = (state.homeOp && state.homeOp !== 'mix') ? OP_META[state.homeOp].label : '混ぜて';
+    var name = op100() !== 'mix' ? OP_META[op100()].label : '＋－×÷ ミックス';
     $('row1').innerHTML = done[0] ? '<span class="sr-t"><b>プリント できた!</b>今日の 練習は 何枚でも OK</span><button class="sr-btn" id="row1Btn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button>' : '';
     if($('row1Btn')) $('row1Btn').onclick = function(){ state.printOpen = !state.printOpen; renderRoad(); };
     $('row2').innerHTML = done[1]
@@ -5950,10 +5962,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(pr){
       var log = printLog();
       var prevBest100 = pr.kind === 'weekend' ? best100(state.op) : null;
+      var goalBefore = pr.kind === 'weekend' && MIX100_OPS.indexOf(state.op) >= 0 ? goal100Met(state.op) : null;
       var entry = { d:todayKey(), op:state.op, n:N, ok:firstTry, ms:elapsed, pass:passed, k:pr.kind };
       if(isReview) entry.rv = pr.lv;
       log.push(entry);
       safeSet('keisan_print_log', log.slice(-200));
+      if(goalBefore === false && goal100Met(state.op)){
+        var nx = op100();
+        banners.push(nx === 'mix'
+          ? { type:'level', title:'ミックス 100問が ひらいた!', text:'× も ÷ も 目標 クリア!次の 100問から ＋－×÷が 混ざって 出るよ。' }
+          : { type:'level', title:OP_META[state.op].label+'の 目標 クリア!', text:'次の 100問は '+OP_META[nx].label+'('+EASY100[nx].desc+')。正解'+MIX100_ACC+'%以上・'+fmtClock(MIX100_MS)+'以内を めざそう!' });
+      }
     }
 
     // sugoroku: one pass = one square
