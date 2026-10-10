@@ -3188,13 +3188,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       return (currentLevelIndex(x) - currentLevelIndex(y)) || (bestAccuracy(x) - bestAccuracy(y)) ||
         ((SINGLE_OPS.indexOf(x) + day) % 4 - (SINGLE_OPS.indexOf(y) + day) % 4);
     });
-    var weak = ops[0], rest = SINGLE_OPS.filter(function(o){ return o !== weak; });
-    return [weak, rest[day % rest.length]];
+    /* the boss (ops[0]) changes every day in turn; the weakest op is always mixed in as the 2nd */
+    var boss = SINGLE_OPS[day % SINGLE_OPS.length], weak = ops[0];
+    if(weak !== boss) return [boss, weak];
+    var rest = SINGLE_OPS.filter(function(o){ return o !== boss; });
+    return [boss, rest[day % rest.length]];
   }
   function startChallenge(){
     var ops = challengeOps(), qs = [];
     state.op = 'mix';
-    state.print = { n:CH_N, kind:'challenge' };
+    state.print = { n:CH_N, kind:'challenge', boss:ops[0] };
     setLive(ops[0]);
     for(var i=0;i<CH_N;i++){
       var op = ops[i % 2], lv = currentLevelIndex(op), hard = (i === 4 || i === 9) && lv < LEVELS[op].length-1;
@@ -5996,7 +5999,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
 
     if(isCh && passed && !challengeDone()){
-      safeSet('keisan_challenge', { d:todayKey(), done:true, boss:bossOp() });
+      safeSet('keisan_challenge', { d:todayKey(), done:true, boss:(pr && pr.boss) || bossOp() });
       bonuses.push({ label:'スペシャルコイン(5コイン分)', n:SPECIAL_VALUE });
       state.chGot = addStamp(bonuses);
     }
