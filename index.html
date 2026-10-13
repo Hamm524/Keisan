@@ -284,6 +284,10 @@
   .pick-card.sel .pc-name{ color:var(--live); }
   .pick-name{ background:var(--surface); border-radius:20px; box-shadow:var(--shadow); padding:12px 14px; margin:-4px 0 14px; display:flex; flex-direction:column; gap:8px; }
   .pick-name-label{ font-size:14px; font-weight:900; }
+  .sex-row{ display:flex; gap:6px; justify-content:center; }
+  .sex-btn{ flex:1; max-width:110px; font:inherit; font-size:14px; font-weight:700; padding:8px 4px; border-radius:100px; border:2px solid var(--line); background:var(--surface-2); color:var(--ink-soft); cursor:pointer; }
+  .sex-btn.sel{ border-color:var(--accent, #5B7CFA); background:var(--surface); color:var(--ink); }
+  .sex-mark{ font-size:.8em; font-weight:700; margin-left:3px; color:var(--ink-soft); }
   .pick-name-note{ margin:0; font-size:11.5px; color:var(--ink-soft); line-height:1.5; }
 
   /* ---- shop ---- */
@@ -1283,7 +1287,8 @@
     <div class="pick-name" id="pickNameBox" hidden>
       <label class="pick-name-label" for="pickName">名前を つけよう(つけなくても いいよ)</label>
       <input class="name-input" id="pickName" maxlength="8" autocomplete="off">
-      <p class="pick-name-note">8文字まで。あとから ホームの「✎ 名前」で かえられるよ。</p>
+      <div class="sex-row" id="pickSex"><button class="sex-btn" data-s="m">男の子</button><button class="sex-btn" data-s="f">女の子</button><button class="sex-btn sel" data-s="">ひみつ</button></div>
+      <p class="pick-name-note">名前は 8文字まで。あとから ホームの「✎ 名前」で かえられるよ。</p>
     </div>
     <button class="btn btn-primary" id="pickGo" disabled>この子に 決めた!</button>
     <button class="restore-link" id="pickRestore">まえの 記録を もどす</button>
@@ -1295,7 +1300,7 @@
       <div class="today-top">
         <div class="today-pet" id="homePet" aria-label="相棒を なでる"></div>
         <div class="today-talk">
-          <div class="buddy-name"><b id="homePetName"></b><span class="lv-chip num" id="homePetLv"></span><button class="name-edit" id="nameEdit">✎ 名前</button></div>
+          <div class="buddy-name"><b id="homePetName"></b><span class="sex-mark" id="homePetSex"></span><span class="lv-chip num" id="homePetLv"></span><button class="name-edit" id="nameEdit">✎ 名前</button></div>
           <p class="buddy-say" id="homeSay"></p>
         </div>
       </div>
@@ -1640,6 +1645,7 @@
     <h2 id="nameTitle">名前を つけよう</h2>
     <p id="nameSub"></p>
     <input class="name-input" id="nameInput" maxlength="8" autocomplete="off" placeholder="名前(8文字まで)">
+    <div class="sex-row" id="nameSex" style="margin-top:10px"><button class="sex-btn" data-s="m">男の子</button><button class="sex-btn" data-s="f">女の子</button><button class="sex-btn" data-s="">ひみつ</button></div>
     <div class="bk-btns"><button class="btn btn-ghost" id="nameCancel">やめる</button><button class="btn btn-primary" id="nameOk">決める</button></div>
     <button class="btn-text" id="nameReset">もとの 名前に もどす</button>
   </div>
@@ -1681,6 +1687,16 @@ var Pet = (function(){
   function wetG(y, lx, rx){
     return '<g class="wet"><ellipse cx="'+lx+'" cy="'+(y+6)+'" rx="6.5" ry="3.4" fill="#BFE6FF" opacity=".75"/><ellipse cx="'+rx+'" cy="'+(y+6)+'" rx="6.5" ry="3.4" fill="#BFE6FF" opacity=".75"/>' +
       '<circle cx="'+(lx+4)+'" cy="'+(y+3)+'" r="1.8" fill="#fff"/><circle cx="'+(rx+4)+'" cy="'+(y+3)+'" r="1.8" fill="#fff"/></g>';
+  }
+  /* 女の子の まつげ(目の 外がわに 2本ずつ) */
+  function lashes(y, lx, rx, col){
+    var s = ' stroke="'+(col||INK)+'" stroke-width="2.8" fill="none" stroke-linecap="round"';
+    return '<g class="lash"><path d="M'+(lx-7)+','+(y-9)+' L'+(lx-13)+','+(y-15)+'"'+s+'/><path d="M'+(lx-9.5)+','+(y-3)+' L'+(lx-16)+','+(y-6)+'"'+s+'/>' +
+      '<path d="M'+(rx+7)+','+(y-9)+' L'+(rx+13)+','+(y-15)+'"'+s+'/><path d="M'+(rx+9.5)+','+(y-3)+' L'+(rx+16)+','+(y-6)+'"'+s+'/></g>';
+  }
+  function lashesH(y, lx, rx, col){
+    var s = ' stroke="'+(col||INK)+'" stroke-width="2.8" fill="none" stroke-linecap="round"';
+    return '<path d="M'+(lx-9)+','+(y)+' L'+(lx-15)+','+(y-3)+'"'+s+'/><path d="M'+(rx+9)+','+(y)+' L'+(rx+15)+','+(y-3)+'"'+s+'/>';
   }
   function eyesH(y, lx, rx, col){
     var s = ' stroke="'+(col||INK)+'" stroke-width="5" fill="none" stroke-linecap="round"';
@@ -1783,6 +1799,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     dolphin:{"name": "イルカ", "gem": "#FF6F4C", "gemAt": [100.0, 147.0], "clipAt": [140, 58], "crownT": "", "eyeY": 84.0, "eyeX": [68.0, 132.0], "back": "", "body": "<path d=\"M146,152 Q176,152 182,124 Q170,128 164,138 Q168,120 156,110 Q150,130 146,152 Z\" fill=\"#6EB8FF\" /><path d=\"M92,32 Q104,6 122,34 Q106,30 92,32 Z\" fill=\"#5AA6F0\" /><ellipse cx=\"32\" cy=\"134\" rx=\"15\" ry=\"9\" fill=\"#5AA6F0\" transform=\"rotate(30 32 134)\" /><ellipse cx=\"168\" cy=\"134\" rx=\"15\" ry=\"9\" fill=\"#5AA6F0\" transform=\"rotate(-30 168 134)\" /><ellipse cx=\"100\" cy=\"128\" rx=\"68\" ry=\"54\" fill=\"#6EB8FF\" /><circle cx=\"100\" cy=\"85\" r=\"56\" fill=\"#6EB8FF\" /><ellipse cx=\"100\" cy=\"146\" rx=\"40\" ry=\"28\" fill=\"#F1F8FF\" /><ellipse cx=\"100\" cy=\"110\" rx=\"28\" ry=\"15\" fill=\"#A8D4FF\" /><ellipse cx=\"100\" cy=\"104\" rx=\"16\" ry=\"7\" fill=\"#A8D4FF\" /><path d=\"M92,36 Q100,40 108,36\" stroke=\"#3E86D0\" stroke-width=\"2.4\" fill=\"none\" stroke-linecap=\"round\" />", "deco": "<ellipse cx=\"54\" cy=\"104\" rx=\"10\" ry=\"6\" fill=\"#FFB6C8\" opacity=\".8\" /><ellipse cx=\"146\" cy=\"104\" rx=\"10\" ry=\"6\" fill=\"#FFB6C8\" opacity=\".8\" />", "mouthN": "<path d=\"M80,114 Q100,128 120,114\" stroke=\"#2E2A3D\" stroke-width=\"2.6\" fill=\"none\" stroke-linecap=\"round\" />", "mouthH": "<path d=\"M79,113 Q100,129 121,113 Q100,116 79,113 Z\" fill=\"#C94A63\"/>"}
   };
 
+  var sexFn = null;
   var capeOn = false, wearFn = null, wearUid = 0, skinFn = null, skinUid = 0;
   /* おしゃれ(漢字アプリから): oshareFn(sp) → [{s:つける所, vb:viewBox, inner:SVGの中身}] */
   var oshareFn = null;
@@ -2153,8 +2170,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var sk = (skinFn && lv >= 3) ? skinFn(sp) : null, dressed = sk ? dressBody(d, sk, sp) : { body:d.body, back:d.back||'', defs:'', back2:d.back2||'', deco:d.deco||'', front2:d.front2||'' };
     if(lv >= 2 && dressed.back2) out += dressed.back2;
     var ex = d.eyeX || [75, 125];
-    var en = d.eyesC ? '<g class="eyes face-n" style="animation-delay:'+(-Math.random()*4).toFixed(2)+'s">'+d.eyesC+wetG(d.eyeY, ex[0], ex[1])+'</g>' : eyesN(d.eyeY, ex[0], ex[1]);
-    out += dressed.defs + dressed.back + dressed.body + en + eyesH(d.eyeY, ex[0], ex[1], d.eyeInk) + dressed.deco;
+    var girl = sexFn && sexFn(sp) === 'f', lsh = girl ? lashes(d.eyeY, ex[0], ex[1], d.eyeInk) : '';
+    var en = d.eyesC ? '<g class="eyes face-n" style="animation-delay:'+(-Math.random()*4).toFixed(2)+'s">'+d.eyesC+lsh+wetG(d.eyeY, ex[0], ex[1])+'</g>' : eyesN(d.eyeY, ex[0], ex[1]).replace(/<g class="wet">/, lsh+'<g class="wet">');
+    var eh = eyesH(d.eyeY, ex[0], ex[1], d.eyeInk);
+    if(girl) eh = eh.replace(/<\/g>$/, lashesH(d.eyeY, ex[0], ex[1], d.eyeInk)+'</g>');
+    out += dressed.defs + dressed.back + dressed.body + en + eh + dressed.deco;
     var mN = d.mouthN || '', flipM = /<path[^>]*Q/.test(mN) ? ' flip' : '', ey = d.eyeY;
     // おなかが すいたときの への字口: にっこり口の 線(Q の 曲線)の 場所に かく
     var mqx = [], mqy = [];
@@ -2215,6 +2235,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     setWear: function(fn){ wearFn = fn; },
     setOshare: function(fn){ oshareFn = fn; },
     setSkin: function(fn){ skinFn = fn; },
+    setSex: function(fn){ sexFn = fn; },
     natPats: function(sp){ return natPats(sp).map(function(p){ return { id:p.id, name:p.n }; }); },
     natPat: function(sp, p){ var x = natPat(sp, p); return x ? x.id : ''; },
     patThumb: patThumb,
@@ -2297,6 +2318,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   Pet.setWear(function(sp){ var g = wornGem(sp); return g ? g.color : null; });
   function getSkin(sp){ return (safeGet('keisan_skin') || {})[sp] || null; }
   Pet.setSkin(function(sp){ var s = getSkin(sp); return s && (s.c || s.p) ? s : null; });
+  /* 男の子・女の子: keisan_sex = { t, s:{ sp:'m'|'f' } }(ないときは ひみつ) */
+  function getSex(sp){ var o = safeGet('keisan_sex'); return (o && o.s && o.s[sp]) || ''; }
+  function setSex(sp, v){
+    var o = safeGet('keisan_sex') || {}, m = {};
+    Object.keys(o.s || {}).forEach(function(k){ m[k] = o.s[k]; });
+    if(v === 'm' || v === 'f') m[sp] = v; else delete m[sp];
+    safeSet('keisan_sex', { t:Date.now(), s:m });
+  }
+  Pet.setSex(getSex);
+  function sexRow(id, v){ $(id).querySelectorAll('.sex-btn').forEach(function(b){ b.classList.toggle('sel', b.getAttribute('data-s') === v); }); }
+  function sexRowVal(id){ var b = $(id).querySelector('.sex-btn.sel'); return b ? b.getAttribute('data-s') : ''; }
   var SAY_HOME = ['今日も いっしょに がんばろう!','なでてくれて うれしいな','宝石、集めたいな〜','計算、得意に なろうね','いっしょだと 楽しいね'];
   var SAY_GOOD = ['やったね!','すごい!','その ちょうし!','正解!','かんぺき!','天才かも!'];
   var SAY_BAD  = ['ドンマイ!','次は できるよ','落ち着いて いこう','いっしょに がんばろ!'];
@@ -2632,7 +2664,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(KEEP_LOCAL[k]) return l;
     /* おしゃれは 新しい ほうを まるごと 使う(まぜると、しまった ものや はずした ものが もどって きて しまう) */
     /* 色・もよう・宝石の つけかえも、新しく えらんだ ほうを まるごと 使う(まぜると「もと」に もどしたのが もどって くる) */
-    if(k === 'keisan_skin' || k === 'keisan_wear'){
+    if(k === 'keisan_skin' || k === 'keisan_wear' || k === 'keisan_sex'){
       try{
         var SL = JSON.parse(l), SR = JSON.parse(r);
         var slt = SL && typeof SL.t === 'number' ? SL.t : 0, srt = SR && typeof SR.t === 'number' ? SR.t : 0;
@@ -2878,6 +2910,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     Pet.mount($('namePic'), a.sp, a.lv);
     $('nameSub').textContent = Pet.SPECIES[a.sp].name + 'に すきな 名前を つけてね。';
     $('nameInput').value = (safeGet('keisan_names') || {})[a.sp] || '';
+    sexRow('nameSex', getSex(a.sp));
     $('nameModal').hidden = false;
     setTimeout(function(){ $('nameInput').focus(); }, 50);
   }
@@ -2886,11 +2919,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     v = String(v || '').replace(/\s+/g, ' ').trim().slice(0, 8);
     if(v) all[a.sp] = v; else delete all[a.sp];
     safeSet('keisan_names', all);
+    if(sexRowVal('nameSex') !== getSex(a.sp)) setSex(a.sp, sexRowVal('nameSex'));
     $('nameModal').hidden = true;
     refreshHome();
     if(v){ Pet.cheer($('homePet')); $('homeSay').textContent = 'わーい!今日から '+v+'だよ!'; }
   }
   $('nameEdit').addEventListener('click', openNameEdit);
+  ['nameSex', 'pickSex'].forEach(function(id){
+    $(id).addEventListener('click', function(e){
+      var b = e.target.closest('.sex-btn'); if(!b) return;
+      var v = b.getAttribute('data-s');
+      sexRow(id, v);
+      var sp = id === 'nameSex' ? activePet().sp : pickSel;
+      var pic = id === 'nameSex' ? $('namePic') : document.querySelector('#pickGrid .pick-card.sel .pc-pet');
+      if(sp && pic){ Pet.setSex(function(x){ return x === sp ? v : getSex(x); }); Pet.mount(pic, sp, id === 'nameSex' ? activePet().lv : 0); Pet.setSex(getSex); }
+    });
+  });
   $('nameCancel').addEventListener('click', function(){ $('nameModal').hidden = true; });
   $('nameOk').addEventListener('click', function(){ saveName($('nameInput').value); });
   $('nameReset').addEventListener('click', function(){ saveName(''); });
@@ -3058,15 +3102,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   $('pickName').addEventListener('keydown', function(e){ if(e.key === 'Enter' && !e.isComposing){ e.preventDefault(); $('pickName').blur(); } });
   function openPick(){
     var grid = $('pickGrid'); grid.innerHTML = '';
-    pickSel = null; $('pickName').value = ''; $('pickNameBox').hidden = true;
+    pickSel = null; $('pickName').value = ''; $('pickNameBox').hidden = true; sexRow('pickSex', '');
     STARTERS.forEach(function(sp){
       var b = document.createElement('button');
       b.className = 'pick-card';
       b.innerHTML = '<div class="pc-pet"></div><span class="pc-name">'+Pet.SPECIES[sp].name+'</span>';
       Pet.mount(b.querySelector('.pc-pet'), sp, 0);
+      b._sp = sp;
       b.addEventListener('click', function(){
         pickSel = sp;
-        grid.querySelectorAll('.pick-card').forEach(function(c){ c.classList.remove('sel'); });
+        grid.querySelectorAll('.pick-card').forEach(function(c){ c.classList.remove('sel'); if(c !== b) Pet.mount(c.querySelector('.pc-pet'), c._sp, 0); });
+        if(sexRowVal('pickSex')){ var pv = sexRowVal('pickSex'); Pet.setSex(function(x){ return x === sp ? pv : getSex(x); }); Pet.mount(b.querySelector('.pc-pet'), sp, 0); Pet.setSex(getSex); }
         b.classList.add('sel');
         Pet.cheer(b.querySelector('.pc-pet'));
         $('pickGo').disabled = false;
@@ -3085,6 +3131,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var nm = pickNameVal(), names = safeGet('keisan_names') || {};
     if(nm) names[pickSel] = nm; else delete names[pickSel];
     safeSet('keisan_names', names);
+    setSex(pickSel, sexRowVal('pickSex'));
     var call = petName(pickSel);
     showModal({
       pet:{ sp:pickSel, lv:0 },
@@ -3550,6 +3597,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     setLive(sel);
     Pet.mount($('homePet'), a.sp, a.lv); moodPet($('homePet'));
     $('homePetName').textContent = petName(a.sp);
+    $('homePetSex').textContent = { m:'♂\uFE0E', f:'♀\uFE0E' }[getSex(a.sp)] || '';
     var fv = favToys(a.sp), myToys = getToys(), fo = fv.filter(function(t){ return myToys.indexOf(t.id) >= 0; });
     $('toyIco').innerHTML = (fo[0] || fv[0]).svg;
     $('toySub').textContent = fo.length ? fo[0].name+'で いっしょに あそぼう' : fv[0].name+'と '+fv[1].name+'が 大すき';
