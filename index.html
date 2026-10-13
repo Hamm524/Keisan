@@ -99,6 +99,15 @@
   .pet.hop-s .p-jump{ animation:p-hop-s .45s ease-out; }
   .pet.hop-s .p-shadow{ animation:p-shadow .45s ease; }
   .pet.oops .p-jump{ animation:p-oops .42s ease; }
+  .pet.spin .p-jump{ transform-origin:100px 130px; animation:p-spin .8s cubic-bezier(.3,.7,.4,1); }
+  .pet.spin .p-shadow{ animation:p-shadow .8s ease; }
+  @keyframes p-spin{
+    0%{ transform:translateY(0) rotate(0) scale(1,1); }
+    14%{ transform:translateY(0) rotate(0) scale(1.08,.9); }
+    45%{ transform:translateY(-32px) rotate(180deg) scale(.96,1.04); }
+    78%{ transform:translateY(0) rotate(360deg) scale(1.06,.94); }
+    100%{ transform:translateY(0) rotate(360deg) scale(1,1); }
+  }
   @keyframes p-hop{
     0%{ transform:translateY(0) scale(1,1); }
     14%{ transform:translateY(0) scale(1.1,.88); }
@@ -2248,11 +2257,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function play(el, cls, ms){
     var s = el && el.querySelector('svg.pet');
     if(!s) return;
-    s.classList.remove('hop','hop-s','oops','happy');
+    s.classList.remove('hop','hop-s','oops','happy','spin');
     void s.getBoundingClientRect();
     cls.split(' ').forEach(function(c){ s.classList.add(c); });
     clearTimeout(s._t);
-    s._t = setTimeout(function(){ s.classList.remove('hop','hop-s','oops','happy'); }, ms);
+    s._t = setTimeout(function(){ s.classList.remove('hop','hop-s','oops','happy','spin'); }, ms);
   }
 
   return {
@@ -2272,6 +2281,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     mount: mount,
     cheer: function(el){ play(el, 'hop happy', 1100); },
     tap: function(el){ play(el, 'hop-s happy', 750); },
+    spin: function(el){ play(el, 'spin happy', 1000); },
     oops: function(el){ play(el, 'oops', 450); }
   };
 })();
@@ -2985,7 +2995,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var d = modalDone; modalDone = null;
     if(d) d();
   });
-  $('modalPic').addEventListener('click', function(){ Pet.tap($('modalPic')); });
+  $('modalPic').addEventListener('click', function(){ Pet.spin($('modalPic')); });
 
   /* ---------- levels ---------- */
   var LEVELS = {
@@ -3738,7 +3748,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   $('collectRow').addEventListener('click', function(){ openShop(); });
   $('navHome').addEventListener('click', function(){ window.scrollTo({ top:0, behavior:'smooth' }); });
   $('homePet').addEventListener('click', function(){
-    Pet.tap($('homePet'));
+    Pet.spin($('homePet'));
     $('homeSay').textContent = any(SAY_HOME);
   });
 
@@ -4078,7 +4088,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       card.className = 'friend-card' + (sp===pets.active?' active':'') + (!isOwned?' locked':'');
       card.innerHTML = '<div class="f-pet"></div><span class="f-name">'+(isOwned ? petName(sp) : Pet.SPECIES[sp].name)+(isOwned?' <span class="num" style="font-weight:600;color:var(--ink-soft);font-size:11px">Lv.'+lv+'</span>':'')+'</span>';
       Pet.mount(card.querySelector('.f-pet'), sp, lv);
-      card.querySelector('.f-pet').addEventListener('click', function(){ Pet.tap(card.querySelector('.f-pet')); });
+      card.querySelector('.f-pet').addEventListener('click', function(){ Pet.spin(card.querySelector('.f-pet')); });
       if(sp===pets.active){
         card.insertAdjacentHTML('beforeend','<span class="f-state">いっしょに いるよ</span>');
       }else if(isOwned){
@@ -4205,7 +4215,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     openShop();
   });
   $('shopBack').addEventListener('click', goHome);
-  $('shopPet').addEventListener('click', function(){ Pet.tap($('shopPet')); });
+  $('shopPet').addEventListener('click', function(){ Pet.spin($('shopPet')); });
 
   /* ---------- food ---------- */
   /* ---------- play with toys ---------- */
@@ -5517,7 +5527,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     sy.style.setProperty('--tx', x.toFixed(0) + 'px');
   }, 120);
   $('toyBack').addEventListener('click', function(){ endPlayClock(); stopToy(); goHome(); });
-  $('toyPet').addEventListener('click', function(){ Pet.tap($('toyPet')); });
+  $('toyPet').addEventListener('click', function(){ Pet.spin($('toyPet')); });
   $('toyFeed').addEventListener('click', function(){ endPlayClock(); stopToy(); openFood(); });
   $('toyStage').addEventListener('pointerdown', function(){ if(tireTimer) touchPlay(); });
   $('toyStage').addEventListener('pointermove', function(e){ if(tireTimer && e.buttons) touchPlay(); });
@@ -5585,7 +5595,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   $('openFood').addEventListener('click', openFood);
   $('foodBack').addEventListener('click', goHome);
-  $('foodPet').addEventListener('click', function(){ Pet.tap($('foodPet')); });
+  $('foodPet').addEventListener('click', function(){ Pet.spin($('foodPet')); });
 
   /* ---------- setup screen ---------- */
   function refreshBestBadges(){
@@ -5686,7 +5696,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     b.textContent = msg;
     b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
   }
-  $('playPet').addEventListener('click', function(){ Pet.tap($('playPet')); });
+  $('playPet').addEventListener('click', function(){ Pet.spin($('playPet')); });
 
   /* ---------- accuracy mode ---------- */
   function beginRound(mode, questions){
@@ -6517,7 +6527,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     startFish(i);
   });
   $('fishQuit').addEventListener('click', openFishMenu);
-  $('fishPet').addEventListener('click', function(){ Pet.tap($('fishPet')); });
+  $('fishPet').addEventListener('click', function(){ Pet.spin($('fishPet')); });
   function fishBegin(F, tag){
     fishR++;
     fish = F;
@@ -6914,7 +6924,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     startKuri(t, i);
   });
   $('kuriQuit').addEventListener('click', function(){ openKuriMenu(kuriOp); });
-  $('kuriPet').addEventListener('click', function(){ Pet.tap($('kuriPet')); });
+  $('kuriPet').addEventListener('click', function(){ Pet.spin($('kuriPet')); });
   function startKuri(track, idx){
     var st = KURI[track].stages[idx];
     kuriR++; kuriStop();
