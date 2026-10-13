@@ -1715,6 +1715,14 @@ var Pet = (function(){
       '<path d="M0,0 L13,-9 Q17,0 13,9 Z" fill="#FF8FB1"/>' +
       gem(0, 0, 8, color) + '</g>';
   }
+  /* 男の子の 蝶ネクタイ(首もとの まんなか) */
+  function bowtie(color){
+    return '<g transform="translate(100 123)">' +
+      '<path d="M0,0 L-15,-9 Q-19,0 -15,9 Z" fill="#4A6CF0"/>' +
+      '<path d="M0,0 L15,-9 Q19,0 15,9 Z" fill="#4A6CF0"/>' +
+      '<path d="M-11,-3 L-6,-1.5 M11,-3 L6,-1.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"/>' +
+      '<rect x="-4.5" y="-5.5" width="9" height="11" rx="3" fill="'+color+'"/></g>';
+  }
   function necklace(){
     var beads = [[79.6,127,'#FF9EC8'],[89.8,130,'#5B7CFA'],[110.2,130,'#1FA98E'],[120.4,127,'#FFC53D']];
     var out = '<path d="M66,120 Q100,142 134,120" stroke="#F2B632" stroke-width="3" fill="none" stroke-linecap="round"/>';
@@ -2170,6 +2178,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var sk = (skinFn && lv >= 3) ? skinFn(sp) : null, dressed = sk ? dressBody(d, sk, sp) : { body:d.body, back:d.back||'', defs:'', back2:d.back2||'', deco:d.deco||'', front2:d.front2||'' };
     if(lv >= 2 && dressed.back2) out += dressed.back2;
     var ex = d.eyeX || [75, 125];
+    var boy = sexFn && sexFn(sp) === 'm';
     var girl = sexFn && sexFn(sp) === 'f', lsh = girl ? lashes(d.eyeY, ex[0], ex[1], d.eyeInk) : '';
     var en = d.eyesC ? '<g class="eyes face-n" style="animation-delay:'+(-Math.random()*4).toFixed(2)+'s">'+d.eyesC+lsh+wetG(d.eyeY, ex[0], ex[1])+'</g>' : eyesN(d.eyeY, ex[0], ex[1]).replace(/<g class="wet">/, lsh+'<g class="wet">');
     var eh = eyesH(d.eyeY, ex[0], ex[1], d.eyeInk);
@@ -2200,9 +2209,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       gc = 'url(#'+rid+')';
     }
     out += gem(d.gemAt[0], d.gemAt[1], lv >= 1 ? 18 : 14, gc);
-    if(lv >= 2){ out += necklace(); if(dressed.front2) out += dressed.front2; }
+    if(lv >= 2){ if(!boy) out += necklace(); if(dressed.front2) out += dressed.front2; }
+    if(boy && lv >= 1) out += bowtie(gc);
     /* 頭の おしゃれを 耳の横に つけた ときは、いつもの リボンと 交換する */
-    if(lv >= 1 && !osh.some(function(it){ return it.s === 'head' && it.pos === 'ear'; })) out += bow(d.clipAt[0], d.clipAt[1], gc);
+    if(lv >= 1 && !boy && !osh.some(function(it){ return it.s === 'head' && it.pos === 'ear'; })) out += bow(d.clipAt[0], d.clipAt[1], gc);
     /* てっぺんの おしゃれ・耳の横の ぼうしが ある ときは、Lv3の 王冠は 出さない(ぼうしと 重なるので) */
     var oshHead = osh.some(function(it){ return it.s === 'head' && (it.pos !== 'ear' || (oshFit(it) && /ぼうし/.test(it.n))); });
     if(lv >= 3 && !oshHead) out += crown(d.crownT);
