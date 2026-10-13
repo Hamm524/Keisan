@@ -99,15 +99,19 @@
   .pet.hop-s .p-jump{ animation:p-hop-s .45s ease-out; }
   .pet.hop-s .p-shadow{ animation:p-shadow .45s ease; }
   .pet.oops .p-jump{ animation:p-oops .42s ease; }
-  .pet.spin .p-jump{ transform-origin:100px 130px; animation:p-spin .8s cubic-bezier(.3,.7,.4,1); }
-  .pet.spin .p-shadow{ animation:p-shadow .8s ease; }
+  /* その場で 縦の じくで くるっと 回る(スケートや ドレスの おひろめ のように) */
+  .pet.spin .p-jump{ transform-origin:100px 180px; animation:p-spin .9s ease-in-out; }
+  .pet.spin .p-shadow{ animation:p-spin-sh .9s ease-in-out; }
   @keyframes p-spin{
-    0%{ transform:translateY(0) rotate(0) scale(1,1); }
-    14%{ transform:translateY(0) rotate(0) scale(1.08,.9); }
-    45%{ transform:translateY(-32px) rotate(180deg) scale(.96,1.04); }
-    78%{ transform:translateY(0) rotate(360deg) scale(1.06,.94); }
-    100%{ transform:translateY(0) rotate(360deg) scale(1,1); }
+    0%{ transform:translateY(0) scaleX(1); }
+    12%{ transform:translateY(-6px) scaleX(.94); }
+    30%{ transform:translateY(-10px) scaleX(.06); }
+    50%{ transform:translateY(-12px) scaleX(-1); }
+    70%{ transform:translateY(-10px) scaleX(-.06); }
+    88%{ transform:translateY(-4px) scaleX(1.03); }
+    100%{ transform:translateY(0) scaleX(1); }
   }
+  @keyframes p-spin-sh{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(.8); } }
   @keyframes p-hop{
     0%{ transform:translateY(0) scale(1,1); }
     14%{ transform:translateY(0) scale(1.1,.88); }
