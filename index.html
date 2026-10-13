@@ -1723,7 +1723,7 @@ var Pet = (function(){
       '<path d="M92,'+(k-2)+' L108,'+(k-2)+' L105,'+(k+6)+' L95,'+(k+6)+' Z" fill="#2F49B8"/></g>';
   }
   /* ネクタイの 結び目の たかさ(口・くちばし・した と ぶつからない よう 種類ごとに) */
-  var TIE_Y = { dog:134, dragon:131, dolphin:130, chick:128, unicorn:127, snake:129, owl:127, penguin:127, fox:124, whale:124, seal:124, panda:124 };
+  var TIE_Y = { dog:134, dragon:131, dolphin:130, chick:129, unicorn:128, snake:129, owl:128, penguin:128, hamster:132, bear:130, fox:130, whale:129, rabbit:130, tiger:128, wolf:128, cat:128, panda:128, seal:128 };
   function tophat(t){
     return '<g transform="'+(t||'')+'">' +
       '<rect x="87" y="14" width="26" height="25" rx="3" fill="#35324A"/>' +
@@ -2224,7 +2224,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       out += '<defs><linearGradient id="'+rid+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF8FB1"/><stop offset=".35" stop-color="#FFD24C"/><stop offset=".65" stop-color="#6FD9BE"/><stop offset="1" stop-color="#7B83EB"/></linearGradient></defs>';
       gc = 'url(#'+rid+')';
     }
-    if(boy && lv >= 1){ var tk = TIE_Y[sp] || 121; out += necktie(tk); out += gem(100, tk + 13, 7, gc); }
+    if(boy && lv >= 1){ var tk = TIE_Y[sp] || 127; out += necktie(tk); out += gem(100, tk + 13, 7, gc); }
     else out += gem(d.gemAt[0], d.gemAt[1], lv >= 1 ? 18 : 14, gc);
     if(lv >= 2){ if(!boy) out += necklace(); if(dressed.front2) out += dressed.front2; }
     /* 頭の おしゃれを 耳の横に つけた ときは、いつもの リボンと 交換する */
