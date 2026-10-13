@@ -111,6 +111,9 @@
     88%{ transform:translateY(-4px) scaleX(1.03); }
     100%{ transform:translateY(0) scaleX(1); }
   }
+  .pet .p-backv{ opacity:0; }
+  .pet.spin .p-backv{ animation:p-backv .9s linear; }
+  @keyframes p-backv{ 0%,29.9%{ opacity:0; } 30%,69.9%{ opacity:1; } 70%,100%{ opacity:0; } }
   @keyframes p-spin-sh{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(.8); } }
   @keyframes p-hop{
     0%{ transform:translateY(0) scale(1,1); }
@@ -1884,6 +1887,28 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var f = function(n){ var v = l - a*Math.max(-1, Math.min(k(n)-3, 9-k(n), 1)); return ('0'+Math.round(v*255).toString(16)).slice(-2); };
     return '#' + f(0) + f(8) + f(4);
   }
+  /* 後ろ姿: 体の 形は そのままで、顔・おなか・ほっぺ などを 体の 色で ぬりつぶす(くるっと 回る あいだだけ 見せる) */
+  function backView(body, back, eyeY){
+    var M = mainColor({ body:body }).toUpperCase(), keep = {};
+    (back.match(/fill="(#[0-9A-Fa-f]{6})"/g) || []).forEach(function(f){ keep[f.slice(6, 13).toUpperCase()] = 1; });
+    function lum(h){ var r = parseInt(h.substr(1,2),16), g = parseInt(h.substr(3,2),16), b = parseInt(h.substr(5,2),16); return (Math.max(r,g,b) + Math.min(r,g,b)) / 510; }
+    function sat(h){ var r = parseInt(h.substr(1,2),16)/255, g = parseInt(h.substr(3,2),16)/255, b = parseInt(h.substr(5,2),16)/255, mx = Math.max(r,g,b), mn = Math.min(r,g,b); return mx === mn ? 0 : (mx - mn) / (1 - Math.abs(mx + mn - 1)); }
+    var LM = lum(M), ey = eyeY || 90;
+    var b = body.replace(/<(circle|ellipse|path|polygon|rect)\b[^>]*\/>/g, function(el){
+      var fm = /fill="(#[0-9A-Fa-f]{6})"/.exec(el);
+      if(!fm) return el.replace(/ stroke="(?!none)[^"]*"/g, ' stroke="'+M+'"');
+      var c = fm[1].toUpperCase();
+      /* 体の 色は そのまま。顔の まわり(目・鼻・口・ほっぺ・おなか)は 体の 色に。顔から はなれた 耳・しま・たてがみ などの 色は のこす */
+      var nums = (/\b(?:cx|x)="(-?[\d.]+)"[^>]*\b(?:cy|y)="(-?[\d.]+)"/.exec(el) || /\bd="M\s*(-?[\d.]+)[ ,](-?[\d.]+)/.exec(el) || /points="(-?[\d.]+)[ ,](-?[\d.]+)/.exec(el));
+      var x = nums ? +nums[1] : 100, y = nums ? +nums[2] : 120;
+      var inFace = x > 58 && x < 142 && y > ey - 22 && y < 178;
+      var distinct = keep[c] || LM - lum(c) > .14 || (sat(c) > .35 && Math.abs(lum(c) - LM) > .04 && c !== M);
+      var out = (!inFace && distinct) ? el : el.replace(/fill="#[0-9A-Fa-f]{6}"/, 'fill="'+M+'"');
+      return out.replace(/ stroke="(?!none)[^"]*"/g, ' stroke="'+M+'"');
+    });
+    b = b.replace(/ stroke="(?!none)[^"]*"/g, ' stroke="'+M+'"');
+    return '<g class="p-backv">' + b + '</g>';
+  }
   function mainColor(d){
     var m = d.body.match(/<ellipse cx="100" cy="1[2-5]\d(?:\.0)?" rx="(?:6\d|7\d)(?:\.0)?" ry="\d+(?:\.0)?" fill="(#[0-9A-Fa-f]{6})"/);
     if(m) return m[1];
@@ -2240,6 +2265,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(boy && lv >= 1){ var tk = TIE_Y[sp] || 127; out += necktie(tk); out += gem(100, tk + 13, 7, gc); }
     else out += gem(d.gemAt[0], d.gemAt[1], lv >= 1 ? 18 : 14, gc);
     if(lv >= 2){ if(!boy) out += necklace(); if(dressed.front2) out += dressed.front2; }
+    out += backView(dressed.body, dressed.back, d.eyeY);
     /* 頭の おしゃれを 耳の横に つけた ときは、いつもの リボンと 交換する */
     if(lv >= 1 && !boy && !osh.some(function(it){ return it.s === 'head' && it.pos === 'ear'; })) out += bow(d.clipAt[0], d.clipAt[1], gc);
     /* てっぺんの おしゃれ・耳の横の ぼうしが ある ときは、Lv3の 王冠は 出さない(ぼうしと 重なるので) */
