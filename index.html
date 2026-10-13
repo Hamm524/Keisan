@@ -2176,7 +2176,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return '<svg viewBox="8 0 184 190">'+r.defs+r.back+r.body+'</svg>';
   }
   var CAPE = '<g class="p-cape"><path d="M58,90 Q14,146 20,178 Q100,194 180,178 Q186,146 142,90 Z" fill="#5B4BC4"/><path d="M56,100 Q30,148 32,172" stroke="#7565E0" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M144,100 Q170,148 168,172" stroke="#7565E0" stroke-width="4" fill="none" stroke-linecap="round"/><polygon points="34.0,147.0 35.3,150.2 38.8,150.5 36.1,152.7 36.9,156.0 34.0,154.2 31.1,156.0 31.9,152.7 29.2,150.5 32.7,150.2" fill="#FFE380"/><polygon points="168.0,154.0 169.6,157.8 173.7,158.1 170.6,160.8 171.5,164.9 168.0,162.7 164.5,164.9 165.4,160.8 162.3,158.1 166.4,157.8" fill="#FFE380"/><polygon points="28.0,172.5 28.9,174.7 31.3,174.9 29.5,176.5 30.1,178.8 28.0,177.6 25.9,178.8 26.5,176.5 24.7,174.9 27.1,174.7" fill="#FFE380"/><polygon points="174.0,134.5 174.9,136.7 177.3,136.9 175.5,138.5 176.1,140.8 174.0,139.6 171.9,140.8 172.5,138.5 170.7,136.9 173.1,136.7" fill="#FFE380"/></g>';
-  function svg(sp, lv){
+  function svg(sp, lv, sexOv){
     var d = SPECIES[sp] || SPECIES.cat;
     lv = Math.max(0, Math.min(3, lv|0));
     var s = SCALE[lv];
@@ -2192,8 +2192,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var sk = (skinFn && lv >= 3) ? skinFn(sp) : null, dressed = sk ? dressBody(d, sk, sp) : { body:d.body, back:d.back||'', defs:'', back2:d.back2||'', deco:d.deco||'', front2:d.front2||'' };
     if(lv >= 2 && dressed.back2) out += dressed.back2;
     var ex = d.eyeX || [75, 125];
-    var boy = sexFn && sexFn(sp) === 'm';
-    var girl = sexFn && sexFn(sp) === 'f', lsh = girl ? lashes(d.eyeY, ex[0], ex[1], d.eyeInk) : '';
+    var sx = sexOv !== undefined ? sexOv : (sexFn && sexFn(sp));
+    var boy = sx === 'm';
+    var girl = sx === 'f', lsh = girl ? lashes(d.eyeY, ex[0], ex[1], d.eyeInk) : '';
     var en = d.eyesC ? '<g class="eyes face-n" style="animation-delay:'+(-Math.random()*4).toFixed(2)+'s">'+d.eyesC+lsh+wetG(d.eyeY, ex[0], ex[1])+'</g>' : eyesN(d.eyeY, ex[0], ex[1]).replace(/<g class="wet">/, lsh+'<g class="wet">');
     var eh = eyesH(d.eyeY, ex[0], ex[1], d.eyeInk);
     if(girl) eh = eh.replace(/<\/g>$/, lashesH(d.eyeY, ex[0], ex[1], d.eyeInk)+'</g>');
