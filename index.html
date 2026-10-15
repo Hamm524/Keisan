@@ -1734,6 +1734,16 @@ var Pet = (function(){
       '<path d="M0,0 L13,-9 Q17,0 13,9 Z" fill="#FF8FB1"/>' +
       gem(0, 0, 8, color) + '</g>';
   }
+  /* うしろから 見た リボン: 宝石は 前がわなので 見えず、結び目と たれた 2本の リボンが 見える */
+  function bowBack(x, y){
+    return '<g transform="translate('+x+' '+y+')">' +
+      '<path d="M-1,2 Q-5,12 -9,19 L-4,18 L-2,22 Q0,12 1,3 Z" fill="#F07A9E"/>' +
+      '<path d="M1,2 Q6,11 11,17 L6,17 L5,21 Q1,12 -1,3 Z" fill="#F58BAD"/>' +
+      '<path d="M0,0 L-13,-9 Q-17,0 -13,9 Z" fill="#F58BAD"/>' +
+      '<path d="M0,0 L13,-9 Q17,0 13,9 Z" fill="#F58BAD"/>' +
+      '<path d="M-3,-2 L-11,-6 M-3,2 L-11,6 M3,-2 L11,-6 M3,2 L11,6" stroke="#E2668E" stroke-width="1.4" stroke-linecap="round" opacity=".6"/>' +
+      '<rect x="-3.5" y="-4.5" width="7" height="9" rx="3" fill="#E2668E"/></g>';
+  }
   /* 男の子の ネクタイ(宝石は ネクタイピンの いち)と シルクハット */
   function necktie(k){
     var e = k + 31;
@@ -1984,6 +1994,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   /* マスク・お面は うしろ向きだと うらがわ(顔の ない 金の かたち) */
   function oshIsMask(it){ return it.s === 'side' && /マスク|仮面|かめん|お面|おめん/.test(it.n || ''); }
+  /* 耳の横の かみかざり(リボン・おはな・ぼうし など)を うしろから 見た 形: 前に ついている 宝石と 台・光は 見えず、少し かげに なる */
+  function oshBackOf(it){
+    var t = (it.inner || '').replace(/<svg\b[\s\S]*?<\/svg>/g, '')
+      .replace(/<circle\b[^>]*fill="#ffe680"[^>]*>(?:<\/circle>)?/gi, '')
+      .replace(/<circle\b[^>]*fill-opacity[^>]*>(?:<\/circle>)?/g, '')
+      .replace(/<g class="ta-twinkle" style="animation-delay[^>]*>[\s\S]*?<\/g>/g, '');
+    return { s:it.s, n:it.n, vb:it.vb, e:it.e, pos:it.pos, inner:'<g style="filter:brightness(.9)">' + t + '</g>' };
+  }
   function oshBackSide(it, d){
     var c = oshColor(it);
     var flat = oshDraw({ s:it.s, n:it.n, vb:it.vb, e:it.e, pos:it.pos, inner:(it.inner || '').replace(/(fill|stroke)="(?!none)[^"]*"/g, '$1="'+c+'"') }, d);
@@ -2380,7 +2398,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     bx += bWing;
     out += backView(dressed.body, dressed.back, d.eyeY, bx);
     /* 頭の おしゃれを 耳の横に つけた ときは、いつもの リボンと 交換する */
-    if(lv >= 1 && !boy && !osh.some(function(it){ return it.s === 'head' && it.pos === 'ear'; })) out += bow(d.clipAt[0], d.clipAt[1], gc);
+    if(lv >= 1 && !boy && !osh.some(function(it){ return it.s === 'head' && it.pos === 'ear'; })) out += '<g class="p-frontv">' + bow(d.clipAt[0], d.clipAt[1], gc) + '</g><g class="p-backv">' + bowBack(d.clipAt[0], d.clipAt[1]) + '</g>';
     /* てっぺんの おしゃれ・耳の横の ぼうしが ある ときは、Lv3の 王冠は 出さない(ぼうしと 重なるので) */
     var oshHead = osh.some(function(it){ return it.s === 'head' && (it.pos !== 'ear' || (oshFit(it) && /ぼうし/.test(it.n))); });
     if(lv >= 3 && !oshHead) out += crown(d.crownT);
@@ -2389,6 +2407,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(it.s === 'back') return;
       if(it.s === 'eyes' || it.s === 'neck') out += '<g class="p-frontv">' + oshDraw(it, d) + '</g>';
       else if(oshIsMask(it)) out += '<g class="p-frontv">' + oshDraw(it, d) + '</g><g class="p-backv">' + oshBackSide(it, d) + '</g>';
+      else if(it.s === 'head' && it.pos === 'ear') out += '<g class="p-frontv">' + oshDraw(it, d) + '</g><g class="p-backv">' + oshDraw(oshBackOf(it), d) + '</g>';
       else out += oshDraw(it, d);
     });
     out += '</g></g></g>';
