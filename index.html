@@ -114,6 +114,9 @@
   .pet .p-backv{ opacity:0; }
   .pet.spin .p-backv{ animation:p-backv .9s linear; }
   @keyframes p-backv{ 0%,29.9%{ opacity:0; } 30%,69.9%{ opacity:1; } 70%,100%{ opacity:0; } }
+  /* 前からしか 見えない もの(めがね・首かざり・マスクの 顔): うしろ向きの 間は かくす */
+  .pet.spin .p-frontv{ animation:p-frontv .9s linear; }
+  @keyframes p-frontv{ 0%,29.9%{ opacity:1; } 30%,69.9%{ opacity:0; } 70%,100%{ opacity:1; } }
   @keyframes p-spin-sh{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(.8); } }
   @keyframes p-hop{
     0%{ transform:translateY(0) scale(1,1); }
@@ -1888,7 +1891,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return '#' + f(0) + f(8) + f(4);
   }
   /* 後ろ姿: 体の 形は そのままで、顔・おなか・ほっぺ などを 体の 色で ぬりつぶす(くるっと 回る あいだだけ 見せる) */
-  function backView(body, back, eyeY){
+  function backView(body, back, eyeY, extra){
     var M = mainColor({ body:body }).toUpperCase(), keep = {};
     (back.match(/fill="(#[0-9A-Fa-f]{6})"/g) || []).forEach(function(f){ keep[f.slice(6, 13).toUpperCase()] = 1; });
     function lum(h){ var r = parseInt(h.substr(1,2),16), g = parseInt(h.substr(3,2),16), b = parseInt(h.substr(5,2),16); return (Math.max(r,g,b) + Math.min(r,g,b)) / 510; }
@@ -1907,7 +1910,52 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       return out.replace(/ stroke="(?!none)[^"]*"/g, ' stroke="'+M+'"');
     });
     b = b.replace(/ stroke="(?!none)[^"]*"/g, ' stroke="'+M+'"');
-    return '<g class="p-backv">' + b + '</g>';
+    return '<g class="p-backv">' + b + (extra || '') + '</g>';
+  }
+  /* 後ろ姿で 体の 上に 見える しっぽ(体の うしろに かくれて いた ぶんも 見える ように 前に 出す)。まるい しっぽ(うさぎ・くま)は おしりの まんなかへ */
+  function backTail(str){
+    var els = str.match(/<(?:circle|ellipse|path|polygon|rect)\b[^>]*\/>/g) || [], out = '', on = false;
+    els.forEach(function(el){
+      var nums = (/\bcx="(-?[\d.]+)"[^>]*\bcy="(-?[\d.]+)"/.exec(el) || /\bd="M\s*(-?[\d.]+)[ ,](-?[\d.]+)/.exec(el));
+      var x = nums ? +nums[1] : 0, y = nums ? +nums[2] : 0, flip = /rotate\(/.test(el) && /<ellipse/.test(el);
+      var start = !flip && x >= 144 && x <= 162 && y >= 108 && y <= 156 && (/<path/.test(el) || /\br="1[0-2]"/.test(el));
+      if(start || (on && !flip && x >= 144 && y >= 90 && y <= 160)){
+        /* 体と 同じ 色の しっぽは、体の 上で 見えるように すこし こい 色の ふちを つける */
+        var fm = /fill="(#[0-9A-Fa-f]{6})"/.exec(el);
+        if(fm && !/stroke=/.test(el)){ var hh = hexHsl(fm[1]); el = el.replace(/\/>$/, ' stroke="'+hslHex(hh[0], hh[1], hh[2] - .14)+'" stroke-width="2.5" stroke-linejoin="round"/>'); }
+        var cm = /<circle\b[^>]*\bcx="(-?[\d.]+)"[^>]*\bcy="(-?[\d.]+)"/.exec(el);
+        if(cm) el = '<g transform="translate('+(100 - cm[1])+' '+(156 - cm[2])+')">' + el + '</g>';
+        out += el; on = true;
+      }
+      else on = false;
+    });
+    return out;
+  }
+  /* 後ろ姿の 頭: マント・はねを 頭に かさねない ための マスク */
+  function headMask(body, id){
+    var m = /<(circle|ellipse) cx="100(?:\.0)?" cy="(8\d|9\d)(?:\.0)?" r(?:x)?="(4[89]|5\d|6\d)(?:\.0)?"[^>]*\/>/.exec(body);
+    if(!m) return '';
+    return '<defs><mask id="'+id+'" maskUnits="userSpaceOnUse" x="-40" y="-40" width="280" height="280"><rect x="-40" y="-40" width="280" height="280" fill="#fff"/>' +
+      m[0].replace(/ (?:fill|stroke|stroke-width)="[^"]*"/g, '').replace(/\/>$/, ' fill="#000"/>') + '</mask></defs>';
+  }
+  /* うしろから 見た マント(首から せなかに たれる) */
+  var CAPE_BACK = '<path d="M64,116 Q30,148 24,180 Q100,196 176,180 Q170,148 136,116 Q100,128 64,116 Z" fill="#5B4BC4"/><path d="M72,124 Q52,150 46,176 M128,124 Q148,150 154,176 M100,130 L100,186" stroke="#7565E0" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/><path d="M64,116 Q100,130 136,116" stroke="#7565E0" stroke-width="6" fill="none" stroke-linecap="round"/>';
+  /* おしゃれの おもな 色(うすい 光の まるを のぞいて、さいしょの 色) */
+  function oshColor(it){
+    var els = (it.inner || '').match(/<[a-z]+\b[^>]*>/gi) || [];
+    for(var i = 0; i < els.length; i++){
+      if(/opacity/.test(els[i])) continue;
+      var m = /(?:fill|stroke)="(#[0-9A-Fa-f]{3,6})"/.exec(els[i]);
+      if(m) return m[1];
+    }
+    return '#E8B93A';
+  }
+  /* マスク・お面は うしろ向きだと うらがわ(顔の ない 金の かたち) */
+  function oshIsMask(it){ return it.s === 'side' && /マスク|仮面|かめん|お面|おめん/.test(it.n || ''); }
+  function oshBackSide(it, d){
+    var c = oshColor(it);
+    var flat = oshDraw({ s:it.s, n:it.n, vb:it.vb, e:it.e, pos:it.pos, inner:(it.inner || '').replace(/(fill|stroke)="(?!none)[^"]*"/g, '$1="'+c+'"') }, d);
+    return '<g opacity=".95">' + flat + '</g>';
   }
   function mainColor(d){
     var m = d.body.match(/<ellipse cx="100" cy="1[2-5]\d(?:\.0)?" rx="(?:6\d|7\d)(?:\.0)?" ry="\d+(?:\.0)?" fill="(#[0-9A-Fa-f]{6})"/);
@@ -2262,17 +2310,55 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       out += '<defs><linearGradient id="'+rid+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF8FB1"/><stop offset=".35" stop-color="#FFD24C"/><stop offset=".65" stop-color="#6FD9BE"/><stop offset="1" stop-color="#7B83EB"/></linearGradient></defs>';
       gc = 'url(#'+rid+')';
     }
+    out += '<g class="p-frontv">';
     if(boy && lv >= 1){ var tk = TIE_Y[sp] || 127; out += necktie(tk); out += gem(100, tk + 13, 7, gc); }
     else out += gem(d.gemAt[0], d.gemAt[1], lv >= 1 ? 18 : 14, gc);
-    if(lv >= 2){ if(!boy) out += necklace(); if(dressed.front2) out += dressed.front2; }
-    out += backView(dressed.body, dressed.back, d.eyeY);
+    if(lv >= 2 && !boy) out += necklace();
+    out += '</g>';
+    if(lv >= 2 && dressed.front2) out += dressed.front2;
+    /* 後ろ姿で 見える もの: しっぽ・せなかの つばさ・首かざりの うしろ・マント・おしゃれの はね/マント */
+    var bx = backTail(dressed.back + dressed.body);
+    if(bx && lv >= 2 && dressed.front2) bx += dressed.front2;
+    (dressed.back.match(/<(?:path|polygon)\b[^>]*\/>/g) || []).forEach(function(el){
+      var nm = /\bd="M\s*(-?[\d.]+)[ ,](-?[\d.]+)/.exec(el);
+      if(nm && +nm[1] >= 60 && +nm[1] <= 140 && +nm[2] >= 90 && +nm[2] <= 125) bx += el;
+    });
+    if(lv >= 2 && dressed.back2) bx += dressed.back2;
+    var ny = Math.max(124, Math.min(136, (d.eyeY + 40 + d.gemAt[1]) / 2));
+    osh.forEach(function(it){
+      if(it.s !== 'neck') return;
+      var thick = /マフラー|スカーフ/.test(it.n || '');
+      bx += '<path d="M64,'+(ny-8)+' Q100,'+(ny+6)+' 136,'+(ny-8)+'" stroke="'+oshColor(it)+'" stroke-width="'+(thick ? 11 : 3.5)+'" fill="none" stroke-linecap="round"/>';
+    });
+    /* マントは 首から 下に たれるので 頭の 下に、はねは せなかから 大きく ひろがるので 頭に すこし かかっても 前に */
+    var bOsh = (capeOn ? CAPE_BACK : ''), bWing = '';
+    osh.forEach(function(it){
+      if(it.s !== 'back') return;
+      if(/マント|ケープ/.test(it.n || '')) bOsh += oshDraw(it, d);
+      else {
+        /* 漢字アプリの はね(左右の はばたく つばさ)は、つばさだけ 大きく、まんなかの 宝石は 小さく */
+        var wg = (it.inner || '').match(/<g class="ta-flap[LR]"[^>]*>[\s\S]*?<\/g>/g);
+        if(wg && wg.length === 2){
+          var rest = it.inner.replace(wg[0], '').replace(wg[1], '');
+          bWing += oshPlace({ vb:it.vb, inner:'<g>' + wg.join('') + '</g>' }, 100, 124, 220) + oshPlace({ vb:it.vb, inner:rest }, 100, 134, 84);
+        } else bWing += oshPlace(it, 100, 136, 168);
+      }
+    });
+    if(bOsh){ var hm = 'pbh'+(wearUid++), hmd = headMask(dressed.body, hm); bx += hmd + (hmd ? '<g mask="url(#'+hm+')">' + bOsh + '</g>' : bOsh); }
+    bx += bWing;
+    out += backView(dressed.body, dressed.back, d.eyeY, bx);
     /* 頭の おしゃれを 耳の横に つけた ときは、いつもの リボンと 交換する */
     if(lv >= 1 && !boy && !osh.some(function(it){ return it.s === 'head' && it.pos === 'ear'; })) out += bow(d.clipAt[0], d.clipAt[1], gc);
     /* てっぺんの おしゃれ・耳の横の ぼうしが ある ときは、Lv3の 王冠は 出さない(ぼうしと 重なるので) */
     var oshHead = osh.some(function(it){ return it.s === 'head' && (it.pos !== 'ear' || (oshFit(it) && /ぼうし/.test(it.n))); });
     if(lv >= 3 && !oshHead) out += crown(d.crownT);
     else if(boy && lv >= 2 && !oshHead) out += tophat(d.crownT);
-    osh.forEach(function(it){ if(it.s !== 'back') out += oshDraw(it, d); });
+    osh.forEach(function(it){
+      if(it.s === 'back') return;
+      if(it.s === 'eyes' || it.s === 'neck') out += '<g class="p-frontv">' + oshDraw(it, d) + '</g>';
+      else if(oshIsMask(it)) out += '<g class="p-frontv">' + oshDraw(it, d) + '</g><g class="p-backv">' + oshBackSide(it, d) + '</g>';
+      else out += oshDraw(it, d);
+    });
     out += '</g></g></g>';
     if(lv >= 3){
       out += sparkle(22, 48, 9, 0, '#FFC53D') + sparkle(178, 40, 7, -.8, '#FF9EC8') +
