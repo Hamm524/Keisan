@@ -2199,7 +2199,7 @@ var Pet = (function(){
       '<path d="M92,'+(k-2)+' L108,'+(k-2)+' L105,'+(k+6)+' L95,'+(k+6)+' Z" fill="#2F49B8"/></g>';
   }
   /* ネクタイの 結び目の たかさ(口・くちばし・した と ぶつからない よう 種類ごとに) */
-  var TIE_Y = { squirrel:130, koala:136, sheep:130, dog:134, dragon:131, dolphin:130, chick:129, unicorn:128, snake:129, owl:128, penguin:128, hamster:132, bear:130, fox:130, whale:129, rabbit:130, tiger:128, wolf:128, cat:128, panda:128, seal:128 };
+  var TIE_Y = { squirrel:130, koala:128, sheep:124, dog:134, dragon:131, dolphin:130, chick:129, unicorn:128, snake:129, owl:128, penguin:128, hamster:132, bear:130, fox:130, whale:129, rabbit:130, tiger:128, wolf:128, cat:128, panda:128, seal:128 };
   function tophat(t){
     return '<g transform="'+(t||'')+'">' +
       '<rect x="87" y="14" width="26" height="25" rx="3" fill="#35324A"/>' +
@@ -2305,18 +2305,18 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       mouthH:'<path d="M93,110 Q100,125 107,110 Q100,113 93,110 Z" fill="#C94A63"/>'
     },
     koala:{
-      name:'コアラ', gem:'#FF6F4C', gemAt:[100,150], clipAt:[134,34], crownT:'', eyeY:86,
+      name:'コアラ', gem:'#FF6F4C', gemAt:[100,142], clipAt:[134,34], crownT:'', eyeY:82,
       body:'<ellipse cx="100" cy="128" rx="68" ry="54" fill="#A7ADB9"/><circle cx="48" cy="54" r="28" fill="#A7ADB9"/><circle cx="152" cy="54" r="28" fill="#A7ADB9"/><circle cx="51" cy="57" r="16" fill="#F4F2F6"/><circle cx="149" cy="57" r="16" fill="#F4F2F6"/><circle cx="100" cy="86" r="56" fill="#A7ADB9"/><ellipse cx="100" cy="142" rx="38" ry="28" fill="#F4F2F6"/>',
-      deco:'<ellipse cx="57" cy="108" rx="10" ry="6" fill="#FFB6C8" opacity=".65"/><ellipse cx="143" cy="108" rx="10" ry="6" fill="#FFB6C8" opacity=".65"/><ellipse cx="100" cy="104" rx="12" ry="15" fill="#4A4552"/><ellipse cx="96" cy="98" rx="3" ry="4" fill="#fff" opacity=".35"/>',
-      mouthN:'<path d="M92,124 Q100,129 108,124" stroke="'+INK+'" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
-      mouthH:'<path d="M92,122 Q100,135 108,122 Q100,125 92,122 Z" fill="#C94A63"/>'
+      deco:'<ellipse cx="57" cy="102" rx="10" ry="6" fill="#FFB6C8" opacity=".65"/><ellipse cx="143" cy="102" rx="10" ry="6" fill="#FFB6C8" opacity=".65"/><ellipse cx="100" cy="97" rx="11" ry="12.5" fill="#4A4552"/><ellipse cx="96.5" cy="92" rx="2.6" ry="3.4" fill="#fff" opacity=".35"/>',
+      mouthN:'<path d="M93,113 Q100,118 107,113" stroke="'+INK+'" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
+      mouthH:'<path d="M93,112 Q100,124 107,112 Q100,115 93,112 Z" fill="#C94A63"/>'
     },
     sheep:{
-      name:'ひつじ', gem:'#B05CE8', gemAt:[100,150], clipAt:[136,46], crownT:'', eyeY:96, eyeX:[82,118],
-      body:'<ellipse cx="100" cy="130" rx="64" ry="50" fill="#FBF5EA"/><circle cx="38.5" cy="136.0" r="18" fill="#EFE3D1"/><circle cx="38.5" cy="134.5" r="15" fill="#FBF5EA"/><circle cx="49.2" cy="156.4" r="18" fill="#EFE3D1"/><circle cx="49.2" cy="154.9" r="15" fill="#FBF5EA"/><circle cx="71.4" cy="170.8" r="18" fill="#EFE3D1"/><circle cx="71.4" cy="169.3" r="15" fill="#FBF5EA"/><circle cx="100.0" cy="176.0" r="18" fill="#EFE3D1"/><circle cx="100.0" cy="174.5" r="15" fill="#FBF5EA"/><circle cx="128.6" cy="170.8" r="18" fill="#EFE3D1"/><circle cx="128.6" cy="169.3" r="15" fill="#FBF5EA"/><circle cx="150.8" cy="156.4" r="18" fill="#EFE3D1"/><circle cx="150.8" cy="154.9" r="15" fill="#FBF5EA"/><circle cx="161.5" cy="136.0" r="18" fill="#EFE3D1"/><circle cx="161.5" cy="134.5" r="15" fill="#FBF5EA"/><ellipse cx="46" cy="94" rx="20" ry="9" transform="rotate(24 46 94)" fill="#F3D9BE"/><ellipse cx="154" cy="94" rx="20" ry="9" transform="rotate(-24 154 94)" fill="#F3D9BE"/><ellipse cx="47" cy="94" rx="12" ry="4.5" transform="rotate(24 47 94)" fill="#FFC2CF"/><ellipse cx="153" cy="94" rx="12" ry="4.5" transform="rotate(-24 153 94)" fill="#FFC2CF"/><circle cx="100" cy="84" r="54" fill="#FBF5EA"/><circle cx="66" cy="54" r="16" fill="#EFE3D1"/><circle cx="66" cy="52.5" r="13" fill="#FBF5EA"/><circle cx="82" cy="40" r="16" fill="#EFE3D1"/><circle cx="82" cy="38.5" r="13" fill="#FBF5EA"/><circle cx="100" cy="35" r="16" fill="#EFE3D1"/><circle cx="100" cy="33.5" r="13" fill="#FBF5EA"/><circle cx="118" cy="40" r="16" fill="#EFE3D1"/><circle cx="118" cy="38.5" r="13" fill="#FBF5EA"/><circle cx="134" cy="54" r="16" fill="#EFE3D1"/><circle cx="134" cy="52.5" r="13" fill="#FBF5EA"/><ellipse cx="100" cy="100" rx="38" ry="36" fill="#F3D9BE"/>',
-      deco:'<ellipse cx="74" cy="113" rx="8" ry="5" fill="#FFB6C8" opacity=".75"/><ellipse cx="126" cy="113" rx="8" ry="5" fill="#FFB6C8" opacity=".75"/><ellipse cx="100" cy="110" rx="5.5" ry="3.6" fill="#C9897A"/>',
-      mouthN:'<path d="M100,113 L100,117 M100,117 Q95,122 91,118 M100,117 Q105,122 109,118" stroke="'+INK+'" stroke-width="2.3" fill="none" stroke-linecap="round"/>',
-      mouthH:'<path d="M93,117 Q100,130 107,117 Q100,120 93,117 Z" fill="#C94A63"/>'
+      name:'ひつじ', gem:'#B05CE8', gemAt:[100,146], clipAt:[140,52], crownT:'', eyeY:98, eyeX:[80,120],
+      body:'<ellipse cx="100" cy="132" rx="60" ry="48" fill="#FFFCF5"/><ellipse cx="80" cy="177" rx="12" ry="6" fill="#B39A86"/><ellipse cx="120" cy="177" rx="12" ry="6" fill="#B39A86"/><circle cx="42.5" cy="137.7" r="17" fill="#F1E6D4"/><circle cx="42.5" cy="136.2" r="14.5" fill="#FFFCF5"/><circle cx="52.5" cy="157.2" r="17" fill="#F1E6D4"/><circle cx="52.5" cy="155.7" r="14.5" fill="#FFFCF5"/><circle cx="73.2" cy="171.0" r="17" fill="#F1E6D4"/><circle cx="73.2" cy="169.5" r="14.5" fill="#FFFCF5"/><circle cx="100.0" cy="176.0" r="17" fill="#F1E6D4"/><circle cx="100.0" cy="174.5" r="14.5" fill="#FFFCF5"/><circle cx="126.8" cy="171.0" r="17" fill="#F1E6D4"/><circle cx="126.8" cy="169.5" r="14.5" fill="#FFFCF5"/><circle cx="147.5" cy="157.2" r="17" fill="#F1E6D4"/><circle cx="147.5" cy="155.7" r="14.5" fill="#FFFCF5"/><circle cx="157.5" cy="137.7" r="17" fill="#F1E6D4"/><circle cx="157.5" cy="136.2" r="14.5" fill="#FFFCF5"/><circle cx="51.9" cy="71.3" r="17" fill="#F1E6D4"/><circle cx="51.9" cy="69.8" r="14.5" fill="#FFFCF5"/><circle cx="58.8" cy="57.9" r="17" fill="#F1E6D4"/><circle cx="58.8" cy="56.4" r="14.5" fill="#FFFCF5"/><circle cx="69.9" cy="47.3" r="17" fill="#F1E6D4"/><circle cx="69.9" cy="45.8" r="14.5" fill="#FFFCF5"/><circle cx="84.1" cy="40.4" r="17" fill="#F1E6D4"/><circle cx="84.1" cy="38.9" r="14.5" fill="#FFFCF5"/><circle cx="100.0" cy="38.0" r="17" fill="#F1E6D4"/><circle cx="100.0" cy="36.5" r="14.5" fill="#FFFCF5"/><circle cx="115.9" cy="40.4" r="17" fill="#F1E6D4"/><circle cx="115.9" cy="38.9" r="14.5" fill="#FFFCF5"/><circle cx="130.1" cy="47.3" r="17" fill="#F1E6D4"/><circle cx="130.1" cy="45.8" r="14.5" fill="#FFFCF5"/><circle cx="141.2" cy="57.9" r="17" fill="#F1E6D4"/><circle cx="141.2" cy="56.4" r="14.5" fill="#FFFCF5"/><circle cx="148.1" cy="71.3" r="17" fill="#F1E6D4"/><circle cx="148.1" cy="69.8" r="14.5" fill="#FFFCF5"/><circle cx="100" cy="84" r="50" fill="#FFFCF5"/><path d="M100,135 Q144,135 144,97 Q144,67 100,67 Q56,67 56,97 Q56,135 100,135 Z" fill="#F8E4CC"/><circle cx="72" cy="74" r="11" fill="#FFFCF5"/><circle cx="86" cy="68" r="11" fill="#FFFCF5"/><circle cx="100" cy="66" r="11" fill="#FFFCF5"/><circle cx="114" cy="68" r="11" fill="#FFFCF5"/><circle cx="128" cy="74" r="11" fill="#FFFCF5"/><circle cx="52" cy="96" r="18" fill="#F7CB45"/><path d="M52,96 m-6,0 a6,6 0 1,1 12,0 a11,11 0 1,1 -22,0" stroke="#E0A92A" stroke-width="3.2" fill="none" stroke-linecap="round"/><circle cx="148" cy="96" r="18" fill="#F7CB45"/><path d="M148,96 m6,0 a6,6 0 1,0 -12,0 a11,11 0 1,0 22,0" stroke="#E0A92A" stroke-width="3.2" fill="none" stroke-linecap="round"/>',
+      deco:'<ellipse cx="70" cy="114" rx="9" ry="5.5" fill="#FFB0B8" opacity=".8"/><ellipse cx="130" cy="114" rx="9" ry="5.5" fill="#FFB0B8" opacity=".8"/><ellipse cx="100" cy="106" rx="4.5" ry="3.2" fill="#C98A7A"/>',
+      mouthN:'<path d="M100,108 L100,111 M100,111 Q95,116 91,112 M100,111 Q105,116 109,112" stroke="'+INK+'" stroke-width="2.3" fill="none" stroke-linecap="round"/>',
+      mouthH:'<path d="M93,110 Q100,124 107,110 Q100,113 93,110 Z" fill="#C94A63"/>'
     }
   };
 
@@ -2690,8 +2690,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     sheep: [
       { id:'buchi', n:'ぶち', old:'dot', f:function(c){ return {
         b: pD([[44,140,13],[150,128,11],[66,168,10],[140,166,12]], '#9B8574') }; } },
-      { id:'mimi', n:'くろみみ', old:'stripe', f:function(c){ return {
-        h: pM(pE(46, 94, 20, 9, '#5B4F4B', 24) + pE(47, 94, 12, 4.5, '#C98A9A', 24)) }; } }
+      { id:'jacob', n:'ジェイコブ', old:'stripe', f:function(c){ return {
+        h: pE(64, 50, 18, 14, '#8C7362') + pE(140, 46, 14, 11, '#8C7362'),
+        b: pD([[48,146,16,13],[152,140,14,12],[100,172,14,9]], '#8C7362') }; } }
     ],
     dolphin: [
       { id:'madara', n:'まだら', old:'dot', f:function(c){ return {
