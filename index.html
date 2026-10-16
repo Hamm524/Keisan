@@ -1,4 +1,150 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="けいさん"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#faf9f5"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}html,body,button,a,input,label,select,textarea{touch-action:manipulation}.toy-stage button{touch-action:none}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="けいさん"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#faf9f5"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}html,body,button,a,input,label,select,textarea{touch-action:manipulation}.toy-stage button{touch-action:none}[hidden]:not([hidden=until-found i]){display:none!important}  /* ---- 小数・分数 ---- */
+  #view-deci{ --dc-red:#E5484D; --dc-blue:#5B7CFA; --dc-orange:#FF8A3D; }
+  :root[data-theme="dark"] #view-deci{ --dc-red:#FF7B7F; --dc-blue:#93A8FF; --dc-orange:#FFAA6B; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) #view-deci{ --dc-red:#FF7B7F; --dc-blue:#93A8FF; --dc-orange:#FFAA6B; } }
+  .train #deciCard .fc-segs i.on, .train #deciCard .fc-go, #deciCard .fc-segs i.on, #deciCard .fc-go{ background:var(--op-div); }
+  #deciCard{ border-color:color-mix(in srgb, var(--op-div) 45%, transparent); }
+  .dc-fr{ display:inline-flex; flex-direction:column; align-items:center; line-height:1.05; vertical-align:middle; font-family:'Fredoka',ui-rounded,system-ui,sans-serif; }
+  .dc-fr>span{ padding:0 .15em; }
+  .dc-fr>span:first-child{ border-bottom:.08em solid currentColor; padding-bottom:.06em; }
+  .dc-fr>span:last-child{ padding-top:.06em; }
+  .dc-mixed{ font-size:.55em; color:var(--ink-soft); display:inline-flex; align-items:center; gap:.2em; }
+  #view-deci .c-red{ color:var(--dc-red); } #view-deci .c-blue{ color:var(--dc-blue); } #view-deci .c-muted{ color:var(--ink-soft); }
+  .dc-total{ display:flex; align-items:center; gap:6px; margin:0 0 12px; font-weight:700; color:var(--ink-soft); font-size:13px; }
+  .dc-total svg{ width:20px; height:20px; } .dc-total b{ color:var(--ink); font-size:17px; }
+  .dc-grade{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin:-4px 0 16px; padding:8px 10px; border-radius:14px; border:1.5px dashed var(--line); }
+  .dc-gl{ font-size:12.5px; font-weight:700; color:var(--ink); line-height:1.4; }
+  .dc-gl small{ display:block; font-size:10.5px; color:var(--ink-soft); }
+  .dc-gb{ display:flex; gap:4px; }
+  .dc-grade .dc-small{ padding:5px 10px; font-size:12.5px; }
+  .dc-grade .dc-small.sel{ background:var(--op-div); border-color:var(--op-div); }
+  .dc-lesson.locked{ opacity:.55; box-shadow:none; background:transparent; border:1.5px dashed var(--line); }
+  .dc-lesson .lock{ font-size:10.5px; color:var(--ink-soft); }
+  .dc-lessons{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin:6px 0 18px; }
+  .dc-lesson{ position:relative; border:none; border-radius:18px; background:var(--surface); box-shadow:var(--shadow); padding:11px 12px; text-align:left; font:inherit; color:var(--ink); cursor:pointer; display:grid; gap:2px; min-width:0; }
+  .dc-lesson .lno{ font-size:11px; color:var(--op-sub); font-weight:900; }
+  .dc-lesson .lt{ font-weight:900; font-size:14.5px; line-height:1.35; padding-right:26px; }
+  .dc-lesson .ld{ font-size:11.5px; color:var(--ink-soft); line-height:1.45; }
+  .dc-stamp{ position:absolute; right:6px; top:6px; width:30px; height:30px; }
+  .dc-stamp path, .dc-stampbig path{ fill:none; stroke:var(--bad); stroke-width:7; stroke-linecap:round; }
+  .dc-course{ background:var(--surface); border-radius:20px; box-shadow:var(--shadow); padding:12px 14px 14px; margin:6px 0 12px; border-left:6px solid var(--mc); }
+  .dc-course h3{ margin:0; font-size:17px; font-weight:900; }
+  .dc-course p{ margin:2px 0 10px; font-size:12px; color:var(--ink-soft); }
+  .dc-levels{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .dc-lvl{ border:1.5px solid var(--line); border-radius:14px; background:var(--surface-2); padding:8px 5px; font:inherit; color:var(--ink); cursor:pointer; display:grid; gap:3px; text-align:center; align-content:start; min-width:0; }
+  .dc-lvl:active{ transform:scale(.97); }
+  .dc-lvl .ln{ font-weight:900; font-size:14px; color:var(--mc); }
+  .dc-lvl .ld{ font-size:10.5px; color:var(--ink-soft); line-height:1.4; }
+  .dc-lvl .st{ display:flex; justify-content:center; gap:1px; } .dc-lvl .st svg{ width:17px; height:17px; }
+  .dc-lvl.locked{ opacity:.55; cursor:default; background:transparent; border-style:dashed; }
+  .dc-lvl .lock{ font-size:10px; color:var(--ink-soft); }
+  /* play */
+  .dc-pc{ position:relative; overflow:hidden; padding:18px 14px 18px; gap:12px; }
+  .dc-label{ margin:0; font-size:12px; font-weight:700; color:var(--ink-soft); text-align:center; padding:0 0 0 46px; min-height:2.6em; display:flex; align-items:center; }
+  .dc-q{ font-family:'Fredoka',ui-rounded,system-ui,sans-serif; font-size:clamp(28px,8vw,40px); font-weight:600; color:var(--ink); display:flex; align-items:center; justify-content:center; gap:.3em; flex-wrap:wrap; min-height:2.3em; }
+  .dc-q .op{ color:var(--live); } .dc-q .eq{ color:var(--ink-soft); }
+  .dc-q .answer-box{ min-width:2.8em; font-size:1em; padding:2px 12px; }
+  .dc-fin{ display:inline-flex; flex-direction:column; align-items:center; gap:4px; }
+  .dc-fbox{ font:inherit; font-size:.8em; min-width:2.2em; height:1.35em; border:2px solid var(--line); border-radius:12px; background:var(--surface-2); color:var(--live); padding:0 .25em; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .dc-fbox.on{ border:3px solid var(--live); }
+  .dc-fbox.empty::after{ content:'?'; color:var(--ink-soft); opacity:.6; }
+  .dc-fl{ width:100%; height:4px; border-radius:2px; background:var(--ink); }
+  .dc-hint{ width:100%; background:var(--surface-2); border:2px dashed var(--line); border-radius:14px; padding:10px 12px; font-size:14px; line-height:1.75; color:var(--ink); }
+  .dc-hint b{ color:var(--live); }
+  .dc-hissan{ display:inline-grid; justify-items:end; font-family:'Fredoka',ui-monospace,monospace; font-size:20px; line-height:1.4; margin:6px 0 0 8px; font-variant-numeric:tabular-nums; }
+  .dc-hissan .rule{ width:100%; border-top:2px solid var(--ink); }
+  .dc-hissan .zr{ color:var(--dc-red); opacity:.8; } .dc-hissan .dot{ color:var(--dc-red); font-weight:800; }
+  .dc-say{ margin:10px 0 0; font-size:14px; line-height:1.6; }
+  .dc-say .dc-fr{ font-size:.95em; }
+  .dc-tools{ display:flex; justify-content:space-between; gap:8px; margin-top:12px; }
+  .dc-small{ border:1.5px solid var(--line); background:var(--surface); color:var(--ink); border-radius:100px; padding:7px 14px; font:inherit; font-size:13px; font-weight:700; cursor:pointer; }
+  .dc-small:disabled{ opacity:.45; cursor:default; }
+  .dc-small.sel{ background:var(--live); border-color:var(--live); color:#fff; }
+  .dc-pad{ margin-top:12px; }
+  .dc-pad .key{ height:58px; }
+  .dc-pad .key.sub{ font-size:14px; font-weight:700; color:var(--ink-soft); font-family:inherit; }
+  .dc-pad .key.ok{ grid-column:1/-1; }
+  .dc-combo{ color:var(--bad); font-weight:900; }
+  .dc-maru{ position:absolute; inset:0; z-index:5; display:flex; align-items:center; justify-content:center; pointer-events:none; background:color-mix(in srgb, var(--surface) 78%, transparent); animation:dc-fade .2s ease-out; }
+  @keyframes dc-fade{ from{ opacity:0; } }
+  .dc-maru svg{ width:min(70%,240px); height:auto; overflow:visible; }
+  .dc-maru path{ fill:none; stroke:var(--bad); stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
+  .dc-maru.draw path{ animation:dc-draw .7s ease-out forwards; }
+  @keyframes dc-draw{ from{ stroke-dashoffset:var(--len); } to{ stroke-dashoffset:0; } }
+  /* bars */
+  .dc-bars{ width:100%; display:grid; gap:8px; background:var(--surface-2); border:2px dashed var(--line); border-radius:14px; padding:10px 12px 8px; }
+  .dc-bnote{ font-size:13px; color:var(--ink-soft); line-height:1.55; }
+  .dc-bnote b{ color:var(--ink); }
+  .dc-btrack{ position:relative; height:132px; margin:0 6px; }
+  .dc-btrack .tick{ position:absolute; top:0; bottom:16px; width:0; border-left:2px dashed var(--ink-soft); opacity:.7; }
+  .dc-btrack .tick b{ position:absolute; bottom:-18px; left:-4px; font-size:12px; color:var(--ink-soft); }
+  .dc-bar{ position:absolute; height:38px; border-radius:6px; display:flex; align-items:center; justify-content:center; border:2px solid var(--ink); background-image:linear-gradient(to right, transparent calc(100% - 1.5px), rgba(0,0,0,.28) 0); color:#fff; font-weight:800; min-width:0; overflow:hidden; }
+  .dc-bar .dc-fr{ font-size:15px; text-shadow:0 0 3px rgba(0,0,0,.7); }
+  .dc-bar .blab{ display:flex; pointer-events:none; }
+  .dc-bar.b1{ top:4px; background-color:var(--dc-red); }
+  .dc-bar.b2{ top:50px; background-color:var(--dc-blue); cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none; box-shadow:0 3px 0 rgba(0,0,0,.25); transition:top .25s; }
+  .dc-bar.b2.drag{ cursor:grabbing; box-shadow:0 6px 10px rgba(0,0,0,.3); }
+  .dc-bar.b2.cut{ background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.55) 0 5px, transparent 5px 10px); opacity:.88; }
+  .dc-left{ position:absolute; left:0; top:2px; height:42px; display:none; border:3px dashed var(--gold); border-radius:8px; pointer-events:none; }
+  .dc-rhi{ position:absolute; left:0; top:98px; height:16px; width:0; background:var(--gold); border-radius:4px; transition:width .25s; }
+  .dc-ruler{ position:absolute; left:0; right:0; top:98px; height:16px; border:2px solid var(--ink); border-radius:4px; background-image:linear-gradient(to right, transparent calc(100% - 1.5px), var(--ink) 0); background-repeat:repeat-x; pointer-events:none; }
+  /* 約分マシン */
+  .dc-rf{ font-size:1.3em; }
+  .dc-rf.bump{ animation:dc-pop .3s; }
+  @keyframes dc-pop{ 50%{ transform:scale(1.25); } }
+  .dc-rbar svg{ width:100%; height:40px; display:block; }
+  .dc-trail{ display:flex; flex-wrap:wrap; gap:.3em .5em; align-items:center; justify-content:center; font-weight:700; font-size:18px; color:var(--ink-soft); min-height:2.6em; }
+  .dc-trail .ar{ color:var(--live); }
+  .dc-divs{ display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:12px; }
+  .dc-divs .key{ height:54px; font-size:22px; }
+  .dc-chkbtn{ margin-top:12px; }
+  #dcChk{ margin-top:8px; }
+  .dc-chk{ display:grid; gap:8px; font-size:13px; }
+  .dc-chk .crow{ display:grid; gap:2px; padding:8px 10px; border-radius:10px; background:var(--surface); border:2px solid var(--line); }
+  .dc-chk .crow.yes{ border-color:var(--good); }
+  .dc-chk .crow b{ font-size:16px; color:var(--ink); }
+  .dc-chk .rule{ color:var(--ink-soft); }
+  .dc-chk .v{ font-weight:800; } .dc-chk .crow.yes .v{ color:var(--good); }
+  .dc-chk .ctip{ color:var(--ink-soft); font-size:12px; }
+  .dc-done{ width:100%; margin-top:12px; }
+  /* result */
+  .dc-review .r-text{ display:grid; gap:6px; }
+  .dc-rv{ display:flex; flex-wrap:wrap; align-items:center; gap:.4em; padding:6px 10px; background:var(--surface-2); border-radius:10px; font-size:16px; color:var(--ink); font-family:'Fredoka',ui-rounded,system-ui,sans-serif; }
+  .dc-rv .eq, .dc-rv .op{ color:var(--ink-soft); }
+  .dc-backmenu{ width:100%; margin-top:8px; }
+  /* lessons */
+  .dc-ltag{ margin:0; flex:1; text-align:left; font-size:13px; }
+  .dc-lcard{ position:relative; overflow:hidden; background:var(--surface); border-radius:26px; box-shadow:var(--shadow); padding:16px 14px; display:grid; gap:12px; }
+  .dc-talk{ background:var(--surface-2); border-radius:14px; padding:10px 12px; font-size:14px; line-height:1.7; margin-left:46px; }
+  .dc-talk b{ color:var(--dc-blue); }
+  .dc-stage{ display:grid; gap:10px; justify-items:center; }
+  .dc-cups, .dc-pizza{ width:min(100%,240px); height:auto; }
+  .dc-cmp{ width:100%; display:grid; gap:6px; }
+  .dc-cbar{ width:100%; height:40px; display:block; }
+  .dc-nlwrap{ width:100%; } .dc-nl{ width:100%; height:auto; display:block; }
+  .dc-cutrow{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; align-items:center; }
+  .dc-ql{ font-size:12.5px; color:var(--ink-soft); font-weight:700; }
+  .dc-readout{ display:grid; gap:6px; justify-items:center; text-align:center; }
+  .dc-big{ font-size:clamp(26px,7vw,34px); font-weight:600; display:flex; align-items:center; gap:.3em; flex-wrap:wrap; justify-content:center; }
+  .dc-explain{ color:var(--ink-soft); font-weight:700; font-size:14px; }
+  .dc-explain b{ color:var(--ink); }
+  .dc-fracx{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:center; }
+  .dc-parts{ display:grid; gap:4px; text-align:left; font-size:13.5px; }
+  .dc-mission{ margin-top:14px; background:var(--surface); border:2px dashed var(--op-sub); border-radius:20px; padding:12px 14px; display:grid; gap:8px; }
+  .dc-mhead{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .dc-mhead .dots{ max-width:90px; }
+  .dc-mtext{ font-size:17px; font-weight:900; display:flex; align-items:center; gap:.3em; flex-wrap:wrap; }
+  .dc-mfb{ min-height:1.6em; font-weight:700; font-size:14px; }
+  .dc-mfb.ok{ color:var(--bad); } .dc-mfb.info{ color:var(--op-sub); }
+  .dc-clear{ display:flex; gap:14px; align-items:center; }
+  .dc-clear p{ margin:4px 0 0; font-size:14px; line-height:1.6; }
+  .dc-ctitle{ font-size:20px; font-weight:900; color:var(--bad); }
+  .dc-coin{ font-size:13px; color:var(--gold-deep); margin-left:6px; }
+  .dc-stampbig{ width:68px; height:68px; flex:none; }
+  .dc-btnrow{ display:flex; flex-wrap:wrap; gap:8px; }
+  .dc-btnrow .btn{ flex:1 1 140px; }
+  @media (prefers-reduced-motion: reduce){ .dc-maru.draw path, .dc-rf.bump{ animation:none; stroke-dashoffset:0; } }
+</style></head><body>
 <title>けいさんチャレンジ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1364,6 +1510,7 @@
     <div class="train">
     <section class="fish-card" id="fishCard" hidden></section>
     <section class="fish-card" id="kuriCard" hidden></section>
+    <section class="fish-card" id="deciCard" hidden></section>
     </div>
     <h2 class="home-sec">コレクション</h2>
     <button class="collect" id="collectRow"></button>
@@ -1515,6 +1662,78 @@
       <button class="btn btn-primary fish-next" id="fishNext" hidden></button>
     </div>
   </main>
+  <!-- 小数・分数 -->
+  <main id="view-deci" class="view" hidden>
+    <div id="dcMenu">
+      <div class="shop-head">
+        <button class="icon-btn" id="dcBack" aria-label="もどる">←</button>
+        <h1>小数・分数</h1>
+      </div>
+      <p class="dc-total" id="dcTotal"></p>
+      <div class="dc-grade" id="dcGrade"></div>
+      <h2 class="sec-title">0じかんめ かんがえ方を まなぶ</h2>
+      <p class="sec-sub">さわって うごかして、小数と 分数の しくみを 知ろう。</p>
+      <div class="dc-lessons" id="dcLessons"></div>
+      <h2 class="sec-title">れんしゅう</h2>
+      <p class="sec-sub">10問で 6問 いっぱつ 正解なら ★。★を とると つぎの レベルが ひらくよ。</p>
+      <div id="dcCourses"></div>
+    </div>
+    <div id="dcLesson" hidden>
+      <div class="play-top">
+        <button class="icon-btn" id="dcLQuit" aria-label="もどる">✕</button>
+        <p class="level-tag dc-ltag">0じかんめ・<b id="dcLTitle"></b></p>
+      </div>
+      <section class="dc-lcard" id="dcLCard">
+        <div class="fish-pet" id="dcLPet"></div>
+        <div class="dc-talk" id="dcTalk"></div>
+        <div class="dc-stage" id="dcStage"></div>
+        <div class="dc-readout" id="dcReadout"></div>
+      </section>
+      <section class="dc-mission" id="dcMission"></section>
+    </div>
+    <div id="dcPlay" hidden>
+      <p class="level-tag" id="dcTag"></p>
+      <div class="play-top">
+        <button class="icon-btn" id="dcQuit" aria-label="やめる">✕</button>
+        <div class="dots" id="dcDots"></div>
+      </div>
+      <div class="problem-card dc-pc" id="dcPC">
+        <div class="fish-pet" id="dcPet"></div>
+        <p class="dc-label" id="dcLabel"></p>
+        <div class="dc-q" id="dcQ"></div>
+        <div class="dc-bars" id="dcBars" hidden></div>
+        <div class="dc-hint" id="dcHint" hidden></div>
+      </div>
+      <div class="bubble dc-say" id="dcSay" hidden></div>
+      <div class="dc-tools" id="dcTools">
+        <button class="dc-small" id="dcHintBtn">ヒントを 見る</button>
+        <button class="dc-small" id="dcOrder"></button>
+      </div>
+      <div class="numpad dc-pad" id="dcPad">
+        <button class="key num" data-k="1">1</button>
+        <button class="key num" data-k="2">2</button>
+        <button class="key num" data-k="3">3</button>
+        <button class="key num" data-k="4">4</button>
+        <button class="key num" data-k="5">5</button>
+        <button class="key num" data-k="6">6</button>
+        <button class="key num" data-k="7">7</button>
+        <button class="key num" data-k="8">8</button>
+        <button class="key num" data-k="9">9</button>
+        <button class="key num" id="dcSpecial" data-k=".">.</button>
+        <button class="key num" data-k="0">0</button>
+        <button class="key del" data-k="del" aria-label="1文字消す">⌫</button>
+        <button class="key ok" id="dcOk" aria-label="答える" disabled>✓</button>
+      </div>
+      <div id="dcRed" hidden>
+        <div class="dc-divs" id="dcDivs"></div>
+        <button class="dc-small dc-chkbtn" id="dcChkBtn">われるかな? チェッカー</button>
+        <div class="dc-hint" id="dcChk" hidden></div>
+        <button class="btn btn-primary dc-done" id="dcDone">これ以上 約分 できない!</button>
+      </div>
+      <button class="btn btn-primary fish-next" id="dcNext" hidden></button>
+    </div>
+  </main>
+
   <main id="view-kuri" class="view" hidden>
     <div id="kuriMenu">
       <div class="shop-head">
@@ -3299,7 +3518,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     speed:{ timerId:null, endAt:0, correct:0, attempted:0, streak:0, maxStreak:0 }
   };
 
-  var views = { pick:$('view-pick'), setup:$('view-setup'), shop:$('view-shop'), food:$('view-food'), toy:$('view-toy'), mode:$('view-mode'), play:$('view-play'), result:$('view-result'), fish:$('view-fish'), kuri:$('view-kuri') };
+  var views = { pick:$('view-pick'), setup:$('view-setup'), shop:$('view-shop'), food:$('view-food'), toy:$('view-toy'), mode:$('view-mode'), play:$('view-play'), result:$('view-result'), fish:$('view-fish'), kuri:$('view-kuri'), deci:$('view-deci') };
   function showView(name){
     Object.keys(views).forEach(function(k){ views[k].hidden = (k!==name); });
     window.scrollTo(0,0);
@@ -3835,6 +4054,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     renderChallenge();
     renderFishCard();
     renderKuriCard();
+    Deci.card();
     renderCollection();
     renderSaveBand(true);
     $('roadPet').innerHTML = '';
@@ -7255,6 +7475,742 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       retry: function(){ startKuri(track, next ? idx + 1 : idx); }
     });
   }
+
+  /* ---------- 小数・分数 (はなまる計算ノートから) ---------- */
+  var Deci = (function(){
+    var KEY = 'keisan_deci', ROUND = 10, LESSON_COIN = 3, STAR_COIN = 2;
+    var LIVE = { dec:'div', frac:'add', red:'mul' };
+    var LV = ['かんたん','ふつう','むずかしい'];
+    var MODES = [
+      { id:'dec', name:'小数の 計算', color:'--op-div', desc:'小数点の いちを そろえるのが コツ。',
+        levels:['小数第1位の たし算・ひき算','けたが ちがう 小数・小数×整数','小数×小数・小数の わり算'] },
+      { id:'frac', name:'分数の 計算', color:'--op-add', desc:'こたえは 約分して かこう。',
+        levels:['分母が 同じ たし算・ひき算','分母が ちがう(通分)','分数の かけ算・わり算'] },
+      { id:'red', name:'約分マシン', color:'--op-mul', desc:'分子と分母を 同じ数で わって 小さく しよう。',
+        levels:['2・3・5で われる','大きめの 数','すごく 大きな 数'] }
+    ];
+    var LESSONS = [
+      { id:'L1', title:'小数って なに?', sub:'ジュースで 0.1 を 知ろう', go:['dec',0] },
+      { id:'L2', title:'分数って なに?', sub:'ピザを 切って ぬってみよう', go:['frac',0] },
+      { id:'L3', title:'同じ 大きさの 分数', sub:'約分の ひみつ', go:['red',0] },
+      { id:'L4', title:'小数と 分数は なかま', sub:'数直線で つなげよう', go:null }
+    ];
+    var DIVS = [2,3,4,5,6,7,8,9,10,12];
+    /* 小学校で ならう 学年: これより 上は おうちの人が 学年を 上げるまで ひらかない */
+    var NEED = { dec:[3,4,5], frac:[3,5,6], red:[5,5,5] }, LNEED = { L1:3, L2:3, L3:5, L4:3 };
+
+    function getD(){
+      var s = safeGet(KEY); if(!s || typeof s !== 'object') s = {};
+      if(!s.best || typeof s.best !== 'object') s.best = {};
+      if(!s.lessons || typeof s.lessons !== 'object') s.lessons = {};
+      if(s.order !== 'n') s.order = 'd';
+      if([3,4,5,6].indexOf(s.grade) < 0) s.grade = 3;
+      return s;
+    }
+    function best(m, l){ return getD().best[m+l] || 0; }
+    function totalStars(){ var b = getD().best, t = 0; Object.keys(b).forEach(function(k){ t += +b[k] || 0; }); return t; }
+    function grade(){ return getD().grade; }
+    function gradeOk(m, l){ return grade() >= NEED[m][l]; }
+    function isOpen(m, l){ return gradeOk(m, l) && (l === 0 || best(m, l-1) >= 1); }
+    function noRed(){ return grade() < 5; }   /* 約分は 5年: それまでは 約分 しなくても 正解 */
+    function modeOf(id){ for(var i=0;i<MODES.length;i++) if(MODES[i].id === id) return MODES[i]; }
+
+    /* ---- math ---- */
+    function gcd(a, b){ a = Math.abs(a); b = Math.abs(b); while(b){ var t = a % b; a = b; b = t; } return a; }
+    function lcm(a, b){ return a / gcd(a, b) * b; }
+    function ri(a, b){ return a + Math.floor(Math.random()*(b-a+1)); }
+    function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+    function pow(s){ return Math.pow(10, s); }
+    function D(v, s){ return { v:v, s:s }; }
+    function align(a, b){ var s = Math.max(a.s, b.s); return [a.v*pow(s-a.s), b.v*pow(s-b.s), s]; }
+    function dAdd(a, b){ var x = align(a, b); return D(x[0]+x[1], x[2]); }
+    function dSub(a, b){ var x = align(a, b); return D(x[0]-x[1], x[2]); }
+    function dMul(a, b){ return D(a.v*b.v, a.s+b.s); }
+    function dCmp(a, b){ var x = align(a, b); return x[0]-x[1]; }
+    function dNorm(d){ var v = d.v, s = d.s; while(s > 0 && v % 10 === 0){ v /= 10; s--; } return D(v, s); }
+    function dFmt(d){
+      d = dNorm(d); var t = String(Math.abs(d.v));
+      if(d.s > 0){ while(t.length < d.s+1) t = '0'+t; t = t.slice(0, -d.s)+'.'+t.slice(-d.s); }
+      return (d.v < 0 ? '-' : '')+t;
+    }
+    function dParse(t){
+      if(!/^\d*\.?\d*$/.test(t) || t === '' || t === '.') return null;
+      var p = t.split('.'), f = p[1] || '';
+      return D(parseInt((p[0] || '0')+f, 10), f.length);
+    }
+    function rdec(s, min, max){ var v; do{ v = ri(Math.round(min*pow(s)), Math.round(max*pow(s))); }while(s > 0 && v % 10 === 0); return D(v, s); }
+    function fr(n, d){ return d === 1 ? '<span>'+n+'</span>' : '<span class="dc-fr"><span>'+n+'</span><span>'+d+'</span></span>'; }
+    function frMixed(n, d){ if(d === 1 || n < d) return ''; var w = Math.floor(n/d), r = n % d; return r ? '<span class="dc-mixed">(= '+w+' と '+fr(r, d)+')</span>' : ''; }
+    function smallestPrime(n){ for(var p=2;p<=n;p++) if(n % p === 0) return p; return n; }
+    function randProper(dmin, dmax){ var d = ri(dmin, dmax), n; do{ n = ri(1, d-1); }while(gcd(n, d) !== 1); return [n, d]; }
+
+    /* ---- 問題 ---- */
+    function hissan(a, b, op){
+      var s = Math.max(a.s, b.s);
+      function row(d){
+        var t = dFmt(d), extra = '';
+        if(s > 0){
+          if(d.s === 0) extra = '<span class="dot">.</span><span class="zr">'+'0'.repeat(s)+'</span>';
+          else if(d.s < s) extra = '<span class="zr">'+'0'.repeat(s-d.s)+'</span>';
+        }
+        if(d.s > 0) t = t.replace('.', '<span class="dot">.</span>');
+        return t+extra;
+      }
+      return '<span class="dc-hissan"><span>'+row(a)+'</span><span>'+op+'&nbsp;'+row(b)+'</span><span class="rule"></span></span>';
+    }
+    function genDec(l){
+      var a, b, op, ans, hint;
+      var t = l === 0 ? pick(['+','-']) : l === 1 ? pick(['+','-','×']) : pick(['×','÷','÷d']);
+      if(t === '+' || t === '-'){
+        if(l === 0){ a = rdec(1, .1, 9.9); b = rdec(1, .1, 9.9); }
+        else{ var sa = pick([1,2]), sb = sa === 1 ? 2 : pick([0,1]); a = rdec(sa, .1, 20); b = sb === 0 ? D(ri(1, 9), 0) : rdec(sb, .1, 20); }
+        if(t === '-' && dCmp(a, b) < 0){ var tmp = a; a = b; b = tmp; }
+        if(dCmp(a, b) === 0) return genDec(l);
+        op = t; ans = t === '+' ? dAdd(a, b) : dSub(a, b);
+        hint = '<b>小数点の いちを たてに そろえて</b> 筆算 しよう。赤い 0 は 書きたした 0 だよ。<br>'+hissan(a, b, op === '-' ? '−' : '+');
+      }else if(t === '×'){
+        if(l === 1){ a = rdec(1, .2, 9.9); b = D(ri(2, 9), 0); }else{ a = rdec(1, .2, 9.9); b = rdec(1, .2, 4.9); }
+        op = '×'; ans = dMul(a, b);
+        hint = '<b>小数点を とって 整数の かけ算</b>: '+a.v+' × '+b.v+' を 計算しよう。<br>そのあと こたえの <b>右から '+(a.s+b.s)+'けた目</b> に 小数点を うつよ。';
+      }else if(t === '÷'){
+        var r = rdec(pick([1,2]), .1, 9.9), m = ri(2, 9); a = dNorm(dMul(r, D(m, 0))); b = D(m, 0); op = '÷'; ans = r;
+        hint = '<b>整数の わり算と 同じように</b> 計算しよう。わられる数の 小数点の <b>真上</b>に、こたえの 小数点を うつよ。';
+      }else{
+        var qq = ri(2, 9); b = rdec(1, .2, .9); a = dNorm(dMul(D(qq, 0), b)); op = '÷'; ans = D(qq, 0);
+        var a10 = dNorm(dMul(a, D(10, 0)));
+        hint = '<b>わる数を 整数に しよう</b>。わる数と わられる数を どちらも 10倍して:<br>'+dFmt(a10)+' ÷ '+b.v+' と 同じ こたえに なるよ。';
+      }
+      return { kind:'dec', key:dFmt(a)+op+dFmt(b),
+        qhtml:'<span>'+dFmt(a)+'</span><span class="op">'+(op === '-' ? '−' : op)+'</span><span>'+dFmt(b)+'</span><span class="eq">=</span>',
+        ans:ans, ansHTML:dFmt(ans), hint:hint };
+    }
+    function genFrac(l){
+      var a, b, c, d, op, N, M, hint, bars = null;
+      if(l === 0){
+        d = ri(3, 12); op = pick(['+','-']);
+        if(op === '+'){ a = ri(1, d-2); b = ri(1, d-a); }else{ a = ri(2, d-1); b = ri(1, a-1); }
+        N = op === '+' ? a+b : a-b; M = d;
+        hint = '<b>分母は そのまま</b>、分子だけ 計算しよう: '+a+' '+(op === '-' ? '−' : '+')+' '+b+'。'+(noRed() ? '' : '<br>さいごに 約分 できるか たしかめてね。');
+        bars = [[a, d], [b, d]];
+        c = b; b = d;
+      }else if(l === 1){
+        var p1, p2;
+        do{ p1 = randProper(2, 10); p2 = randProper(2, 10); a = p1[0]; b = p1[1]; c = p2[0]; d = p2[1]; }while(b === d || lcm(b, d) > 30);
+        op = pick(['+','-']);
+        if(op === '-' && a*d < c*b){ var t1 = a, t2 = b; a = c; b = d; c = t1; d = t2; }
+        var L = lcm(b, d); N = op === '+' ? a*(L/b)+c*(L/d) : a*(L/b)-c*(L/d); M = L;
+        if(N === 0) return genFrac(l);
+        hint = '<b>分母を '+L+' に そろえよう(通分)</b>。<br>'+fr(a, b)+' = '+fr(a*(L/b), L)+'、 '+fr(c, d)+' = '+fr(c*(L/d), L);
+        bars = [[a, b], [c, d]];
+      }else{
+        var q1 = randProper(2, 9), q2 = randProper(2, 9); a = q1[0]; b = q1[1]; c = q2[0]; d = q2[1]; op = pick(['×','÷']);
+        if(op === '×'){ N = a*c; M = b*d; hint = '<b>分子どうし、分母どうし を かけよう</b>。<br>かける 前に ななめに 約分 すると 計算が らくに なるよ。'; }
+        else{ N = a*d; M = b*c; hint = '<b>わる数を ひっくり返して かけ算</b>に しよう:<br>'+fr(a, b)+' × '+fr(d, c); }
+      }
+      var g = gcd(N, M), ans = { n:N/g, d:M/g };
+      if(l === 0 && noRed()) return { kind:'frac', key:a+'/'+b+op+c+'/'+d, plain:true,
+        qhtml:fr(a, b)+'<span class="op">'+(op === '-' ? '−' : '+')+'</span>'+fr(c, d)+'<span class="eq">=</span>',
+        ans:ans, ansHTML:fr(N, M)+(N === M ? ' <span class="eq">=</span> 1' : ''), hint:hint, bars:bars, op:op };
+      return { kind:'frac', key:a+'/'+b+op+c+'/'+d,
+        qhtml:fr(a, b)+'<span class="op">'+(op === '-' ? '−' : op)+'</span>'+fr(c, d)+'<span class="eq">=</span>',
+        ans:ans, ansHTML:(g > 1 ? fr(N, M)+' <span class="eq">=</span> ' : '')+fr(ans.n, ans.d)+' '+frMixed(ans.n, ans.d), hint:hint, bars:bars, op:op };
+    }
+    function genRed(l){
+      var n, d, k, sets = [[2,3,4,5,6],[4,6,8,9,10,12,14],[12,15,16,18,20,21,24]];
+      if(l > 0 && Math.random() < .1){ var p = randProper(5, l === 1 ? 30 : 60); n = p[0]; d = p[1]; k = 1; }
+      else{ var base = l === 0 ? randProper(2, 7) : l === 1 ? randProper(2, 10) : randProper(2, 12); k = pick(sets[l]); n = base[0]*k; d = base[1]*k; }
+      var g = gcd(n, d);
+      return { kind:'red', key:n+'/'+d, n:n, d:d, cur:{ n:n, d:d }, trail:[[n, d]], steps:0, g:g, ansHTML:fr(n/g, d/g) };
+    }
+
+    /* ---- 花丸 ---- */
+    var MARU = (function(){
+      var pts = [], t;
+      for(t=0;t<=Math.PI*5.2;t+=.12){ var r = 4+t*2.4; pts.push([r*Math.cos(t-1.6), r*Math.sin(t-1.6)]); }
+      var lastT = Math.PI*5.2;
+      for(t=0;t<=Math.PI*2+.05;t+=.05){ var th = lastT+t, r2 = 43+7*Math.abs(Math.sin(t*3.5)); pts.push([r2*Math.cos(th-1.6), r2*Math.sin(th-1.6)]); }
+      return 'M'+pts.map(function(p){ return p[0].toFixed(1)+' '+p[1].toFixed(1); }).join('L');
+    })();
+    function stamp(cls){ return '<svg class="'+cls+'" viewBox="-60 -60 120 120" aria-label="クリア"><path d="'+MARU+'"/></svg>'; }
+    function drawMaru(card){
+      if(!card) return;
+      var w = document.createElement('div'); w.className = 'dc-maru';
+      w.innerHTML = '<svg viewBox="-60 -60 120 120"><path d="'+MARU+'"/></svg>'; card.appendChild(w);
+      var p = w.querySelector('path'), len = p.getTotalLength();
+      p.style.strokeDasharray = len; p.style.strokeDashoffset = len; p.style.setProperty('--len', len);
+      requestAnimationFrame(function(){ w.classList.add('draw'); });
+      setTimeout(function(){ w.remove(); }, 1600);
+    }
+    function starsHTML(n){ var h = ''; for(var i=0;i<3;i++) h += starSVG(i < n); return h; }
+
+    /* ---- 画面 ---- */
+    var P = null, LS = null, R = 0, chkOpen = false;
+    function show(part){
+      $('dcMenu').hidden = part !== 'menu'; $('dcLesson').hidden = part !== 'lesson'; $('dcPlay').hidden = part !== 'play';
+      showView('deci');
+    }
+    function renderCard(){
+      var c = $('deciCard'); if(!c) return;
+      var s = getD(), segs = '', ls = 0;
+      MODES.forEach(function(m){ for(var l=0;l<3;l++) segs += '<i class="'+((s.best[m.id+l] || 0) >= 1 ? 'on' : '')+'"></i>'; });
+      LESSONS.forEach(function(L){ if(s.lessons[L.id]) ls++; });
+      c.innerHTML = '<span class="fc-ico"></span><span class="fc-text"><b>小数・分数</b>レッスン '+ls+'/4・★ '+totalStars()+'/27<span class="fc-segs">'+segs+'</span></span>' +
+        '<button class="fc-go" id="dcGo">れんしゅう</button>';
+      c.hidden = false;
+    }
+    $('deciCard').addEventListener('click', function(e){ if(e.target.closest('#dcGo')) openMenu(); });
+    function openMenu(){
+      R++; P = null; LS = null;
+      setLive('div');
+      var s = getD();
+      $('dcTotal').innerHTML = starSVG(true)+'<span>あつめた 星 <b class="num">'+totalStars()+'</b> / 27</span>';
+      $('dcGrade').innerHTML = '<span class="dc-gl">ならった ところ まで ひらく<small>おうちの人が えらんでね</small></span><span class="dc-gb">' +
+        [3,4,5,6].map(function(g){ return '<button class="dc-small'+(s.grade === g ? ' sel' : '')+'" data-g="'+g+'">'+g+'年</button>'; }).join('')+'</span>';
+      $('dcLessons').innerHTML = LESSONS.map(function(L, i){
+        return '<button class="dc-lesson'+(s.grade < LNEED[L.id] ? ' locked' : '')+'" data-ls="'+L.id+'"><span class="lno">レッスン '+(i+1)+'</span><span class="lt">'+L.title+'</span><span class="ld">'+L.sub+'</span>'+(s.lessons[L.id] ? stamp('dc-stamp') : '')+(s.grade < LNEED[L.id] ? '<span class="lock">🔒 '+LNEED[L.id]+'年で ならうよ</span>' : '')+'</button>';
+      }).join('');
+      $('dcCourses').innerHTML = MODES.map(function(m){
+        return '<section class="dc-course" style="--mc:var('+m.color+')"><h3>'+m.name+'</h3><p>'+(m.id === 'frac' && s.grade < 5 ? 'まずは 分母が 同じ 分数から。' : m.desc)+'</p><div class="dc-levels">' +
+          [0,1,2].map(function(l){
+            var open = isOpen(m.id, l), need = NEED[m.id][l];
+            return '<button class="dc-lvl'+(open ? '' : ' locked')+(s.grade < need ? ' later' : '')+'" data-m="'+m.id+'" data-l="'+l+'"><span class="ln">'+LV[l]+'</span><span class="ld">'+m.levels[l]+'</span>' +
+              (open ? '<span class="st">'+starsHTML(best(m.id, l))+'</span>' : '<span class="lock">🔒 '+(s.grade < need ? need+'年で ならうよ' : 'まえの レベルで ★1こ')+'</span>')+'</button>';
+          }).join('')+'</div></section>';
+      }).join('');
+      show('menu');
+    }
+    $('dcBack').addEventListener('click', goHome);
+    $('dcLessons').addEventListener('click', function(e){
+      var b = e.target.closest('.dc-lesson'); if(!b) return;
+      if(b.classList.contains('locked')){ toast('もう少し あとの 学年で ならうよ'); return; }
+      lesson(b.getAttribute('data-ls'));
+    });
+    $('dcGrade').addEventListener('click', function(e){
+      var b = e.target.closest('[data-g]'); if(!b) return;
+      var s = getD(); s.grade = +b.getAttribute('data-g'); safeSet(KEY, s);
+      toast(s.grade+'年までの ところを ひらいたよ'); openMenu();
+    });
+    $('dcCourses').addEventListener('click', function(e){
+      var b = e.target.closest('.dc-lvl'); if(!b) return;
+      if(b.classList.contains('later')){ toast('もう少し あとの 学年で ならうよ'); return; }
+      if(b.classList.contains('locked')){ toast('まえの レベルで ★を 1こ とると ひらくよ'); return; }
+      start(b.getAttribute('data-m'), +b.getAttribute('data-l'));
+    });
+
+    /* ---- れんしゅう ---- */
+    function start(mode, level){
+      R++; LS = null;
+      P = { mode:mode, level:level, i:0, first:0, combo:0, maxCombo:0, results:[], missed:[], used:{}, startTime:Date.now() };
+      setLive(LIVE[mode]);
+      var a = activePet(); Pet.mount($('dcPet'), a.sp, a.lv);
+      show('play');
+      nextQ();
+    }
+    function newQuestion(){
+      var g = P.mode === 'dec' ? genDec : P.mode === 'frac' ? genFrac : genRed, q, tries = 0;
+      do{ q = g(P.level); tries++; }while(P.used[q.key] && tries < 30);
+      P.used[q.key] = 1; return q;
+    }
+    function nextQ(){
+      if(P.i >= ROUND){ finish(); return; }
+      P.q = newQuestion(); P.att = 0; P.miss = 0; P.locked = false; P.hold = null;
+      P.input = { a:'', n:'', d:'', f:getD().order };
+      $('dcSay').hidden = true;
+      render();
+    }
+    function say(msg){ var b = $('dcSay'); b.innerHTML = msg; b.hidden = false; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); }
+    function renderTop(){
+      var m = modeOf(P.mode);
+      $('dcTag').innerHTML = m.name+'・<b>'+LV[P.level]+'</b>'+(P.combo >= 2 ? '　<span class="dc-combo">'+P.combo+' れんぞく!</span>' : '');
+      var d = '';
+      for(var i=0;i<ROUND;i++){ var r = P.results[i]; d += '<span class="dot-item'+(r === 'ok' ? ' done' : r === 'so' ? ' retry' : r === 'ng' ? ' miss' : i === P.i ? ' active' : '')+'"></span>'; }
+      $('dcDots').innerHTML = d;
+    }
+    function render(){
+      var q = P.q; renderTop();
+      var red = q.kind === 'red';
+      $('dcPad').hidden = red; $('dcTools').hidden = red; $('dcRed').hidden = !red; $('dcNext').hidden = true;
+      $('dcPC').classList.remove('flash-good','flash-bad');
+      if(red){ renderRed(); return; }
+      var chain = q.chain || [], last = chain.length ? chain[chain.length-1] : null;
+      $('dcLabel').textContent = (P.i+1)+'もんめ' + (q.kind === 'frac' ? (last ? '・つづけて 約分 しよう' : q.plain ? '・こたえを 入れよう' : '・こたえを 入れよう。約分 できたら してね') : '');
+      var ans = q.kind === 'dec' ? '<span class="answer-box num" id="dcAnsA"></span>'
+        : '<span class="dc-fin"><button class="dc-fbox num" id="dcFN" aria-label="分子"></button><span class="dc-fl"></span><button class="dc-fbox num" id="dcFD" aria-label="分母"></button></span>';
+      $('dcQ').innerHTML = q.qhtml + chain.map(function(f){ return fr(f[0], f[1])+'<span class="eq">=</span>'; }).join('') + ans;
+      var hint = q.hint;
+      if(last){ var g = gcd(last[0], last[1]), p = smallestPrime(g); hint = '<b>約分</b>: '+last[0]+' と '+last[1]+' は <b>'+p+'</b> で わりきれるよ。'+last[0]+'÷'+p+' と '+last[1]+'÷'+p+' を 計算しよう。'; }
+      $('dcHint').innerHTML = hint; $('dcHint').hidden = true; $('dcHintBtn').disabled = false;
+      $('dcBars').innerHTML = q.bars ? barsHTML(q) : ''; $('dcBars').hidden = !q.bars;
+      if(q.bars) bindBars(q);
+      $('dcOrder').hidden = q.kind !== 'frac'; orderLabel();
+      var sp = $('dcSpecial');
+      sp.textContent = q.kind === 'dec' ? '.' : '分子⇅分母';
+      sp.setAttribute('data-k', q.kind === 'dec' ? '.' : 'sw');
+      sp.classList.toggle('num', q.kind === 'dec'); sp.classList.toggle('sub', q.kind !== 'dec');
+      if(q.kind === 'frac'){
+        $('dcFN').onclick = function(){ setField('n'); };
+        $('dcFD').onclick = function(){ setField('d'); };
+      }
+      drawInput();
+    }
+    function orderLabel(){ $('dcOrder').textContent = 'かく じゅん: '+(getD().order === 'd' ? '分母 → 分子' : '分子 → 分母'); }
+    function setField(f){ if(!P || P.locked) return; P.input.f = f; drawInput(); }
+    function drawInput(){
+      if(P.q.kind === 'dec'){ var e = $('dcAnsA'); e.textContent = P.input.a || '?'; e.classList.toggle('placeholder', !P.input.a); }
+      else ['n','d'].forEach(function(f){
+        var e = $(f === 'n' ? 'dcFN' : 'dcFD'); e.textContent = P.input[f];
+        e.classList.toggle('empty', !P.input[f]); e.classList.toggle('on', P.input.f === f && !P.locked);
+      });
+      $('dcOk').disabled = P.locked || (P.q.kind === 'dec' ? !P.input.a : !P.input.n);
+    }
+    function press(k){
+      if(!P || !P.q || P.locked || P.q.kind === 'red') return;
+      var q = P.q, f = q.kind === 'dec' ? 'a' : P.input.f;
+      if(k === 'sw'){ if(q.kind === 'frac') setField(P.input.f === 'n' ? 'd' : 'n'); return; }
+      if(k === 'del'){
+        if(P.input[f]) P.input[f] = P.input[f].slice(0, -1);
+        else if(q.kind === 'frac'){ var o = f === 'n' ? 'd' : 'n'; if(P.input[o]){ P.input.f = o; P.input[o] = P.input[o].slice(0, -1); } }
+      }
+      else if(k === '.'){ if(q.kind === 'dec' && P.input.a.indexOf('.') < 0 && P.input.a.length < 7) P.input.a = (P.input.a || '0')+'.'; }
+      else if(/^\d$/.test(k)){
+        var max = q.kind === 'dec' ? 7 : 4;
+        if(P.input[f].length < max) P.input[f] = P.input[f] === '0' ? k : P.input[f]+k;
+      }
+      drawInput();
+    }
+    function flash(good){ var c = $('dcPC'); c.classList.remove('flash-good','flash-bad'); void c.offsetWidth; c.classList.add(good ? 'flash-good' : 'flash-bad'); }
+    function submit(){
+      if(!P || P.locked) return;
+      var q = P.q, ok = false;
+      if(q.kind === 'dec'){
+        var v = dParse(P.input.a); if(!v){ say('こたえを 入れてね'); return; }
+        ok = dCmp(v, q.ans) === 0;
+      }else{
+        if(!P.input.n){ say('分子を 入れてね'); setField('n'); return; }
+        var n = +P.input.n, d = P.input.d === '' ? 1 : +P.input.d;
+        if(d === 0){ say('分母に 0 は 入れられないよ'); setField('d'); return; }
+        if(n*q.ans.d === q.ans.n*d){
+          if(gcd(n, d) !== 1 && n !== 0 && !q.plain){
+            var chain = q.chain || [], last = chain.length ? chain[chain.length-1] : null;
+            if(last && last[0] === n && last[1] === d){ say('まだ 約分 できるよ。同じ 数で わって 小さく しよう'); flash(false); return; }
+            (q.chain = chain).push([n, d]);
+            P.input = { a:'', n:'', d:'', f:getD().order };
+            Pet.cheer($('dcPet'));
+            render();
+            say('ここまで OK! まだ 約分 できるよ。'+n+' と '+d+' を 同じ 数で わってみよう');
+            return;
+          }
+          ok = true;
+        }
+      }
+      if(ok){ correct(''); return; }
+      P.att++; P.combo = 0; flash(false); Pet.oops($('dcPet')); renderTop();
+      if(P.att < 2){ say('ざんねん! もういちど やってみよう。ヒントも 見てね'); $('dcHint').hidden = false; $('dcHintBtn').disabled = true; P.input = { a:'', n:'', d:'', f:getD().order }; drawInput(); }
+      else reveal();
+    }
+    function correct(extra){
+      var first = P.att === 0 && P.miss === 0;
+      if(first){ P.combo++; P.maxCombo = Math.max(P.maxCombo, P.combo); P.first++; }
+      P.results[P.i] = first ? 'ok' : 'so';
+      P.locked = true; flash(true); Pet.cheer($('dcPet'));
+      if(P.q.kind !== 'red') drawInput();
+      say((first ? any(['せいかい!','すごい!','その ちょうし!','ばっちり!','はなまる!']) : 'できたね!')+(extra || ''));
+      drawMaru($('dcPC')); renderTop();
+      var r = R, q = P.q;
+      setTimeout(function(){ if(r === R && P && P.q === q) advance(); }, extra ? 2200 : 1300);
+    }
+    function reveal(){
+      P.results[P.i] = 'ng'; P.missed.push(P.q); P.locked = true; renderTop();
+      if(P.q.kind !== 'red') drawInput();
+      say('こたえは '+P.q.ansHTML+' だよ。つぎは できる!');
+      P.hold = advance;
+      $('dcPad').hidden = true; $('dcRed').hidden = true;
+      $('dcNext').textContent = P.i === ROUND-1 ? 'わかった (おわり)' : 'わかった、つぎへ';
+      $('dcNext').hidden = false;
+    }
+    function advance(){ if(!P || !P.locked) return; P.locked = false; P.hold = null; P.i++; nextQ(); }
+    $('dcNext').addEventListener('click', function(){ if(P && P.hold) P.hold(); });
+    $('dcPad').addEventListener('click', function(e){
+      var b = e.target.closest('.key'); if(!b) return;
+      if(b.id === 'dcOk'){ if(!b.disabled) submit(); }
+      else press(b.getAttribute('data-k'));
+    });
+    $('dcHintBtn').addEventListener('click', function(){ $('dcHint').hidden = false; $('dcHintBtn').disabled = true; });
+    $('dcOrder').addEventListener('click', function(){
+      var s = getD(); s.order = s.order === 'd' ? 'n' : 'd'; safeSet(KEY, s); orderLabel();
+      if(P && P.q && P.q.kind === 'frac' && !P.input.n && !P.input.d){ P.input.f = s.order; drawInput(); }
+    });
+    $('dcQuit').addEventListener('click', openMenu);
+    $('dcPet').addEventListener('click', function(){ Pet.spin($('dcPet')); });
+
+    /* ---- 分数の バー (ドラッグ) ---- */
+    function barsHTML(q){
+      var a = q.bars[0][0], b = q.bars[0][1], c = q.bars[1][0], d = q.bars[1][1], f1 = a/b, f2 = c/d, plus = q.op === '+';
+      var scale = plus ? Math.max(1, Math.ceil(f1+f2-1e-9)) : 1, tick = '';
+      for(var i=0;i<=scale;i++) tick += '<i class="tick" style="left:'+(i/scale*100)+'%"><b>'+i+'</b></i>';
+      return '<div class="dc-bnote" id="dcBNote"></div><div class="dc-btrack" id="dcBTrack">'+tick +
+        '<div class="dc-bar b1" style="left:0;width:'+(f1/scale*100)+'%;background-size:calc(100%/'+a+') 100%"><span class="blab">'+fr(a, b)+'</span></div>' +
+        '<div class="dc-left" id="dcBLeft"></div>' +
+        '<div class="dc-bar b2" id="dcB2" role="button" tabindex="0" aria-label="青い バー。ドラッグして うごかせます" style="width:'+(f2/scale*100)+'%;background-size:calc(100%/'+c+') 100%"><span class="blab">'+fr(c, d)+'</span></div>' +
+        '<div class="dc-rhi" id="dcRhi"></div>' +
+        '<div class="dc-ruler" style="background-size:calc(100%/'+(lcm(b, d)*scale)+') 100%"></div></div>';
+    }
+    function bindBars(q){
+      var a = q.bars[0][0], b = q.bars[0][1], c = q.bars[1][0], d = q.bars[1][1], f1 = a/b, f2 = c/d, plus = q.op === '+';
+      var scale = plus ? Math.max(1, Math.ceil(f1+f2-1e-9)) : 1, target = plus ? f1 : f1-f2, maxOff = scale-f2;
+      var el = $('dcB2'), track = $('dcBTrack'), L = lcm(b, d);
+      function near(o){ return Math.abs(o-target) < 1e-6; }
+      function apply(off){
+        q.barOff = off; el.style.left = off/scale*100+'%';
+        var on = near(off), l = $('dcBLeft'), n = $('dcBNote'), hi = $('dcRhi');
+        hi.style.width = on ? ((plus ? f1+f2 : target)/scale*100)+'%' : '0';
+        el.style.top = on && !plus ? '4px' : '50px'; el.classList.toggle('cut', on && !plus);
+        l.style.display = on && !plus ? 'block' : 'none'; if(on && !plus) l.style.width = target/scale*100+'%';
+        var u = 'めもりは '+fr(1, L)+' ずつ';
+        n.innerHTML = on ? (plus ? 'ぴったり つながった! 下の きいろい めもり('+u+')を <b>かぞえて</b> みよう'
+          : '青を 赤に のせて <b>とった</b>! のこった 赤の めもり('+u+')を <b>かぞえて</b> みよう')
+          : (plus ? '青い バーを <b>ドラッグ</b>して、赤い バーの <b>つづき</b>に くっつけよう(タップでも OK)'
+          : '青い バーを <b>ドラッグ</b>して、赤い バーの <b>右はし</b>に のせよう。のせた ぶんが <b>とる ぶん</b>(タップでも OK)');
+      }
+      apply(q.barOff || 0);
+      var sx = 0, so = 0, moved = false, drag = false;
+      el.addEventListener('pointerdown', function(e){ drag = true; moved = false; sx = e.clientX; so = q.barOff || 0; el.setPointerCapture(e.pointerId); el.classList.add('drag'); });
+      el.addEventListener('pointermove', function(e){
+        if(!drag) return; var W = track.getBoundingClientRect().width;
+        if(Math.abs(e.clientX-sx) > 4) moved = true;
+        var off = so+(e.clientX-sx)/W*scale; off = Math.max(0, Math.min(maxOff, off));
+        if(Math.abs(off-target) < .04*scale) off = target; apply(off);
+      });
+      el.addEventListener('pointerup', function(){
+        if(!drag) return; drag = false; el.classList.remove('drag');
+        if(!moved) apply(near(q.barOff || 0) ? 0 : target);
+      });
+      el.addEventListener('pointercancel', function(){ drag = false; el.classList.remove('drag'); });
+      el.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); e.stopPropagation(); apply(near(q.barOff || 0) ? 0 : target); }
+        else if(e.key === 'ArrowLeft' || e.key === 'ArrowRight'){ e.preventDefault(); var st = .02*scale; apply(Math.max(0, Math.min(maxOff, (q.barOff || 0)+(e.key === 'ArrowRight' ? st : -st)))); }
+      });
+    }
+
+    /* ---- 約分マシン ---- */
+    function barSVG(n, d){
+      var lines = '';
+      if(d <= 40) for(var i=1;i<d;i++) lines += '<line x1="'+(i/d*100)+'" y1="0" x2="'+(i/d*100)+'" y2="20" stroke="var(--line)" stroke-width="'+(d > 20 ? .25 : .5)+'"/>';
+      return '<svg viewBox="0 0 100 20" preserveAspectRatio="none" aria-hidden="true"><rect x="0" y="0" width="100" height="20" rx="2" fill="var(--surface-2)" stroke="var(--line)" stroke-width=".6"/><rect x="0" y="0" width="'+(Math.min(n/d, 1)*100)+'" height="20" rx="2" fill="var(--op-mul)" opacity=".85"/>'+lines+'</svg>';
+    }
+    function groupBar(n, d, k){
+      var w = 300/d, full = Math.floor(d/k)*k, fn = Math.floor(n/k)*k, c = '', g = '', i;
+      for(i=0;i<d;i++){
+        var left = i >= full || (i < n && i >= fn);
+        c += '<rect x="'+(i*w).toFixed(2)+'" y="2" width="'+w.toFixed(2)+'" height="36" fill="'+(i < n ? 'var(--op-mul)' : 'var(--surface-2)')+'" stroke="var(--line)" stroke-width=".7"/>';
+        if(left) c += '<rect x="'+(i*w).toFixed(2)+'" y="2" width="'+w.toFixed(2)+'" height="36" fill="var(--dc-orange)" opacity=".85"/>';
+      }
+      for(i=0;i<=d;i+=k) if(i <= full) g += '<line x1="'+(i*w).toFixed(2)+'" y1="0" x2="'+(i*w).toFixed(2)+'" y2="40" stroke="var(--ink)" stroke-width="2.5"/>';
+      return '<svg viewBox="-2 0 304 40" preserveAspectRatio="none" aria-hidden="true">'+c+g+'</svg>';
+    }
+    function digsum(x){ return String(x).split('').reduce(function(a, b){ return a + +b; }, 0); }
+    function checkerHTML(n, d){
+      function row(k, rule, fn){
+        var a = fn(n), b = fn(d), ok = a.ok && b.ok;
+        return '<div class="crow'+(ok ? ' yes' : '')+'"><b>÷'+k+'</b><span class="rule">'+rule+'</span>' +
+          '<span>分子 '+n+': '+a.t+' '+(a.ok ? '○' : '×')+'</span><span>分母 '+d+': '+b.t+' '+(b.ok ? '○' : '×')+'</span>' +
+          '<span class="v">'+(ok ? 'ふたつとも ○ → ÷'+k+' できる!' : '× が あるから ÷'+k+' は できない')+'</span></div>';
+      }
+      return '<div class="dc-chk">' +
+        row(2, '一の位が 0・2・4・6・8(偶数)', function(x){ return { ok:x%2 === 0, t:'一の位は '+(x%10) }; }) +
+        row(3, '各位の 数を たして 3の 倍数', function(x){ var s = digsum(x), str = String(x); return { ok:s%3 === 0, t:str.split('').join('+')+(str.length > 1 ? '='+s : '') }; }) +
+        row(5, '一の位が 0 か 5', function(x){ return { ok:x%5 === 0, t:'一の位は '+(x%10) }; }) +
+        '<div class="ctip">4・6・8… は 2や 3で 何回かに 分けて わっても OK。24÷2÷2÷2 のように 小さい 数から!</div></div>';
+    }
+    function drawChecker(){
+      var e = $('dcChk'); e.hidden = !chkOpen;
+      if(chkOpen && P && P.q && P.q.kind === 'red') e.innerHTML = checkerHTML(P.q.cur.n, P.q.cur.d);
+      $('dcChkBtn').textContent = chkOpen ? 'チェッカーを とじる' : 'われるかな? チェッカー';
+    }
+    function renderRed(){
+      var q = P.q;
+      $('dcLabel').textContent = (P.i+1)+'もんめ・分子と 分母を 同じ 数で わろう';
+      $('dcQ').innerHTML = '<span class="dc-rf" id="dcRF">'+fr(q.cur.n, q.cur.d)+'</span>';
+      $('dcBars').innerHTML = '<div class="dc-rbar" id="dcRBar">'+barSVG(q.cur.n, q.cur.d)+'</div><div class="dc-trail" id="dcTrail"></div>';
+      $('dcBars').hidden = false; $('dcHint').hidden = true;
+      $('dcDivs').innerHTML = DIVS.map(function(k){ return '<button class="key num" data-d="'+k+'">÷'+k+'</button>'; }).join('');
+      drawTrail(); drawChecker();
+      say('どの 数で わる?');
+    }
+    function drawTrail(){ $('dcTrail').innerHTML = P.q.trail.map(function(f, i){ return (i ? '<span class="ar">→</span>' : '')+fr(f[0], f[1]); }).join(''); }
+    function divide(k){
+      if(!P || P.locked) return;
+      var q = P.q, c = q.cur;
+      if(c.n % k === 0 && c.d % k === 0){
+        $('dcRBar').innerHTML = groupBar(c.n, c.d, k);
+        c.n /= k; c.d /= k; q.steps++; q.trail.push([c.n, c.d]);
+        var rf = $('dcRF'); rf.innerHTML = fr(c.n, c.d); rf.classList.remove('bump'); void rf.offsetWidth; rf.classList.add('bump');
+        drawTrail(); drawChecker(); Pet.cheer($('dcPet'));
+        say(k+'こずつ ひとまとめ! ÷'+k+' できた。大きさは そのままで、数が 小さく なったね');
+        var r = R, mine = q;
+        setTimeout(function(){ if(r === R && P && P.q === mine && $('dcRBar')) $('dcRBar').innerHTML = barSVG(mine.cur.n, mine.cur.d); }, 1100);
+      }else{
+        $('dcRBar').innerHTML = groupBar(c.n, c.d, k);
+        P.miss++; P.combo = 0; renderTop(); flash(false); Pet.oops($('dcPet'));
+        var bad = [c.n % k ? c.n : null, c.d % k ? c.d : null].filter(function(x){ return x !== null; });
+        say(k+'こずつ まとめると オレンジの あまりが 出るね。'+bad.join(' と ')+' は '+k+' で わりきれないよ');
+      }
+    }
+    function redDone(){
+      if(!P || P.locked) return;
+      var q = P.q, c = q.cur, g = gcd(c.n, c.d);
+      if(g === 1){
+        var extra = q.steps === 0 ? '(はじめから 約分 できない 分数 だった!)' : '<br>たしかめ: '+fr(c.n, c.d)+' の 分子と 分母に ×'+(q.n/c.n)+' → '+fr(q.n, q.d)+'(もとに もどった!)';
+        correct(extra); return;
+      }
+      P.miss++; P.combo = 0; renderTop(); flash(false); Pet.oops($('dcPet'));
+      if(P.miss >= 3){ reveal(); return; }
+      say('まだ '+smallestPrime(g)+' で われるよ!');
+    }
+    $('dcDivs').addEventListener('click', function(e){ var b = e.target.closest('[data-d]'); if(b) divide(+b.getAttribute('data-d')); });
+    $('dcDone').addEventListener('click', redDone);
+    $('dcChkBtn').addEventListener('click', function(){ chkOpen = !chkOpen; drawChecker(); });
+
+    /* ---- おわり ---- */
+    function finish(){
+      var F = P, m = modeOf(F.mode), l = F.level, elapsed = Date.now()-F.startTime;
+      var stars = F.first >= 10 ? 3 : F.first >= 8 ? 2 : F.first >= 6 ? 1 : 0;
+      R++; P = null;
+      var s = getD(), key = F.mode+l, prev = s.best[key] || 0, gain = Math.max(0, stars-prev);
+      if(gain > 0){ s.best[key] = stars; safeSet(KEY, s); }
+      var lastOp = safeGet('keisan_last_op');
+      state.op = LIVE[F.mode]; state.mode = 'deci'; state.print = null; state.chGot = null; state.lowLv = false;
+      state.questions = []; state.sessionCoins = 0; state.baseCoins = 0;
+      var bonuses = [], banners = [];
+      if(gain > 0) bonuses.push({ label:'★が '+gain+'こ ふえた', n:gain*STAR_COIN });
+      var opened = prev < 1 && stars >= 1 && l < 2 && gradeOk(F.mode, l+1);
+      if(opened){
+        bonuses.push({ label:'つぎの レベル', n:LEVELUP_BONUS });
+        banners.push({ type:'level', title:'レベルアップ! 「'+LV[l+1]+'」が ひらいたよ', text:m.levels[l+1]+' に チャレンジ。' });
+      }
+      addMission(bonuses);
+      if(lastOp != null) safeSet('keisan_last_op', lastOp);
+      giveBonuses(bonuses);
+      if(state.sessionCoins > 0) banners.push(coinBanner(bonuses));
+      var next = l < 2 && (stars >= 1 || prev >= 1) && gradeOk(F.mode, l+1);
+      renderResult({
+        stars:stars,
+        title:stars === 3 ? 'ぜんもん いっぱつ 正解!' : stars === 2 ? 'あと 少しで ★3つ!' : stars === 1 ? '★ ゲット!' : 'もう 少し!',
+        sub:m.name+'・'+LV[l]+(stars ? '' : '\n6問 いっぱつで 正解 すると ★が もらえるよ'),
+        stats:[
+          { label:'いっぱつ 正解', value:F.first, unit:'/'+ROUND, main:true },
+          { label:'さいだい れんぞく', value:F.maxCombo },
+          { label:'時間', value:fmtTimeShort(elapsed) }
+        ],
+        banners:banners,
+        levelNoteHtml:null,
+        retryLabel:next ? 'つぎの レベルへ' : 'もう一回',
+        retry:function(){ start(F.mode, next ? l+1 : l); }
+      });
+      var card = $('rewardCard');
+      if(F.missed.length){
+        card.insertAdjacentHTML('beforeend', '<div class="reward-row dc-review"><span class="r-icon info-i">'+ICONS.info+'</span><span class="r-text"><b>まちがえた 問題の こたえ</b>' +
+          F.missed.map(function(q){ return '<span class="dc-rv">'+(q.kind === 'red' ? fr(q.n, q.d)+' <span class="eq">→</span> ' : q.qhtml)+' <b>'+q.ansHTML+'</b></span>'; }).join('')+'</span></div>');
+      }
+      card.insertAdjacentHTML('beforeend', '<button class="btn btn-ghost dc-backmenu" id="dcBackMenu">小数・分数の メニューへ</button>');
+      card.hidden = false;
+      $('dcBackMenu').onclick = openMenu;
+    }
+
+    /* ---- 0じかんめ レッスン ---- */
+    function numline(max, t, tap){
+      var s = '', i;
+      function X(v){ return 16+v/(max*10)*288; }
+      s += '<line x1="16" y1="40" x2="304" y2="40" stroke="var(--ink)" stroke-width="2"/>';
+      for(i=0;i<=max*10;i++){
+        var big = i%10 === 0, mid = i%5 === 0, h = big ? 12 : mid ? 9 : 6;
+        s += '<line x1="'+X(i)+'" y1="'+(40-h)+'" x2="'+X(i)+'" y2="'+(40+h)+'" stroke="var(--ink)" stroke-width="'+(big ? 2 : 1.2)+'"/>';
+        if(big) s += '<text x="'+X(i)+'" y="62" text-anchor="middle" font-size="12" font-weight="800" fill="var(--ink)">'+(i/10)+'</text>';
+      }
+      if(t != null) s += '<g><circle cx="'+X(t)+'" cy="40" r="6" fill="var(--dc-red)"/><path d="M'+(X(t)-7)+' 14 L'+(X(t)+7)+' 14 L'+X(t)+' 24 Z" fill="var(--dc-red)"/></g>';
+      if(tap) s += '<rect x="0" y="0" width="320" height="66" fill="transparent" style="cursor:pointer"/>';
+      return '<svg class="dc-nl" viewBox="0 0 320 66" role="img" aria-label="数直線">'+s+'</svg>';
+    }
+    function pizza(d, on){
+      var r = 88, c = 100, s = '<circle cx="'+c+'" cy="'+c+'" r="'+(r+8)+'" fill="var(--dc-orange)" opacity=".85"/>';
+      for(var i=0;i<d;i++){
+        var a0 = (-90+i*360/d)*Math.PI/180, a1 = (-90+(i+1)*360/d)*Math.PI/180;
+        var p0 = [c+r*Math.cos(a0), c+r*Math.sin(a0)], p1 = [c+r*Math.cos(a1), c+r*Math.sin(a1)];
+        var path = 'M'+c+' '+c+'L'+p0[0].toFixed(1)+' '+p0[1].toFixed(1)+'A'+r+' '+r+' 0 '+(360/d > 180 ? 1 : 0)+' 1 '+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+'Z';
+        s += '<path data-sl="'+i+'" d="'+path+'" fill="'+(on[i] ? 'var(--dc-red)' : 'var(--gold)')+'" stroke="var(--surface)" stroke-width="3" style="cursor:pointer"/>';
+      }
+      return '<svg class="dc-pizza" viewBox="0 0 200 200" role="img" aria-label="ピザ '+d+'等分">'+s+'</svg>';
+    }
+    function cellBar(d, n, color, tap){
+      var s = '', w = 300/d;
+      for(var i=0;i<d;i++) s += '<rect '+(tap ? 'data-c="'+i+'" style="cursor:pointer"' : '')+' x="'+(i*w).toFixed(2)+'" y="0" width="'+w.toFixed(2)+'" height="40" fill="'+(i < n ? color : 'var(--surface-2)')+'" stroke="var(--ink)" stroke-width="1.2"/>';
+      return '<svg class="dc-cbar" viewBox="-1 -1 302 42" preserveAspectRatio="none" aria-hidden="true">'+s+'</svg>';
+    }
+    function cutRow(label, list, cur, attr){
+      return '<div class="dc-cutrow">'+(label ? '<span class="dc-ql">'+label+'</span>' : '')+list.map(function(d){ return '<button class="dc-small'+(cur === d ? ' sel' : '')+'" '+attr+'="'+d+'">'+d+(attr === 'data-cut' ? 'つ' : '')+'</button>'; }).join('')+'</div>';
+    }
+    var LESSON_DEF = {
+      L1:{
+        intro:'<b>1L</b> の ますを <b>10こ</b>に 同じように 分けると、1めもりは <b>0.1L</b>(れい てん いち リットル)。ますを タップして ジュースを 入れて みよう。',
+        init:function(){ return { v:3 }; },
+        render:function(st){
+          var s = '';
+          for(var i=0;i<2;i++){
+            var x = 20+i*110;
+            for(var k=0;k<10;k++){ var on = i*10+k < st.v; s += '<rect data-cell="'+(i*10+k)+'" x="'+x+'" y="'+(10+(9-k)*20)+'" width="90" height="20" fill="'+(on ? 'var(--dc-orange)' : 'var(--surface-2)')+'" stroke="var(--line)" stroke-width="1" style="cursor:pointer"/>'; }
+            s += '<rect x="'+x+'" y="10" width="90" height="200" fill="none" stroke="var(--ink)" stroke-width="3" rx="4"/>';
+            s += '<text x="'+(x+45)+'" y="230" text-anchor="middle" font-size="14" font-weight="800" fill="var(--ink-soft)">1L ます</text>';
+          }
+          return '<svg class="dc-cups" viewBox="0 0 240 238" role="img" aria-label="1Lます 2こ">'+s+'</svg>' +
+            '<div class="dc-cutrow"><button class="dc-small" data-add="-1">− 0.1L</button><button class="dc-small" data-add="1">+ 0.1L</button><button class="dc-small" data-add="0">からに する</button></div>';
+        },
+        bind:function(stage, st, ch){
+          stage.querySelectorAll('[data-cell]').forEach(function(r){ r.onclick = function(){ var c = +r.getAttribute('data-cell'); st.v = st.v === c+1 ? c : c+1; ch(); }; });
+          stage.querySelectorAll('[data-add]').forEach(function(b){ b.onclick = function(){ var a = +b.getAttribute('data-add'); st.v = a === 0 ? 0 : Math.max(0, Math.min(20, st.v+a)); ch(); }; });
+        },
+        readout:function(st){ return '<div class="dc-big num">'+(st.v/10).toFixed(1)+' L</div><div class="dc-explain">1L が <b>'+Math.floor(st.v/10)+'</b>こ と、0.1L が <b>'+(st.v%10)+'</b>こ</div>'+numline(2, st.v); },
+        missions:[
+          { text:'ジュースを <b>0.7L</b> 入れよう', ok:function(s){ return s.v === 7; }, done:'0.1L が 7こで 0.7L!' },
+          { text:'こんどは <b>1.4L</b> 入れよう', ok:function(s){ return s.v === 14; }, done:'1L と 0.4L で 1.4L!' },
+          { text:'0.1L を <b>10こ</b> あつめると 何L? 入れて たしかめよう', ok:function(s){ return s.v === 10; }, done:'0.1L が 10こで ちょうど 1L! 10こ たまると 1 くり上がるよ' }
+        ],
+        summary:'1 を 10こに 分けた 1つ分が 0.1。小数は 1より 小さい はしたを あらわす 数だよ。'
+      },
+      L2:{
+        intro:'ピザを <b>同じ 大きさ</b>に 切って、ぬった 数を 数えよう。<b>分母</b>(下の 数)は いくつに 分けたか、<b>分子</b>(上の 数)は そのうち いくつ分か だよ。',
+        init:function(){ return { d:4, on:[] }; },
+        render:function(st){ return cutRow('いくつに 切る?', [2,3,4,5,6,8], st.d, 'data-cut')+pizza(st.d, st.on); },
+        bind:function(stage, st, ch){
+          stage.querySelectorAll('[data-cut]').forEach(function(b){ b.onclick = function(){ st.d = +b.getAttribute('data-cut'); st.on = []; ch(); }; });
+          stage.querySelectorAll('[data-sl]').forEach(function(p){ p.onclick = function(){ var i = +p.getAttribute('data-sl'); st.on[i] = !st.on[i]; ch(); }; });
+        },
+        readout:function(st){
+          var n = st.on.filter(Boolean).length;
+          return '<div class="dc-fracx"><div class="dc-big num">'+fr(n, st.d)+'</div><div class="dc-parts"><span><b class="c-red">分子 '+n+'</b>… ぬった 数</span><span><b class="c-blue">分母 '+st.d+'</b>… 同じ 大きさに 分けた 数</span></div></div>';
+        },
+        missions:[
+          { text:'ピザを 4つに 切って、'+fr(3, 4)+' を ぬろう', ok:function(s){ return s.d === 4 && s.on.filter(Boolean).length === 3; }, done:'4つに 分けた 3つ分で 3/4!' },
+          { text:fr(5, 8)+' を つくろう', ok:function(s){ return s.d === 8 && s.on.filter(Boolean).length === 5; }, done:'8つに 分けた 5つ分で 5/8!' },
+          { text:'3つに 切って ぜんぶ ぬろう。何分の何 かな?', ok:function(s){ return s.d === 3 && s.on.filter(Boolean).length === 3; }, done:'3/3 は まるごと 1まい! 分子と 分母が 同じなら 1 だよ' }
+        ],
+        summary:'分数は「同じ 大きさに 分けた うちの いくつ分」。分母が 大きいほど 1つ分は 小さく なるよ。'
+      },
+      L3:{
+        intro:'分け方を かえても、<b>大きさが 同じ</b> 分数が あるよ。おてほんと 同じ 長さに なるように、下の ぼうを ぬって みよう。',
+        init:function(){ return { d:2, n:0 }; },
+        render:function(st, m){
+          var t = m.t;
+          return '<div class="dc-cmp"><span class="dc-ql">おてほん '+fr(t[0], t[1])+'</span>'+cellBar(t[1], t[0], 'var(--dc-blue)') +
+            '<span class="dc-ql">きみの ぼう(タップで ぬる)</span>'+cellBar(st.d, st.n, 'var(--dc-red)', true)+'</div>' +
+            cutRow('いくつに 分ける?', [2,3,4,6,8,9,12], st.d, 'data-d');
+        },
+        bind:function(stage, st, ch){
+          stage.querySelectorAll('[data-d]').forEach(function(b){ b.onclick = function(){ st.d = +b.getAttribute('data-d'); st.n = Math.min(st.n, st.d); ch(); }; });
+          stage.querySelectorAll('[data-c]').forEach(function(r){ r.onclick = function(){ var c = +r.getAttribute('data-c'); st.n = st.n === c+1 ? c : c+1; ch(true); }; });
+        },
+        readout:function(st, m){ var t = m.t, eq = st.n*t[1] === st.d*t[0]; return '<div class="dc-big num">'+fr(st.n, st.d)+' <span class="'+(eq ? 'c-red' : 'c-muted')+'">'+(eq ? '=' : '≠')+'</span> '+fr(t[0], t[1])+'</div>'; },
+        missions:[
+          { t:[1,2], d:4, text:fr(1, 2)+' と 同じ 大きさを、<b>4つ</b>に 分けた ぼうで つくろう', done:'1/2 = 2/4。分子と 分母に 同じ 数(2)を かけても 大きさは 同じ!' },
+          { t:[2,3], d:6, text:fr(2, 3)+' と 同じ 大きさを、<b>6つ</b>に 分けて つくろう', done:'2/3 = 4/6。こんども ×2 だね' },
+          { t:[3,4], d:8, text:fr(3, 4)+' と 同じ 大きさを、<b>8つ</b>に 分けて つくろう', done:'3/4 = 6/8。ぎゃくに 6/8 を ÷2 して 3/4 に するのが 約分 だよ!' }
+        ].map(function(m){
+          m.ok = function(s){ return s.d === m.d && s.n*m.t[1] === s.d*m.t[0]; };
+          m.near = function(s){ return s.n*m.t[1] === s.d*m.t[0] && s.n > 0 ? '同じ 大きさ! こんどは '+m.d+'つに 分けて つくって みよう' : ''; };
+          return m;
+        }),
+        summary:'分子と 分母に 同じ 数を かけても わっても、大きさは かわらない。わって かんたんに するのが 約分!'
+      },
+      L4:{
+        intro:'0 から 1 までを <b>10こ</b>に 分けた 数直線 だよ。1めもりは <b>0.1</b>、分数で かくと <b>1/10</b>。数直線を タップして みよう。',
+        init:function(){ return { t:null }; },
+        render:function(st){ return '<div class="dc-nlwrap">'+numline(1, st.t, true)+'</div>'; },
+        bind:function(stage, st, ch){
+          var svg = stage.querySelector('.dc-nl');
+          svg.onclick = function(e){ var b = svg.getBoundingClientRect(), x = (e.clientX-b.left)/b.width*320; st.t = Math.max(0, Math.min(10, Math.round((x-16)/288*10))); ch(true); };
+        },
+        readout:function(st){
+          if(st.t == null) return '<div class="dc-explain">数直線の どこかを タップしてね</div>';
+          var t = st.t; if(t === 0) return '<div class="dc-big num">0</div>'; if(t === 10) return '<div class="dc-big num">1 = '+fr(10, 10)+'</div>';
+          var g = gcd(t, 10); return '<div class="dc-big num">'+(t/10).toFixed(1)+' = '+fr(t, 10)+(g > 1 ? ' = '+fr(t/g, 10/g) : '')+'</div>';
+        },
+        missions:[
+          { text:'<b>0.3</b> は どこ? タップしよう', ok:function(s){ return s.t === 3; }, done:'0.3 = 3/10。0.1 と 1/10 は 同じ 大きさ!' },
+          { text:'分数の '+fr(1, 2)+' は どこ?', ok:function(s){ return s.t === 5; }, done:'1/2 = 5/10 = 0.5。まんなか だね' },
+          { text:fr(4, 5)+' は どこ? ヒント: 1 を 5つに 分けると 1つ分は 2めもり', ok:function(s){ return s.t === 8; }, done:'4/5 = 8/10 = 0.8。小数と 分数は 同じ 数の ちがう かきかた!' }
+        ].map(function(m){ m.near = function(s){ return s.t == null ? '' : 'そこは '+(s.t/10).toFixed(1)+' だよ。もういちど!'; }; return m; }),
+        summary:'0.1 = 1/10。小数は 分母が 10、100 の 分数と 同じ なかま なんだ。'
+      }
+    };
+    function lesson(id){
+      R++; P = null;
+      var L = null; LESSONS.forEach(function(x){ if(x.id === id) L = x; });
+      var def = LESSON_DEF[id];
+      LS = { id:id, L:L, def:def, mi:0, st:def.init(), wait:false };
+      setLive('sub');
+      var a = activePet(); Pet.mount($('dcLPet'), a.sp, a.lv);
+      $('dcLTitle').textContent = L.title;
+      $('dcTalk').innerHTML = def.intro;
+      show('lesson');
+      drawLesson(); drawMission('');
+    }
+    function curMission(){ var ms = LS.def.missions; return ms[Math.min(LS.mi, ms.length-1)]; }
+    function drawLesson(){
+      var m = curMission(), stage = $('dcStage');
+      stage.innerHTML = LS.def.render(LS.st, m); $('dcReadout').innerHTML = LS.def.readout(LS.st, m);
+      LS.def.bind(stage, LS.st, lessonChanged);
+    }
+    function mfb(msg, cls){ var e = $('dcMfb'); if(!e) return; e.className = 'dc-mfb '+(cls || ''); e.innerHTML = msg; }
+    function drawMission(msg){
+      var ms = LS.def.missions;
+      if(LS.mi >= ms.length){
+        var s = getD(), firstClear = !s.lessons[LS.id];
+        s.lessons[LS.id] = 1; safeSet(KEY, s);
+        if(firstClear) earn(LESSON_COIN);
+        var go = LS.L.go;
+        $('dcMission').innerHTML = '<div class="dc-clear">'+stamp('dc-stampbig')+'<div><div class="dc-ctitle">レッスン クリア!'+(firstClear ? ' <span class="dc-coin">コイン +'+LESSON_COIN+'</span>' : '')+'</div><p>'+LS.def.summary+'</p></div></div>' +
+          '<div class="dc-btnrow">'+(go ? '<button class="btn btn-primary" id="dcToPractice">れんしゅう してみる</button>' : '')+'<button class="btn btn-ghost" id="dcToMenu">メニューに もどる</button></div>';
+        Pet.cheer($('dcLPet'));
+        if(go) $('dcToPractice').onclick = function(){ start(go[0], go[1]); };
+        $('dcToMenu').onclick = openMenu;
+        return;
+      }
+      var dots = ms.map(function(_, i){ return '<span class="dot-item'+(i < LS.mi ? ' done' : i === LS.mi ? ' active' : '')+'"></span>'; }).join('');
+      $('dcMission').innerHTML = '<div class="dc-mhead"><span class="dc-ql">ミッション '+(LS.mi+1)+' / '+ms.length+'</span><span class="dots">'+dots+'</span></div>' +
+        '<div class="dc-mtext">'+ms[LS.mi].text+'</div><div class="dc-mfb" id="dcMfb" aria-live="polite">'+msg+'</div>';
+    }
+    function lessonChanged(attempt){
+      drawLesson();
+      if(LS.wait || LS.mi >= LS.def.missions.length) return;
+      var m = LS.def.missions[LS.mi];
+      if(m.ok(LS.st)){
+        LS.wait = true; mfb('はなまる! '+m.done, 'ok'); drawMaru($('dcLCard')); Pet.cheer($('dcLPet'));
+        var cur = LS;
+        setTimeout(function(){
+          if(LS !== cur) return;
+          LS.wait = false; LS.mi++;
+          if(LS.def.missions[LS.mi] && LS.id === 'L3') LS.st.n = 0;
+          drawLesson(); drawMission('');
+        }, 2200);
+      }else if(m.near){ var t = m.near(LS.st); if(t && (attempt || LS.id !== 'L4')) mfb(t, 'info'); else if(!t) mfb('', ''); }
+    }
+    $('dcLQuit').addEventListener('click', openMenu);
+    $('dcLPet').addEventListener('click', function(){ Pet.spin($('dcLPet')); });
+
+    /* ---- キーボード ---- */
+    document.addEventListener('keydown', function(e){
+      if(views.deci.hidden || $('dcPlay').hidden || !$('modal').hidden || !P || !P.q) return;
+      if(P.hold){ if(e.key === 'Enter'){ e.preventDefault(); P.hold(); } return; }
+      if(e.target && e.target.id === 'dcB2') return;
+      if(P.q.kind === 'red'){ if(e.key === 'Enter'){ e.preventDefault(); redDone(); } return; }
+      if(e.key >= '0' && e.key <= '9') press(e.key);
+      else if(e.key === '.') press('.');
+      else if(e.key === 'Backspace'){ e.preventDefault(); press('del'); }
+      else if(e.key === 'Enter'){ e.preventDefault(); if(!$('dcOk').disabled) submit(); }
+      else if(P.q.kind === 'frac' && ['/','Tab','ArrowDown','ArrowUp'].indexOf(e.key) >= 0){ e.preventDefault(); press('sw'); }
+    });
+
+    return { card:renderCard, open:openMenu };
+  })();
 
   /* ---------- backup / restore ---------- */
   function readNum(k){ return parseInt(rawGet(k), 10) || 0; }
