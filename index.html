@@ -272,6 +272,12 @@
   @keyframes rm-up{ 0%{ opacity:0; transform:translate(-50%, 6px) scale(.6); } 20%{ opacity:1; transform:translate(-50%, 0) scale(1); } 100%{ opacity:0; transform:translate(-50%, -34px); } }
   .rm-edit{ border:1.5px solid var(--line); background:var(--surface); color:var(--ink); border-radius:100px; padding:8px 14px; font:inherit; font-size:13px; font-weight:900; cursor:pointer; flex:none; }
   .rm-edit.on{ background:var(--good); border-color:var(--good); color:#fff; }
+  .rm-pv{ max-width:720px; margin:0 auto 8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; background:#EAF4FF; border:2px dashed #7FB8F0; border-radius:16px; padding:8px 10px; color:#2E2A3D; }
+  .rm-pv b{ flex:1; font-size:14px; min-width:8em; line-height:1.4; } .rm-pv b small{ display:block; font-size:11px; font-weight:700; color:#5B6B80; }
+  .rm-pv .rm-tb{ background:#fff; } .rm-pv .rm-tb.buy{ background:var(--good); color:#fff; display:inline-flex; align-items:center; gap:4px; } .rm-pv .rm-tb.buy .coin{ width:14px; height:14px; }
+  .rm-it.pv:not(.rm-front){ animation:rm-pv 1.6s ease-in-out infinite; }
+  @keyframes rm-pv{ 0%,100%{ filter:drop-shadow(0 0 2px #7FB8F0); } 50%{ filter:drop-shadow(0 0 8px #5FA2E8); } }
+  .rm-card.pving{ border-color:#7FB8F0; border-style:dashed; }
   .rm-tools{ max-width:720px; margin:0 auto 8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; background:var(--surface); border:1.5px solid var(--gold); border-radius:16px; padding:8px 10px; }
   .rm-tools b{ flex:1; font-size:14px; min-width:6em; }
   .rm-tb{ border:none; background:var(--surface-2); color:var(--ink); border-radius:12px; padding:9px 12px; font:inherit; font-size:13px; font-weight:900; cursor:pointer; }
@@ -291,7 +297,7 @@
   .rc-p .coin{ width:13px; height:13px; }
   .rc-p small{ width:100%; font-size:10px; color:var(--ink-soft); font-weight:700; }
   .rc-p.own{ color:var(--good); }
-  .rm-card.cant{ cursor:default; } .rm-card.cant .rc-pic{ opacity:.5; }
+  .rm-card.cant{ cursor:pointer; } .rm-card.cant .rc-pic{ opacity:.5; }
   .room-card{ width:100%; border:1.5px solid var(--line); background:var(--surface); border-radius:18px; padding:8px; cursor:pointer; color:var(--ink); font:inherit; text-align:left; display:grid; grid-template-columns:44% 1fr auto; align-items:center; gap:10px; margin-bottom:8px; }
   .room-card .rm-mini{ border-radius:12px; box-shadow:none; pointer-events:none; }
   .rm-ct{ display:grid; gap:2px; } .rm-ct b{ font-size:15px; } .rm-ct span{ font-size:11.5px; color:var(--ink-soft); line-height:1.45; }
@@ -1954,6 +1960,11 @@
       <button class="rm-edit" id="rmEdit">🔨 もようがえ</button>
     </div>
     <section class="rm-stage" id="rmStage"></section>
+    <div class="rm-pv" id="rmPv" hidden>
+      <b id="rmPvName"></b>
+      <button class="rm-tb buy" id="rmPvBuy"></button>
+      <button class="rm-tb" id="rmPvNo">やめる</button>
+    </div>
     <div class="rm-tools" id="rmTools" hidden>
       <b id="rmToolName"></b>
       <button class="rm-tb" id="rmFlip">↔ むきを かえる</button>
@@ -9262,7 +9273,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(!BY[r.floor]) r.floor = 'f_wood';
       return r;
     }
-    function saveRoom(r){ r.t = Date.now(); safeSet(KEY, r); }
+    /* おためし中(pv)の 家具・かべがみは 買うまで 保存しない */
+    var pv = null;
+    function saveRoom(r){
+      r.t = Date.now();
+      if(pv){
+        var c = { t:r.t, wall:r.wall, floor:r.floor, items:r.items.filter(function(it){ return it !== pv.it; }) };
+        if(pv.old){ c.wall = pv.old.wall; c.floor = pv.old.floor; }
+        safeSet(KEY, c);
+      } else safeSet(KEY, r);
+    }
     function getOwn(){ var o = safeGet(OWN); return (o && typeof o === 'object') ? o : {}; }
     function ownN(id){ return (getOwn()[id] || 0) + (STARTER[id] || 0); }
     function placedN(r, id){ return r.items.filter(function(it){ return it.k === id; }).length; }
@@ -9345,6 +9365,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ステージを つくる(card のときは さわれない 小さい 見本) */
     function build(stage, mini){
       var r = getRoom();
+      if(!mini && pv){
+        if(pv.it) r.items.push(pv.it);
+        else if(pv.d.id.charAt(0) === 'w') r.wall = pv.d.id; else r.floor = pv.d.id;
+      }
       stage.innerHTML = '';
       var wall = document.createElement('div'); wall.className = 'rm-wall'; wall.innerHTML = surfSvg(BY[r.wall]); wall.style.height = WALL + '%';
       var floor = document.createElement('div'); floor.className = 'rm-floor'; floor.innerHTML = surfSvg(BY[r.floor]); floor.style.top = WALL + '%';
@@ -9353,7 +9377,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var els = [];
       r.items.forEach(function(it, i){
         var g = geo(it), el = document.createElement('div');
-        el.className = 'rm-it z-' + g.d.z + (lampOn[i] && g.d.tap === 'light' ? ' on' : '');
+        el.className = 'rm-it z-' + g.d.z + (lampOn[i] && g.d.tap === 'light' ? ' on' : '') + (!mini && pv && pv.it === it ? ' pv' : '');
         el.innerHTML = itemSvg(g.d);
         el._i = i;
         place(el, it, g, g.z);
@@ -9637,6 +9661,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     });
     $('rmStore').addEventListener('click', function(){
       if(sel < 0) return;
+      if(pv && S.r.items[sel] === pv.it){ endPreview(); return; }
       var nm = BY[S.r.items[sel].k].name;
       S.r.items.splice(sel, 1); lampOn = {}; saveRoom(S.r); sel = -1;
       render(); say(nm + 'を しまったよ。下の 「もってる」から また おけるよ');
@@ -9657,7 +9682,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var own = ownN(d.id), surf = !!d.bg, using = surf && (r.wall === d.id || r.floor === d.id), left = surf ? 0 : own - placedN(r, d.id);
         var c = document.createElement('button');
         c.className = 'rm-card' + (using ? ' using' : '') + (!own && coins < d.price ? ' cant' : '');
-        var tag = using ? '<span class="rc-p own">つかってる</span>'
+        var pving = pv && pv.d.id === d.id;
+        if(pving) c.className += ' pving';
+        var tag = pving ? '<span class="rc-p own" style="color:#3F7FD0">おためし中</span>'
+          : using ? '<span class="rc-p own">つかってる</span>'
           : surf && own ? '<span class="rc-p own">これに する ›</span>'
           : left > 0 ? '<span class="rc-p own">おく ›<small>しまってある '+left+'</small></span>'
           : '<span class="rc-p num"><span class="coin"></span>'+d.price+(own ? '<small>もってる '+own+'</small>' : '')+'</span>';
@@ -9680,22 +9708,58 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }
       return best;
     }
+    /* ---- 買う 前に おいて みる(おためし) ---- */
+    function renderPv(){
+      $('rmPv').hidden = !pv;
+      if(!pv) return;
+      var d = pv.d, c = getCoins();
+      $('rmPvName').innerHTML = 'おためし中: ' + d.name + '<small>' + (pv.it ? 'ゆびで うごかして みてね。' : '') + (c < d.price ? 'あと ' + (d.price - c) + 'コイン あつめると 買えるよ' : '気に入ったら 買おう') + '</small>';
+      $('rmPvBuy').innerHTML = 'かう <span class="coin"></span>' + d.price;
+    }
+    function startPreview(d){
+      var r = S.r, surf = !!d.bg;
+      if(pv) pv = null;
+      var base = getRoom();
+      pv = { d:d, it:surf ? null : emptySpot(base, d), old:surf ? { wall:base.wall, floor:base.floor } : null };
+      if(!surf && !edit) setEdit(true);
+      render();
+      if(pv.it) selectIt(S.r.items.indexOf(pv.it));
+      renderPv();
+      say(surf ? 'ためしに ' + d.name + 'に して みたよ。どうかな?' : 'ためしに ' + d.name + 'を おいて みたよ。ゆびで うごかして みてね');
+      $('rmStage').scrollIntoView({ block:'nearest', behavior:'smooth' });
+    }
+    function endPreview(){
+      var d = pv && pv.d; pv = null; sel = -1;
+      render(); renderPv();
+      if(d) say(d.name + 'は やめて おいたよ');
+    }
+    function buyPreview(){
+      if(!pv) return;
+      var d = pv.d;
+      if(!buyGate(d.price, d.name+'を かう?', thumb(d), 'かう', buyPreview)) return;
+      addOwn(d.id);
+      var it = pv.it; pv = null;
+      if(!it){ if(d.id.charAt(0) === 'w') S.r.wall = d.id; else S.r.floor = d.id; }
+      saveRoom(S.r); render(); renderPv();
+      if(it) selectIt(S.r.items.indexOf(it));
+      Pet.cheer(S.pets[0].el);
+      say(petName(S.pets[0].sp) + '「わあ、' + d.name + (it ? 'が きた!' : 'に なった!') + '」');
+    }
+    $('rmPvBuy').addEventListener('click', buyPreview);
+    $('rmPvNo').addEventListener('click', endPreview);
     function pick(d){
       var r = S.r, surf = !!d.bg;
+      if(pv && pv.d.id === d.id) return;
+      if(pv) endPreview();
+      r = S.r;
       if(surf){
-        if(!ownN(d.id)){
-          if(!buyGate(d.price, d.name+'を かう?', thumb(d), 'かう', function(){ pick(d); })) return;
-          addOwn(d.id);
-        }
+        if(!ownN(d.id)){ startPreview(d); return; }
         if(d.id.charAt(0) === 'w') r.wall = d.id; else r.floor = d.id;
         saveRoom(r); render(); Pet.cheer(S.pets[0].el);
         say(petName(S.pets[0].sp) + '「わあ、' + d.name + 'に なった!」');
         return;
       }
-      if(ownN(d.id) - placedN(r, d.id) <= 0){
-        if(!buyGate(d.price, d.name+'を かう?', thumb(d), 'かう', function(){ pick(d); })) return;
-        addOwn(d.id);
-      }
+      if(ownN(d.id) - placedN(r, d.id) <= 0){ startPreview(d); return; }
       var it = emptySpot(r, d);
       r.items.push(it); saveRoom(r);
       if(!edit) setEdit(true);
@@ -9707,13 +9771,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     function open(){
       setLive('add');
-      edit = false; sel = -1; lampOn = {};
+      edit = false; sel = -1; lampOn = {}; pv = null; renderPv();
       $('rmEdit').textContent = '🔨 もようがえ'; $('rmEdit').classList.remove('on');
       showView('room');
       render();
       say(petName(activePet().sp) + '「ここが みんなの おへやだよ!」');
     }
-    function close(){ stopPets(); if(edit) setEdit(false); goHome(); }
+    function close(){ stopPets(); if(pv){ pv = null; renderPv(); } if(edit) setEdit(false); goHome(); }
     $('rmBack').addEventListener('click', close);
 
     function card(){
