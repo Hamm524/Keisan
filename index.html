@@ -1478,6 +1478,37 @@
   /* ===== home: today's adventure road ===== */
   :root{ --boss:var(--op-mix); }
   #view-setup{ padding-bottom:calc(84px + env(safe-area-inset-bottom,0px)); }
+
+  /* ---- 今週の にじ ---- */
+  .niji{ background:var(--surface); border:1.5px solid var(--line); border-radius:22px; padding:12px 14px 14px; margin-bottom:12px; }
+  .niji-top{ display:flex; align-items:center; gap:12px; }
+  .niji-arc{ flex:0 0 auto; width:112px; }
+  .niji-arc svg{ width:100%; height:auto; display:block; }
+  .niji-txt{ flex:1; min-width:0; }
+  .niji-txt h3{ margin:0; font-size:17px; font-weight:900; }
+  .niji-txt p{ margin:3px 0 0; font-size:13px; color:var(--ink-soft); line-height:1.45; }
+  .niji-txt p b{ color:var(--ink); }
+  .niji-chips{ display:grid; grid-template-columns:repeat(7, 1fr); gap:4px; margin-top:10px; }
+  .nj{ position:relative; border:none; background:none; padding:4px 0 2px; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; border-radius:12px; font:inherit; color:var(--ink-soft); }
+  .nj .nj-s{ width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:20px; line-height:1;
+    color:var(--nc); background:var(--surface); border:2.5px dashed var(--nc); box-sizing:border-box; }
+  .nj .nj-s.sm{ font-size:13px; }
+  .nj.on .nj-s{ background:var(--nc); color:#fff; border-style:solid; }
+  .nj.on.yl .nj-s{ color:#4A3A00; }
+  .nj .nj-l{ font-size:10.5px; font-weight:800; white-space:nowrap; }
+  .nj[aria-pressed="true"]{ background:var(--surface-2); }
+  .nj[aria-pressed="true"] .nj-l{ color:var(--ink); }
+  .nj .nj-b{ position:absolute; top:-7px; left:50%; transform:translateX(-50%); font-size:9px; font-weight:900; white-space:nowrap; color:#5A3B00; background:var(--gold); padding:0 5px; border-radius:100px; line-height:1.6; }
+  .niji-go{ margin-top:8px; display:flex; align-items:center; gap:10px; }
+  .niji-go span{ flex:1; font-size:13px; color:var(--ink-soft); line-height:1.4; }
+  .niji-go span b{ color:var(--ink); }
+  .niji-go button{ flex:0 0 auto; border:none; border-radius:14px; padding:10px 16px; font-size:15px; font-weight:900; color:#fff; background:var(--nc); box-shadow:0 4px 0 color-mix(in srgb, var(--nc) 60%, #000); cursor:pointer; font-family:inherit; }
+  .niji-go button.yl{ color:#4A3A00; }
+  .niji.full{ background:linear-gradient(180deg, color-mix(in srgb, var(--gold) 16%, var(--surface)), var(--surface)); }
+  @media (min-width:1000px){ .niji{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); column-gap:20px; align-items:center; } .niji-top{ grid-row:1 / span 2; } .niji-chips{ margin-top:0; } }
+  .r-icon.niji-i{ background:var(--surface-2); }
+  .r-icon.niji-i svg{ width:30px; height:30px; }
+  .got-item svg[viewBox="0 0 120 64"]{ width:54px; height:29px; }
   .me-card{ background:var(--surface-2); border-radius:22px; padding:10px 14px 12px; margin-bottom:12px; }
   .me-card .today-pet{ width:96px; margin:-8px -6px -8px -8px; }
   .me-card .today-talk .buddy-say{ box-shadow:none; }
@@ -1676,6 +1707,7 @@
         <div class="foot-row"><span class="foot-label" id="streakNum"></span><span class="s-dots" id="streakDots"></span></div>
       </div>
     </section>
+    <section class="niji" id="nijiCard"></section>
     <div class="home-grid">
     <div class="home-main">
     <div class="road" id="road">
@@ -4050,7 +4082,127 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     state.gotMission = false;
     if(m.n >= MISSION_ROUNDS && !m.got){ m.got = true; state.gotMission = true; bonuses.push({ label:'今日のミッション', n:MISSION_BONUS }); }
     safeSet('keisan_mission', m);
+    nijiAdd(bonuses);
   }
+
+
+  /* ---------- 今週の にじ: ちがう しゅるいを やると 色が つく ---------- */
+  var NIJI = [
+    { k:'add',  s:'＋',   l:'たし算',  n:'たし算の プリント',    c:'var(--op-add)' },
+    { k:'sub',  s:'－',   l:'ひき算',  n:'ひき算の プリント',    c:'var(--op-sub)' },
+    { k:'kuri', s:'くり', l:'くり上',  n:'くりあがり・くりさがり', c:'#E9C61B', yl:true },
+    { k:'mul',  s:'×',   l:'かけ算',  n:'かけ算の プリント',    c:'var(--op-mul)' },
+    { k:'div',  s:'÷',   l:'わり算',  n:'わり算の プリント',    c:'var(--op-div)' },
+    { k:'hsl',  s:'筆',   l:'ひっさん', n:'ひっさん教室',         c:'#5A45D6' },
+    { k:'deci', s:'0.1', l:'小数分数', n:'小数・分数',           c:'#C058C8' }
+  ];
+  var NIJI_NEW = 5, NIJI_TODAY = 10, NIJI_ALL = 30;
+  function nijiOf(k){ for(var i=0;i<NIJI.length;i++) if(NIJI[i].k === k) return NIJI[i]; return null; }
+  function weekNo(){ return dayNo() - ((new Date().getDay() + 6) % 7); }   /* 月曜はじまり */
+  function getNiji(){
+    var s = safeGet('keisan_niji'); if(!s || typeof s !== 'object') s = {};
+    if(!s.last || typeof s.last !== 'object') s.last = {};
+    if(s.w !== weekNo()){ s.w = weekNo(); s.got = {}; s.done = false; }
+    if(!s.got || typeof s.got !== 'object') s.got = {};
+    return s;
+  }
+  function nijiCount(s){ return NIJI.filter(function(x){ return s.got[x.k] != null; }).length; }
+  /* きょうの ボーナス: 今週 まだの しゅるい → いちばん 長く やっていない しゅるい。1日 かわらない */
+  function nijiBonusKind(){
+    var s = getNiji(), t = todayKey();
+    if(s.bk && s.bk.d === t && nijiOf(s.bk.k)) return s.bk.k;
+    var day = dayNo(), L = NIJI.length;
+    var list = NIJI.map(function(x, i){ return { k:x.k, i:i }; });
+    list.sort(function(a, b){
+      return ((s.got[a.k] != null) - (s.got[b.k] != null)) ||
+        ((s.last[a.k] == null ? -1 : s.last[a.k]) - (s.last[b.k] == null ? -1 : s.last[b.k])) ||
+        ((a.i + day) % L - (b.i + day) % L);
+    });
+    s.bk = { d:t, k:list[0].k };
+    safeSet('keisan_niji', s);
+    return s.bk.k;
+  }
+  function nijiBonusLeft(){ var s = getNiji(); return s.bg !== todayKey(); }
+  function nijiArcSVG(s, sq){
+    var h = '<svg viewBox="'+(sq ? '0 -26 120 120' : '0 0 120 64')+'" aria-hidden="true">';
+    NIJI.forEach(function(x, i){
+      var r = 56 - i * 6.4, on = s.got[x.k] != null;
+      h += '<path d="M'+(60-r)+' 62 A'+r+' '+r+' 0 0 1 '+(60+r)+' 62" fill="none" stroke-width="5.6" stroke-linecap="round" stroke="'+(on ? x.c : 'var(--line)')+'"/>';
+    });
+    return h + '</svg>';
+  }
+  /* 終わった 回の しゅるい(今日の プリント・くり上がり・小数分数・ひっさん教室。復習・100問・挑戦・ぱくぱくは 数えない) */
+  function nijiKindNow(){
+    if(state.mode === 'kuri' || state.mode === 'deci' || state.mode === 'hsl') return state.mode;
+    var pr = state.print;
+    if(pr && pr.kind === 'daily' && SINGLE_OPS.indexOf(state.op) >= 0) return state.op;
+    return null;
+  }
+  function nijiAdd(bonuses){
+    state.nijiNews = null;
+    var k = nijiKindNow(); if(!k) return;
+    state.nijiSel = null;
+    var bk = nijiBonusKind(), s = getNiji(), x = nijiOf(k), news = null, t = todayKey();
+    if(s.got[k] == null){
+      s.got[k] = dayNo();
+      bonuses.push({ label:'にじに 新しい 色', n:NIJI_NEW });
+      news = { title:'にじに「'+x.l+'」の 色が ついた!', text:'' };
+    }
+    if(k === bk && s.bg !== t){
+      s.bg = t;
+      bonuses.push({ label:'きょうの ボーナス', n:NIJI_TODAY });
+      if(!news) news = { title:'きょうの ボーナス ゲット!', text:'' };
+    }
+    s.last[k] = dayNo();
+    var cnt = nijiCount(s);
+    if(cnt === NIJI.length && !s.done){
+      s.done = true;
+      bonuses.push({ label:'にじ 完成', n:NIJI_ALL });
+      news = { title:'にじが 完成した!', text:'今週 7しゅるい 全部 やったね!ボーナス ＋'+NIJI_ALL+'コイン' };
+    }
+    safeSet('keisan_niji', s);
+    if(news){
+      if(!news.text) news.text = cnt < NIJI.length ? 'あと '+(NIJI.length - cnt)+'色で にじが 完成(＋'+NIJI_ALL+'コイン)。ちがう しゅるいを やってみよう!' : '今週の にじは 完成ずみ。';
+      state.nijiNews = { type:'niji', title:news.title, text:news.text, icon:nijiArcSVG(s, true), wide:nijiArcSVG(s) };
+    }
+  }
+  function renderNiji(){
+    var c = $('nijiCard'); if(!c) return;
+    var bk = nijiBonusKind(), s = getNiji(), cnt = nijiCount(s), left = nijiBonusLeft(), bx = nijiOf(bk);
+    if(!state.nijiSel || !nijiOf(state.nijiSel)) state.nijiSel = (left || s.got[bk] == null) ? bk : (NIJI.filter(function(x){ return s.got[x.k] == null; })[0] || bx).k;
+    var sel = nijiOf(state.nijiSel);
+    var h = '<div class="niji-top"><div class="niji-arc">'+nijiArcSVG(s)+'</div><div class="niji-txt"><h3>今週の にじ <span class="num" style="font-size:14px;color:var(--ink-soft)">'+cnt+'/'+NIJI.length+'</span></h3>';
+    h += '<p>' + (cnt < NIJI.length ? 'ちがう しゅるいを やると 色が つくよ。<b>あと '+(NIJI.length - cnt)+'色</b>で 完成 <span style="white-space:nowrap"><span class="coin" style="width:12px;height:12px;vertical-align:-2px"></span> ＋'+NIJI_ALL+'!</span>' : '<b>にじが 完成!</b> 月曜日に また 新しい にじが はじまるよ。') + '</p>';
+    h += '<p>きょうの ボーナス:<b>'+bx.l+'</b> <span style="white-space:nowrap">' + (left ? '<span class="coin" style="width:12px;height:12px;vertical-align:-2px"></span> ＋'+NIJI_TODAY : 'ゲットずみ!') + '</span></p></div></div>';
+    h += '<div class="niji-chips">';
+    NIJI.forEach(function(x){
+      var on = s.got[x.k] != null;
+      h += '<button class="nj'+(on ? ' on' : '')+(x.yl ? ' yl' : '')+'" data-nj="'+x.k+'" aria-pressed="'+(x.k === sel.k)+'" style="--nc:'+x.c+'">' +
+        (x.k === bk && left ? '<span class="nj-b">ボーナス</span>' : '') +
+        '<span class="nj-s'+(x.s.length > 1 ? ' sm' : '')+'">'+x.s+'</span><span class="nj-l">'+x.l+'</span></button>';
+    });
+    h += '</div>';
+    var selOn = s.got[sel.k] != null;
+    h += '<div class="niji-go" style="--nc:'+sel.c+'"><span><b>'+sel.n+'</b><br>' +
+      (sel.k === bk && left ? 'きょうの ボーナス ＋'+NIJI_TODAY+(selOn ? '' : '・新しい 色 ＋'+NIJI_NEW) : selOn ? '今週は もう 色が ついたよ' : 'やると 新しい 色 ＋'+NIJI_NEW) +
+      '</span><button id="nijiGo"'+(sel.yl ? ' class="yl"' : '')+'>やる ›</button></div>';
+    c.className = 'niji' + (cnt === NIJI.length ? ' full' : '');
+    c.innerHTML = h;
+  }
+  function nijiStart(k){
+    if(SINGLE_OPS.indexOf(k) >= 0){
+      state.homeOp = k; state.review = null;
+      safeSet('keisan_last_op', k);
+      startPrint(k, printSize(), 'daily');
+    }else if(k === 'kuri') openKuriMenu(state.homeOp === 'sub' ? 'sub' : 'add');
+    else if(k === 'deci'){ Deci.card(); var d = $('dcGo'); if(d) d.click(); }
+    else if(k === 'hsl'){ Hsl.card(); var e = $('hlGo'); if(e) e.click(); }
+  }
+  $('nijiCard').addEventListener('click', function(e){
+    var b = e.target.closest('[data-nj]');
+    if(b){ state.nijiSel = b.getAttribute('data-nj'); renderNiji(); return; }
+    if(e.target.closest('#nijiGo')) nijiStart(state.nijiSel);
+  });
 
   /* ---------- home ---------- */
   function nextTreasure(){
@@ -4066,6 +4218,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return total ? done/total : 1;
   }
   function recommendOp(){
+    var nb = nijiBonusKind(), ns = getNiji();
+    if(SINGLE_OPS.indexOf(nb) >= 0 && nijiBonusLeft()) return nb;
+    var miss = SINGLE_OPS.filter(function(o){ return ns.got[o] == null; });
+    if(miss.length) return miss[0];
     var last = safeGet('keisan_last_op');
     if(SINGLE_OPS.indexOf(last) >= 0 && !levelInfoText(last).isMax) return last;
     var best = null;
@@ -4371,7 +4527,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var meta = OP_META[op];
       var sub = op==='mix' ? '混ぜる' : 'Lv'+(currentLevelIndex(op)+1);
       h += '<button class="op-tab'+(op==='mix'?' mix':'')+'" role="tab" data-op="'+op+'" aria-selected="'+(op===sel)+'" style="--c:var('+meta.color+')">' +
-        (op===rec && op!==sel ? '<span class="rec-dot">おすすめ</span>' : '') +
+        (op===rec && op!==sel ? '<span class="rec-dot">'+(op===nijiBonusKind() && nijiBonusLeft() ? 'ボーナス' : 'おすすめ')+'</span>' : '') +
         '<span class="ts">'+meta.symbol+'</span><span class="tl">'+sub+'</span></button>';
     });
     $('opTabs').innerHTML = h;
@@ -4511,6 +4667,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     Hsl.card();
     Room.card();
     renderCollection();
+    renderNiji();
     renderSaveBand(true);
     $('roadPet').innerHTML = '';
     renderRoad();
@@ -7104,6 +7261,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   /* ---------- result rendering ---------- */
   function renderResult(r){
+    if(state.nijiNews){ r.banners = (r.banners || []).concat([state.nijiNews]); state.nijiNews = null; }
     setLive(state.op==='mix' ? 'add' : state.op);
     var a = activePet();
     Pet.mount($('resultPet'), a.sp, a.lv); moodPet($('resultPet'));
@@ -7126,13 +7284,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     });
 
     // rewards: level-up / unlock first, coins, then current level
-    var order = { level:0, speed:1, coin:2 };
+    var order = { level:0, niji:1, speed:1, coin:2 };
     var rows = r.banners.slice().sort(function(x,y){ return order[x.type]-order[y.type]; });
     var hasSpeedBanner = rows.some(function(b){ return b.type==='speed'; });
     var card = $('rewardCard'); card.innerHTML = '';
     rows.forEach(function(b){
       card.insertAdjacentHTML('beforeend',
-        '<div class="reward-row"><span class="r-icon '+b.type+'-i">'+ICONS[b.type]+'</span>' +
+        '<div class="reward-row"><span class="r-icon '+b.type+'-i">'+(b.icon || ICONS[b.type])+'</span>' +
         '<span class="r-text"><b>'+b.title+'</b>'+b.text+'</span></div>');
     });
     if(r.levelNoteHtml){
@@ -7169,6 +7327,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(b.type==='level' && /レベルアップ/.test(b.title)) items.push({ icon:ICONS.level, v:'UP!', l:'レベルアップ' });
       else if(b.type==='level') items.push({ icon:ICONS.level, v:'UP!', l:'プリント' });
       if(b.type==='speed') items.push({ icon:ICONS.speed, v:'解放', l:'スピード' });
+      if(b.type==='niji') items.push({ icon:b.wide, v:/完成/.test(b.title) ? '完成!' : /色/.test(b.title) ? '+1色' : '+'+NIJI_TODAY, l:'にじ' });
     });
     if(state.gotMission){ items.push({ icon:starSVG(true), v:'達成!', l:'ミッション' }); state.gotMission = false; }
     if(r.gotStep) items.push({ icon:ICONS.info, v:'1マス', l:'すごろく' });
