@@ -1069,6 +1069,7 @@
   .toy-stage{ position:relative; height:250px; border-radius:22px; background:linear-gradient(to top, var(--surface-2) 0, var(--surface-2) 96px, var(--surface) 96px); box-shadow:var(--shadow); overflow:hidden; margin-bottom:10px; touch-action:none; }
   .toy-petwrap{ position:absolute; left:50%; bottom:6px; width:160px; margin-left:-80px; z-index:1; transform-origin:50% 100%; }
   .toy-under{ position:absolute; inset:0; z-index:0; pointer-events:none; }
+  .toy-stage.room{ height:310px; }
   .toy-room{ position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
   .toy-room .rm-it > svg{ height:auto; }
   .toy-under > div, .toy-layer > div{ position:absolute; }
@@ -4982,7 +4983,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var on = toyRoomOn(), box = $('toyRoom'), st = $('toyStage');
     $('toyRoomBtn').classList.toggle('on', on);
     box.hidden = !on;
-    if(on) Room.backdrop(box, st.clientWidth, st.clientHeight, 96); else box.innerHTML = '';
+    st.classList.toggle('room', on);
+    if(on) Room.backdrop(box, st.clientWidth, st.clientHeight, 96, $('toyPetWrap').offsetWidth || 160); else box.innerHTML = '';
   }
   $('toyRoomBtn').addEventListener('click', function(){
     safeSet('keisan_toyroom', toyRoomOn() ? 0 : 1);
@@ -9369,9 +9371,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       return { r:r, els:els };
     }
 
-    /* あそぶ 画面の はいけい: W×H(px)の 中に かべ(上)と ゆか(下 FL px)を しき、家具を 同じ ならびで おく */
-    function backdrop(box, W, H, FL){
-      var r = getRoom(), WL = H - FL, RW = Math.min(W, 520), X0 = (W - RW) / 2;
+    /* あそぶ 画面の はいけい: W×H(px)の 中に かべ(上)と ゆか(下 FL px)を しき、家具を 同じ ならびで おく。
+       家具の 大きさは おへやと 同じ「相棒との くらべっこ」に なるよう、手前の 相棒の はば PW(px) から きめる */
+    function backdrop(box, W, H, FL, PW){
+      var r = getRoom(), WL = H - FL, RW = PW / PET_W * 100, X0 = 0;
       box.innerHTML = '';
       function add(cls, css, html){ var e = document.createElement('div'); e.className = cls; e.style.cssText = css; e.innerHTML = html; box.appendChild(e); return e; }
       add('rm-wall', 'height:' + WL + 'px', surfSvg(BY[r.wall]));
@@ -9383,7 +9386,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var pos = d.z === 'wall'
           ? 'top:' + Math.max(4, Math.min(WL - h - 6, it.y / WALL * WL - h / 2)) + 'px'
           : 'bottom:' + ((100 - it.y) / (100 - WALL) * FL) + 'px';
-        var css = 'left:' + (X0 + it.x / 100 * RW) + 'px;width:' + w + 'px;' + pos + ';z-index:';
+        var css = 'left:' + (X0 + it.x / 100 * W) + 'px;width:' + w + 'px;' + pos + ';z-index:';
         add('rm-it' + (it.f ? ' flip' : ''), css + z, itemSvg(d));
         if(d.f) add('rm-it rm-front' + (it.f ? ' flip' : ''), css + (z + 2), itemSvg(d, 'f'));
       });
