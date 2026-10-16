@@ -208,9 +208,12 @@
   .hl-clear{ margin-top:0; }
   .hl-viz-wrap{ margin-top:10px; }
   .hl-viz{ background:var(--surface); border-radius:18px; box-shadow:var(--shadow); padding:10px 12px; display:grid; gap:8px; }
-  .hl-viz .vb{ display:inline-block; width:7px; height:30px; margin:0 1px; border-radius:2px; background:repeating-linear-gradient(to bottom, var(--op-div) 0 2.2px, color-mix(in srgb, var(--op-div) 55%, var(--surface)) 2.2px 3px); vertical-align:bottom; }
-  .hl-viz .vb.c{ background:repeating-linear-gradient(to bottom, var(--hl-carry) 0 2.2px, color-mix(in srgb, var(--hl-carry) 55%, var(--surface)) 2.2px 3px); }
-  .hl-viz .vd{ display:inline-block; width:8px; height:8px; margin:1px; border-radius:2px; background:var(--op-add); vertical-align:bottom; }
+  .hl-viz .vb{ display:inline-block; box-sizing:content-box; width:7px; height:90px; margin:0 2px; border:1.5px solid color-mix(in srgb, var(--op-div) 70%, var(--ink)); border-radius:2px; background:repeating-linear-gradient(to bottom, var(--op-div) 0 8px, color-mix(in srgb, var(--op-div) 40%, var(--surface)) 8px 9px); vertical-align:bottom; }
+  .hl-viz .vb.c{ border-color:color-mix(in srgb, var(--hl-carry) 70%, var(--ink)); background:repeating-linear-gradient(to bottom, var(--hl-carry) 0 8px, color-mix(in srgb, var(--hl-carry) 40%, var(--surface)) 8px 9px); }
+  .hl-viz .vd{ display:inline-block; box-sizing:content-box; width:7px; height:7px; margin:1px; border:1px solid color-mix(in srgb, var(--op-add) 70%, var(--ink)); border-radius:2px; background:var(--op-add); vertical-align:bottom; }
+  .vz-key{ display:flex; align-items:flex-end; gap:6px; flex-wrap:wrap; font-size:12px; font-weight:800; color:var(--ink-soft); }
+  .vz-key b{ color:var(--ink); }
+  .vz-key{ align-items:center; }
   .vz-pile{ display:flex; flex-wrap:wrap; align-items:flex-end; gap:4px; min-height:34px; padding:6px 8px; border-radius:12px; background:var(--surface-2); }
   .vz-pile .vo{ display:inline-flex; flex-wrap:wrap; max-width:150px; }
   .vz-lab{ font-size:11px; font-weight:900; color:var(--ink-soft); margin-right:4px; align-self:center; }
@@ -9034,15 +9037,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(!s) return '';
       var bar = '<i class="vb"></i>', dot = '<i class="vd"></i>';
       function rep(t, n){ var o = ''; for(var i=0;i<n;i++) o += t; return o; }
+      var key = '<div class="vz-key">'+bar+'<span>= <b>10こ</b> の たば(ばらが 10こ つながったもの)</span>'+dot+'<span>= <b>1こ</b></span></div>';
       if(s.mul){
         var g = '';
         for(var i=0;i<s.b;i++) g += '<div class="vz-grp"><span class="vt'+(s.focus === 'T' ? ' on' : '')+'">'+rep(bar, s.T)+'</span><span class="vo'+(s.focus === 'O' ? ' on' : '')+'">'+rep(dot, s.O)+'</span></div>';
         var tot = s.gT + s.gC + s.gO ? '<div class="vz-tot"><span class="vz-lab">あわせると</span>'+rep(bar, s.gT)+rep('<i class="vb c"></i>', s.gC)+rep(dot, s.gO)+'</div>' : '';
-        return '<div class="hl-viz"><div class="vz-grps">'+g+'</div>'+tot+'<p class="vz-note">'+s.note+'</p></div>';
+        return '<div class="hl-viz">'+key+'<div class="vz-grps">'+g+'</div>'+tot+'<p class="vz-note">'+s.note+'</p></div>';
       }
       var plates = '';
       for(var j=0;j<s.d;j++) plates += '<div class="vz-pl"><span class="vz-who">'+(j+1)+'</span><span class="vt">'+rep(bar, s.perT)+'</span><span class="vo">'+rep(dot, s.perO)+'</span></div>';
-      return '<div class="hl-viz"><div class="vz-pile'+(s.focus ? ' f'+s.focus : '')+'"><span class="vz-lab">のこり</span><span class="vt">'+rep(bar, s.pileT)+'</span><span class="vo">'+rep(dot, s.pileO)+'</span>'+(s.pileT + s.pileO ? '' : '<span class="vz-none">なし</span>')+'</div>' +
+      return '<div class="hl-viz">'+key+'<div class="vz-pile'+(s.focus ? ' f'+s.focus : '')+'"><span class="vz-lab">のこり</span><span class="vt">'+rep(bar, s.pileT)+'</span><span class="vo">'+rep(dot, s.pileO)+'</span>'+(s.pileT + s.pileO ? '' : '<span class="vz-none">なし</span>')+'</div>' +
         '<div class="vz-pls">'+plates+'</div><p class="vz-note">'+s.note+'</p></div>';
     }
     function render(){
