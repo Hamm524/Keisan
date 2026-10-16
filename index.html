@@ -2441,6 +2441,56 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(/リボン$/.test(it.n) && t.indexOf('#fffdf6') >= 0) return [1.6, 0, 0, 18];
     return null;
   }
+  /* 漢字アプリの マフラー(v73〜)：小物の 絵から 色・しましま・ぽんぽん・もこもこ・宝石を 読みとる */
+  function oshScarf(it){
+    if(it.s !== 'neck' || !/マフラー$/.test(it.n || '')) return null;
+    var t = it.inner || '';
+    var m = /d="M7 25Q32 41 57 25[^"]*" fill="(#[0-9A-Fa-f]{3,6})"/.exec(t), k = /d="M41 39Q47 40 52 36[^"]*" fill="(#[0-9A-Fa-f]{3,6})"/.exec(t);
+    var g = /<svg\b[\s\S]*?<\/svg>/.exec(t);
+    return { m: m ? m[1] : '#E8524C', dk: k ? k[1] : '#C9383A', st: /fill="#fff" fill-opacity="\.9"/.test(t),
+      pom: /r="4\.2" fill="#fff"/.test(t), fl: (t.match(/r="3\.4"/g) || []).length > 6, gem: g ? g[0] : '' };
+  }
+  /* 首の 高さ：口の いちばん 下から 少し 下(口が ない・はなれた 相棒は 目から) */
+  var SCARF_NY = { 'ひよこ':128, 'うし':132 };
+  function scarfNeckY(d){
+    if(SCARF_NY[d.name]) return SCARF_NY[d.name];
+    var nums = (d.mouthN || '').match(/-?\d+(\.\d+)?/g) || [], my = -1;
+    for(var i = 1; i < nums.length; i += 2) my = Math.max(my, +nums[i]);
+    if(my < 0) my = d.eyeY + 26;
+    return Math.max(122, Math.min(134, Math.min(my, d.eyeY + 34) + 10));
+  }
+  function scarfWrap(d, o, back){
+    var ny = scarfNeckY(d), W = 15, f = function(v){ return (+v).toFixed(1); };
+    function strip(p, w, col, cap){
+      var s = '';
+      if(o.fl) s += '<path d="'+p+'" stroke="'+col+'" stroke-width="'+(w+7)+'" stroke-dasharray="0.1 6.5" stroke-linecap="round" fill="none"/>';
+      s += '<path d="'+p+'" stroke="'+col+'" stroke-width="'+w+'" fill="none" stroke-linecap="'+(cap || 'round')+'"/>';
+      if(o.st) s += '<path d="'+p+'" stroke="#fff" stroke-opacity=".9" stroke-width="'+(w-4)+'" stroke-dasharray="4 5" fill="none"/>';
+      return s;
+    }
+    if(back) return strip('M58,'+(ny-7)+' Q100,'+(ny+11)+' 142,'+(ny-7), W, o.m) +
+      (o.st ? '' : '<path d="M66,'+(ny-3)+' Q100,'+(ny+10)+' 134,'+(ny-3)+'" stroke="'+o.dk+'" stroke-width="2.4" fill="none" stroke-linecap="round"/>');
+    function end(x, y, a){
+      if(o.pom) return '<g stroke="'+o.dk+'" stroke-width="1.3" fill="#fff"><circle cx="'+f(x-3)+'" cy="'+f(y+1)+'" r="3.4"/><circle cx="'+f(x+3)+'" cy="'+f(y+1)+'" r="3.4"/><circle cx="'+f(x)+'" cy="'+f(y+4)+'" r="3.4"/></g><circle cx="'+f(x)+'" cy="'+f(y+1.5)+'" r="4.2" fill="#fff"/>';
+      var p = '';
+      for(var i = -2; i <= 2; i++){ var fx = x + i*2.4*Math.cos(a), fy = y + i*2.4*Math.sin(a); p += 'M'+f(fx)+','+f(fy)+' l'+f(-5*Math.sin(a))+','+f(5*Math.cos(a)); }
+      return '<path d="'+p+'" stroke="'+o.dk+'" stroke-width="1.8" stroke-linecap="round"/>';
+    }
+    var t1 = 'M118,'+(ny+6)+' Q114,'+(ny+22)+' 116,'+(ny+38), t2 = 'M124,'+(ny+6)+' Q134,'+(ny+20)+' 138,'+(ny+33);
+    var s = strip(t1, 12, o.dk, 'butt') + end(116, ny+38, .1) + strip(t2, 12, o.dk, 'butt') + end(138, ny+33, -.35);
+    var band = 'M58,'+(ny-7)+' Q100,'+(ny+15)+' 142,'+(ny-7);
+    s += strip(band, W, o.m);
+    if(!o.st) s += '<path d="M66,'+(ny-3)+' Q84,'+(ny+7)+' 98,'+(ny+8)+'M106,'+(ny+8)+' Q120,'+(ny+6)+' 134,'+(ny-3)+'" stroke="'+o.dk+'" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
+    /* 結び目と 宝石 */
+    var kx = 121, ky = ny + 5;
+    s += '<ellipse cx="'+kx+'" cy="'+ky+'" rx="8" ry="7.5" fill="'+o.m+'"/>';
+    if(o.gem){
+      s += '<circle cx="'+kx+'" cy="'+ky+'" r="6.2" fill="#ffe680" stroke="#c9951a" stroke-width="1"/>' +
+        o.gem.replace(/\s(x|y|width|height)="[^"]*"/g, '').replace(/^<svg/, '<svg x="'+(kx-4.5)+'" y="'+(ky-4.5)+'" width="9" height="9"');
+    } else if(o.st) s += '<path d="M'+(kx-3)+','+(ky-6)+' L'+(kx-3)+','+(ky+6)+'M'+(kx+3)+','+(ky-6)+' L'+(kx+3)+','+(ky+6)+'" stroke="#fff" stroke-width="2.5" stroke-opacity=".9"/>';
+    else s += '<path d="M'+(kx-4)+','+(ky-3)+' Q'+kx+','+(ky+2)+' '+(kx+4)+','+(ky-3)+'" stroke="'+o.dk+'" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    return s;
+  }
   function oshDraw(it, d){
     var ex = d.eyeX || [75, 125];
     var fit = it.pos === 'ear' ? oshFit(it) : null;
@@ -2452,11 +2502,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(it.s === 'head' && it.pos === 'ear') return oshPlace(it, d.clipAt[0], d.clipAt[1], 44);
     if(it.s === 'head') return '<g transform="'+(d.crownT||'')+'">'+oshPlace(it, 100, 22, 56)+'</g>';
     if(it.s === 'eyes'){ var k = (ex[1]-ex[0])/26; return oshPlace(it, 100, d.eyeY - 2*k, 64*k); }
-    /* マフラーは 口の 下に 大きく まく。上の キラキラは 目に かかるので、帯より 上(64の 18より 上)は 切る */
-    if(it.s === 'neck' && /マフラー$/.test(it.n || '')){
-      var k = 68 / 64, my = Math.max(134, (d.eyeY + 40 + d.gemAt[1]) / 2 + 4) - 7 * k;
-      return '<svg class="ta" x="66" y="'+(my - 14 * k)+'" width="68" height="'+(46 * k)+'" viewBox="0 18 64 46" style="overflow:hidden">'+it.inner+'</svg>';
-    }
+    /* マフラーは 首に まいて、結び目から 2本 たらす(相棒の 形に 合わせて ここで かく) */
+    var sc = oshScarf(it);
+    if(sc) return scarfWrap(d, sc, false);
     /* 首の 真ん中(口の 下と 胸の 宝石の あいだ) */
     if(it.s === 'neck') return oshPlace(it, 100, Math.max(130, (d.eyeY + 40 + d.gemAt[1]) / 2), 44);
     if(it.s === 'back') return oshPlace(it, 100, 120, 176);
@@ -3001,6 +3049,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var ny = Math.max(124, Math.min(136, (d.eyeY + 40 + d.gemAt[1]) / 2));
     osh.forEach(function(it){
       if(it.s !== 'neck') return;
+      var sc = oshScarf(it);
+      if(sc){ bx += scarfWrap(d, sc, true); return; }
       var thick = /マフラー|スカーフ/.test(it.n || '');
       bx += '<path d="M64,'+(ny-8)+' Q100,'+(ny+6)+' 136,'+(ny-8)+'" stroke="'+oshColor(it)+'" stroke-width="'+(thick ? 11 : 3.5)+'" fill="none" stroke-linecap="round"/>';
     });
