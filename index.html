@@ -2199,7 +2199,7 @@ var Pet = (function(){
       '<path d="M92,'+(k-2)+' L108,'+(k-2)+' L105,'+(k+6)+' L95,'+(k+6)+' Z" fill="#2F49B8"/></g>';
   }
   /* ネクタイの 結び目の たかさ(口・くちばし・した と ぶつからない よう 種類ごとに) */
-  var TIE_Y = { dog:134, dragon:131, dolphin:130, chick:129, unicorn:128, snake:129, owl:128, penguin:128, hamster:132, bear:130, fox:130, whale:129, rabbit:130, tiger:128, wolf:128, cat:128, panda:128, seal:128 };
+  var TIE_Y = { squirrel:130, koala:136, sheep:130, dog:134, dragon:131, dolphin:130, chick:129, unicorn:128, snake:129, owl:128, penguin:128, hamster:132, bear:130, fox:130, whale:129, rabbit:130, tiger:128, wolf:128, cat:128, panda:128, seal:128 };
   function tophat(t){
     return '<g transform="'+(t||'')+'">' +
       '<rect x="87" y="14" width="26" height="25" rx="3" fill="#35324A"/>' +
@@ -2295,7 +2295,29 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     penguin:{"name": "ペンギン", "gem": "#FF6F4C", "gemAt": [100.0, 147.0], "clipAt": [140, 58], "crownT": "", "eyeY": 90.0, "eyeX": [76.0, 124.0], "back": "", "body": "<ellipse cx=\"74\" cy=\"172\" rx=\"16\" ry=\"7\" fill=\"#F2A134\" /><ellipse cx=\"126\" cy=\"172\" rx=\"16\" ry=\"7\" fill=\"#F2A134\" /><ellipse cx=\"36\" cy=\"128\" rx=\"14\" ry=\"28\" fill=\"#3A3D66\" transform=\"rotate(16 36 128)\" /><ellipse cx=\"164\" cy=\"128\" rx=\"14\" ry=\"28\" fill=\"#3A3D66\" transform=\"rotate(-16 164 128)\" /><ellipse cx=\"100\" cy=\"128\" rx=\"66\" ry=\"52\" fill=\"#3A3D66\" /><circle cx=\"100\" cy=\"85\" r=\"56\" fill=\"#3A3D66\" /><ellipse cx=\"100\" cy=\"142\" rx=\"42\" ry=\"30\" fill=\"#FFFFFF\" /><circle cx=\"80\" cy=\"94\" r=\"25\" fill=\"#FFFFFF\" /><circle cx=\"120\" cy=\"94\" r=\"25\" fill=\"#FFFFFF\" />", "deco": "<ellipse cx=\"60\" cy=\"108\" rx=\"10\" ry=\"6\" fill=\"#FFB6C8\" opacity=\".8\" /><ellipse cx=\"140\" cy=\"108\" rx=\"10\" ry=\"6\" fill=\"#FFB6C8\" opacity=\".8\" /><polygon points=\"88,101 112,101 100,116\" fill=\"#F2A134\" />", "eyesC": "<ellipse cx=\"76\" cy=\"90\" rx=\"8.5\" ry=\"11.5\" fill=\"#2E2A3D\" /><ellipse cx=\"124\" cy=\"90\" rx=\"8.5\" ry=\"11.5\" fill=\"#2E2A3D\" /><circle cx=\"73\" cy=\"85\" r=\"3\" fill=\"#fff\" /><circle cx=\"121\" cy=\"85\" r=\"3\" fill=\"#fff\" />", "mouthN": "", "mouthH": "<path d=\"M92,112 Q100,126 108,112 Q100,115 92,112 Z\" fill=\"#C94A63\"/>"},
     seal:{"name": "あざらし", "gem": "#F2A134", "gemAt": [100.0, 141.0], "clipAt": [140, 58], "crownT": "", "eyeY": 88.0, "eyeX": [72.0, 128.0], "back": "", "body": "<path d=\"M150,150 Q184,150 182,170 Q166,172 152,164 Q166,164 150,150 Z\" fill=\"#B4C2DA\" /><ellipse cx=\"36\" cy=\"134\" rx=\"17\" ry=\"10\" fill=\"#B4C2DA\" transform=\"rotate(28 36 134)\" /><ellipse cx=\"164\" cy=\"134\" rx=\"17\" ry=\"10\" fill=\"#B4C2DA\" transform=\"rotate(-28 164 134)\" /><ellipse cx=\"100\" cy=\"128\" rx=\"68\" ry=\"54\" fill=\"#C9D4E6\" /><circle cx=\"100\" cy=\"85\" r=\"56\" fill=\"#C9D4E6\" /><ellipse cx=\"100\" cy=\"144\" rx=\"40\" ry=\"28\" fill=\"#F4F7FC\" /><ellipse cx=\"100\" cy=\"108\" rx=\"26\" ry=\"17\" fill=\"#F4F7FC\" />", "deco": "<ellipse cx=\"54\" cy=\"106\" rx=\"10\" ry=\"6\" fill=\"#FFB6C8\" opacity=\".75\" /><ellipse cx=\"146\" cy=\"106\" rx=\"10\" ry=\"6\" fill=\"#FFB6C8\" opacity=\".75\" /><ellipse cx=\"100\" cy=\"100\" rx=\"7.5\" ry=\"5\" fill=\"#2E2A3D\" /><g fill=\"#7C8AA5\"><circle cx=\"86\" cy=\"106\" r=\"1.4\" /><circle cx=\"82\" cy=\"111\" r=\"1.4\" /><circle cx=\"114\" cy=\"106\" r=\"1.4\" /><circle cx=\"118\" cy=\"111\" r=\"1.4\" /></g>", "eyesC": "<ellipse cx=\"72\" cy=\"88\" rx=\"10.5\" ry=\"13.5\" fill=\"#2E2A3D\" /><ellipse cx=\"128\" cy=\"88\" rx=\"10.5\" ry=\"13.5\" fill=\"#2E2A3D\" /><circle cx=\"69\" cy=\"83\" r=\"3.4\" fill=\"#fff\" /><circle cx=\"125\" cy=\"83\" r=\"3.4\" fill=\"#fff\" />", "mouthN": "<path d=\"M100,105 L100,110 M100,110 Q94,116 89,111 M100,110 Q106,116 111,111\" stroke=\"#2E2A3D\" stroke-width=\"2.4\" fill=\"none\" stroke-linecap=\"round\" />", "mouthH": "<path d=\"M99,104 Q105.5,120 112,104 Q105.5,107 99,104 Z\" fill=\"#C94A63\"/>"},
     unicorn:{"name": "ユニコーン", "gem": "#B05CE8", "gemAt": [100.0, 141.0], "clipAt": [140, 58], "crownT": "translate(-30 14) rotate(-20 100 30)", "eyeY": 92.0, "eyeX": [75.0, 125.0], "back": "", "body": "<path d=\"M148,124 Q190,110 180,150 Q172,166 148,148 Z\" fill=\"#B58CFF\" /><path d=\"M156,136 Q178,132 176,152\" stroke=\"#FF9EC8\" stroke-width=\"6\" fill=\"none\" stroke-linecap=\"round\" /><polygon points=\"60,52 64,14 92,46\" fill=\"#F6F0FF\" stroke=\"#E4D8F5\" stroke-width=\"2\" stroke-linejoin=\"round\" /><polygon points=\"140,52 136,14 108,46\" fill=\"#F6F0FF\" stroke=\"#E4D8F5\" stroke-width=\"2\" stroke-linejoin=\"round\" /><polygon points=\"66,46 68,26 82,44\" fill=\"#FFB6C8\" /><polygon points=\"134,46 132,26 118,44\" fill=\"#FFB6C8\" /><ellipse cx=\"100\" cy=\"128\" rx=\"68\" ry=\"54\" fill=\"#F6F0FF\" stroke=\"#E4D8F5\" stroke-width=\"2\" /><circle cx=\"100\" cy=\"85\" r=\"56\" fill=\"#F6F0FF\" stroke=\"#E4D8F5\" stroke-width=\"2\" /><ellipse cx=\"100\" cy=\"128\" rx=\"65\" ry=\"51\" fill=\"#F6F0FF\" /><circle cx=\"100\" cy=\"85\" r=\"53\" fill=\"#F6F0FF\" /><ellipse cx=\"100\" cy=\"144\" rx=\"38\" ry=\"26\" fill=\"#FFFFFF\" /><circle cx=\"62\" cy=\"40\" r=\"13\" fill=\"#FF9EC8\" /><circle cx=\"76\" cy=\"34\" r=\"12\" fill=\"#B58CFF\" /><circle cx=\"50\" cy=\"56\" r=\"11\" fill=\"#8FE0C6\" /><polygon points=\"91,44 100,-2 109,44\" fill=\"#FFD24C\" /><path d=\"M94,32 L106,28 M92,40 L108,36 M96,22 L104,19\" stroke=\"#F2A134\" stroke-width=\"2.4\" stroke-linecap=\"round\" />", "deco": "<ellipse cx=\"60\" cy=\"108\" rx=\"11\" ry=\"7\" fill=\"#FFB6C8\" opacity=\".75\" /><ellipse cx=\"140\" cy=\"108\" rx=\"11\" ry=\"7\" fill=\"#FFB6C8\" opacity=\".75\" /><ellipse cx=\"94\" cy=\"108\" rx=\"2.6\" ry=\"2\" fill=\"#C7A9E0\" /><ellipse cx=\"106\" cy=\"108\" rx=\"2.6\" ry=\"2\" fill=\"#C7A9E0\" />", "mouthN": "<path d=\"M92,116 Q100,122 108,116\" stroke=\"#2E2A3D\" stroke-width=\"2.5\" fill=\"none\" stroke-linecap=\"round\" />", "mouthH": "<path d=\"M91,115 Q100,131 109,115 Q100,118 91,115 Z\" fill=\"#C94A63\"/>"},
-    dolphin:{"name": "イルカ", "gem": "#FF6F4C", "gemAt": [100.0, 147.0], "clipAt": [140, 58], "crownT": "", "eyeY": 84.0, "eyeX": [68.0, 132.0], "back": "", "body": "<path d=\"M146,152 Q176,152 182,124 Q170,128 164,138 Q168,120 156,110 Q150,130 146,152 Z\" fill=\"#6EB8FF\" /><path d=\"M92,32 Q104,6 122,34 Q106,30 92,32 Z\" fill=\"#5AA6F0\" /><ellipse cx=\"32\" cy=\"134\" rx=\"15\" ry=\"9\" fill=\"#5AA6F0\" transform=\"rotate(30 32 134)\" /><ellipse cx=\"168\" cy=\"134\" rx=\"15\" ry=\"9\" fill=\"#5AA6F0\" transform=\"rotate(-30 168 134)\" /><ellipse cx=\"100\" cy=\"128\" rx=\"68\" ry=\"54\" fill=\"#6EB8FF\" /><circle cx=\"100\" cy=\"85\" r=\"56\" fill=\"#6EB8FF\" /><ellipse cx=\"100\" cy=\"146\" rx=\"40\" ry=\"28\" fill=\"#F1F8FF\" /><ellipse cx=\"100\" cy=\"110\" rx=\"28\" ry=\"15\" fill=\"#A8D4FF\" /><ellipse cx=\"100\" cy=\"104\" rx=\"16\" ry=\"7\" fill=\"#A8D4FF\" /><path d=\"M92,36 Q100,40 108,36\" stroke=\"#3E86D0\" stroke-width=\"2.4\" fill=\"none\" stroke-linecap=\"round\" />", "deco": "<ellipse cx=\"54\" cy=\"104\" rx=\"10\" ry=\"6\" fill=\"#FFB6C8\" opacity=\".8\" /><ellipse cx=\"146\" cy=\"104\" rx=\"10\" ry=\"6\" fill=\"#FFB6C8\" opacity=\".8\" />", "mouthN": "<path d=\"M80,114 Q100,128 120,114\" stroke=\"#2E2A3D\" stroke-width=\"2.6\" fill=\"none\" stroke-linecap=\"round\" />", "mouthH": "<path d=\"M79,113 Q100,129 121,113 Q100,116 79,113 Z\" fill=\"#C94A63\"/>"}
+    dolphin:{"name": "イルカ", "gem": "#FF6F4C", "gemAt": [100.0, 147.0], "clipAt": [140, 58], "crownT": "", "eyeY": 84.0, "eyeX": [68.0, 132.0], "back": "", "body": "<path d=\"M146,152 Q176,152 182,124 Q170,128 164,138 Q168,120 156,110 Q150,130 146,152 Z\" fill=\"#6EB8FF\" /><path d=\"M92,32 Q104,6 122,34 Q106,30 92,32 Z\" fill=\"#5AA6F0\" /><ellipse cx=\"32\" cy=\"134\" rx=\"15\" ry=\"9\" fill=\"#5AA6F0\" transform=\"rotate(30 32 134)\" /><ellipse cx=\"168\" cy=\"134\" rx=\"15\" ry=\"9\" fill=\"#5AA6F0\" transform=\"rotate(-30 168 134)\" /><ellipse cx=\"100\" cy=\"128\" rx=\"68\" ry=\"54\" fill=\"#6EB8FF\" /><circle cx=\"100\" cy=\"85\" r=\"56\" fill=\"#6EB8FF\" /><ellipse cx=\"100\" cy=\"146\" rx=\"40\" ry=\"28\" fill=\"#F1F8FF\" /><ellipse cx=\"100\" cy=\"110\" rx=\"28\" ry=\"15\" fill=\"#A8D4FF\" /><ellipse cx=\"100\" cy=\"104\" rx=\"16\" ry=\"7\" fill=\"#A8D4FF\" /><path d=\"M92,36 Q100,40 108,36\" stroke=\"#3E86D0\" stroke-width=\"2.4\" fill=\"none\" stroke-linecap=\"round\" />", "deco": "<ellipse cx=\"54\" cy=\"104\" rx=\"10\" ry=\"6\" fill=\"#FFB6C8\" opacity=\".8\" /><ellipse cx=\"146\" cy=\"104\" rx=\"10\" ry=\"6\" fill=\"#FFB6C8\" opacity=\".8\" />", "mouthN": "<path d=\"M80,114 Q100,128 120,114\" stroke=\"#2E2A3D\" stroke-width=\"2.6\" fill=\"none\" stroke-linecap=\"round\" />", "mouthH": "<path d=\"M79,113 Q100,129 121,113 Q100,116 79,113 Z\" fill=\"#C94A63\"/>"},
+    squirrel:{
+      name:'りす', gem:'#1FA98E', gemAt:[100,141], clipAt:[140,58], crownT:'', eyeY:88,
+      back:'<path d="M144,156 Q206,160 200,94 Q196,30 150,22 Q118,20 120,48 Q146,42 156,62 Q166,86 156,112 Q150,130 144,140 Z" fill="#D98E4E"/><path d="M160,46 Q188,64 188,100 Q186,136 160,148 Q174,116 172,92 Q170,66 150,50 Z" fill="#F2B77A"/>',
+      body:'<ellipse cx="100" cy="128" rx="66" ry="54" fill="#E0A066"/><path d="M60,54 L64,14 Q78,22 90,44 Z" fill="#E0A066"/><path d="M140,54 L136,14 Q122,22 110,44 Z" fill="#E0A066"/><path d="M64,16 Q58,4 63,-2 Q70,6 67,16 Z" fill="#C97A3E"/><path d="M136,16 Q142,4 137,-2 Q130,6 133,16 Z" fill="#C97A3E"/><circle cx="100" cy="85" r="56" fill="#E0A066"/><path d="M67,44 L69,24 Q78,30 83,42 Z" fill="#FFB6C8"/><path d="M133,44 L131,24 Q122,30 117,42 Z" fill="#FFB6C8"/><ellipse cx="100" cy="142" rx="38" ry="28" fill="#FFF1DC"/><ellipse cx="100" cy="109" rx="27" ry="17" fill="#FFF1DC"/>',
+      deco:'<ellipse cx="58" cy="106" rx="10" ry="6" fill="#FFB6C8" opacity=".7"/><ellipse cx="142" cy="106" rx="10" ry="6" fill="#FFB6C8" opacity=".7"/><ellipse cx="100" cy="102" rx="5.5" ry="3.8" fill="#8A5A3C"/>',
+      mouthN:'<path d="M100,105 L100,110 M100,110 Q94,115 90,111 M100,110 Q106,115 110,111" stroke="'+INK+'" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
+      mouthH:'<path d="M93,110 Q100,125 107,110 Q100,113 93,110 Z" fill="#C94A63"/>'
+    },
+    koala:{
+      name:'コアラ', gem:'#FF6F4C', gemAt:[100,150], clipAt:[134,34], crownT:'', eyeY:86,
+      body:'<ellipse cx="100" cy="128" rx="68" ry="54" fill="#A7ADB9"/><circle cx="48" cy="54" r="28" fill="#A7ADB9"/><circle cx="152" cy="54" r="28" fill="#A7ADB9"/><circle cx="51" cy="57" r="16" fill="#F4F2F6"/><circle cx="149" cy="57" r="16" fill="#F4F2F6"/><circle cx="100" cy="86" r="56" fill="#A7ADB9"/><ellipse cx="100" cy="142" rx="38" ry="28" fill="#F4F2F6"/>',
+      deco:'<ellipse cx="57" cy="108" rx="10" ry="6" fill="#FFB6C8" opacity=".65"/><ellipse cx="143" cy="108" rx="10" ry="6" fill="#FFB6C8" opacity=".65"/><ellipse cx="100" cy="104" rx="12" ry="15" fill="#4A4552"/><ellipse cx="96" cy="98" rx="3" ry="4" fill="#fff" opacity=".35"/>',
+      mouthN:'<path d="M92,124 Q100,129 108,124" stroke="'+INK+'" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
+      mouthH:'<path d="M92,122 Q100,135 108,122 Q100,125 92,122 Z" fill="#C94A63"/>'
+    },
+    sheep:{
+      name:'ひつじ', gem:'#B05CE8', gemAt:[100,150], clipAt:[136,46], crownT:'', eyeY:96, eyeX:[82,118],
+      body:'<ellipse cx="100" cy="130" rx="64" ry="50" fill="#FBF5EA"/><circle cx="38.5" cy="136.0" r="18" fill="#EFE3D1"/><circle cx="38.5" cy="134.5" r="15" fill="#FBF5EA"/><circle cx="49.2" cy="156.4" r="18" fill="#EFE3D1"/><circle cx="49.2" cy="154.9" r="15" fill="#FBF5EA"/><circle cx="71.4" cy="170.8" r="18" fill="#EFE3D1"/><circle cx="71.4" cy="169.3" r="15" fill="#FBF5EA"/><circle cx="100.0" cy="176.0" r="18" fill="#EFE3D1"/><circle cx="100.0" cy="174.5" r="15" fill="#FBF5EA"/><circle cx="128.6" cy="170.8" r="18" fill="#EFE3D1"/><circle cx="128.6" cy="169.3" r="15" fill="#FBF5EA"/><circle cx="150.8" cy="156.4" r="18" fill="#EFE3D1"/><circle cx="150.8" cy="154.9" r="15" fill="#FBF5EA"/><circle cx="161.5" cy="136.0" r="18" fill="#EFE3D1"/><circle cx="161.5" cy="134.5" r="15" fill="#FBF5EA"/><ellipse cx="46" cy="94" rx="20" ry="9" transform="rotate(24 46 94)" fill="#F3D9BE"/><ellipse cx="154" cy="94" rx="20" ry="9" transform="rotate(-24 154 94)" fill="#F3D9BE"/><ellipse cx="47" cy="94" rx="12" ry="4.5" transform="rotate(24 47 94)" fill="#FFC2CF"/><ellipse cx="153" cy="94" rx="12" ry="4.5" transform="rotate(-24 153 94)" fill="#FFC2CF"/><circle cx="100" cy="84" r="54" fill="#FBF5EA"/><circle cx="66" cy="54" r="16" fill="#EFE3D1"/><circle cx="66" cy="52.5" r="13" fill="#FBF5EA"/><circle cx="82" cy="40" r="16" fill="#EFE3D1"/><circle cx="82" cy="38.5" r="13" fill="#FBF5EA"/><circle cx="100" cy="35" r="16" fill="#EFE3D1"/><circle cx="100" cy="33.5" r="13" fill="#FBF5EA"/><circle cx="118" cy="40" r="16" fill="#EFE3D1"/><circle cx="118" cy="38.5" r="13" fill="#FBF5EA"/><circle cx="134" cy="54" r="16" fill="#EFE3D1"/><circle cx="134" cy="52.5" r="13" fill="#FBF5EA"/><ellipse cx="100" cy="100" rx="38" ry="36" fill="#F3D9BE"/>',
+      deco:'<ellipse cx="74" cy="113" rx="8" ry="5" fill="#FFB6C8" opacity=".75"/><ellipse cx="126" cy="113" rx="8" ry="5" fill="#FFB6C8" opacity=".75"/><ellipse cx="100" cy="110" rx="5.5" ry="3.6" fill="#C9897A"/>',
+      mouthN:'<path d="M100,113 L100,117 M100,117 Q95,122 91,118 M100,117 Q105,122 109,118" stroke="'+INK+'" stroke-width="2.3" fill="none" stroke-linecap="round"/>',
+      mouthH:'<path d="M93,117 Q100,130 107,117 Q100,120 93,117 Z" fill="#C94A63"/>'
+    }
   };
 
   var sexFn = null;
@@ -2492,6 +2514,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     penguin: [['kuro','くろ',240,.1,.22],['ao','あお',212,.45,.5]],
     seal:    [['shiro','しろ',210,.25,.95],['koi','こいグレー',215,.14,.5],['cha','ちゃいろ',30,.25,.58]],
     dolphin: [['gray','グレー',210,.12,.62],['pink','ピンク',345,.6,.8],['koi','こいあお',214,.6,.5]],
+    squirrel:[['aka','あかちゃ',22,.62,.52],['gray','はいいろ',220,.08,.62],['kuro','くろ',250,.08,.3]],
+    koala:   [['cha','ちゃいろ',28,.22,.56],['koi','こいグレー',225,.06,.5]],
+    sheep:   [['cream','クリーム',40,.55,.88],['cha','ちゃいろ',28,.35,.6],['kuro','くろ',250,.06,.32]],
     whale:   [['ao','あお',214,.5,.6],['shiro','しろ',200,.25,.94],['kuro','くろ',230,.12,.3]],
     snake:   [['kiiro','きいろ',50,.8,.62],['cha','ちゃいろ',30,.45,.5],['ao','あおみどり',170,.4,.5],['shiro','しろ',50,.2,.92]],
     dragon:  [['midori','みどり',110,.45,.6],['aka','あか',5,.62,.6],['ao','あお',210,.6,.64],['murasaki','むらさき',270,.42,.68],['kin','きんいろ',45,.78,.62]],
@@ -2646,6 +2671,27 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { id:'wa', n:'わもん', old:'stripe', f:function(c){
         var ring = function(l){ return l.map(function(p){ return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+p[2]+'" fill="'+c.dk+'" stroke="'+c.lt+'" stroke-width="2.2"/>'; }).join(''); };
         return { h: ring([[62,52,5],[100,38,5],[138,52,5],[50,82,4],[150,82,4]]), b: ring([[38,138,5],[46,160,5],[162,138,5],[154,160,5]]) }; } }
+    ],
+    squirrel: [
+      { id:'shima', n:'シマリス', old:'stripe', f:function(c){ return {
+        h: pS('M100,30 L100,52', 6, c.dk2),
+        b: pM(pS('M66,100 Q60,132 68,168', 5, c.dk2)) + pS('M100,96 L100,176', 7, c.dk2) }; } },
+      { id:'ezo', n:'エゾリス', old:'dot', f:function(c){ return {
+        h: '<path d="M20,-10 L180,-10 L180,56 Q100,34 20,56 Z" fill="'+c.dk+'"/>',
+        b: BODY_ALL(c.dk) }; } }
+    ],
+    koala: [
+      { id:'mune', n:'しろい むね', old:'dot', f:function(c){ return {
+        ob: pE(100, 136, 52, 42, '#FFFFFF') + pE(100, 112, 30, 14, '#F4F2F6') }; } },
+      { id:'koge', n:'こいせなか', old:'stripe', f:function(c){ return {
+        h: '<path d="M20,-10 L180,-10 L180,50 Q100,30 20,50 Z" fill="'+c.dk+'"/>',
+        b: BODY_ALL(c.dk) }; } }
+    ],
+    sheep: [
+      { id:'buchi', n:'ぶち', old:'dot', f:function(c){ return {
+        b: pD([[44,140,13],[150,128,11],[66,168,10],[140,166,12]], '#9B8574') }; } },
+      { id:'mimi', n:'くろみみ', old:'stripe', f:function(c){ return {
+        h: pM(pE(46, 94, 20, 9, '#5B4F4B', 24) + pE(47, 94, 12, 4.5, '#C98A9A', 24)) }; } }
     ],
     dolphin: [
       { id:'madara', n:'まだら', old:'dot', f:function(c){ return {
@@ -2939,7 +2985,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   var GROW_COST = [40, 80, 150]; // Lv0→1, Lv1→2, Lv2→3
   var RECRUIT_COST = 120;   // 2ひき目の 仲間
   var RECRUIT_STEP = 10;    // 仲間が ふえるたびに 少しずつ 上がる
-  var PARTNERS = ['cat','dragon','chick','tiger','wolf','snake','owl','rabbit','bear','panda','dog','fox','hamster','penguin','seal','unicorn','dolphin'];
+  var PARTNERS = ['cat','dragon','chick','tiger','wolf','snake','owl','rabbit','bear','panda','dog','fox','hamster','penguin','seal','unicorn','dolphin','squirrel','koala','sheep'];
   var STARTERS = ['cat','dragon','chick'];
   var LIMITED = ['whale'];          // スタンプでしか 会えない 仲間
   /* きょうの ちょうせん: 1日1回、苦手な計算を まぜた 10問。クリアで スペシャルコイン(5コイン分)+スタンプ */
@@ -3026,7 +3072,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     panda:['tire','chew','fris'],    hamster:['wheel','chew','fris'], rabbit:['dig','tunnel','rc'],
     snake:['tunnel','box','fris'],   dragon:['dig','rc','bubble'],    chick:['swing','bell','jara'],
     owl:['swing','box','rc'],        unicorn:['bell','bubble','chew'], penguin:['bubble','tunnel','chew'],
-    seal:['ball','bubble','dig'],    dolphin:['fris','bubble','yarn'], whale:['bubble','ball','wheel']
+    seal:['ball','bubble','dig'],    dolphin:['fris','bubble','yarn'], whale:['bubble','ball','wheel'],
+    squirrel:['wheel','dig','bubble'], koala:['swing','chew','ball'], sheep:['dig','yarn','laser']
   };
   var BIRDS = ['chick','owl'];
   function toyById(id){ for(var i=0;i<TOYS.length;i++){ if(TOYS[i].id === id) return TOYS[i]; } return null; }
@@ -3041,7 +3088,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return o;
   }
   var SAY_PLAY = ['たのしい!','もっと あそぼう!','おもしろいね!','わーい!'];
-  var FAVORITE = { whale:'fish', cat:'fish', dragon:'meat', chick:'corn', tiger:'meat', wolf:'meat', snake:'apple', owl:'meat', rabbit:'apple', bear:'fish', panda:'rice', dog:'meat', fox:'rice', hamster:'corn', penguin:'fish', seal:'fish', unicorn:'cake', dolphin:'fish' };
+  var FAVORITE = { squirrel:'corn', koala:'apple', sheep:'rice', whale:'fish', cat:'fish', dragon:'meat', chick:'corn', tiger:'meat', wolf:'meat', snake:'apple', owl:'meat', rabbit:'apple', bear:'fish', panda:'rice', dog:'meat', fox:'rice', hamster:'corn', penguin:'fish', seal:'fish', unicorn:'cake', dolphin:'fish' };
   var SAY_HUNGRY = ['おなか すいたな…','ごはん 食べたいな〜','おなかが ぐ〜って なったよ'];
   var SAY_FED = ['おいしい!','もぐもぐ… 幸せ〜','ありがとう!','元気 もりもり!'];
 
