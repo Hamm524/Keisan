@@ -223,6 +223,80 @@
   .vz-tot{ display:flex; flex-wrap:wrap; align-items:flex-end; gap:2px; padding:6px 8px; border-radius:12px; border:1.5px dashed var(--line); }
   .vz-note{ margin:0; font-size:13px; font-weight:700; line-height:1.6; }
   @media (prefers-reduced-motion: reduce){ .hl-c.pop, .hl-c.shake{ animation:none; } }
+  /* ---- 相棒の おへや ---- */
+  .rm-stage{ position:relative; width:100%; aspect-ratio:4/3; border-radius:22px; overflow:hidden; box-shadow:var(--shadow); background:#FFF6E8; touch-action:none; user-select:none; -webkit-user-select:none; container-type:inline-size; }
+  #view-room .rm-stage{ max-width:720px; margin:0 auto 10px; }
+  .rm-wall, .rm-floor{ position:absolute; left:0; right:0; }
+  .rm-wall{ top:0; } .rm-floor{ bottom:0; }
+  .rm-wall svg, .rm-floor svg{ display:block; }
+  .rm-base{ position:absolute; left:0; right:0; height:1.8%; }
+  .rm-it{ position:absolute; transform:translateX(-50%); }
+  .rm-it > svg{ display:block; width:100%; height:auto; overflow:visible; }
+  .rm-it.flip > svg{ transform:scaleX(-1); }
+  .rm-front{ pointer-events:none; }
+  .rm-stage.editing{ outline:3px dashed var(--gold); outline-offset:-3px; }
+  .rm-stage.editing .rm-it:not(.rm-front){ cursor:grab; }
+  .rm-stage.editing .rm-it.sel{ filter:drop-shadow(0 0 0 transparent) drop-shadow(0 0 6px #FFC53D) drop-shadow(0 0 2px #E39B12); }
+  .rm-stage.editing .rm-pet{ opacity:.35; pointer-events:none; }
+  .rm-glow{ opacity:0; transition:opacity .4s; } .rm-lit{ opacity:0; transition:opacity .4s; }
+  .rm-it.on .rm-glow{ opacity:.9; } .rm-it.on .rm-lit{ opacity:1; }
+  .rm-tv{ animation:rm-tv 9s ease-in-out infinite; }
+  @keyframes rm-tv{ 0%,100%{ fill:#9AD7F5; } 33%{ fill:#FFD3A8; } 66%{ fill:#C9B8F2; } }
+  .rm-tvsun{ animation:rm-bob 3s ease-in-out infinite; }
+  .rm-fish1{ animation:rm-swim 7s ease-in-out infinite; } .rm-fish2{ animation:rm-swim2 9s ease-in-out infinite; }
+  @keyframes rm-swim{ 0%,100%{ transform:translateX(-26px); } 50%{ transform:translateX(30px); } }
+  @keyframes rm-swim2{ 0%,100%{ transform:translateX(20px); } 50%{ transform:translateX(-48px); } }
+  .rm-bub{ animation:rm-bub 3.4s ease-in infinite; } .rm-bub.b2{ animation-delay:-1.7s; }
+  @keyframes rm-bub{ 0%{ transform:translateY(0); opacity:.8; } 100%{ transform:translateY(-52px); opacity:0; } }
+  .rm-tw{ animation:rm-tw 3.2s ease-in-out infinite; }
+  @keyframes rm-tw{ 0%,100%{ opacity:1; } 50%{ opacity:.55; } }
+  @keyframes rm-bob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-3px); } }
+  .rm-pet{ position:absolute; transform:translate(-50%, 10%); transition-property:left,bottom,width; transition-timing-function:ease-in-out; cursor:pointer; }
+  .rm-pet .pet{ transition:transform .3s; }
+  .rm-pet.walk .pet{ animation:rm-walk .42s ease-in-out infinite; }
+  @keyframes rm-walk{ 0%,100%{ transform:translateY(0) rotate(-2deg); } 50%{ transform:translateY(-5%) rotate(2deg); } }
+  .rm-pet.hopin{ transition-timing-function:cubic-bezier(.3,-.6,.5,1); }
+  .rm-pet.climb .pet{ animation:rm-walk .3s ease-in-out infinite; }
+  .rm-pet.wee{ transition-timing-function:ease-in; }
+  .rm-pet.wee .pet{ transform:rotate(14deg); }
+  .rm-pet.left.wee .pet{ transform:rotate(-14deg); }
+  .rm-pet.sleep .pet .eyes{ animation:none; transform:scaleY(.12); }
+  .rm-pet.sleep .pet .wet{ display:none; }
+  .rm-pet.sleep .p-breathe{ animation-duration:4.5s; }
+  .rm-zz{ position:absolute; right:4%; top:2%; font-weight:900; color:#7B83EB; font-family:'Fredoka',sans-serif; pointer-events:none; }
+  .rm-zz i{ font-style:normal; display:inline-block; font-size:13px; animation:rm-zz 2.4s ease-in-out infinite; opacity:0; }
+  .rm-zz i:nth-child(2){ animation-delay:.5s; font-size:16px; } .rm-zz i:nth-child(3){ animation-delay:1s; font-size:20px; }
+  @keyframes rm-zz{ 0%{ opacity:0; transform:translateY(6px); } 30%,70%{ opacity:1; } 100%{ opacity:0; transform:translateY(-10px); } }
+  .rm-heart, .rm-note{ position:absolute; left:50%; top:4%; color:#FF6F91; font-size:20px; font-weight:900; pointer-events:none; animation:rm-up 1.5s ease-out forwards; }
+  .rm-note{ color:#7B83EB; font-size:18px; }
+  @keyframes rm-up{ 0%{ opacity:0; transform:translate(-50%, 6px) scale(.6); } 20%{ opacity:1; transform:translate(-50%, 0) scale(1); } 100%{ opacity:0; transform:translate(-50%, -34px); } }
+  .rm-edit{ border:1.5px solid var(--line); background:var(--surface); color:var(--ink); border-radius:100px; padding:8px 14px; font:inherit; font-size:13px; font-weight:900; cursor:pointer; flex:none; }
+  .rm-edit.on{ background:var(--good); border-color:var(--good); color:#fff; }
+  .rm-tools{ max-width:720px; margin:0 auto 8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; background:var(--surface); border:1.5px solid var(--gold); border-radius:16px; padding:8px 10px; }
+  .rm-tools b{ flex:1; font-size:14px; min-width:6em; }
+  .rm-tb{ border:none; background:var(--surface-2); color:var(--ink); border-radius:12px; padding:9px 12px; font:inherit; font-size:13px; font-weight:900; cursor:pointer; }
+  .rm-say{ min-height:1.5em; max-width:720px; margin-left:auto; margin-right:auto; }
+  .rm-tabs{ display:flex; gap:6px; margin:0 0 10px; overflow-x:auto; padding-bottom:2px; }
+  .rm-tab{ flex:none; border:1.5px solid var(--line); background:var(--surface); color:var(--ink); border-radius:100px; padding:8px 14px; font:inherit; font-size:13px; font-weight:900; cursor:pointer; }
+  .rm-tab.sel{ background:var(--ink); border-color:var(--ink); color:var(--surface); }
+  .rm-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(104px, 1fr)); gap:8px; }
+  .rm-card{ position:relative; background:var(--surface); border-radius:18px; box-shadow:var(--shadow); padding:10px 6px 8px; display:flex; flex-direction:column; gap:3px; align-items:center; border:2px solid transparent; font:inherit; color:var(--ink); text-align:center; cursor:pointer; }
+  .rm-card.using{ border-color:var(--good); }
+  .rm-card b{ font-size:12px; line-height:1.3; }
+  .rc-pic{ width:64px; height:56px; display:flex; align-items:flex-end; justify-content:center; }
+  .rc-pic svg{ max-width:100%; max-height:100%; }
+  .rc-pic.surf svg{ width:52px; height:52px; border-radius:12px; box-shadow:inset 0 0 0 1.5px var(--line); }
+  .rc-p{ font-size:12px; font-weight:700; display:flex; flex-direction:column; align-items:center; line-height:1.3; }
+  .rc-p.num{ flex-direction:row; flex-wrap:wrap; justify-content:center; gap:3px; }
+  .rc-p .coin{ width:13px; height:13px; }
+  .rc-p small{ width:100%; font-size:10px; color:var(--ink-soft); font-weight:700; }
+  .rc-p.own{ color:var(--good); }
+  .rm-card.cant{ cursor:default; } .rm-card.cant .rc-pic{ opacity:.5; }
+  .room-card{ width:100%; border:1.5px solid var(--line); background:var(--surface); border-radius:18px; padding:8px; cursor:pointer; color:var(--ink); font:inherit; text-align:left; display:grid; grid-template-columns:44% 1fr auto; align-items:center; gap:10px; margin-bottom:8px; }
+  .room-card .rm-mini{ border-radius:12px; box-shadow:none; pointer-events:none; }
+  .rm-ct{ display:grid; gap:2px; } .rm-ct b{ font-size:15px; } .rm-ct span{ font-size:11.5px; color:var(--ink-soft); line-height:1.45; }
+  .rm-go{ color:var(--ink-soft); font-size:18px; padding-right:4px; }
+  @media (prefers-reduced-motion: reduce){ .rm-stage *{ animation:none !important; } .rm-pet{ transition-duration:0s !important; } }
 </style></head><body>
 <title>けいさんチャレンジ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1592,6 +1666,8 @@
     <section class="fish-card" id="deciCard" hidden></section>
     <section class="fish-card" id="hslCard" hidden></section>
     </div>
+    <h2 class="home-sec">おへや</h2>
+    <button class="room-card" id="roomCard"></button>
     <h2 class="home-sec">コレクション</h2>
     <button class="collect" id="collectRow"></button>
     <div class="save-band" id="saveBand" hidden>
@@ -1864,6 +1940,25 @@
       </div>
       <section class="dc-mission hl-clear" id="hlClear" hidden></section>
     </div>
+  </main>
+  <!-- 相棒の おへや -->
+  <main id="view-room" class="view" hidden>
+    <div class="shop-head">
+      <button class="icon-btn" id="rmBack" aria-label="もどる">←</button>
+      <h1>おへや</h1>
+      <button class="rm-edit" id="rmEdit">🔨 もようがえ</button>
+    </div>
+    <section class="rm-stage" id="rmStage"></section>
+    <div class="rm-tools" id="rmTools" hidden>
+      <b id="rmToolName"></b>
+      <button class="rm-tb" id="rmFlip">↔ むきを かえる</button>
+      <button class="rm-tb" id="rmStore">しまう</button>
+    </div>
+    <p class="food-say rm-say" id="rmSay"></p>
+    <h2 class="sec-title">おへやの ショップ</h2>
+    <p class="sec-sub">コインで かぐや かべがみを 買って、すきな ところに おこう。1回 買えば ずっと つかえるよ。</p>
+    <div class="rm-tabs" id="rmTabs"></div>
+    <div class="rm-grid" id="rmGrid"></div>
   </main>
   <main id="view-kuri" class="view" hidden>
     <div id="kuriMenu">
@@ -3649,7 +3744,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     speed:{ timerId:null, endAt:0, correct:0, attempted:0, streak:0, maxStreak:0 }
   };
 
-  var views = { pick:$('view-pick'), setup:$('view-setup'), shop:$('view-shop'), food:$('view-food'), toy:$('view-toy'), mode:$('view-mode'), play:$('view-play'), result:$('view-result'), fish:$('view-fish'), kuri:$('view-kuri'), deci:$('view-deci'), hsl:$('view-hsl') };
+  var views = { pick:$('view-pick'), setup:$('view-setup'), shop:$('view-shop'), food:$('view-food'), toy:$('view-toy'), mode:$('view-mode'), play:$('view-play'), result:$('view-result'), fish:$('view-fish'), kuri:$('view-kuri'), deci:$('view-deci'), hsl:$('view-hsl'), room:$('view-room') };
   function showView(name){
     Object.keys(views).forEach(function(k){ views[k].hidden = (k!==name); });
     window.scrollTo(0,0);
@@ -4187,6 +4282,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     renderKuriCard();
     Deci.card();
     Hsl.card();
+    Room.card();
     renderCollection();
     renderSaveBand(true);
     $('roadPet').innerHTML = '';
@@ -8895,6 +8991,576 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     });
 
     return { card:renderCard, open:openMenu, _plan:function(op, a, b){ return op === 'div' ? planDiv(a, b, true) : planMul(a, b, true); } };
+  })();
+
+  /* ---------- 相棒の おへや (かべ紙・ゆか・家具を コインで 買って 自由に おく) ---------- */
+  var Room = (function(){
+    var KEY = 'keisan_room', OWN = 'keisan_roomown';
+    var WALL = 56;                 /* かべと ゆかの さかいめ(上から %) */
+    var PET_W = 21;                /* いちばん 手前の 相棒の はば(% ) */
+    var STARTER = { w_cream:1, f_wood:1, cushion:1 };
+    var C = { wood:'#C99A62', woodL:'#E8C597', woodD:'#A77A45' };
+
+    /* ---- かべ紙 ---- */
+    function pat(id, w, h, body){ return '<pattern id="'+id+'" width="'+w+'" height="'+h+'" patternUnits="userSpaceOnUse">'+body+'</pattern>'; }
+    var WALLS = [
+      { id:'w_cream', name:'クリーム', price:0, bg:'#FFF6E8', p:null },
+      { id:'w_dot', name:'ピンクの 水玉', price:40, bg:'#FFE9F1', p:function(i){ return pat(i, 34, 34, '<circle cx="8" cy="8" r="4.5" fill="#FFD0E0"/><circle cx="25" cy="25" r="4.5" fill="#FFD0E0"/>'); } },
+      { id:'w_stripe', name:'そらいろ しましま', price:40, bg:'#E8F5FF', p:function(i){ return pat(i, 32, 10, '<rect width="14" height="10" fill="#D3ECFF"/>'); } },
+      { id:'w_flower', name:'おはな', price:60, bg:'#FFF8E7', p:function(i){
+          function fl(x, y, c){ var o = ''; for(var k = 0; k < 5; k++){ var a = k*72*Math.PI/180; o += '<circle cx="'+(x+Math.sin(a)*4.6).toFixed(1)+'" cy="'+(y-Math.cos(a)*4.6).toFixed(1)+'" r="3.6" fill="'+c+'"/>'; } return o + '<circle cx="'+x+'" cy="'+y+'" r="2.6" fill="#FFD66B"/>'; }
+          return pat(i, 56, 56, fl(14, 14, '#FFC4D6') + fl(42, 42, '#C9E7FF') + '<path d="M40,12 q4,-4 8,0 q-4,4 -8,0" fill="#C9EBB5"/><path d="M12,40 q4,-4 8,0 q-4,4 -8,0" fill="#C9EBB5"/>'); } },
+      { id:'w_forest', name:'もりの 木', price:80, bg:'#E7F6E2', p:function(i){ return pat(i, 64, 70, '<path d="M16,10 L30,40 L2,40 Z" fill="#CBEAC0"/><rect x="14" y="40" width="4" height="9" fill="#E3D2B5"/><path d="M48,40 L60,64 L36,64 Z" fill="#D6EFCB"/><rect x="46" y="64" width="4" height="6" fill="#E3D2B5"/>'); } },
+      { id:'w_brick', name:'おしろの レンガ', price:100, bg:'#F3E4D3', p:function(i){ return pat(i, 48, 28, '<rect x="1" y="1" width="46" height="12" rx="2" fill="#EAD4BE"/><rect x="-23" y="15" width="46" height="12" rx="2" fill="#EAD4BE"/><rect x="25" y="15" width="46" height="12" rx="2" fill="#EAD4BE"/>'); } },
+      { id:'w_sea', name:'うみの なか', price:100, bg:'#BCE6FA', grad:['#D4F1FF','#9FD8F3'], p:function(i){ return pat(i, 90, 90, '<circle cx="14" cy="18" r="5" fill="#fff" opacity=".45"/><circle cx="22" cy="8" r="3" fill="#fff" opacity=".45"/><path d="M58,52 q10,-9 20,0 q-10,9 -20,0 Z M78,52 l7,-5 l0,10 Z" fill="#FFC98F" opacity=".75"/><circle cx="62" cy="50" r="1.4" fill="#5B5770"/><circle cx="40" cy="78" r="3.5" fill="#fff" opacity=".4"/>'); } },
+      { id:'w_night', name:'ほしぞら', price:120, bg:'#34407A', p:function(i){ return pat(i, 80, 80, '<path d="M14,10 l2,5 5,.5 -4,3.4 1.3,5 -4.3,-2.8 -4.3,2.8 1.3,-5 -4,-3.4 5,-.5 Z" fill="#FFE58A"/><circle cx="52" cy="22" r="1.8" fill="#fff" opacity=".85"/><circle cx="36" cy="54" r="1.4" fill="#fff" opacity=".7"/><path d="M62,52 l1.4,3.4 3.6,.3 -2.8,2.4 .9,3.5 -3.1,-2 -3.1,2 .9,-3.5 -2.8,-2.4 3.6,-.3 Z" fill="#FFF3C4"/><circle cx="8" cy="66" r="1.2" fill="#fff" opacity=".7"/>'); } },
+      { id:'w_sweets', name:'おかしの へや', price:150, bg:'#FFF0F6', p:function(i){ return pat(i, 60, 60, '<rect x="8" y="10" width="9" height="3.4" rx="1.7" fill="#FFB0C8" transform="rotate(30 12 12)"/><rect x="40" y="16" width="9" height="3.4" rx="1.7" fill="#A8DCF7" transform="rotate(-25 44 18)"/><rect x="22" y="40" width="9" height="3.4" rx="1.7" fill="#FFE07A" transform="rotate(70 26 42)"/><rect x="46" y="46" width="9" height="3.4" rx="1.7" fill="#B9E8B0" transform="rotate(10 50 48)"/><circle cx="18" cy="28" r="6" fill="#F7D3A8"/><circle cx="18" cy="28" r="2.4" fill="#FFF0F6"/>'); }, top:'#FFD0E2' }
+    ];
+    /* ---- ゆか ---- */
+    var FLOORS = [
+      { id:'f_wood', name:'フローリング', price:0, bg:'#EAC9A0', base:'#D7B286', p:function(i){ return pat(i, 120, 22, '<rect y="20.5" width="120" height="1.5" fill="#D9B385"/><rect x="40" width="1.5" height="22" fill="#DDB88B"/>'); } },
+      { id:'f_tile', name:'しろい タイル', price:40, bg:'#F5F2EC', base:'#DCD4C6', p:function(i){ return pat(i, 48, 48, '<rect width="24" height="24" fill="#E9E3D8"/><rect x="24" y="24" width="24" height="24" fill="#E9E3D8"/>'); } },
+      { id:'f_tatami', name:'たたみ', price:50, bg:'#DCE2A6', base:'#B9C27E', p:function(i){ return pat(i, 140, 60, '<rect width="140" height="60" fill="none" stroke="#B4BE73" stroke-width="3"/><path d="M0,10 H140 M0,20 H140 M0,30 H140 M0,40 H140 M0,50 H140" stroke="#CFD694" stroke-width="1.2"/>'); } },
+      { id:'f_carpet', name:'ピンクの じゅうたん', price:60, bg:'#F8CCDA', base:'#E9AFC2', p:function(i){ return pat(i, 22, 22, '<circle cx="6" cy="6" r="2" fill="#F3B9CB"/><circle cx="17" cy="17" r="2" fill="#F3B9CB"/>'); } },
+      { id:'f_grass', name:'しばふ', price:80, bg:'#AEDD8C', base:'#93C872', p:function(i){ return pat(i, 40, 30, '<path d="M8,22 l2,-8 2,8 M26,12 l2,-8 2,8" stroke="#94CC72" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="34" cy="26" r="2" fill="#FFF3A6"/>'); } },
+      { id:'f_cloud', name:'ふわふわ くも', price:120, bg:'#EAF4FF', base:'#CFE3F7', p:function(i){ return pat(i, 110, 50, '<g fill="#fff"><circle cx="20" cy="26" r="12"/><circle cx="36" cy="20" r="15"/><circle cx="52" cy="28" r="11"/><rect x="20" y="26" width="32" height="12"/></g><g fill="#fff" opacity=".8"><circle cx="86" cy="44" r="8"/><circle cx="97" cy="40" r="10"/></g>'); } }
+    ];
+
+    /* ---- 家具・かざり ----
+       z:'floor' は ゆかに おく(下はしが ゆかの いち)、'wall' は かべに かける(まん中が いち)、'rug' は ゆかに しく。
+       seat:[よこ 0〜1, 下からの 高さ 0〜1, 相棒の 大きさ] / act: 相棒が する こと */
+    var ITEMS = [
+      { id:'cushion', name:'ふかふかクッション', price:30, z:'floor', w:22, vb:[140,64], act:'sleep', seat:[.5,.36,.82],
+        b:'<ellipse cx="70" cy="40" rx="68" ry="23" fill="#F2A65A"/><ellipse cx="70" cy="36" rx="50" ry="13" fill="#FFE3C2"/>',
+        f:'<path d="M2,40 A68,23 0 0 0 138,40 L120,38 A50,13 0 0 1 20,38 Z" fill="#E8954A"/>' },
+      { id:'chair', name:'きいろい いす', price:40, z:'floor', w:13, vb:[80,120], act:'sit', seat:[.5,.42,.78],
+        b:'<rect x="14" y="4" width="52" height="58" rx="18" fill="#F2C14E"/><rect x="22" y="12" width="36" height="40" rx="12" fill="#F7D272"/><rect x="12" y="98" width="7" height="22" rx="3" fill="#C9973A"/><rect x="61" y="98" width="7" height="22" rx="3" fill="#C9973A"/>',
+        f:'<rect x="6" y="60" width="68" height="40" rx="12" fill="#F7D272"/><rect x="6" y="88" width="68" height="12" rx="6" fill="#E6B640"/>' },
+      { id:'plant', name:'はっぱの 木', price:40, z:'floor', w:11, vb:[80,140], act:'look',
+        b:'<path d="M40,96 Q12,80 10,52 Q28,58 40,92 Z" fill="#7CC77A"/><path d="M40,96 Q68,76 70,44 Q50,54 40,92 Z" fill="#8FD68C"/><path d="M40,96 Q30,50 40,8 Q52,50 40,96 Z" fill="#6DBB6B"/><path d="M40,96 Q20,70 26,30 Q40,60 40,92 Z" fill="#9BDD98"/><path d="M16,94 L64,94 L58,138 L22,138 Z" fill="#E98B6D"/><rect x="12" y="90" width="56" height="10" rx="5" fill="#F2A285"/>' },
+      { id:'rug_round', name:'まるい ラグ', price:30, z:'rug', w:46, vb:[200,56],
+        b:'<ellipse cx="100" cy="28" rx="99" ry="27" fill="#FFD6A5"/><ellipse cx="100" cy="28" rx="80" ry="20" fill="none" stroke="#FFE8C9" stroke-width="6"/><ellipse cx="100" cy="28" rx="52" ry="12" fill="#FFC88A"/>' },
+      { id:'rug_stripe', name:'しましまの ラグ', price:40, z:'rug', w:52, vb:[220,56],
+        b:'<rect x="2" y="2" width="216" height="52" rx="16" fill="#CFE8FF"/><rect x="2" y="12" width="216" height="8" fill="#FFD0E0"/><rect x="2" y="28" width="216" height="8" fill="#FFF1B8"/><rect x="2" y="44" width="216" height="6" fill="#C9EBB5"/>' },
+      { id:'lamp', name:'スタンドライト', price:50, z:'floor', w:10, vb:[60,170], act:'look', tap:'light',
+        b:'<defs><radialGradient id="rmGlowG"><stop offset="0" stop-color="#FFF6C0" stop-opacity="1"/><stop offset="1" stop-color="#FFF6C0" stop-opacity="0"/></radialGradient></defs><circle class="rm-glow" cx="30" cy="40" r="74" fill="url(#rmGlowG)"/><ellipse cx="30" cy="164" rx="22" ry="6" fill="#B9A58A"/><rect x="27" y="50" width="6" height="114" rx="3" fill="#C9B79C"/><path d="M8,52 L16,8 L44,8 L52,52 Z" fill="#FFE08A"/><path class="rm-lit" d="M8,52 L16,8 L44,8 L52,52 Z" fill="#FFF6C8"/><rect x="6" y="48" width="48" height="6" rx="3" fill="#F2C94C"/>' },
+      { id:'table', name:'まるい テーブル', price:60, z:'floor', w:20, vb:[140,104], act:'look',
+        b:'<ellipse cx="70" cy="96" rx="34" ry="7" fill="#B98A55"/><rect x="62" y="38" width="16" height="58" rx="5" fill="#C99A62"/><ellipse cx="70" cy="38" rx="66" ry="17" fill="#C99A62"/><ellipse cx="70" cy="33" rx="66" ry="17" fill="#E8C597"/><path d="M52,30 Q52,20 60,20 L72,20 Q78,20 78,28 Q84,26 84,31 Q84,36 77,35 Q74,40 64,40 Q52,40 52,30 Z" fill="#fff"/><ellipse cx="65" cy="21" rx="10" ry="3" fill="#C98A5A"/><path d="M98,26 Q104,10 110,26 Z" fill="#FF8FB1"/><ellipse cx="104" cy="27" rx="9" ry="3" fill="#FFF"/>' },
+      { id:'toybox', name:'おもちゃばこ', price:60, z:'floor', w:17, vb:[120,100], act:'look',
+        b:'<circle cx="36" cy="30" r="16" fill="#FF8FB1"/><circle cx="31" cy="25" r="4" fill="#fff" opacity=".7"/><path d="M78,40 L86,6" stroke="#B79CF0" stroke-width="5" stroke-linecap="round"/><path d="M86,2 l3.5,7 7.7,1 -5.6,5.4 1.4,7.6 -7,-3.7 -7,3.7 1.4,-7.6 -5.6,-5.4 7.7,-1 Z" fill="#FFD24C"/><rect x="58" y="22" width="18" height="18" rx="4" fill="#7FC6B8"/><rect x="6" y="38" width="108" height="62" rx="10" fill="#7FB8F0"/><rect x="6" y="38" width="108" height="12" rx="6" fill="#5F9EE0"/><path d="M46,72 Q60,82 74,72" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/>' },
+      { id:'shelf', name:'本だな', price:80, z:'floor', w:18, vb:[120,160], act:'look',
+        b:'<rect x="4" y="2" width="112" height="156" rx="8" fill="#C99A62"/><rect x="12" y="10" width="96" height="140" rx="4" fill="#E8C597"/><rect x="12" y="54" width="96" height="6" fill="#C99A62"/><rect x="12" y="102" width="96" height="6" fill="#C99A62"/>' +
+          '<rect x="18" y="20" width="12" height="34" rx="2" fill="#FF8FB1"/><rect x="32" y="16" width="10" height="38" rx="2" fill="#7FB8F0"/><rect x="44" y="24" width="14" height="30" rx="2" fill="#FFD24C"/><rect x="62" y="22" width="8" height="32" rx="2" transform="rotate(14 66 54)" fill="#9BD66B"/>' +
+          '<circle cx="90" cy="44" r="10" fill="#B79CF0"/><rect x="18" y="68" width="14" height="34" rx="2" fill="#7FC6B8"/><rect x="34" y="72" width="10" height="30" rx="2" fill="#FF9E6B"/><rect x="46" y="66" width="12" height="36" rx="2" fill="#B79CF0"/><path d="M76,102 L84,80 L92,102 Z" fill="#9BD66B"/>' +
+          '<rect x="22" y="116" width="34" height="30" rx="4" fill="#FFF1E0"/><circle cx="39" cy="131" r="7" fill="#FFB6C8"/><rect x="70" y="122" width="12" height="24" rx="2" fill="#FFD24C"/><rect x="84" y="118" width="12" height="28" rx="2" fill="#FF8FB1"/>' },
+      { id:'tv', name:'テレビ', price:120, z:'floor', w:22, vb:[160,130], act:'watch',
+        b:'<rect x="14" y="96" width="132" height="32" rx="6" fill="#C99A62"/><rect x="22" y="104" width="54" height="16" rx="3" fill="#E8C597"/><rect x="84" y="104" width="54" height="16" rx="3" fill="#E8C597"/><rect x="72" y="84" width="16" height="14" fill="#5C6B7A"/>' +
+          '<rect x="8" y="6" width="144" height="82" rx="10" fill="#4A4F5C"/><rect class="rm-tv" x="16" y="13" width="128" height="68" rx="5" fill="#9AD7F5"/><circle class="rm-tvsun" cx="110" cy="34" r="10" fill="#FFE58A"/><path d="M16,64 Q48,48 80,62 Q112,76 144,58 L144,76 Q144,81 139,81 L21,81 Q16,81 16,76 Z" fill="#9BD66B"/>' },
+      { id:'sofa', name:'ソファ', price:150, z:'floor', w:34, vb:[220,120], act:'sit', seat:[.5,.4,.86],
+        b:'<rect x="22" y="12" width="176" height="66" rx="28" fill="#7FC6B8"/><rect x="34" y="20" width="72" height="50" rx="20" fill="#93D3C6"/><rect x="114" y="20" width="72" height="50" rx="20" fill="#93D3C6"/><rect x="30" y="62" width="160" height="40" rx="14" fill="#98D6C9"/><rect x="30" y="104" width="10" height="16" rx="3" fill="#A77A45"/><rect x="180" y="104" width="10" height="16" rx="3" fill="#A77A45"/>',
+        f:'<rect x="2" y="48" width="42" height="62" rx="18" fill="#6CB5A7"/><rect x="176" y="48" width="42" height="62" rx="18" fill="#6CB5A7"/><rect x="26" y="86" width="168" height="22" rx="10" fill="#7FC6B8"/>' },
+      { id:'bed', name:'ベッド', price:150, z:'floor', w:36, vb:[200,130], act:'sleep', seat:[.5,.36,.84],
+        b:'<rect x="18" y="6" width="164" height="84" rx="34" fill="#F7B7C8"/><path d="M40,30 q10,-12 20,0 q10,-12 20,0" stroke="#FFD6E2" stroke-width="5" fill="none" stroke-linecap="round"/><rect x="12" y="66" width="176" height="44" rx="14" fill="#FFFDF7"/><ellipse cx="100" cy="68" rx="44" ry="14" fill="#fff"/><ellipse cx="100" cy="70" rx="40" ry="9" fill="#F4EEE4"/>',
+        f:'<rect x="8" y="84" width="184" height="34" rx="12" fill="#8FC7F2"/><path d="M8,96 H192" stroke="#B9DDF7" stroke-width="6"/><circle cx="40" cy="106" r="4" fill="#fff" opacity=".7"/><circle cx="100" cy="108" r="4" fill="#fff" opacity=".7"/><circle cx="160" cy="106" r="4" fill="#fff" opacity=".7"/><rect x="20" y="116" width="10" height="14" rx="3" fill="#E89AAE"/><rect x="170" y="116" width="10" height="14" rx="3" fill="#E89AAE"/>' },
+      { id:'tent', name:'ひみつの テント', price:160, z:'floor', w:28, vb:[180,150], act:'sit', seat:[.5,.06,.7],
+        b:'<path d="M90,4 L176,146 L4,146 Z" fill="#F6A5B8"/><path d="M90,4 L132,146 L48,146 Z" fill="#FFC4D3"/><path d="M90,30 L126,146 L54,146 Z" fill="#8A5A6C"/><rect x="86" y="0" width="8" height="10" rx="3" fill="#E07B95"/><path d="M94,2 L116,8 L94,14 Z" fill="#FFD24C"/>',
+        f:'<path d="M90,30 L70,146 L54,146 Z" fill="#FFB0C4"/><path d="M90,30 L110,146 L126,146 Z" fill="#FFB0C4"/><path d="M4,146 L176,146" stroke="#E07B95" stroke-width="4"/>' },
+      { id:'aquarium', name:'すいそう', price:180, z:'floor', w:22, vb:[160,150], act:'watch',
+        b:'<rect x="12" y="98" width="136" height="50" rx="6" fill="#8A9BB0"/><rect x="20" y="106" width="56" height="34" rx="4" fill="#A5B4C6"/><rect x="84" y="106" width="56" height="34" rx="4" fill="#A5B4C6"/>' +
+          '<rect x="8" y="10" width="144" height="88" rx="10" fill="#D5F1FF"/><rect x="14" y="20" width="132" height="72" rx="6" fill="#9ED9F5"/><path d="M14,82 Q40,76 70,82 Q100,88 146,80 L146,86 Q146,92 140,92 L20,92 Q14,92 14,86 Z" fill="#F2DDB0"/>' +
+          '<path d="M34,84 Q28,66 36,52 Q30,66 38,84 Z" fill="#6DBB6B"/><path d="M124,84 Q132,62 122,46 Q130,62 120,84 Z" fill="#7CC77A"/><rect x="8" y="6" width="144" height="8" rx="4" fill="#6E7F94"/>' +
+          '<g class="rm-fish1"><path d="M60,44 q12,-10 24,0 q-12,10 -24,0 Z M84,44 l9,-7 l0,14 Z" fill="#FF9E6B"/><circle cx="66" cy="42" r="1.8" fill="#2E2A3D"/></g>' +
+          '<g class="rm-fish2"><path d="M100,66 q9,-7 18,0 q-9,7 -18,0 Z M100,66 l-7,-5 l0,10 Z" fill="#FFD24C"/><circle cx="113" cy="64.5" r="1.5" fill="#2E2A3D"/></g>' +
+          '<circle class="rm-bub" cx="50" cy="70" r="3" fill="#fff" opacity=".7"/><circle class="rm-bub b2" cx="110" cy="80" r="2.4" fill="#fff" opacity=".7"/>' },
+      { id:'cattower', name:'キャットタワー', price:200, z:'floor', w:17, vb:[120,210], act:'sit', seat:[.42,.78,.62],
+        b:'<rect x="44" y="40" width="14" height="150" rx="5" fill="#E3D2B5"/><rect x="80" y="110" width="12" height="80" rx="5" fill="#E3D2B5"/><g stroke="#CDB894" stroke-width="2"><path d="M44,60 L58,66 M44,80 L58,86 M44,100 L58,106 M44,140 L58,146 M44,160 L58,166 M80,130 L92,136 M80,150 L92,156 M80,170 L92,176"/></g>' +
+          '<rect x="6" y="186" width="108" height="20" rx="8" fill="#B79CF0"/><ellipse cx="88" cy="110" rx="28" ry="9" fill="#B79CF0"/><ellipse cx="50" cy="40" rx="42" ry="11" fill="#B79CF0"/><ellipse cx="50" cy="36" rx="34" ry="7" fill="#CDB8F7"/><path d="M100,116 L100,140" stroke="#FF8FB1" stroke-width="2"/><circle cx="100" cy="144" r="6" fill="#FF8FB1"/>' },
+      { id:'tree', name:'キラキラの 木', price:200, z:'floor', w:20, vb:[140,190], act:'look',
+        b:'<rect x="60" y="150" width="20" height="24" rx="4" fill="#A77A45"/><path d="M30,154 L110,154 L104,190 L36,190 Z" fill="#E98B6D"/><path d="M70,14 L124,152 L16,152 Z" fill="#6DBB6B"/><path d="M70,14 L106,104 L34,104 Z" fill="#7CC77A"/><path d="M70,14 L92,62 L48,62 Z" fill="#8FD68C"/>' +
+          '<g class="rm-tw"><circle cx="58" cy="84" r="5" fill="#FF8FB1"/><circle cx="86" cy="96" r="5" fill="#FFD24C"/><circle cx="48" cy="128" r="5" fill="#7FB8F0"/><circle cx="96" cy="134" r="5" fill="#FF8FB1"/><circle cx="72" cy="118" r="5" fill="#B79CF0"/><circle cx="74" cy="56" r="4" fill="#7FB8F0"/></g>' +
+          '<path d="M70,0 l4.4,9 9.9,1.3 -7.2,6.9 1.8,9.8 -8.9,-4.8 -8.9,4.8 1.8,-9.8 -7.2,-6.9 9.9,-1.3 Z" fill="#FFD24C"/>' },
+      { id:'piano', name:'ピアノ', price:250, z:'floor', w:28, vb:[200,150], act:'music', tap:'piano',
+        b:'<rect x="10" y="6" width="180" height="96" rx="10" fill="#3A3346"/><rect x="22" y="16" width="156" height="34" rx="6" fill="#4A4258"/><path d="M60,24 q6,-6 12,0 v12 M96,22 q6,-6 12,0 v14" stroke="#FFE58A" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="58" cy="37" r="4" fill="#FFE58A"/><circle cx="94" cy="37" r="4" fill="#FFE58A"/>' +
+          '<rect x="4" y="66" width="192" height="34" rx="4" fill="#fff"/><g fill="#E6E1D8"><rect x="27" y="66" width="1.5" height="34"/><rect x="51" y="66" width="1.5" height="34"/><rect x="75" y="66" width="1.5" height="34"/><rect x="99" y="66" width="1.5" height="34"/><rect x="123" y="66" width="1.5" height="34"/><rect x="147" y="66" width="1.5" height="34"/><rect x="171" y="66" width="1.5" height="34"/></g>' +
+          '<g fill="#2E2A3D"><rect x="20" y="66" width="14" height="20" rx="2"/><rect x="44" y="66" width="14" height="20" rx="2"/><rect x="92" y="66" width="14" height="20" rx="2"/><rect x="116" y="66" width="14" height="20" rx="2"/><rect x="140" y="66" width="14" height="20" rx="2"/></g>' +
+          '<rect x="10" y="98" width="180" height="8" rx="3" fill="#2E2A3D"/><rect x="20" y="106" width="12" height="44" rx="3" fill="#3A3346"/><rect x="168" y="106" width="12" height="44" rx="3" fill="#3A3346"/>' },
+      { id:'slide', name:'すべりだい', price:300, z:'floor', w:38, vb:[240,170], act:'slide',
+        b:'<rect x="18" y="20" width="8" height="150" rx="3" fill="#7FB8F0"/><rect x="58" y="20" width="8" height="150" rx="3" fill="#7FB8F0"/><g stroke="#7FB8F0" stroke-width="6" stroke-linecap="round"><path d="M22,60 H62 M22,96 H62 M22,132 H62"/></g><rect x="12" y="26" width="64" height="12" rx="6" fill="#5F9EE0"/>' +
+          '<path d="M66,30 Q110,34 150,96 Q176,140 236,150 L236,166 Q168,160 140,110 Q106,52 66,48 Z" fill="#FF9E6B"/><path d="M66,30 Q110,34 150,96 Q176,140 236,150" stroke="#FFC3A0" stroke-width="5" fill="none" stroke-linecap="round"/><rect x="226" y="148" width="10" height="22" rx="3" fill="#E07B4F"/>' },
+      { id:'castle', name:'おひめさまベッド', price:400, z:'floor', w:40, vb:[220,220], act:'sleep', seat:[.5,.27,.86],
+        b:'<rect x="18" y="30" width="10" height="186" rx="4" fill="#E8C15A"/><rect x="192" y="30" width="10" height="186" rx="4" fill="#E8C15A"/><path d="M10,34 Q110,-6 210,34 L210,44 L10,44 Z" fill="#F7B7C8"/><path d="M10,44 Q60,62 110,44 Q160,62 210,44" stroke="#FFD6E2" stroke-width="6" fill="none"/><path d="M98,12 l6,-10 6,10 6,-10 6,10 L120,24 L100,24 Z" fill="#FFD24C" transform="translate(-6 -4)"/>' +
+          '<path d="M14,44 Q4,130 30,208 L44,208 Q26,120 40,44 Z" fill="#FFD0DE" opacity=".9"/><path d="M206,44 Q216,130 190,208 L176,208 Q194,120 180,44 Z" fill="#FFD0DE" opacity=".9"/>' +
+          '<rect x="40" y="96" width="140" height="72" rx="30" fill="#D9C4F5"/><circle cx="110" cy="122" r="12" fill="#FFD24C"/><circle cx="110" cy="122" r="6" fill="#FF8FB1"/><rect x="26" y="150" width="168" height="40" rx="14" fill="#FFFDF7"/><ellipse cx="110" cy="152" rx="44" ry="13" fill="#fff"/>',
+        f:'<rect x="22" y="168" width="176" height="36" rx="12" fill="#B79CF0"/><path d="M22,180 H198" stroke="#D3C2F7" stroke-width="6"/><g fill="#FFE58A"><circle cx="56" cy="192" r="3.5"/><circle cx="110" cy="194" r="3.5"/><circle cx="164" cy="192" r="3.5"/></g><rect x="30" y="202" width="10" height="16" rx="3" fill="#E8C15A"/><rect x="180" y="202" width="10" height="16" rx="3" fill="#E8C15A"/>' },
+
+      { id:'window', name:'まど', price:50, z:'wall', w:22, vb:[130,110], sky:true },
+      { id:'frame', name:'相棒の しゃしん', price:40, z:'wall', w:13, vb:[90,104], photo:true },
+      { id:'clock', name:'かけどけい', price:50, z:'wall', w:11, vb:[90,90], clock:true },
+      { id:'garland', name:'ガーランド', price:30, z:'wall', w:38, vb:[240,56],
+        b:'<path d="M4,6 Q120,40 236,6" stroke="#C9B79C" stroke-width="2.4" fill="none"/>' +
+          (function(){ var c = ['#FF8FB1','#FFD24C','#7FB8F0','#9BD66B','#B79CF0','#FF9E6B','#FF8FB1','#7FC6B8'], o = ''; for(var k = 0; k < 8; k++){ var t = (k+.5)/8, x = 4 + t*232, y = 6 + 34*4*t*(1-t)*.98; o += '<path d="M'+(x-11).toFixed(1)+','+(y-1).toFixed(1)+' L'+(x+11).toFixed(1)+','+(y-1).toFixed(1)+' L'+x.toFixed(1)+','+(y+24).toFixed(1)+' Z" fill="'+c[k]+'"/>'; } return o; })() },
+      { id:'stars', name:'ほしの ライト', price:70, z:'wall', w:38, vb:[240,60],
+        b:'<path d="M4,8 Q120,46 236,8" stroke="#C9B79C" stroke-width="2" fill="none"/>' +
+          (function(){ var o = ''; for(var k = 0; k < 7; k++){ var t = (k+.5)/7, x = 4 + t*232, y = 8 + 38*4*t*(1-t)*.98 + 9;
+            o += '<g class="rm-tw" style="animation-delay:'+(-k*.7)+'s"><path transform="translate('+x.toFixed(1)+' '+y.toFixed(1)+')" d="M0,-9 l2.6,5.4 6,.8 -4.3,4.1 1,5.9 -5.3,-2.8 -5.3,2.8 1,-5.9 -4.3,-4.1 6,-.8 Z" fill="'+(k%2 ? '#FFE58A' : '#FFF3C4')+'"/></g>'; } return o; })() },
+      { id:'wshelf', name:'かべの たな', price:40, z:'wall', w:22, vb:[140,70],
+        b:'<rect x="4" y="56" width="132" height="8" rx="3" fill="#C99A62"/><path d="M20,64 L28,70 M120,64 L112,70" stroke="#A77A45" stroke-width="4" stroke-linecap="round"/><path d="M14,56 L22,30 L42,30 L48,56 Z" fill="#E98B6D"/><path d="M30,32 Q20,10 30,2 Q40,14 32,32 Z" fill="#7CC77A"/><rect x="62" y="22" width="12" height="34" rx="2" fill="#7FB8F0"/><rect x="76" y="28" width="12" height="28" rx="2" fill="#FFD24C"/><rect x="90" y="18" width="10" height="38" rx="2" fill="#FF8FB1"/><circle cx="118" cy="46" r="10" fill="#B79CF0"/><circle cx="114" cy="42" r="3" fill="#fff" opacity=".6"/>' },
+      { id:'gemcase', name:'宝石の かざりだな', price:100, z:'wall', w:28, vb:[180,84], gems:true }
+    ];
+    var BY = {};
+    WALLS.concat(FLOORS, ITEMS).forEach(function(d){ BY[d.id] = d; });
+
+    /* ---- 保存 ---- */
+    function getRoom(){
+      var r = safeGet(KEY);
+      if(!r || typeof r !== 'object') r = { t:0, wall:'w_cream', floor:'f_wood', items:[{ k:'cushion', x:66, y:90, f:0 }] };
+      if(!Array.isArray(r.items)) r.items = [];
+      r.items = r.items.filter(function(it){ return it && BY[it.k]; });
+      if(!BY[r.wall]) r.wall = 'w_cream';
+      if(!BY[r.floor]) r.floor = 'f_wood';
+      return r;
+    }
+    function saveRoom(r){ r.t = Date.now(); safeSet(KEY, r); }
+    function getOwn(){ var o = safeGet(OWN); return (o && typeof o === 'object') ? o : {}; }
+    function ownN(id){ return (getOwn()[id] || 0) + (STARTER[id] || 0); }
+    function placedN(r, id){ return r.items.filter(function(it){ return it.k === id; }).length; }
+    function addOwn(id){ var o = getOwn(); o[id] = (o[id] || 0) + 1; safeSet(OWN, o); }
+
+    /* ---- 絵 ---- */
+    var uid = 0;
+    function depth(y){ return .72 + .28 * Math.max(0, Math.min(1, (y - WALL) / (100 - WALL))); }
+    function skyNow(){ var h = new Date().getHours(); return h >= 19 || h < 5 ? 'night' : h >= 16 ? 'eve' : 'day'; }
+    function windowSvg(){
+      var s = skyNow();
+      var sky = s === 'night' ? '<rect x="14" y="12" width="102" height="80" fill="#34407A"/><circle cx="88" cy="34" r="11" fill="#FFF3C4"/><circle cx="93" cy="30" r="9" fill="#34407A"/><circle cx="34" cy="28" r="1.6" fill="#fff"/><circle cx="52" cy="60" r="1.3" fill="#fff"/><circle cx="100" cy="72" r="1.5" fill="#fff"/>'
+        : s === 'eve' ? '<rect x="14" y="12" width="102" height="80" fill="#FFC9A3"/><rect x="14" y="52" width="102" height="40" fill="#FFB38A"/><circle cx="64" cy="70" r="14" fill="#FF8A5C"/>'
+        : '<rect x="14" y="12" width="102" height="80" fill="#BFE6FF"/><circle cx="92" cy="32" r="10" fill="#FFE58A"/><g fill="#fff"><circle cx="36" cy="44" r="8"/><circle cx="46" cy="40" r="10"/><circle cx="56" cy="45" r="7"/></g>';
+      return '<rect x="6" y="4" width="118" height="96" rx="8" fill="#fff"/>' + sky + '<path d="M65,12 V92 M14,52 H116" stroke="#fff" stroke-width="5"/>' +
+        '<path d="M2,2 Q14,50 4,104 L22,104 Q30,54 28,2 Z" fill="#FFB6C8"/><path d="M128,2 Q116,50 126,104 L108,104 Q100,54 102,2 Z" fill="#FFB6C8"/><rect x="0" y="0" width="130" height="7" rx="3.5" fill="#C99A62"/>';
+    }
+    function clockSvg(){
+      var d = new Date(), m = d.getMinutes(), h = (d.getHours() % 12) + m / 60, ticks = '';
+      for(var k = 0; k < 12; k++){ var a = k * 30 * Math.PI / 180; ticks += '<circle cx="'+(45 + Math.sin(a)*30).toFixed(1)+'" cy="'+(45 - Math.cos(a)*30).toFixed(1)+'" r="'+(k % 3 ? 1.6 : 2.8)+'" fill="#8A8296"/>'; }
+      return '<circle cx="45" cy="45" r="43" fill="#FF9E6B"/><circle cx="45" cy="45" r="36" fill="#FFFDF7"/>' + ticks +
+        '<path d="M45,45 L45,26" stroke="#2E2A3D" stroke-width="4.5" stroke-linecap="round" transform="rotate('+(h*30).toFixed(1)+' 45 45)"/>' +
+        '<path d="M45,45 L45,16" stroke="#2E2A3D" stroke-width="3" stroke-linecap="round" transform="rotate('+(m*6)+' 45 45)"/><circle cx="45" cy="45" r="3.6" fill="#FF6F4C"/>';
+    }
+    function photoSvg(){
+      var a = activePet();
+      var p = Pet.svg(a.sp, a.lv).replace('<svg ', '<svg x="12" y="14" width="66" height="76" style="width:66px;height:76px" preserveAspectRatio="xMidYMax meet" ');
+      return '<rect x="0" y="0" width="90" height="104" rx="8" fill="#E8C15A"/><rect x="8" y="8" width="74" height="88" rx="4" fill="#FFF3D6"/>' + p + '<circle cx="45" cy="5" r="3" fill="#C9973A"/>';
+    }
+    function gemcaseSvg(){
+      var mine = getGems(), o = '<rect x="2" y="2" width="176" height="80" rx="10" fill="#C99A62"/><rect x="10" y="10" width="160" height="64" rx="6" fill="#FFF1E0"/><rect x="10" y="40" width="160" height="4" fill="#E8C597"/>';
+      GEMS.forEach(function(g, k){
+        var x = 14 + (k % 4) * 40, y = k < 4 ? 10 : 44;
+        o += mine.indexOf(g.id) >= 0 ? gemSVG(g.color).replace('<svg ', '<svg x="'+(x+4)+'" y="'+(y+1)+'" width="28" height="28" style="width:28px;height:28px" ') : '<circle cx="'+(x+18)+'" cy="'+(y+15)+'" r="4" fill="#E8D8C2"/>';
+      });
+      return o;
+    }
+    function body(d){
+      if(d.sky) return windowSvg();
+      if(d.clock) return clockSvg();
+      if(d.photo) return photoSvg();
+      if(d.gems) return gemcaseSvg();
+      return d.b || '';
+    }
+    function itemSvg(d, part){ return '<svg viewBox="0 0 '+d.vb[0]+' '+d.vb[1]+'" aria-hidden="true">' + (part === 'f' ? d.f : body(d)) + '</svg>'; }
+    function thumb(d){
+      if(d.bg){
+        var id = 'rmt' + (uid++), fill = d.p ? '<defs>'+d.p(id)+'</defs><rect width="64" height="64" fill="'+d.bg+'"/><rect width="64" height="64" fill="url(#'+id+')"/>' : '<rect width="64" height="64" fill="'+d.bg+'"/>';
+        return '<svg viewBox="0 0 64 64" aria-hidden="true">'+fill+'</svg>';
+      }
+      return '<svg viewBox="0 0 '+d.vb[0]+' '+d.vb[1]+'" aria-hidden="true">' + body(d) + (d.f || '') + '</svg>';
+    }
+    function surfSvg(d){
+      var id = 'rms' + (uid++), defs = '', base = '<rect width="100%" height="100%" fill="'+d.bg+'"/>';
+      if(d.grad){ defs += '<linearGradient id="'+id+'g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+d.grad[0]+'"/><stop offset="1" stop-color="'+d.grad[1]+'"/></linearGradient>'; base = '<rect width="100%" height="100%" fill="url(#'+id+'g)"/>'; }
+      if(d.p) defs += d.p(id);
+      return '<svg width="100%" height="100%" aria-hidden="true"><defs>'+defs+'</defs>' + base + (d.p ? '<rect width="100%" height="100%" fill="url(#'+id+')"/>' : '') + '</svg>';
+    }
+
+    /* 家具の 大きさ・いち(すべて ステージに たいする %) */
+    function geo(it){
+      var d = BY[it.k], s = d.z === 'wall' ? 1 : depth(it.y), w = d.w * s, h = w * d.vb[1] / d.vb[0] * 4 / 3;
+      var z = d.z === 'wall' ? 2 : d.z === 'rug' ? 3 + Math.round(it.y) : 100 + Math.round(it.y * 10);
+      return { d:d, s:s, w:w, h:h, z:z };
+    }
+    function place(el, it, g, z){
+      el.style.left = it.x + '%';
+      el.style.width = g.w + '%';
+      el.style.zIndex = z;
+      if(g.d.z === 'wall'){ el.style.top = (it.y - g.h / 2) + '%'; el.style.bottom = ''; }
+      else{ el.style.top = ''; el.style.bottom = (100 - it.y) + '%'; }
+      el.classList.toggle('flip', !!it.f);
+    }
+    function seatOf(it){
+      var g = geo(it), d = g.d, sx = d.seat[0];
+      if(it.f) sx = 1 - sx;
+      return { x:it.x + (sx - .5) * g.w, y:it.y - d.seat[1] * g.h, s:g.s * d.seat[2], z:g.z + 1 };
+    }
+
+    /* ステージを つくる(card のときは さわれない 小さい 見本) */
+    function build(stage, mini){
+      var r = getRoom();
+      stage.innerHTML = '';
+      var wall = document.createElement('div'); wall.className = 'rm-wall'; wall.innerHTML = surfSvg(BY[r.wall]); wall.style.height = WALL + '%';
+      var floor = document.createElement('div'); floor.className = 'rm-floor'; floor.innerHTML = surfSvg(BY[r.floor]); floor.style.top = WALL + '%';
+      var base = document.createElement('div'); base.className = 'rm-base'; base.style.top = (WALL - 1.6) + '%'; base.style.background = BY[r.floor].base;
+      stage.appendChild(wall); stage.appendChild(floor); stage.appendChild(base);
+      var els = [];
+      r.items.forEach(function(it, i){
+        var g = geo(it), el = document.createElement('div');
+        el.className = 'rm-it z-' + g.d.z + (lampOn[i] && g.d.tap === 'light' ? ' on' : '');
+        el.innerHTML = itemSvg(g.d);
+        el._i = i;
+        place(el, it, g, g.z);
+        stage.appendChild(el);
+        var fe = null;
+        if(g.d.f){ fe = document.createElement('div'); fe.className = 'rm-it rm-front'; fe.innerHTML = itemSvg(g.d, 'f'); fe._i = i; place(fe, it, g, g.z + 2); stage.appendChild(fe); }
+        els.push({ el:el, fe:fe });
+      });
+      if(mini){
+        var a = activePet(), p = document.createElement('div');
+        p.className = 'rm-pet'; p.innerHTML = Pet.svg(a.sp, a.lv);
+        var y = 84; p.style.left = '36%'; p.style.bottom = (100 - y) + '%'; p.style.width = (PET_W * depth(y)) + '%'; p.style.zIndex = 100 + y * 10 + 5;
+        stage.appendChild(p);
+      }
+      return { r:r, els:els };
+    }
+
+    /* ---- おへやの 画面 ---- */
+    var S = null, edit = false, sel = -1, tab = 'item', lampOn = {}, clockT = 0;
+    function live(){ return S && !views.room.hidden; }
+    function say(t){ $('rmSay').textContent = t; }
+
+    function petsHere(){
+      var p = getPets() || {}, act = activePet(), list = [act.sp];
+      PARTNERS.concat(['whale']).forEach(function(sp){ if(sp !== act.sp && p.owned && p.owned[sp] != null && list.length < 5) list.push(sp); });
+      return list.map(function(sp){ return { sp:sp, lv:(p.owned && p.owned[sp]) || 0 }; });
+    }
+    function setPet(P, x, y, s, z, ms){
+      P.x = x; P.y = y;
+      var el = P.el;
+      el.style.transitionDuration = (ms || 0) + 'ms';
+      el.style.left = x + '%'; el.style.bottom = (100 - y) + '%'; el.style.width = (PET_W * s) + '%';
+      el.style.zIndex = z != null ? z : 100 + Math.round(y * 10) + 5;
+    }
+    function freeSpot(){ return { x:8 + Math.random() * 84, y:WALL + 12 + Math.random() * (100 - WALL - 16) }; }
+    function walkTo(P, x, y, s, z, done){
+      var dx = (x - P.x), dy = (y - P.y) * .75, dist = Math.sqrt(dx*dx + dy*dy), ms = Math.max(350, dist * 55);
+      P.el.classList.add('walk');
+      P.el.classList.toggle('left', dx < -1);
+      setPet(P, x, y, s == null ? depth(y) : s, z, ms);
+      clearTimeout(P.t);
+      P.t = setTimeout(function(){ P.el.classList.remove('walk'); if(done) done(); }, ms + 30);
+    }
+    function leave(P){
+      if(P.seat != null){ S.used[P.seat] = null; P.seat = null; }
+      P.el.classList.remove('sleep', 'sit');
+      P.el.querySelectorAll('.rm-zz,.rm-note').forEach(function(n){ n.remove(); });
+    }
+    function bubble(P, txt, cls){
+      var b = document.createElement('span'); b.className = cls || 'rm-heart'; b.textContent = txt;
+      P.el.appendChild(b); setTimeout(function(){ b.remove(); }, 1600);
+    }
+    var TALK = {
+      sleep:['すやすや…', 'ふかふかで ねむく なっちゃう', 'おやすみ〜'],
+      sit:['ここ すわりごこち いいね!', 'ひとやすみ〜', 'ここ だいすき!'],
+      look:['これ すてき!', 'なんだろう?', 'いいね!'],
+      watch:['わあ、見て 見て!', 'たのしいね!', 'ずっと 見ていたいな'],
+      music:['ドレミ〜♪', 'ピアノ ひけたよ!'],
+      slide:['すべりだい たのしい!', 'もう 1回!']
+    };
+    function useItem(P, i, byUser){
+      var it = S.r.items[i]; if(!it) return;
+      var d = BY[it.k];
+      leave(P);
+      var talk = TALK[d.act] || TALK.look, nm = petName(P.sp);
+      if(d.seat){
+        if(S.used[i] && S.used[i] !== P.sp){ if(byUser) say(petName(S.used[i]) + 'が つかってるよ'); return wander(P); }
+        S.used[i] = P.sp; P.seat = i;
+        var st = seatOf(it), g = geo(it);
+        walkTo(P, Math.max(5, Math.min(95, it.x + (it.x > 50 ? -1 : 1) * (g.w / 2 + 4))), Math.min(99, it.y + 2), null, null, function(){
+          if(P.seat !== i) return;
+          P.el.classList.add('hopin');
+          setPet(P, st.x, st.y, st.s, st.z, 380);
+          setTimeout(function(){
+            P.el.classList.remove('hopin');
+            if(P.seat !== i) return;
+            if(d.act === 'sleep'){ P.el.classList.add('sleep'); var z = document.createElement('span'); z.className = 'rm-zz'; z.innerHTML = '<i>z</i><i>z</i><i>Z</i>'; P.el.appendChild(z); }
+            else P.el.classList.add('sit');
+            if(byUser || Math.random() < .5) say(nm + '「' + any(talk) + '」');
+            P.t = setTimeout(function(){ getUp(P); }, d.act === 'sleep' ? 9000 + Math.random() * 6000 : 5000 + Math.random() * 4000);
+          }, 400);
+        });
+        return;
+      }
+      var g2 = geo(it), side = it.x > 50 ? -1 : 1;
+      var tx = d.z === 'wall' ? it.x : it.x + side * (g2.w / 2 + 5), ty = d.z === 'wall' ? WALL + 14 + Math.random() * 10 : Math.min(99, it.y + 3);
+      if(d.act === 'slide') return slide(P, i);
+      if(d.act === 'music'){ tx = it.x; ty = Math.min(99, it.y + 4); }
+      walkTo(P, Math.max(6, Math.min(94, tx)), ty, null, null, function(){
+        if(d.act === 'music'){ playTune(P, byUser); }
+        else{ Pet.tap(P.el); bubble(P, '♥'); }
+        if(byUser || Math.random() < .5) say(nm + '「' + any(talk) + '」');
+        next(P, 2500);
+      });
+    }
+    function getUp(P){
+      if(!live()) return next(P, 2000);
+      var i = P.seat; leave(P);
+      var it = S.r.items[i];
+      if(it){ var g = geo(it); setPet(P, P.x, Math.min(99, it.y + 3), depth(Math.min(99, it.y + 3)), null, 300); }
+      next(P, 600);
+    }
+    function slide(P, i){
+      var it = S.r.items[i], g = geo(it), L = it.f ? 1 : -1;   /* はしごの がわ */
+      var lx = it.x + L * g.w * .32, rx = it.x - L * g.w * .46;
+      walkTo(P, lx, Math.min(99, it.y + 1), null, null, function(){
+        var top = it.y - g.h * .78, s = g.s * .62;
+        P.el.classList.add('climb');
+        setPet(P, lx, top, s, g.z + 1, 900);
+        P.t = setTimeout(function(){
+          P.el.classList.remove('climb'); P.el.classList.add('wee');
+          setPet(P, rx, it.y - g.h * .06, g.s * .7, g.z + 1, 650);
+          P.t = setTimeout(function(){
+            P.el.classList.remove('wee'); bubble(P, '♥'); Pet.cheer(P.el);
+            if(Math.random() < .6) say(petName(P.sp) + '「' + any(TALK.slide) + '」');
+            setPet(P, rx, Math.min(99, it.y + 2), depth(Math.min(99, it.y + 2)), null, 300);
+            next(P, 1400);
+          }, 700);
+        }, 950);
+      });
+    }
+    var TUNE = [523, 587, 659, 523, 659, 784, 659, 587, 523];
+    function playTune(P, loud){
+      var n = 0;
+      (function step(){
+        if(!live() || n >= 6) return;
+        var f = TUNE[(Math.random() * TUNE.length) | 0];
+        if(loud) chime(f);
+        var note = document.createElement('span'); note.className = 'rm-note'; note.textContent = n % 2 ? '♪' : '♫';
+        note.style.left = (30 + Math.random() * 40) + '%'; P.el.appendChild(note);
+        setTimeout(function(){ note.remove(); }, 1400);
+        Pet.tap(P.el); n++; setTimeout(step, 420);
+      })();
+    }
+    function wander(P){ var f = freeSpot(); walkTo(P, f.x, f.y, null, null, function(){ next(P, 1200 + Math.random() * 2600); }); }
+    function next(P, ms){
+      clearTimeout(P.t);
+      P.t = setTimeout(function(){
+        if(!live()) return;
+        if(edit) return next(P, 1500);
+        var usable = [];
+        S.r.items.forEach(function(it, i){ var d = BY[it.k]; if(d.act && !(d.seat && S.used[i])) usable.push(i); });
+        var r = Math.random();
+        if(usable.length && r < .55) useItem(P, usable[(Math.random() * usable.length) | 0]);
+        else if(r < .9) wander(P);
+        else{ Pet.tap(P.el); next(P, 1500); }
+      }, ms);
+    }
+    function stopPets(){ if(S) S.pets.forEach(function(P){ clearTimeout(P.t); }); clearInterval(clockT); }
+
+    function render(){
+      var stage = $('rmStage'), keep = S ? S.pets : null;
+      stopPets();
+      var b = build(stage, false);
+      S = { r:b.r, els:b.els, used:{}, pets:[] };
+      stage.classList.toggle('editing', edit);
+      petsHere().forEach(function(p, k){
+        var el = document.createElement('div');
+        el.className = 'rm-pet'; el.innerHTML = Pet.svg(p.sp, p.lv);
+        if(k === 0) moodPet(el);
+        stage.appendChild(el);
+        var P = { sp:p.sp, el:el, x:0, y:0, seat:null, t:0 };
+        var old = keep && keep.filter(function(q){ return q.sp === p.sp; })[0];
+        var f = old ? { x:old.x, y:old.y } : { x:k === 0 ? 40 : 10 + Math.random() * 80, y:k === 0 ? 86 : WALL + 14 + Math.random() * 26 };
+        setPet(P, f.x, f.y, depth(f.y), null, 0);
+        el.addEventListener('click', function(e){
+          e.stopPropagation();
+          if(edit) return;
+          var wasSleep = P.el.classList.contains('sleep');
+          if(P.seat != null){ getUp(P); }
+          Pet.spin(el); bubble(P, '♥');
+          say(petName(P.sp) + '「' + (wasSleep ? 'ふあ〜、おはよう!' : any(['えへへ', 'なあに?', 'あそぼう!', 'この おへや すき!'])) + '」');
+          next(P, 2200);
+        });
+        S.pets.push(P);
+        next(P, 800 + k * 900);
+      });
+      clockT = setInterval(function(){
+        if(!live()) return clearInterval(clockT);
+        S.r.items.forEach(function(it, i){ var d = BY[it.k]; if(d.clock || d.sky){ S.els[i].el.innerHTML = itemSvg(d); } });
+      }, 30000);
+      renderTools(); renderShop();
+    }
+
+    /* ---- もようがえ(ドラッグで うごかす) ---- */
+    function setEdit(on){
+      edit = on; sel = -1;
+      $('rmStage').classList.toggle('editing', on);
+      $('rmEdit').textContent = on ? '✓ できた' : '🔨 もようがえ';
+      $('rmEdit').classList.toggle('on', on);
+      if(on && S) S.pets.forEach(function(P){ clearTimeout(P.t); leave(P); P.el.classList.remove('walk'); });
+      if(!on && S) S.pets.forEach(function(P, k){ next(P, 400 + k * 500); });
+      say(on ? 'かぐを ゆびで うごかしてね。タップで えらぶと むきを かえたり しまったり できるよ' : '');
+      renderTools();
+    }
+    function selectIt(i){
+      sel = i;
+      S.els.forEach(function(e, k){ e.el.classList.toggle('sel', k === i); });
+      renderTools();
+    }
+    function renderTools(){
+      var t = $('rmTools');
+      t.hidden = !(edit && sel >= 0 && S && S.r.items[sel]);
+      if(t.hidden) return;
+      var d = BY[S.r.items[sel].k];
+      $('rmToolName').textContent = d.name;
+    }
+    function clampIt(it, d){
+      var g = geo(it), half = g.w / 2;
+      it.x = Math.max(half - 4, Math.min(104 - half, it.x));
+      if(d.z === 'wall') it.y = Math.max(g.h / 2 + 1, Math.min(WALL - g.h / 2 - 1, it.y));
+      else it.y = Math.max(WALL + (d.z === 'rug' ? 10 : 6), Math.min(100, it.y));
+    }
+    var drag = null;
+    function stagePt(e){ var r = $('rmStage').getBoundingClientRect(); return { x:(e.clientX - r.left) / r.width * 100, y:(e.clientY - r.top) / r.height * 100 }; }
+    function itemAt(target){
+      var n = target; while(n && n !== $('rmStage') && n._i == null) n = n.parentNode;
+      return n && n._i != null ? n._i : -1;
+    }
+    $('rmStage').addEventListener('pointerdown', function(e){
+      var i = itemAt(e.target);
+      if(!edit){
+        if(i < 0 || !S) return;
+        var d = BY[S.r.items[i].k];
+        if(d.tap === 'light'){ lampOn[i] = !lampOn[i]; S.els[i].el.classList.toggle('on', !!lampOn[i]); }
+        if(d.tap === 'piano'){ chime(TUNE[(Math.random() * TUNE.length) | 0]); }
+        if(d.act){ var P = S.pets[0]; clearTimeout(P.t); if(P.seat === i) return; useItem(P, i, true); }
+        else if(d.photo){ Pet.cheer(S.pets[0].el); bubble(S.pets[0], '♥'); say(petName(S.pets[0].sp) + '「わたしの しゃしん!」'); }
+        return;
+      }
+      if(i < 0){ selectIt(-1); return; }
+      e.preventDefault();
+      selectIt(i);
+      var it = S.r.items[i], p = stagePt(e);
+      drag = { i:i, dx:it.x - p.x, dy:it.y - p.y, id:e.pointerId, moved:false };
+      try{ $('rmStage').setPointerCapture(e.pointerId); }catch(_){}
+    });
+    $('rmStage').addEventListener('pointermove', function(e){
+      if(!drag || e.pointerId !== drag.id) return;
+      var it = S.r.items[drag.i], d = BY[it.k], p = stagePt(e);
+      it.x = p.x + drag.dx; it.y = p.y + drag.dy; clampIt(it, d); drag.moved = true;
+      var g = geo(it), e2 = S.els[drag.i];
+      place(e2.el, it, g, d.z === 'wall' ? 2 : 900 + (d.z === 'rug' ? 0 : 1)); if(e2.fe) place(e2.fe, it, g, 901);
+    });
+    function endDrag(e){
+      if(!drag || e.pointerId !== drag.id) return;
+      var i = drag.i, moved = drag.moved; drag = null;
+      if(moved){
+        var it = S.r.items[i], g = geo(it), e2 = S.els[i];
+        place(e2.el, it, g, g.z); if(e2.fe) place(e2.fe, it, g, g.z + 2);
+        saveRoom(S.r);
+      }
+    }
+    $('rmStage').addEventListener('pointerup', endDrag);
+    $('rmStage').addEventListener('pointercancel', endDrag);
+    $('rmFlip').addEventListener('click', function(){
+      if(sel < 0) return;
+      var it = S.r.items[sel]; it.f = it.f ? 0 : 1; saveRoom(S.r);
+      var g = geo(it); place(S.els[sel].el, it, g, g.z); if(S.els[sel].fe) place(S.els[sel].fe, it, g, g.z + 2);
+    });
+    $('rmStore').addEventListener('click', function(){
+      if(sel < 0) return;
+      var nm = BY[S.r.items[sel].k].name;
+      S.r.items.splice(sel, 1); lampOn = {}; saveRoom(S.r); sel = -1;
+      render(); say(nm + 'を しまったよ。下の 「もってる」から また おけるよ');
+    });
+    $('rmEdit').addEventListener('click', function(){ setEdit(!edit); });
+
+    /* ---- おへやの ショップ ---- */
+    var TABS = [ { id:'item', name:'かぐ' }, { id:'wall', name:'かべの かざり' }, { id:'wp', name:'かべがみ' }, { id:'fl', name:'ゆか' } ];
+    function listFor(t){
+      if(t === 'wp') return WALLS;
+      if(t === 'fl') return FLOORS;
+      return ITEMS.filter(function(d){ return t === 'wall' ? d.z === 'wall' : d.z !== 'wall'; });
+    }
+    function renderShop(){
+      $('rmTabs').innerHTML = TABS.map(function(t){ return '<button class="rm-tab'+(t.id === tab ? ' sel' : '')+'" data-t="'+t.id+'">'+t.name+'</button>'; }).join('');
+      var r = S ? S.r : getRoom(), coins = getCoins(), g = $('rmGrid'); g.innerHTML = '';
+      listFor(tab).forEach(function(d){
+        var own = ownN(d.id), surf = !!d.bg, using = surf && (r.wall === d.id || r.floor === d.id), left = surf ? 0 : own - placedN(r, d.id);
+        var c = document.createElement('button');
+        c.className = 'rm-card' + (using ? ' using' : '') + (!own && coins < d.price ? ' cant' : '');
+        var tag = using ? '<span class="rc-p own">つかってる</span>'
+          : surf && own ? '<span class="rc-p own">これに する ›</span>'
+          : left > 0 ? '<span class="rc-p own">おく ›<small>しまってある '+left+'</small></span>'
+          : '<span class="rc-p num"><span class="coin"></span>'+d.price+(own ? '<small>もってる '+own+'</small>' : '')+'</span>';
+        c.innerHTML = '<span class="rc-pic'+(surf ? ' surf' : '')+'">' + thumb(d) + '</span><b>'+d.name+'</b>' + tag;
+        c.addEventListener('click', function(){ pick(d); });
+        g.appendChild(c);
+      });
+    }
+    /* あいている ところを さがして おく */
+    function emptySpot(r, d){
+      var best = null, bs = -1, same = r.items.filter(function(o){ var z = BY[o.k].z; return d.z === 'wall' ? z === 'wall' : z !== 'wall'; });
+      for(var gx = 0; gx < 9; gx++) for(var gy = 0; gy < 4; gy++){
+        var it = { k:d.id, x:12 + gx * 9.5, y:d.z === 'wall' ? 12 + gy * 10 : WALL + 12 + gy * 10, f:0 };
+        clampIt(it, d);
+        var g = geo(it), sc = 999;
+        same.forEach(function(o){ var go = geo(o), dx = Math.abs(o.x - it.x) - (go.w + g.w) / 2, dy = Math.abs((o.y - (d.z === 'wall' ? 0 : go.h / 2)) - (it.y - (d.z === 'wall' ? 0 : g.h / 2))) - (go.h + g.h) / 2; sc = Math.min(sc, Math.max(dx, dy * .8)); });
+        var half = g.w / 2; it.x = Math.max(half + 1, Math.min(99 - half, it.x));
+        sc += Math.random() * .5 - Math.abs(it.x - 50) * .01 - (d.z === 'wall' ? Math.abs(it.y - 24) * .12 : 0);
+        if(sc > bs){ bs = sc; best = it; }
+      }
+      return best;
+    }
+    function pick(d){
+      var r = S.r, surf = !!d.bg;
+      if(surf){
+        if(!ownN(d.id)){
+          if(!buyGate(d.price, d.name+'を かう?', thumb(d), 'かう', function(){ pick(d); })) return;
+          addOwn(d.id);
+        }
+        if(d.id.charAt(0) === 'w') r.wall = d.id; else r.floor = d.id;
+        saveRoom(r); render(); Pet.cheer(S.pets[0].el);
+        say(petName(S.pets[0].sp) + '「わあ、' + d.name + 'に なった!」');
+        return;
+      }
+      if(ownN(d.id) - placedN(r, d.id) <= 0){
+        if(!buyGate(d.price, d.name+'を かう?', thumb(d), 'かう', function(){ pick(d); })) return;
+        addOwn(d.id);
+      }
+      var it = emptySpot(r, d);
+      r.items.push(it); saveRoom(r);
+      if(!edit) setEdit(true);
+      render(); selectIt(r.items.length - 1);
+      say(d.name + 'を おいたよ!ゆびで すきな ところに うごかしてね');
+      $('rmStage').scrollIntoView({ block:'nearest', behavior:'smooth' });
+    }
+    $('rmTabs').addEventListener('click', function(e){ var b = e.target.closest('.rm-tab'); if(!b) return; tab = b.getAttribute('data-t'); renderShop(); });
+
+    function open(){
+      setLive('add');
+      edit = false; sel = -1; lampOn = {};
+      $('rmEdit').textContent = '🔨 もようがえ'; $('rmEdit').classList.remove('on');
+      showView('room');
+      render();
+      say(petName(activePet().sp) + '「ここが みんなの おへやだよ!」');
+    }
+    function close(){ stopPets(); if(edit) setEdit(false); goHome(); }
+    $('rmBack').addEventListener('click', close);
+
+    function card(){
+      var c = $('roomCard'); if(!c) return;
+      c.innerHTML = '<div class="rm-stage rm-mini"></div><span class="rm-ct"><b>おへや</b><span>かぐを 買って すきな ように かざろう</span></span><span class="rm-go">›</span>';
+      build(c.querySelector('.rm-stage'), true);
+    }
+    $('roomCard').addEventListener('click', open);
+
+    return { open:open, card:card, ITEMS:ITEMS, WALLS:WALLS, FLOORS:FLOORS };
   })();
 
   /* ---------- backup / restore ---------- */
