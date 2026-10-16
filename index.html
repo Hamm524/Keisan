@@ -2199,7 +2199,7 @@ var Pet = (function(){
       '<path d="M92,'+(k-2)+' L108,'+(k-2)+' L105,'+(k+6)+' L95,'+(k+6)+' Z" fill="#2F49B8"/></g>';
   }
   /* ネクタイの 結び目の たかさ(口・くちばし・した と ぶつからない よう 種類ごとに) */
-  var TIE_Y = { squirrel:130, koala:128, sheep:124, dog:134, dragon:131, dolphin:130, chick:129, unicorn:128, snake:129, owl:128, penguin:128, hamster:132, bear:130, fox:130, whale:129, rabbit:130, tiger:128, wolf:128, cat:128, panda:128, seal:128 };
+  var TIE_Y = { mouse:130, cow:130, horse:132, monkey:130, hen:128, boar:132, squirrel:130, koala:128, sheep:124, dog:134, dragon:131, dolphin:130, chick:129, unicorn:128, snake:129, owl:128, penguin:128, hamster:132, bear:130, fox:130, whale:129, rabbit:130, tiger:128, wolf:128, cat:128, panda:128, seal:128 };
   function tophat(t){
     return '<g transform="'+(t||'')+'">' +
       '<rect x="87" y="14" width="26" height="25" rx="3" fill="#35324A"/>' +
@@ -2317,6 +2317,54 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       deco:'<ellipse cx="70" cy="114" rx="9" ry="5.5" fill="#FFB0B8" opacity=".8"/><ellipse cx="130" cy="114" rx="9" ry="5.5" fill="#FFB0B8" opacity=".8"/><ellipse cx="100" cy="106" rx="4.5" ry="3.2" fill="#C98A7A"/>',
       mouthN:'<path d="M100,108 L100,111 M100,111 Q95,116 91,112 M100,111 Q105,116 109,112" stroke="'+INK+'" stroke-width="2.3" fill="none" stroke-linecap="round"/>',
       mouthH:'<path d="M93,110 Q100,124 107,110 Q100,113 93,110 Z" fill="#C94A63"/>'
+    },
+    mouse:{
+      name:'ねずみ', gem:'#E5484D', gemAt:[100,141], clipAt:[146,40], crownT:'', eyeY:90, eyeX:[76,124],
+      back:'<path d="M150,152 Q192,156 190,124 Q188,100 168,106" stroke="#F4AFC0" stroke-width="6" fill="none" stroke-linecap="round"/>',
+      body:'<circle cx="44" cy="50" r="31" fill="#C9C6D3"/><circle cx="156" cy="50" r="31" fill="#C9C6D3"/><circle cx="46" cy="52" r="20" fill="#FFC2CF"/><circle cx="154" cy="52" r="20" fill="#FFC2CF"/><ellipse cx="100" cy="128" rx="68" ry="54" fill="#C9C6D3"/><circle cx="100" cy="85" r="56" fill="#C9C6D3"/><ellipse cx="100" cy="142" rx="38" ry="28" fill="#F7F5FA"/><ellipse cx="100" cy="106" rx="22" ry="14" fill="#F7F5FA"/>',
+      deco:'<ellipse cx="58" cy="108" rx="10" ry="6" fill="#FFB6C8" opacity=".7"/><ellipse cx="142" cy="108" rx="10" ry="6" fill="#FFB6C8" opacity=".7"/><ellipse cx="100" cy="100" rx="6" ry="4.5" fill="#FF8FA8"/><path d="M72,104 L50,99 M72,110 L50,112 M128,104 L150,99 M128,110 L150,112" stroke="#ADA8BA" stroke-width="2" fill="none" stroke-linecap="round"/>',
+      mouthN:'<path d="M100,104 L100,109 M100,109 Q94,114 90,110 M100,109 Q106,114 110,110" stroke="'+INK+'" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
+      mouthH:'<path d="M93,110 Q100,124 107,110 Q100,113 93,110 Z" fill="#C94A63"/>'
+    },
+    cow:{
+      name:'うし', gem:'#1FA98E', gemAt:[100,146], clipAt:[140,52], crownT:'', eyeY:82, eyeX:[75,125],
+      back:'<path d="M150,150 Q182,152 184,122" stroke="#FBF8F4" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="184" cy="116" rx="6" ry="9" fill="#3D3842"/>',
+      body:'<path d="M72,42 Q58,24 68,10 Q76,28 88,36 Z" fill="#F3E2B8"/><path d="M128,42 Q142,24 132,10 Q124,28 112,36 Z" fill="#F3E2B8"/><ellipse cx="40" cy="74" rx="22" ry="11" fill="#FBF8F4" transform="rotate(-20 40 74)"/><ellipse cx="160" cy="74" rx="22" ry="11" fill="#FBF8F4" transform="rotate(20 160 74)"/><ellipse cx="42" cy="74" rx="12" ry="5.5" fill="#FFC2CF" transform="rotate(-20 42 74)"/><ellipse cx="158" cy="74" rx="12" ry="5.5" fill="#FFC2CF" transform="rotate(20 158 74)"/><ellipse cx="100" cy="128" rx="68" ry="54" fill="#FBF8F4"/><circle cx="100" cy="85" r="56" fill="#FBF8F4"/><ellipse cx="150" cy="142" rx="20" ry="24" fill="#3D3842" transform="rotate(20 150 142)"/><ellipse cx="54" cy="154" rx="15" ry="11" fill="#3D3842"/><ellipse cx="77" cy="56" rx="17" ry="13" fill="#3D3842" transform="rotate(-25 77 56)"/><ellipse cx="100" cy="142" rx="38" ry="28" fill="#FFFFFF"/><ellipse cx="100" cy="108" rx="32" ry="17" fill="#FFC9CF"/>',
+      deco:'<ellipse cx="58" cy="98" rx="9" ry="5.5" fill="#FFB6C8" opacity=".7"/><ellipse cx="142" cy="98" rx="9" ry="5.5" fill="#FFB6C8" opacity=".7"/><ellipse cx="89" cy="104" rx="3.6" ry="2.6" fill="#D98A98"/><ellipse cx="111" cy="104" rx="3.6" ry="2.6" fill="#D98A98"/>',
+      mouthN:'<path d="M92,114 Q100,120 108,114" stroke="'+INK+'" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
+      mouthH:'<path d="M93,113 Q100,127 107,113 Q100,116 93,113 Z" fill="#C94A63"/>'
+    },
+    horse:{
+      name:'うま', gem:'#5B7CFA', gemAt:[100,146], clipAt:[140,56], crownT:'translate(0 -6)', eyeY:84, eyeX:[75,125],
+      back:'<path d="M148,138 Q190,128 186,172 Q172,160 150,156 Z" fill="#6B4430"/>',
+      body:'<polygon points="58,54 62,12 92,44" fill="#C98A55"/><polygon points="142,54 138,12 108,44" fill="#C98A55"/><polygon points="65,46 67,26 82,42" fill="#E8B48A"/><polygon points="135,46 133,26 118,42" fill="#E8B48A"/><ellipse cx="100" cy="128" rx="68" ry="54" fill="#C98A55"/><circle cx="100" cy="85" r="56" fill="#C98A55"/><ellipse cx="100" cy="142" rx="38" ry="28" fill="#F3D9B8"/><ellipse cx="100" cy="110" rx="31" ry="18" fill="#F3D9B8"/><ellipse cx="90" cy="34" rx="13" ry="10" fill="#6B4430" transform="rotate(-20 90 34)"/><ellipse cx="110" cy="34" rx="13" ry="10" fill="#6B4430" transform="rotate(20 110 34)"/><path d="M82,34 Q100,22 118,34 Q114,58 100,62 Q86,58 82,34 Z" fill="#6B4430"/>',
+      deco:'<ellipse cx="58" cy="100" rx="9" ry="5.5" fill="#FFB6C8" opacity=".7"/><ellipse cx="142" cy="100" rx="9" ry="5.5" fill="#FFB6C8" opacity=".7"/><ellipse cx="89" cy="108" rx="3.6" ry="2.8" fill="#8A5A3C"/><ellipse cx="111" cy="108" rx="3.6" ry="2.8" fill="#8A5A3C"/>',
+      mouthN:'<path d="M93,118 Q100,123 107,118" stroke="'+INK+'" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
+      mouthH:'<path d="M93,117 Q100,131 107,117 Q100,120 93,117 Z" fill="#C94A63"/>'
+    },
+    monkey:{
+      name:'さる', gem:'#F2A134', gemAt:[100,146], clipAt:[136,40], crownT:'', eyeY:86, eyeX:[80,120],
+      back:'<path d="M150,152 Q190,156 188,122 Q186,98 166,102 Q154,108 162,118" stroke="#A9714B" stroke-width="8" fill="none" stroke-linecap="round"/>',
+      body:'<circle cx="40" cy="90" r="20" fill="#A9714B"/><circle cx="160" cy="90" r="20" fill="#A9714B"/><circle cx="42" cy="90" r="12" fill="#F7D5B5"/><circle cx="158" cy="90" r="12" fill="#F7D5B5"/><ellipse cx="100" cy="128" rx="68" ry="54" fill="#A9714B"/><circle cx="100" cy="85" r="56" fill="#A9714B"/><ellipse cx="100" cy="142" rx="38" ry="28" fill="#F7D5B5"/><circle cx="81" cy="84" r="22" fill="#F7D5B5"/><circle cx="119" cy="84" r="22" fill="#F7D5B5"/><ellipse cx="100" cy="106" rx="34" ry="21" fill="#F7D5B5"/><path d="M92,32 Q98,20 106,28 Q100,30 96,36 Z" fill="#A9714B"/>',
+      deco:'<ellipse cx="64" cy="104" rx="8" ry="5" fill="#FF9DB0" opacity=".7"/><ellipse cx="136" cy="104" rx="8" ry="5" fill="#FF9DB0" opacity=".7"/><ellipse cx="96" cy="99" rx="2.4" ry="2" fill="#7A4E34"/><ellipse cx="104" cy="99" rx="2.4" ry="2" fill="#7A4E34"/>',
+      mouthN:'<path d="M91,108 Q100,116 109,108" stroke="'+INK+'" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
+      mouthH:'<path d="M93,108 Q100,122 107,108 Q100,111 93,108 Z" fill="#C94A63"/>'
+    },
+    hen:{
+      name:'にわとり', gem:'#B05CE8', gemAt:[100,154], clipAt:[140,60], crownT:'translate(-28 10) rotate(-18 100 30)', eyeY:86,
+      back:'<ellipse cx="158" cy="100" rx="9" ry="26" fill="#E39A4E" transform="rotate(25 158 100)"/><ellipse cx="172" cy="112" rx="9" ry="26" fill="#4FA88A" transform="rotate(50 172 112)"/><ellipse cx="178" cy="130" rx="8" ry="22" fill="#E39A4E" transform="rotate(78 178 130)"/><ellipse cx="50" cy="124" rx="17" ry="11" fill="#EFE6D8" transform="rotate(-25 50 124)"/><ellipse cx="150" cy="124" rx="17" ry="11" fill="#EFE6D8" transform="rotate(25 150 124)"/>',
+      body:'<circle cx="86" cy="32" r="11" fill="#F0545C"/><circle cx="100" cy="25" r="13" fill="#F0545C"/><circle cx="114" cy="32" r="11" fill="#F0545C"/><ellipse cx="100" cy="130" rx="66" ry="52" fill="#FFFBF4"/><circle cx="100" cy="85" r="58" fill="#FFFBF4"/><ellipse cx="100" cy="144" rx="36" ry="26" fill="#FFFFFF"/><ellipse cx="44" cy="128" rx="13" ry="22" fill="#EFE6D8" transform="rotate(15 44 128)"/><ellipse cx="156" cy="128" rx="13" ry="22" fill="#EFE6D8" transform="rotate(-15 156 128)"/>',
+      deco:'<ellipse cx="62" cy="104" rx="10" ry="6" fill="#FF9D6A" opacity=".55"/><ellipse cx="138" cy="104" rx="10" ry="6" fill="#FF9D6A" opacity=".55"/>',
+      mouthN:'<ellipse cx="100" cy="114" rx="5.5" ry="7" fill="#F0545C"/><polygon points="90,100 110,100 100,111" fill="#F7B731"/>',
+      mouthH:'<ellipse cx="100" cy="118" rx="5.5" ry="7" fill="#F0545C"/><polygon points="89,97 111,97 100,104" fill="#F7B731"/><path d="M91,106 L109,106 L100,114 Z" fill="#E09A1E"/><ellipse cx="100" cy="105" rx="6" ry="2.2" fill="#C94A63"/>'
+    },
+    boar:{
+      name:'いのしし', gem:'#1FA98E', gemAt:[100,146], clipAt:[142,52], crownT:'', eyeY:84, eyeX:[74,126],
+      back:'<path d="M150,150 Q170,152 172,142 Q174,132 166,134 Q160,138 168,146 Q176,152 184,146" stroke="#B9805A" stroke-width="4.5" fill="none" stroke-linecap="round"/>',
+      body:'<polygon points="50,62 52,22 84,40" fill="#B9805A"/><polygon points="150,62 148,22 116,40" fill="#B9805A"/><polygon points="57,52 58,32 75,42" fill="#F2A3A0"/><polygon points="143,52 142,32 125,42" fill="#F2A3A0"/><ellipse cx="100" cy="128" rx="68" ry="54" fill="#B9805A"/><circle cx="100" cy="85" r="56" fill="#B9805A"/><ellipse cx="100" cy="142" rx="38" ry="28" fill="#DDAE86"/><path d="M86,34 L88,52 M100,31 L100,52 M114,34 L112,52" stroke="#5A3524" stroke-width="6.5" fill="none" stroke-linecap="round"/>',
+      deco:'<ellipse cx="56" cy="102" rx="10" ry="6" fill="#FFB6C8" opacity=".7"/><ellipse cx="144" cy="102" rx="10" ry="6" fill="#FFB6C8" opacity=".7"/><path d="M74,108 Q66,98 72,90 Q74,100 82,104 Z" fill="#FFFFFF"/><path d="M126,108 Q134,98 128,90 Q126,100 118,104 Z" fill="#FFFFFF"/><ellipse cx="100" cy="104" rx="25" ry="16" fill="#F2A3A0"/><ellipse cx="91" cy="104" rx="3.6" ry="5" fill="#6B3A33"/><ellipse cx="109" cy="104" rx="3.6" ry="5" fill="#6B3A33"/>',
+      mouthN:'<path d="M93,124 Q100,129 107,124" stroke="'+INK+'" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
+      mouthH:'<path d="M93,122 Q100,136 107,122 Q100,125 93,122 Z" fill="#C94A63"/>'
     }
   };
 
@@ -2517,6 +2565,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     squirrel:[['aka','あかちゃ',22,.62,.52],['gray','はいいろ',220,.08,.62],['kuro','くろ',250,.08,.3]],
     koala:   [['cha','ちゃいろ',28,.22,.56],['koi','こいグレー',225,.06,.5]],
     sheep:   [['cream','クリーム',40,.55,.88],['cha','ちゃいろ',28,.35,.6],['kuro','くろ',250,.06,.32]],
+    mouse:   [['shiro','しろ',40,.3,.95],['cha','ちゃいろ',28,.38,.6]],
+    cow:     [['kuro','くろげ',250,.06,.3]],
+    horse:   [['kage','かげ',20,.45,.36],['ashige','あしげ',220,.06,.78],['kuro','あおげ',240,.1,.28]],
+    monkey:  [['nihon','ニホンザル',30,.2,.62],['koge','こげちゃ',24,.4,.36]],
+    hen:     [['cha','ちゃいろ',22,.55,.55],['kuro','くろ',250,.08,.3]],
+    boar:    [['koge','こげちゃ',22,.38,.36],['kuro','くろ',250,.08,.3]],
     whale:   [['ao','あお',214,.5,.6],['shiro','しろ',200,.25,.94],['kuro','くろ',230,.12,.3]],
     snake:   [['kiiro','きいろ',50,.8,.62],['cha','ちゃいろ',30,.45,.5],['ao','あおみどり',170,.4,.5],['shiro','しろ',50,.2,.92]],
     dragon:  [['midori','みどり',110,.45,.6],['aka','あか',5,.62,.6],['ao','あお',210,.6,.64],['murasaki','むらさき',270,.42,.68],['kin','きんいろ',45,.78,.62]],
@@ -2693,6 +2747,19 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { id:'jacob', n:'ジェイコブ', old:'stripe', f:function(c){ return {
         h: pE(64, 50, 18, 14, '#8C7362') + pE(140, 46, 14, 11, '#8C7362'),
         b: pD([[48,146,16,13],[152,140,14,12],[100,172,14,9]], '#8C7362') }; } }
+    ],
+    cow: [
+      { id:'obuchi', n:'おおきい ぶち', old:'dot', f:function(c){ return {
+        h: pE(134, 50, 18, 14, '#3D3842', 25),
+        b: pD([[60,122,15,13],[124,166,13,9]], '#3D3842') }; } }
+    ],
+    boar: [
+      { id:'uribo', n:'うりぼう', old:'stripe', f:function(c){ return {
+        b: pM(pS('M42,112 Q37,134 45,156', 5, '#F1D6B4') + pS('M56,102 Q49,134 57,168', 5, '#F1D6B4')) }; } }
+    ],
+    horse: [
+      { id:'ryusei', n:'りゅうせい', old:'star', f:function(c){ return {
+        o: '<path d="M96,60 Q100,56 104,60 L103,94 Q100,98 97,94 Z" fill="#FFFFFF" opacity=".9"/>' }; } }
     ],
     dolphin: [
       { id:'madara', n:'まだら', old:'dot', f:function(c){ return {
@@ -2986,7 +3053,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   var GROW_COST = [40, 80, 150]; // Lv0→1, Lv1→2, Lv2→3
   var RECRUIT_COST = 120;   // 2ひき目の 仲間
   var RECRUIT_STEP = 10;    // 仲間が ふえるたびに 少しずつ 上がる
-  var PARTNERS = ['cat','dragon','chick','tiger','wolf','snake','owl','rabbit','bear','panda','dog','fox','hamster','penguin','seal','unicorn','dolphin','squirrel','koala','sheep'];
+  var PARTNERS = ['cat','dragon','chick','tiger','wolf','snake','owl','rabbit','bear','panda','dog','fox','hamster','penguin','seal','unicorn','dolphin','squirrel','koala','sheep','mouse','cow','horse','monkey','hen','boar'];
   var STARTERS = ['cat','dragon','chick'];
   var LIMITED = ['whale'];          // スタンプでしか 会えない 仲間
   /* きょうの ちょうせん: 1日1回、苦手な計算を まぜた 10問。クリアで スペシャルコイン(5コイン分)+スタンプ */
@@ -3074,9 +3141,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     snake:['tunnel','box','fris'],   dragon:['dig','rc','bubble'],    chick:['swing','bell','jara'],
     owl:['swing','box','rc'],        unicorn:['bell','bubble','chew'], penguin:['bubble','tunnel','chew'],
     seal:['ball','bubble','dig'],    dolphin:['fris','bubble','yarn'], whale:['bubble','ball','wheel'],
-    squirrel:['wheel','dig','bubble'], koala:['swing','chew','ball'], sheep:['dig','yarn','laser']
+    squirrel:['wheel','dig','bubble'], koala:['swing','chew','ball'], sheep:['dig','yarn','laser'],
+    mouse:['box','chew','jara'], cow:['ball','bell','rc'], horse:['tire','fris','bubble'], monkey:['swing','box','tunnel'], hen:['dig','bell','rc'], boar:['dig','tire','swing']
   };
-  var BIRDS = ['chick','owl'];
+  var BIRDS = ['chick','owl','hen'];
   function toyById(id){ for(var i=0;i<TOYS.length;i++){ if(TOYS[i].id === id) return TOYS[i]; } return null; }
   function toyFeel(sp, id){ var l = TOY_LIKE[sp] || TOY_LIKE.cat; return (l[0] === id || l[1] === id) ? 'fav' : (l[2] === id ? 'bad' : 'ok'); }
   function favToys(sp){ var l = TOY_LIKE[sp] || TOY_LIKE.cat; return [toyById(l[0]), toyById(l[1])]; }
@@ -3089,7 +3157,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return o;
   }
   var SAY_PLAY = ['たのしい!','もっと あそぼう!','おもしろいね!','わーい!'];
-  var FAVORITE = { squirrel:'corn', koala:'apple', sheep:'rice', whale:'fish', cat:'fish', dragon:'meat', chick:'corn', tiger:'meat', wolf:'meat', snake:'apple', owl:'meat', rabbit:'apple', bear:'fish', panda:'rice', dog:'meat', fox:'rice', hamster:'corn', penguin:'fish', seal:'fish', unicorn:'cake', dolphin:'fish' };
+  var FAVORITE = { mouse:'cake', cow:'rice', horse:'apple', monkey:'apple', hen:'corn', boar:'apple', squirrel:'corn', koala:'apple', sheep:'rice', whale:'fish', cat:'fish', dragon:'meat', chick:'corn', tiger:'meat', wolf:'meat', snake:'apple', owl:'meat', rabbit:'apple', bear:'fish', panda:'rice', dog:'meat', fox:'rice', hamster:'corn', penguin:'fish', seal:'fish', unicorn:'cake', dolphin:'fish' };
   var SAY_HUNGRY = ['おなか すいたな…','ごはん 食べたいな〜','おなかが ぐ〜って なったよ'];
   var SAY_FED = ['おいしい!','もぐもぐ… 幸せ〜','ありがとう!','元気 もりもり!'];
 
