@@ -218,8 +218,7 @@
   .vz-pile .vo{ display:inline-flex; flex-wrap:wrap; max-width:150px; }
   .vz-lab{ font-size:11px; font-weight:900; color:var(--ink-soft); margin-right:4px; align-self:center; }
   .vz-none{ font-size:11px; color:var(--ink-soft); align-self:center; }
-  .vz-pile.fT .vt, .vz-pile.fO .vo{ outline:2px solid var(--hl-hl); outline-offset:2px; border-radius:4px; }
-  .vz-pls{ display:grid; grid-template-columns:repeat(auto-fill, minmax(56px, 1fr)); gap:6px; }
+  .vz-pls{ display:grid; grid-template-columns:repeat(auto-fill, minmax(84px, 1fr)); gap:6px; }
   .vz-pl{ position:relative; min-height:44px; padding:14px 4px 4px; border-radius:12px; border:1.5px dashed var(--line); display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:center; }
   .vz-pl .vo{ display:inline-flex; flex-wrap:wrap; max-width:50px; align-items:flex-end; }
   .vz-who{ position:absolute; top:2px; left:6px; font-size:10px; font-weight:900; color:var(--ink-soft); }
@@ -227,7 +226,19 @@
   .vz-grp{ display:flex; align-items:flex-end; gap:8px; padding:4px 8px; border-radius:10px; background:var(--surface-2); }
   .vz-grp .on{ background:var(--hl-hl); border-radius:4px; padding:0 2px; }
   .vz-tot{ display:flex; flex-wrap:wrap; align-items:flex-end; gap:2px; padding:6px 8px; border-radius:12px; border:1.5px dashed var(--line); }
-  .vz-note{ margin:0; font-size:13px; font-weight:700; line-height:1.6; }
+  .vz-note{ margin:0; font-size:15px; font-weight:700; line-height:1.6; }
+  .bk-n{ font-size:13px; font-weight:800; color:var(--ink-soft); align-self:center; margin-left:4px; white-space:nowrap; }
+  .bk-n b{ font-family:'Fredoka',ui-rounded,system-ui,sans-serif; font-size:1.25em; font-weight:600; color:var(--ink); }
+  .vz-pl .bk-n{ flex-basis:100%; text-align:center; margin:4px 0 0; }
+  .vz-note b{ font-family:'Fredoka',ui-rounded,system-ui,sans-serif; font-size:1.15em; font-weight:600; }
+  .vz-note .bk-done{ font-family:inherit; font-size:1em; color:var(--live); }
+  .bk-acts{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .bk-act{ flex:1; min-height:48px; border:0; border-radius:14px; background:var(--live); color:#fff; font:inherit; font-size:16px; font-weight:900; cursor:pointer; box-shadow:0 3px 0 color-mix(in srgb, var(--live) 60%, #000); }
+  .bk-act:active{ transform:translateY(2px); box-shadow:0 1px 0 color-mix(in srgb, var(--live) 60%, #000); }
+  .bk-rs{ min-height:40px; border:1.5px solid var(--line); border-radius:12px; background:var(--surface); color:var(--ink-soft); font:inherit; font-size:13px; font-weight:800; padding:0 12px; cursor:pointer; margin-left:auto; }
+  .hl-viz .gone{ opacity:.18; }
+  .hl-viz .pop{ animation:bkpop .35s ease-out; }
+  @keyframes bkpop{ 0%{ transform:scale(.6); opacity:.2; } 100%{ transform:none; opacity:1; } }
   .hl-tip{ position:absolute; z-index:4; width:max-content; background:var(--live); color:#fff; border-radius:14px; padding:6px 10px 7px; font-size:14px; font-weight:700; line-height:1.45; box-shadow:0 4px 12px color-mix(in srgb, var(--live) 30%, transparent); font-family:'Zen Maru Gothic',sans-serif; }
   .hl-tip b{ font-family:'Fredoka',ui-rounded,system-ui,sans-serif; font-size:1.2em; font-weight:600; }
   .hl-tip small{ font-size:12px; font-weight:700; opacity:.92; }
@@ -8728,7 +8739,6 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           tSay = B(cur+' ÷ '+d)+': '+d+' を '+(dT*10)+'、'+cur+' を '+(cT*10)+' と みて 見当を つけよう。'+cT+' ÷ '+dT+' → '+B(est)+' くらい。<br>'+d+' × '+est+' = '+(d*est)+(d*est > cur ? '。大きすぎたら 1 へらそう。' : '。のこりが '+d+' より 大きければ 1 ふやそう。');
         }
         step(P, { chip:0, cells:[qid], hl:curIds.concat(dvIds), say:pre+tSay, tip:'<small class="tp-mean">たてる = こたえの 数を 上に 書くこと</small>'+(qd === 0 ? B(cur)+' の 中に '+B(d)+' は 1つも 入らない。<br>上に '+B('0')+' を 書こう' : B(d)+' × いくつ なら '+B(cur)+' を こえない?'), help:qd === 0 ? '' : dan(d, cur, qd),
-          viz:viz ? vizDiv(viz, 'tate', qT, qd, cur, pos === i0 && i0 === 0) : null,
           wrong:(function(cur, qd){ return function(v){
             var x = d*v;
             if(v > qd) return d+' × '+v+' = '+x+' で、'+cur+' より 大きいよ。ひけないね。もっと 小さい 数に しよう。';
@@ -8738,8 +8748,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(qd > 0){
           var p = qd*d, pd = digs(p), pr = row+1, pIds = [];
           pd.forEach(function(v, t){ var id = 'p'+pos+'_'+t; cell(P, pr, X(pos)-(pd.length-1)+t, v, 'in', id); pIds.push(id); });
-          step(P, { chip:1, cells:pIds, hl:dvIds.concat([qid]), tip:B(d+' × '+qd+' = ?'), say:B(d+' × '+qd)+' を 計算して、'+cur+' の 下に 書こう(右はしを そろえる)。',
-            viz:viz ? vizDiv(viz, 'kake', qT, qd, cur, pos === 0) : null, ans:p,
+          step(P, { chip:1, cells:pIds, hl:dvIds.concat([qid]), tip:B(d+' × '+qd+' = ?'), say:B(d+' × '+qd)+' を 計算して、'+cur+' の 下に 書こう(右はしを そろえる)。', ans:p,
             wrong:(function(a){ return function(){ return d+' × '+a+' を もういちど 計算してみよう。'; }; })(qd) });
           rem = cur - p;
           var leftCol = Math.min(P.byId[curIds[0]].c, P.byId[pIds[0]].c);
@@ -8747,8 +8756,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           P.rowKind[pr+1] = 'line';
           var rd = digs(rem), rIds = [], rr = pr+2;
           rd.forEach(function(v, t){ var id = 'r'+pos+'_'+t; cell(P, rr, X(pos)-(rd.length-1)+t, v, 'in', id); rIds.push(id); });
-          step(P, { chip:2, cells:rIds, hl:curIds.concat(pIds), tip:B(cur+' − '+p+' = ?'), say:B(cur+' − '+p)+' を 計算しよう。',
-            viz:viz ? vizDiv(viz, 'hiku', qT, qd, cur, pos === 0) : null, ans:rem,
+          step(P, { chip:2, cells:rIds, hl:curIds.concat(pIds), tip:B(cur+' − '+p+' = ?'), say:B(cur+' − '+p)+' を 計算しよう。', ans:rem,
             wrong:(function(c, p){ return function(){ return c+' − '+p+' を もういちど 計算してみよう。'; }; })(cur, p) });
           row = rr; curIds = rIds.slice();
         }else{
@@ -8760,13 +8768,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         cell(P, row, X(pos+1), nx, 'in', bid);
         step(P, { chip:3, cells:[bid], hl:['n'+(pos+1)], from:'n'+(pos+1), fade:fade, tip:'上の '+B(nx)+' を ここに おろそう',
           say:(qd === 0 ? '0 を たてた ときは、かける・ひくは とばして すぐ おろすよ。<br>' : '')+'つぎの '+B(nx)+' を まっすぐ 下に おろそう。'+(fade ? '<br>(ひいた こたえが 0 の ときは、0 は 書かなくても いいよ)' : ''),
-          viz:viz ? vizDiv(viz, 'oro', qT, qd, cur, true, rem) : null,
           wrong:(function(x){ return function(){ return 'わられる数の つぎの 数字は '+x+' だよ。それを おろそう。'; }; })(nx) });
         cur = rem*10 + nx; pos++;
         curIds = (fade ? [] : curIds).concat([bid]);
       }
       P.Q = Math.floor(N/d); P.R = N % d;
-      P.vizEnd = viz ? vizDiv(viz, 'end', qT, 0, 0, false) : null;
+      P.bz = viz;
       P.answer = N+' ÷ '+d+' = '+B(P.Q)+(P.R ? ' あまり '+B(P.R) : '');
       P.check = P.R ? 'たしかめ: '+d+' × '+P.Q+' + '+P.R+' = '+N : 'たしかめ: '+d+' × '+P.Q+' = '+N;
       P.chips = DIV_CHIPS;
@@ -8779,38 +8786,6 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       for(i=a;i<=z;i++){ var v = d*i; h += '<button class="tp-dan'+(v > cur ? ' over' : '')+'" data-dk="'+i+'">'+d+'×'+B(i)+'='+v+'</button>'; if(v > cur) break; }
       return h;
     }
-    /* ブロック(10こ入りの たば・ばら)の ようす */
-    function vizDiv(z, ph, qT, qd, cur, tensPhase, rem){
-      var T = z.T, O = z.O, d = z.d, s = { d:d, pileT:T, pileO:O, perT:qT, perO:0, note:'' };
-      var split = T < d;
-      if(ph === 'end'){
-        var Q = Math.floor((T*10+O)/d), R = (T*10+O) % d;
-        s.pileT = 0; s.pileO = R; s.perT = Math.floor(Q/10); s.perO = Q % 10;
-        if(split){ s.perT = 0; s.perO = Q; }
-        s.note = R ? '1人 '+Q+'こずつ。'+R+'こ あまったね。' : '1人 '+Q+'こずつ。ぴったり わけられた!';
-        return s;
-      }
-      if(tensPhase && !split && ph !== 'oro'){
-        s.perT = ph === 'tate' ? 0 : qd; s.pileT = ph === 'tate' ? T : T - qd*d;
-        s.note = ph === 'tate' ? '10こ入りの たばが '+T+'こ。'+d+'人に 同じ 数ずつ くばると、1人 なんたば?' :
-          ph === 'kake' ? '1人 '+qd+'たばずつ、'+d+'人ぶん。くばった たばは ぜんぶで?' : 'のこりの たばは いくつ?';
-        s.focus = 'T';
-        return s;
-      }
-      if(ph === 'oro'){
-        s.perT = qd; s.pileT = 0; s.pileO = rem*10 + O;
-        s.note = rem ? 'のこった '+rem+'たばを ばらすと '+(rem*10)+'こ。ばらの '+O+'こと あわせると '+(rem*10+O)+'こ。' : 'たばは のこらなかった。ばらの '+O+'こを おろして かんがえよう。';
-        s.focus = 'O';
-        return s;
-      }
-      /* 一の位: ばらを くばる */
-      s.perT = split ? 0 : qT; s.pileT = 0;
-      if(ph === 'tate'){ s.pileO = cur; s.note = (split ? T+'たばでは '+d+'人に くばれないので、ばらして '+cur+'こ に したよ。' : '')+cur+'こを '+d+'人に。1人 なんこ?'; }
-      else{ s.perO = qd; s.pileO = cur - qd*d; s.note = ph === 'kake' ? '1人 '+qd+'こずつ、'+d+'人ぶん。くばったのは?' : 'のこりは いくつ?'; }
-      s.focus = 'O';
-      return s;
-    }
-
     function planMul(A, Bn, wantViz){
       var P = newPlan(), a = digs(A), b = digs(Bn), la = a.length, lb = b.length;
       var W = la + lb + 1, j;
@@ -8831,19 +8806,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           if(p === 0 && bi === 1) intro = 'こんどは '+PLACE[1]+'の '+B(bd)+' を かけるよ。こたえは 1つ 左に ずらして、'+PLACE[1]+'の 下から 書く(一の位は あけておく)。<br>まえの くりあがりは けしておこう。<br>';
           var hl = [aIds[p], bIds[bi]].concat(carryId ? [carryId] : []);
           var calc = B(ad+' × '+bd)+(carry ? ' に くりあがりの '+B(carry)+' を たそう。' : ' は?');
-          var vz = viz ? vizMul(viz, p === 0 ? 'one' : 'ten') : null;
           if(p < la-1 || v < 10){
             var id = 'm'+bi+'_'+p;
             cell(P, pr, col, v % 10, 'in', id); rowIds.push(id);
             step(P, { chip:0, cells:[id], hl:hl, clear:p === 0 && bi === 1 ? prevCarry : null, tip:B(ad+' × '+bd)+(carry ? ' ＋ くりあがり '+B(carry) : '')+' = ?'+(p < la-1 ? '<br><small>一の位だけ 書こう</small>' : ''),
-              say:intro+calc+(p < la-1 ? '<br>こたえが 2けたに なったら、'+B('一の位だけ')+' 書こう(十の位は くりあがりに なるよ)。' : '<br>こたえを 書こう。'),
-              viz:vz, wrong:mulWrong(ad, bd, carry, v, true) });
+              say:intro+calc+(p < la-1 ? '<br>こたえが 2けたに なったら、'+B('一の位だけ')+' 書こう(十の位は くりあがりに なるよ)。' : '<br>こたえを 書こう。'), wrong:mulWrong(ad, bd, carry, v, true) });
             var nc = Math.floor(v/10);
             if(p < la-1 && nc > 0){
               var cid = 'c'+bi+'_'+(p+1);
               cell(P, 0, C(p+1), nc, 'in', cid, { small:true });
-              step(P, { chip:1, cells:[cid], hl:[id], tip:'くりあがりを 小さく 書こう', say:B(v)+' の 十の位の '+B(nc)+' は くりあがり。'+PLACE[p+1]+'の 上の 小さい マスに 書いておこう。',
-                viz:vz, wrong:(function(v, nc){ return function(){ return v+' の 十の位は '+nc+' だよ。'; }; })(v, nc) });
+              step(P, { chip:1, cells:[cid], hl:[id], tip:'くりあがりを 小さく 書こう', say:B(v)+' の 十の位の '+B(nc)+' は くりあがり。'+PLACE[p+1]+'の 上の 小さい マスに 書いておこう。', wrong:(function(v, nc){ return function(){ return v+' の 十の位は '+nc+' だよ。'; }; })(v, nc) });
               carryId = cid; if(bi === 0) prevCarry.push(cid);
             }else carryId = null;
             carry = p < la-1 ? nc : 0;
@@ -8852,15 +8824,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             var vd = digs(v), ids = [];
             vd.forEach(function(x, t){ var id = 'm'+bi+'_'+(p+vd.length-1-t); cell(P, pr, C(p+bi+vd.length-1-t), x, 'in', id); ids.push(id); rowIds.push(id); });
             step(P, { chip:0, cells:ids, hl:hl, clear:p === 0 && bi === 1 ? prevCarry : null, tip:B(ad+' × '+bd)+(carry ? ' ＋ くりあがり '+B(carry) : '')+' = ?<br><small>そのまま 書こう</small>',
-              say:intro+calc+'<br>いちばん 左 なので、'+(carry ? ad*bd+' + '+carry+' = ' : '')+B(v)+' を そのまま 書こう。',
-              viz:vz, wrong:mulWrong(ad, bd, carry, v, false) });
+              say:intro+calc+'<br>いちばん 左 なので、'+(carry ? ad*bd+' + '+carry+' = ' : '')+B(v)+' を そのまま 書こう。', wrong:mulWrong(ad, bd, carry, v, false) });
             carry = 0;
           }
         }
       }
       var total = A*Bn;
-      if(lb === 1){ P.vizEnd = viz ? vizMul(viz, 'end') : null; }
-      else{
+      P.bz = viz;
+      if(lb > 1){
         line(P, 6, C(W-1), C(0)); P.rowKind[6] = 'line';
         var P1 = A*b[lb-1], P2 = A*b[0], tl = digs(total).length, c2 = 0;
         for(var s=0; s<tl; s++){
@@ -8897,14 +8868,6 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         return ad+' × '+bd+(carry ? ' + '+carry : '')+' を もういちど 計算してみよう。'+(single && v >= 10 ? '書くのは 一の位 だけ だよ。' : '');
       };
     }
-    function vizMul(z, ph){
-      var T = z.T, O = z.O, b = z.b, v = O*b, c = Math.floor(v/10), t = T*b + c;
-      var s = { mul:true, T:T, O:O, b:b, focus:ph === 'one' ? 'O' : ph === 'ten' ? 'T' : '', gT:0, gC:0, gO:0, note:'' };
-      if(ph === 'one'){ s.gC = c; s.gO = v % 10; s.note = 'ばらが '+O+'こずつ '+b+'組で '+v+'こ。'+(c ? '10こで 1たば に まとめると、'+c+'たばと '+(v % 10)+'こ。'+c+'たばが くりあがり!' : ''); }
-      else{ s.gT = T*b; s.gC = c; s.gO = v % 10; s.note = 'たばが '+T+'こずつ '+b+'組で '+(T*b)+'たば'+(c ? '。くりあがりの '+c+'たばと あわせて '+t+'たば' : '')+'。'+(ph === 'end' ? 'ぜんぶで '+(T*10+O)*b+'こ!' : ''); }
-      return s;
-    }
-
     /* ---- 画面 ---- */
     var H = null, R = 0;
     function show(part){ $('hlPlayInner').hidden = false; $('hlClear').hidden = true; $('hlMenu').hidden = part !== 'menu'; $('hlPlay').hidden = part !== 'play'; showView('hsl'); }
@@ -9033,21 +8996,58 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       });
       return (st ? '<div class="hl-tip" id="hlTip" aria-live="polite"></div>' : '')+'<div class="hl-grid num '+P.op+'" style="grid-template-columns:repeat('+P.cols+',1.05em);grid-template-rows:'+rows.join(' ')+'">'+h+'</div>';
     }
-    function vizHTML(s){
-      if(!s) return '';
+    /* ---- ブロックで やってみる(自分で くばる・あつめる) ---- */
+    function bkNew(z){
+      if(z.d) return { div:1, d:z.d, T:z.T, O:z.O, pT:z.T, pO:z.O, gT:0, gO:0 };
+      return { mul:1, b:z.b, T:z.T, O:z.O, cT:0, cO:0, carry:0, gotO:false, gotT:false };
+    }
+    function bkDo(k){
+      var s = H.bk; if(!s) return;
+      if(k === 'rs'){ H.bk = bkNew(H.plan.bz); }
+      else if(s.div){
+        if(k === 'kt' && s.pT >= s.d){ s.pT -= s.d; s.gT++; }
+        else if(k === 'sp' && s.pT > 0 && s.pT < s.d){ s.pT--; s.pO += 10; }
+        else if(k === 'ko' && s.pO >= s.d){ s.pO -= s.d; s.gO++; }
+      }else{
+        if(k === 'co' && !s.gotO){ s.cO = s.O*s.b; s.gotO = true; }
+        else if(k === 'mk' && s.cO >= 10){ s.cO -= 10; s.carry++; }
+        else if(k === 'ct' && s.gotO && s.cO < 10 && !s.gotT){ s.cT = s.T*s.b; s.gotT = true; }
+      }
+      H.bkAnim = k; renderBk(); H.bkAnim = '';
+    }
+    function bkHTML(s){
       var bar = '<i class="vb"></i>', dot = '<i class="vd"></i>';
       function rep(t, n){ var o = ''; for(var i=0;i<n;i++) o += t; return o; }
-      var key = '<div class="vz-key">'+bar+'<span>= <b>10こ</b> の たば(ばらが 10こ つながったもの)</span>'+dot+'<span>= <b>1こ</b></span></div>';
-      if(s.mul){
-        var g = '';
-        for(var i=0;i<s.b;i++) g += '<div class="vz-grp"><span class="vt'+(s.focus === 'T' ? ' on' : '')+'">'+rep(bar, s.T)+'</span><span class="vo'+(s.focus === 'O' ? ' on' : '')+'">'+rep(dot, s.O)+'</span></div>';
-        var tot = s.gT + s.gC + s.gO ? '<div class="vz-tot"><span class="vz-lab">あわせると</span>'+rep(bar, s.gT)+rep('<i class="vb c"></i>', s.gC)+rep(dot, s.gO)+'</div>' : '';
-        return '<div class="hl-viz">'+key+'<div class="vz-grps">'+g+'</div>'+tot+'<p class="vz-note">'+s.note+'</p></div>';
+      function cnt(t, o, extra){ return '<span class="bk-n">'+(t ? 'たば '+B(t)+'こ' : '')+(t && o ? '・' : '')+(o ? 'ばら '+B(o)+'こ' : '')+(t || o ? ' = ' : '')+B((t*10+o)+(extra || 0))+'こ</span>'; }
+      var key = '<div class="vz-key">'+bar+'<span>= <b>10</b>こ(ばら10こを まとめた たば)</span>'+dot+'<span>= <b>1</b>こ</span></div>';
+      var act = '', note = '', h = '';
+      if(s.div){
+        var per = s.gT*10 + s.gO;
+        if(s.pT >= s.d){ note = 'たばが '+B(s.pT)+'こ ある。'+B(s.d)+'人に 1たばずつ くばろう。'; act = '<button class="bk-act" data-bk="kt">1人に 1たばずつ くばる</button>'; }
+        else if(s.pT > 0){ note = (s.gT ? '1人 '+B(s.gT)+'たば → 十の位に '+B(s.gT)+' が たつ。' : '')+'たばは '+B(s.pT)+'こ。'+B(s.d)+'人には くばれないね。ばらして 10こに しよう。'; act = '<button class="bk-act" data-bk="sp">たばを 1つ ばらす</button>'; }
+        else if(s.pO >= s.d){ note = 'ばらが '+B(s.pO)+'こ ある。'+B(s.d)+'人に 1こずつ くばろう。'; act = '<button class="bk-act" data-bk="ko">1人に 1こずつ くばる</button>'; }
+        else note = '<b class="bk-done">もう くばれない!</b> 1人 '+B(per)+'こ'+(s.gT ? '(たば '+B(s.gT)+'こ と ばら '+B(s.gO)+'こ)' : '')+'。'+(s.pO ? 'あまりは '+B(s.pO)+'こ。' : 'あまりは なし。')+'<br>'+(s.T*10+s.O)+' ÷ '+s.d+' = '+B(per)+(s.pO ? ' あまり '+B(s.pO) : '');
+        var plates = '';
+        for(var j=0;j<s.d;j++) plates += '<div class="vz-pl'+(H.bkAnim === 'kt' || H.bkAnim === 'ko' ? ' pop' : '')+'"><span class="vz-who">'+(j+1)+'人め</span><span class="vt">'+rep(bar, s.gT)+'</span><span class="vo">'+rep(dot, s.gO)+'</span><span class="bk-n">'+B(per)+'こ</span></div>';
+        h = '<div class="vz-pile"><span class="vz-lab">のこり</span><span class="vt">'+rep(bar, s.pT)+'</span><span class="vo'+(H.bkAnim === 'sp' ? ' pop' : '')+'">'+rep(dot, s.pO)+'</span>'+cnt(s.pT, s.pO)+'</div><div class="vz-pls">'+plates+'</div>';
+      }else{
+        var g = '', N = s.T*10+s.O;
+        for(var i=0;i<s.b;i++) g += '<div class="vz-grp"><span class="vz-lab">'+(i+1)+'組め</span><span class="vt'+(s.gotT ? ' gone' : '')+'">'+rep(bar, s.T)+'</span><span class="vo'+(s.gotO ? ' gone' : '')+'">'+rep(dot, s.O)+'</span>'+cnt(s.T, s.O)+'</div>';
+        if(!s.gotO){ note = B(N)+'こが '+B(s.b)+'組。ひっさんと 同じで、ばら(一の位)から あつめよう。'; act = '<button class="bk-act" data-bk="co">ばらを あつめる</button>'; }
+        else if(s.cO >= 10){ note = 'ばらが '+B(s.cO)+'こ。10こで 1たばに まとめられるよ。'; act = '<button class="bk-act" data-bk="mk">10こを 1たばに まとめる</button>'; }
+        else if(!s.gotT){ note = (s.carry ? 'まとめた '+B(s.carry)+'たば(オレンジ)が くりあがりの '+B(s.carry)+'。' : '')+'ばらは '+B(s.cO)+'こ → 一の位に '+B(s.cO)+'。つぎは たばを あつめよう。'; act = '<button class="bk-act" data-bk="ct">たばを あつめる</button>'; }
+        else note = '<b class="bk-done">ぜんぶ あつまった!</b> たば '+B(s.cT)+'こ と くりあがりの '+B(s.carry)+'こ で '+B(s.cT+s.carry)+'たば。<br>'+N+' × '+s.b+' = '+B((s.cT+s.carry)*10+s.cO);
+        h = '<div class="vz-grps">'+g+'</div><div class="vz-tot"><span class="vz-lab">あつめた</span>'+rep(bar, s.cT)+'<span class="'+(H.bkAnim === 'mk' ? 'pop' : '')+'">'+rep('<i class="vb c"></i>', s.carry)+'</span><span class="vo">'+rep(dot, s.cO)+'</span>'+(s.cT + s.carry + s.cO ? cnt(s.cT + s.carry, s.cO) : '<span class="vz-none">まだ なし</span>')+'</div>';
       }
-      var plates = '';
-      for(var j=0;j<s.d;j++) plates += '<div class="vz-pl"><span class="vz-who">'+(j+1)+'</span><span class="vt">'+rep(bar, s.perT)+'</span><span class="vo">'+rep(dot, s.perO)+'</span></div>';
-      return '<div class="hl-viz">'+key+'<div class="vz-pile'+(s.focus ? ' f'+s.focus : '')+'"><span class="vz-lab">のこり</span><span class="vt">'+rep(bar, s.pileT)+'</span><span class="vo">'+rep(dot, s.pileO)+'</span>'+(s.pileT + s.pileO ? '' : '<span class="vz-none">なし</span>')+'</div>' +
-        '<div class="vz-pls">'+plates+'</div><p class="vz-note">'+s.note+'</p></div>';
+      return '<div class="hl-viz">'+key+h+'<p class="vz-note">'+note+'</p><div class="bk-acts">'+act+'<button class="bk-rs" data-bk="rs">はじめから</button></div></div>';
+    }
+    function renderBk(){
+      var P = H.plan;
+      if(P.bz && (!H.bk || H.bkP !== P)){ H.bk = bkNew(P.bz); H.bkP = P; }
+      var on = !!(P.bz && H.viz);
+      $('hlViz').innerHTML = on ? bkHTML(H.bk) : ''; $('hlViz').hidden = !on;
+      $('hlVizBtn').hidden = !P.bz;
+      $('hlVizBtn').textContent = H.viz ? 'ブロックを とじる' : 'ブロックで やってみる';
     }
     function render(){
       var P = H.plan, st = curStep();
@@ -9060,10 +9060,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('hlChips').innerHTML = P.chips.map(function(c, i){ return '<span class="'+(st && st.chip === i ? 'on' : '')+'">'+c+'</span>'; }).join(P.op === 'div' ? '<i>→</i>' : '<i>・</i>');
       $('hlChips').hidden = H.done;
       $('hlGrid').innerHTML = gridHTML();
-      var vz = H.viz ? (st ? st.viz : P.vizEnd) : null;
-      $('hlViz').innerHTML = vizHTML(vz); $('hlViz').hidden = !vz;
-      $('hlVizBtn').hidden = !(st ? st.viz : P.vizEnd);
-      $('hlVizBtn').textContent = H.viz ? 'ブロックを とじる' : 'ブロックで 見る';
+      renderBk();
       var say = '';
       if(H.done){
         say = '<b class="hl-ans">'+P.answer+'</b>'+(P.check ? '<span class="hl-chk">'+P.check+'</span>' : '');
@@ -9168,7 +9165,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('hlPad').addEventListener('click', function(e){ var b = e.target.closest('[data-k]'); if(b) press(+b.getAttribute('data-k')); });
     $('hlNext').addEventListener('click', function(){ if(!H || !H.done) return; H.i++; nextQ(); });
     $('hlHintBtn').addEventListener('click', function(){ if(!H || H.done) return; H.hint = true; H.msg = ''; render(); });
-    $('hlVizBtn').addEventListener('click', function(){ if(!H) return; H.viz = !H.viz; render(); });
+    $('hlVizBtn').addEventListener('click', function(){ if(!H) return; H.viz = !H.viz; renderBk(); });
+    $('hlViz').addEventListener('click', function(e){ var b = e.target.closest('[data-bk]'); if(b && H) bkDo(b.getAttribute('data-bk')); });
     $('hlQuit').addEventListener('click', openMenu);
     $('hlPet').addEventListener('click', function(){ Pet.spin($('hlPet')); });
 
