@@ -2412,6 +2412,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(it.s === 'head' && it.pos === 'ear') return oshPlace(it, d.clipAt[0], d.clipAt[1], 44);
     if(it.s === 'head') return '<g transform="'+(d.crownT||'')+'">'+oshPlace(it, 100, 22, 56)+'</g>';
     if(it.s === 'eyes'){ var k = (ex[1]-ex[0])/26; return oshPlace(it, 100, d.eyeY - 2*k, 64*k); }
+    /* マフラーは 口の 下に 大きく まく。上の キラキラは 目に かかるので、帯より 上(64の 18より 上)は 切る */
+    if(it.s === 'neck' && /マフラー$/.test(it.n || '')){
+      var k = 68 / 64, my = Math.max(134, (d.eyeY + 40 + d.gemAt[1]) / 2 + 4) - 7 * k;
+      return '<svg class="ta" x="66" y="'+(my - 14 * k)+'" width="68" height="'+(46 * k)+'" viewBox="0 18 64 46" style="overflow:hidden">'+it.inner+'</svg>';
+    }
     /* 首の 真ん中(口の 下と 胸の 宝石の あいだ) */
     if(it.s === 'neck') return oshPlace(it, 100, Math.max(130, (d.eyeY + 40 + d.gemAt[1]) / 2), 44);
     if(it.s === 'back') return oshPlace(it, 100, 120, 176);
