@@ -167,17 +167,20 @@
   .hl-chips span{ padding:3px 9px; border-radius:100px; background:var(--surface-2); color:var(--ink-soft); }
   .hl-chips span.on{ background:var(--live); color:#fff; }
   .hl-chips i{ font-style:normal; color:var(--ink-soft); font-size:11px; }
-  .hl-gridwrap{ max-width:100%; overflow-x:auto; padding:4px 2px; }
-  .hl-grid{ display:grid; justify-content:center; font-size:clamp(28px, 8.4vw, 40px); line-height:1; font-weight:600; }
+  .hl-gridwrap{ position:relative; max-width:100%; padding:4px 0; align-self:stretch; }
+  .hl-grid{ display:grid; width:max-content; margin:0 auto; font-size:clamp(28px, 8.4vw, 40px); line-height:1; font-weight:600; }
   .hl-c{ display:flex; align-items:center; justify-content:center; position:relative; border-radius:9px; margin:1px; min-height:1.1em; }
   .hl-c.op{ color:var(--live); }
   .hl-c.hl{ background:var(--hl-hl); }
+  .hl-c.dim{ opacity:.35; }
+  .hl-c.in.cur{ animation:hl-pulse 1.3s ease-in-out infinite; }
+  @keyframes hl-pulse{ 50%{ box-shadow:0 0 0 5px color-mix(in srgb, var(--live) 22%, transparent); } }
   .hl-c.in.empty{ border:2px dashed var(--line); }
   .hl-c.in.cur{ border:2.5px solid var(--live); background:color-mix(in srgb, var(--live) 10%, var(--surface)); }
   .hl-c.in.ok{ color:var(--live); }
   .hl-c.in.fade{ opacity:.28; }
   .hl-c.pop{ animation:hl-pop .25s ease-out; }
-  .hl-c.shake{ animation:hl-shake .35s ease-out; border-color:var(--bad); }
+  .hl-c.shake, .hl-c.in.cur.shake{ animation:hl-shake .35s ease-out; border-color:var(--bad); }
   .hl-c.small{ font-size:.5em; min-height:0; height:1.3em; width:1.3em; margin:auto; align-self:end; border-radius:6px; }
   .hl-c.small.in.ok{ color:var(--hl-carry); }
   .hl-c.from{ background:var(--hl-hl); }
@@ -189,7 +192,7 @@
   .hl-br{ display:block; position:relative; }
   .hl-br svg{ position:absolute; left:-.05em; top:-3px; width:.5em; height:calc(100% + 3px); overflow:visible; }
   .hl-br path{ fill:none; stroke:var(--ink); stroke-width:3; stroke-linecap:round; vector-effect:non-scaling-stroke; }
-  .hl-say{ margin:10px 0 0; font-size:14.5px; line-height:1.7; min-height:3.2em; }
+  .hl-say{ margin:12px 0 0; font-size:14.5px; line-height:1.7; min-height:3.2em; }
   .hl-say b{ color:var(--live); font-size:1.08em; }
   .hl-say .hl-bad{ color:var(--bad); font-weight:700; }
   .hl-say .hl-bad b{ color:var(--bad); }
@@ -222,7 +225,30 @@
   .vz-grp .on{ background:var(--hl-hl); border-radius:4px; padding:0 2px; }
   .vz-tot{ display:flex; flex-wrap:wrap; align-items:flex-end; gap:2px; padding:6px 8px; border-radius:12px; border:1.5px dashed var(--line); }
   .vz-note{ margin:0; font-size:13px; font-weight:700; line-height:1.6; }
-  @media (prefers-reduced-motion: reduce){ .hl-c.pop, .hl-c.shake{ animation:none; } }
+  .hl-tip{ position:absolute; z-index:4; width:max-content; background:var(--live); color:#fff; border-radius:14px; padding:6px 10px 7px; font-size:14px; font-weight:700; line-height:1.45; box-shadow:0 4px 12px color-mix(in srgb, var(--live) 30%, transparent); font-family:'Zen Maru Gothic',sans-serif; }
+  .hl-tip b{ font-family:'Fredoka',ui-rounded,system-ui,sans-serif; font-size:1.2em; font-weight:600; }
+  .hl-tip small{ font-size:12px; font-weight:700; opacity:.92; }
+  .hl-tip .tp-step{ display:block; font-size:12px; font-weight:900; opacity:.9; letter-spacing:.04em; }
+  .hl-tip .tp-body{ display:block; }
+  .hl-tip .tp-more{ display:block; }
+  .hl-tip .hl-dan{ margin-top:5px; }
+  .hl-tip .hl-dan{ gap:5px; margin-top:7px; }
+  .hl-tip .tp-dan{ border:none; font:inherit; font-family:'Fredoka',ui-rounded,system-ui,sans-serif; font-size:14px; font-weight:600; padding:4px 8px; border-radius:9px; background:#fff; color:var(--live); cursor:pointer; box-shadow:0 2px 0 color-mix(in srgb, var(--live) 45%, #000); }
+  .hl-tip .tp-dan b{ font-size:1.15em; }
+  .hl-tip .tp-dan.over{ background:color-mix(in srgb, #fff 55%, transparent); color:var(--bad); }
+  .hl-tip .tp-dan:active{ transform:translateY(2px); box-shadow:none; }
+  .hl-tip .tp-mean{ display:block; margin-bottom:3px; padding-bottom:3px; border-bottom:1px dashed color-mix(in srgb, #fff 55%, transparent); }
+  .hl-tip.bad{ background:var(--bad); box-shadow:0 4px 12px color-mix(in srgb, var(--bad) 30%, transparent); }
+  .hl-tip.bad b{ font-size:1.05em; }
+  .hl-tip::before{ content:''; position:absolute; border:8px solid transparent; }
+  .hl-tip.s-r::before{ right:100%; top:var(--ax); margin-top:-8px; border-right-color:inherit; border-right-color:var(--live); }
+  .hl-tip.s-l::before{ left:100%; top:var(--ax); margin-top:-8px; border-left-color:var(--live); }
+  .hl-tip.s-b::before{ bottom:100%; left:var(--ax); margin-left:-8px; border-bottom-color:var(--live); }
+  .hl-tip.s-t::before{ top:100%; left:var(--ax); margin-left:-8px; border-top-color:var(--live); }
+  .hl-tip.bad.s-r::before{ border-right-color:var(--bad); } .hl-tip.bad.s-l::before{ border-left-color:var(--bad); }
+  .hl-tip.bad.s-b::before{ border-bottom-color:var(--bad); } .hl-tip.bad.s-t::before{ border-top-color:var(--bad); }
+  .hl-say .hl-more{ display:block; font-size:11px; font-weight:900; color:var(--ink-soft); }
+  @media (prefers-reduced-motion: reduce){ .hl-c.pop, .hl-c.shake, .hl-c.in.cur{ animation:none; } }
   /* ---- 相棒の おへや ---- */
   .rm-stage{ position:relative; width:100%; aspect-ratio:4/3; border-radius:22px; overflow:hidden; box-shadow:var(--shadow); background:#FFF6E8; touch-action:none; user-select:none; -webkit-user-select:none; container-type:inline-size; }
   #view-room .rm-stage{ max-width:720px; margin:0 auto 10px; }
@@ -1929,12 +1955,6 @@
           <div class="hl-chips" id="hlChips"></div>
           <div class="hl-gridwrap" id="hlGrid"></div>
         </div>
-        <div class="bubble hl-say" id="hlSay" aria-live="polite"></div>
-        <div class="hl-viz-wrap" id="hlViz" hidden></div>
-        <div class="dc-tools hl-tools">
-          <button class="dc-small" id="hlHintBtn">ヒントを 見る</button>
-          <button class="dc-small" id="hlVizBtn" hidden></button>
-        </div>
         <div class="hl-pad" id="hlPad">
           <button class="key num" data-k="1">1</button>
           <button class="key num" data-k="2">2</button>
@@ -1948,6 +1968,12 @@
           <button class="key num" data-k="0">0</button>
         </div>
         <button class="btn btn-primary fish-next" id="hlNext" hidden></button>
+        <div class="dc-tools hl-tools">
+          <button class="dc-small" id="hlHintBtn">ヒントを 見る</button>
+          <button class="dc-small" id="hlVizBtn" hidden></button>
+        </div>
+        <div class="bubble hl-say" id="hlSay"></div>
+        <div class="hl-viz-wrap" id="hlViz" hidden></div>
       </div>
       <section class="dc-mission hl-clear" id="hlClear" hidden></section>
     </div>
@@ -8698,7 +8724,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           var dT = Math.floor(d/10), cT = Math.floor(cur/10), est = Math.max(1, Math.min(9, Math.floor(cT/dT)));
           tSay = B(cur+' ÷ '+d)+': '+d+' を '+(dT*10)+'、'+cur+' を '+(cT*10)+' と みて 見当を つけよう。'+cT+' ÷ '+dT+' → '+B(est)+' くらい。<br>'+d+' × '+est+' = '+(d*est)+(d*est > cur ? '。大きすぎたら 1 へらそう。' : '。のこりが '+d+' より 大きければ 1 ふやそう。');
         }
-        step(P, { chip:0, cells:[qid], hl:curIds.concat(dvIds), say:pre+tSay, help:qd === 0 ? '' : dan(d, cur),
+        step(P, { chip:0, cells:[qid], hl:curIds.concat(dvIds), say:pre+tSay, tip:'<small class="tp-mean">たてる = こたえの 数を 上に 書くこと</small>'+(qd === 0 ? B(cur)+' の 中に '+B(d)+' は 1つも 入らない。<br>上に '+B('0')+' を 書こう' : B(d)+' × いくつ なら '+B(cur)+' を こえない?'), help:qd === 0 ? '' : dan(d, cur, qd),
           viz:viz ? vizDiv(viz, 'tate', qT, qd, cur, pos === i0 && i0 === 0) : null,
           wrong:(function(cur, qd){ return function(v){
             var x = d*v;
@@ -8709,7 +8735,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(qd > 0){
           var p = qd*d, pd = digs(p), pr = row+1, pIds = [];
           pd.forEach(function(v, t){ var id = 'p'+pos+'_'+t; cell(P, pr, X(pos)-(pd.length-1)+t, v, 'in', id); pIds.push(id); });
-          step(P, { chip:1, cells:pIds, hl:dvIds.concat([qid]), say:B(d+' × '+qd)+' を 計算して、'+cur+' の 下に 書こう(右はしを そろえる)。',
+          step(P, { chip:1, cells:pIds, hl:dvIds.concat([qid]), tip:B(d+' × '+qd+' = ?'), say:B(d+' × '+qd)+' を 計算して、'+cur+' の 下に 書こう(右はしを そろえる)。',
             viz:viz ? vizDiv(viz, 'kake', qT, qd, cur, pos === 0) : null, ans:p,
             wrong:(function(a){ return function(){ return d+' × '+a+' を もういちど 計算してみよう。'; }; })(qd) });
           rem = cur - p;
@@ -8718,7 +8744,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           P.rowKind[pr+1] = 'line';
           var rd = digs(rem), rIds = [], rr = pr+2;
           rd.forEach(function(v, t){ var id = 'r'+pos+'_'+t; cell(P, rr, X(pos)-(rd.length-1)+t, v, 'in', id); rIds.push(id); });
-          step(P, { chip:2, cells:rIds, hl:curIds.concat(pIds), say:B(cur+' − '+p)+' を 計算しよう。',
+          step(P, { chip:2, cells:rIds, hl:curIds.concat(pIds), tip:B(cur+' − '+p+' = ?'), say:B(cur+' − '+p)+' を 計算しよう。',
             viz:viz ? vizDiv(viz, 'hiku', qT, qd, cur, pos === 0) : null, ans:rem,
             wrong:(function(c, p){ return function(){ return c+' − '+p+' を もういちど 計算してみよう。'; }; })(cur, p) });
           row = rr; curIds = rIds.slice();
@@ -8729,7 +8755,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(pos === n-1) break;
         var bid = 'b'+(pos+1), nx = D[pos+1], fade = qd > 0 && rem === 0 ? curIds.slice() : null;
         cell(P, row, X(pos+1), nx, 'in', bid);
-        step(P, { chip:3, cells:[bid], hl:['n'+(pos+1)], from:'n'+(pos+1), fade:fade,
+        step(P, { chip:3, cells:[bid], hl:['n'+(pos+1)], from:'n'+(pos+1), fade:fade, tip:'上の '+B(nx)+' を ここに おろそう',
           say:(qd === 0 ? '0 を たてた ときは、かける・ひくは とばして すぐ おろすよ。<br>' : '')+'つぎの '+B(nx)+' を まっすぐ 下に おろそう。'+(fade ? '<br>(ひいた こたえが 0 の ときは、0 は 書かなくても いいよ)' : ''),
           viz:viz ? vizDiv(viz, 'oro', qT, qd, cur, true, rem) : null,
           wrong:(function(x){ return function(){ return 'わられる数の つぎの 数字は '+x+' だよ。それを おろそう。'; }; })(nx) });
@@ -8743,10 +8769,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       P.chips = DIV_CHIPS;
       return P;
     }
-    function dan(d, cur){
-      if(d > 9) return '';
-      var h = '', i;
-      for(i=1;i<=9;i++){ var v = d*i; h += '<span class="'+(v > cur ? 'over' : '')+'">'+d+'×'+i+'='+v+'</span>'; if(v > cur) break; }
+    /* たてる: 九九(わる数の だん)を ボタンで ならべ、えらぶと その 数を 上に 書く */
+    function dan(d, cur, q){
+      var h = '', i, a = 1, z = 9;
+      if(d > 9){ a = Math.max(1, q-1); z = Math.min(9, q+1); }
+      for(i=a;i<=z;i++){ var v = d*i; h += '<button class="tp-dan'+(v > cur ? ' over' : '')+'" data-dk="'+i+'">'+d+'×'+B(i)+'='+v+'</button>'; if(v > cur) break; }
       return h;
     }
     /* ブロック(10こ入りの たば・ばら)の ようす */
@@ -8805,14 +8832,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           if(p < la-1 || v < 10){
             var id = 'm'+bi+'_'+p;
             cell(P, pr, col, v % 10, 'in', id); rowIds.push(id);
-            step(P, { chip:0, cells:[id], hl:hl, clear:p === 0 && bi === 1 ? prevCarry : null,
+            step(P, { chip:0, cells:[id], hl:hl, clear:p === 0 && bi === 1 ? prevCarry : null, tip:B(ad+' × '+bd)+(carry ? ' ＋ くりあがり '+B(carry) : '')+' = ?'+(p < la-1 ? '<br><small>一の位だけ 書こう</small>' : ''),
               say:intro+calc+(p < la-1 ? '<br>こたえが 2けたに なったら、'+B('一の位だけ')+' 書こう(十の位は くりあがりに なるよ)。' : '<br>こたえを 書こう。'),
               viz:vz, wrong:mulWrong(ad, bd, carry, v, true) });
             var nc = Math.floor(v/10);
             if(p < la-1 && nc > 0){
               var cid = 'c'+bi+'_'+(p+1);
               cell(P, 0, C(p+1), nc, 'in', cid, { small:true });
-              step(P, { chip:1, cells:[cid], hl:[id], say:B(v)+' の 十の位の '+B(nc)+' は くりあがり。'+PLACE[p+1]+'の 上の 小さい マスに 書いておこう。',
+              step(P, { chip:1, cells:[cid], hl:[id], tip:'くりあがりを 小さく 書こう', say:B(v)+' の 十の位の '+B(nc)+' は くりあがり。'+PLACE[p+1]+'の 上の 小さい マスに 書いておこう。',
                 viz:vz, wrong:(function(v, nc){ return function(){ return v+' の 十の位は '+nc+' だよ。'; }; })(v, nc) });
               carryId = cid; if(bi === 0) prevCarry.push(cid);
             }else carryId = null;
@@ -8821,7 +8848,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             /* いちばん 左: こたえを そのまま 2けた 書く */
             var vd = digs(v), ids = [];
             vd.forEach(function(x, t){ var id = 'm'+bi+'_'+(p+vd.length-1-t); cell(P, pr, C(p+bi+vd.length-1-t), x, 'in', id); ids.push(id); rowIds.push(id); });
-            step(P, { chip:0, cells:ids, hl:hl, clear:p === 0 && bi === 1 ? prevCarry : null,
+            step(P, { chip:0, cells:ids, hl:hl, clear:p === 0 && bi === 1 ? prevCarry : null, tip:B(ad+' × '+bd)+(carry ? ' ＋ くりあがり '+B(carry) : '')+' = ?<br><small>そのまま 書こう</small>',
               say:intro+calc+'<br>いちばん 左 なので、'+(carry ? ad*bd+' + '+carry+' = ' : '')+B(v)+' を そのまま 書こう。',
               viz:vz, wrong:mulWrong(ad, bd, carry, v, false) });
             carry = 0;
@@ -8843,7 +8870,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           if(xs) terms.push(x); if(ys) terms.push(y);
           var say2 = s === 0 ? 'さいごに たし算。'+PLACE[0]+'は '+B(x)+' を そのまま おろそう。'
             : (terms.length ? B(terms.join(' + '))+(c2 ? ' に くりあがりの '+B(c2)+' を たそう' : ' を たそう') : 'くりあがりの '+B(c2)+' を 書こう')+'。'+(s > 0 && s < tl-1 ? '<br>2けたに なったら 一の位を 書いて、1 くりあがり。' : '');
-          step(P, { chip:2, cells:[id2], hl:hl2, say:(s === 0 ? '' : PLACE[s]+': ')+say2,
+          step(P, { chip:2, cells:[id2], hl:hl2, tip:s === 0 ? B(x)+' を そのまま おろそう' : (terms.length ? B(terms.join(' + ')) : '')+(c2 ? (terms.length ? ' ＋ ' : '')+'くりあがり '+B(c2) : '')+' = ?', say:(s === 0 ? '' : PLACE[s]+': ')+say2,
             wrong:(function(terms, c2, sum){ return function(v){
               if(c2 && v === (sum - c2) % 10) return 'くりあがりの '+c2+' を たすのを わすれて いないかな?';
               return (terms.length ? terms.join(' + ') : '0')+(c2 ? ' + '+c2 : '')+' を もういちど 計算してみよう。';
@@ -8976,8 +9003,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function gridHTML(){
       var P = H.plan, st = curStep(), hl = {}, curId = st ? st.cells[H.ci] : null;
       if(st && st.hl) st.hl.forEach(function(id){ hl[id] = 1; });
-      var rows = [];
-      for(var r=0;r<P.rows;r++) rows.push(P.rowKind[r] === 'line' ? '7px' : (P.op === 'mul' && r === 0 ? '.75em' : '1.22em'));
+      var rows = [], maxR = 0;
+      P.cells.forEach(function(c){ if(cellVisible(c)) maxR = Math.max(maxR, c.r); });
+      P.lines.forEach(function(l){ if(H.si >= l.step || H.done) maxR = Math.max(maxR, l.r); });
+      for(var r=0;r<=maxR;r++) rows.push(P.rowKind[r] === 'line' ? '7px' : (P.op === 'mul' && r === 0 ? '.75em' : '1.22em'));
       var h = '';
       P.lines.forEach(function(l){ if(H.si >= l.step || H.done) h += '<i class="hl-line'+(l.roof ? ' roof' : '')+'" style="grid-row:'+(l.r+1)+';grid-column:'+(l.c1+1)+' / '+(l.c2+2)+'"></i>'; });
       if(P.bracket) h += '<span class="hl-br" style="grid-row:'+(P.bracket.r+1)+';grid-column:'+(P.bracket.c+1)+'"><svg viewBox="0 0 20 52" preserveAspectRatio="none"><path d="M5 1 Q19 26 5 51"/></svg></span>';
@@ -8995,10 +9024,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         }
         if(c.small) cls += ' small';
         if(hl[c.id]) cls += ' hl';
+        else if(st && c.id !== curId && (c.kind !== 'in' || H.vals[c.id] != null)) cls += ' dim';
         if(st && st.from === c.id) cls += ' from';
-        h += '<span class="'+cls+'" style="grid-row:'+(c.r+1)+';grid-column:'+(c.c+1)+'">'+txt+'</span>';
+        h += '<span class="'+cls+'"'+(c.id === curId ? ' id="hlCur"' : '')+' style="grid-row:'+(c.r+1)+';grid-column:'+(c.c+1)+'">'+txt+'</span>';
       });
-      return '<div class="hl-grid num '+P.op+'" style="grid-template-columns:repeat('+P.cols+',1.05em);grid-template-rows:'+rows.join(' ')+'">'+h+'</div>';
+      return (st ? '<div class="hl-tip" id="hlTip" aria-live="polite"></div>' : '')+'<div class="hl-grid num '+P.op+'" style="grid-template-columns:repeat('+P.cols+',1.05em);grid-template-rows:'+rows.join(' ')+'">'+h+'</div>';
     }
     function vizHTML(s){
       if(!s) return '';
@@ -9035,17 +9065,69 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         say = '<b class="hl-ans">'+P.answer+'</b>'+(P.check ? '<span class="hl-chk">'+P.check+'</span>' : '');
       }else{
         var guided = H.mode === 'g' || H.hint;
-        if(H.msg) say = '<span class="'+H.msgCls+'">'+H.msg+'</span>';
-        else if(guided) say = st.say;
-        else say = '<b>'+P.chips[st.chip]+'</b> の ばん だよ。'+(H.ci === 0 && st.cells.length > 1 ? '' : '');
-        if(guided && st.help && !H.msg) say += '<span class="hl-dan">'+st.help+'</span>';
+        if(guided) say = '<span class="hl-more">くわしく</span>'+st.say;
       }
       $('hlSay').innerHTML = say;
+      $('hlSay').hidden = !H.done && !(H.mode === 'g' || H.hint);
+      if(st) drawTip(st);
       $('hlHintBtn').hidden = H.done || H.mode === 'g' || H.hint;
       $('hlPad').hidden = H.done;
       $('hlNext').hidden = !H.done;
       $('hlNext').textContent = H.i+1 >= H.n ? 'おわり' : 'つぎの 問題';
       H.justId = null; H.shake = false;
+    }
+    /* いま 書く マスの となりに、やることを 1つだけ 出す */
+    function drawTip(st){
+      var tip = $('hlTip'), cur = $('hlCur'), wrap = $('hlGrid'); if(!tip || !cur) return;
+      var guided = H.mode === 'g' || H.hint, P = H.plan;
+      var head = '<span class="tp-step">'+(P.op === 'div' ? '①②③④'.charAt(st.chip)+' ' : '')+P.chips[st.chip]+'</span>';
+      var body = H.msg ? '<span class="tp-bad">'+H.msg+'</span>' : guided ? st.tip : st.chip === 0 && P.op === 'div' ? 'こたえの 数を ここに' : 'ここに 書こう';
+      if(guided && st.help) body += '<span class="hl-dan">'+st.help+'</span>';
+      if(!H.msg && st.cells.length > 1 && H.ci > 0) body += '<small class="tp-more">つづけて となりも</small>';
+      tip.innerHTML = head+'<span class="tp-body">'+body+'</span>';
+      tip.className = 'hl-tip'+(H.msg ? ' bad' : '');
+      wrap.style.paddingBottom = ''; wrap.style.paddingTop = '';
+      var grid = wrap.querySelector('.hl-grid'), W = wrap.clientWidth;
+      tip.style.maxWidth = Math.min(W >= 500 ? 230 : 164, W-8)+'px';
+      var tw0 = tip.offsetWidth, gw = grid.offsetWidth, ml = (W-gw)/2;
+      if(P.op === 'div') ml = Math.max(4, Math.min(ml, W-gw-tw0-16));
+      else ml = Math.min(W-gw-4, Math.max(ml, tw0+16));
+      grid.style.marginLeft = Math.max(0, ml)+'px';
+      var wr = wrap.getBoundingClientRect(), cr = cur.getBoundingClientRect();
+      var c = { l:cr.left-wr.left, t:cr.top-wr.top, r:cr.right-wr.left, b:cr.bottom-wr.top };
+      var tw = tip.offsetWidth, th = tip.offsetHeight, G = 12;
+      var boxes = [];
+      Array.prototype.forEach.call(wrap.querySelectorAll('.hl-c:not(.empty):not(#hlCur), .hl-line, .hl-br'), function(e){ var q = e.getBoundingClientRect(); boxes.push({ l:q.left-wr.left, t:q.top-wr.top, r:q.right-wr.left, b:q.bottom-wr.top, w:e.classList.contains('hl') || e.classList.contains('from') ? 12 : 6 }); });
+      function clampX(x){ return Math.max(4, Math.min(W-tw-4, x)); }
+      var cy = (c.t+c.b)/2, cx = (c.l+c.r)/2;
+      var cand = [
+        { side:'r', x:c.r+G, y:cy-th/2 },
+        { side:'l', x:c.l-G-tw, y:cy-th/2 },
+        { side:'b', x:clampX(cx-tw/2), y:c.b+G },
+        { side:'t', x:clampX(cx-tw/2), y:c.t-G-th }
+      ];
+      function cost(k){
+        if(k.x < 2 || k.x+tw > W-2) return 1e9;
+        var a = 0; boxes.forEach(function(q){ var ox = Math.min(k.x+tw, q.r)-Math.max(k.x, q.l), oy = Math.min(k.y+th, q.b)-Math.max(k.y, q.t); if(ox > 0 && oy > 0) a += ox*oy*q.w; });
+        if(k.y < 0) a += -k.y*8;
+        return a;
+      }
+      var best = cand[0], bc = 1e18;
+      cand.forEach(function(k){ var v = cost(k); if(v < bc - .5){ bc = v; best = k; } });
+      if(bc >= 1e9) best = cand[2], best.x = clampX(best.x);
+      if(best.side === 'b' || best.side === 't'){
+        /* 上・下に 出す ときは 横に 広げて ひくく する */
+        tip.style.maxWidth = Math.min(300, W-8)+'px'; tw = tip.offsetWidth; th = tip.offsetHeight;
+        best.x = clampX(cx-tw/2); best.y = best.side === 'b' ? c.b+G : c.t-G-th;
+      }
+      var y = best.y, pad = y < 0 ? Math.ceil(-y)+4 : 0;
+      if(pad){ wrap.style.paddingTop = (4+pad)+'px'; y += pad; cy += pad; cx = cx; }
+      tip.style.left = best.x+'px'; tip.style.top = y+'px';
+      tip.classList.add('s-'+best.side);
+      var ax = best.side === 'b' || best.side === 't' ? cx-best.x : cy-y;
+      tip.style.setProperty('--ax', Math.max(14, Math.min((best.side === 'b' || best.side === 't' ? tw : th)-14, ax))+'px');
+      var need = y+th - (grid.offsetTop+grid.offsetHeight) + 8;
+      if(need > 0) wrap.style.paddingBottom = need+'px';
     }
     function press(v){
       if(!H || H.done || H.locked) return;
@@ -9078,6 +9160,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       drawMaru($('hlCardBox'));
       Pet.cheer($('hlPet'));
     }
+    $('hlGrid').addEventListener('click', function(e){ var b = e.target.closest('[data-dk]'); if(b) press(+b.getAttribute('data-dk')); });
     $('hlPad').addEventListener('click', function(e){ var b = e.target.closest('[data-k]'); if(b) press(+b.getAttribute('data-k')); });
     $('hlNext').addEventListener('click', function(){ if(!H || !H.done) return; H.i++; nextQ(); });
     $('hlHintBtn').addEventListener('click', function(){ if(!H || H.done) return; H.hint = true; H.msg = ''; render(); });
