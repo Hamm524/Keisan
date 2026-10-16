@@ -343,6 +343,57 @@
   .rm-ct{ display:grid; gap:2px; } .rm-ct b{ font-size:15px; } .rm-ct span{ font-size:11.5px; color:var(--ink-soft); line-height:1.45; }
   .rm-go{ color:var(--ink-soft); font-size:18px; padding-right:4px; }
   @media (prefers-reduced-motion: reduce){ .rm-stage *{ animation:none !important; } .rm-pet{ transition-duration:0s !important; } }
+  /* ---- 100問の メダル・トロフィー ---- */
+  .md-svg{ width:100%; height:auto; display:block; }
+  .md-ladder{ display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin:0 0 6px; }
+  .md-step{ border:1.5px solid var(--line); background:var(--surface); border-radius:14px; padding:6px 4px 5px; text-align:center; display:grid; justify-items:center; gap:1px; }
+  .md-step .md-svg{ width:34px; }
+  .md-step b{ font-size:11.5px; font-weight:900; }
+  .md-step span{ font-size:10.5px; color:var(--ink-soft); font-weight:700; font-family:'Fredoka','Zen Maru Gothic',sans-serif; }
+  .md-step.next{ border:2px dashed var(--gold-deep); }
+  .md-step.got{ background:color-mix(in srgb, var(--gold) 12%, var(--surface)); }
+  .md-hint{ font-size:12px; color:var(--ink-soft); font-weight:700; margin:0 0 10px; line-height:1.55; }
+  .md-hint b{ color:var(--ink); }
+  .st.is-done.open > .weekend{ display:block !important; margin-top:8px; }
+  #allClear .weekend{ display:block; margin-top:10px; }
+  .md-card{ width:100%; border:1.5px solid var(--line); background:var(--surface); border-radius:18px; padding:10px 12px; cursor:pointer; color:var(--ink); font:inherit; text-align:left; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:10px; margin-bottom:8px; }
+  .mdc-ops{ display:flex; gap:3px; }
+  .mdc-op{ width:28px; display:grid; justify-items:center; }
+  .mdc-op i{ font-style:normal; font-size:10px; font-weight:900; color:var(--ink-soft); font-family:'Fredoka',sans-serif; line-height:1; margin-top:1px; }
+  .mdc-t{ display:grid; gap:2px; } .mdc-t b{ font-size:15px; } .mdc-t span{ font-size:11.5px; color:var(--ink-soft); line-height:1.45; }
+  .md-shelf{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:18px; }
+  @media (min-width:600px){ .md-shelf{ grid-template-columns:repeat(4, 1fr); } }
+  .tr-cell{ background:var(--surface); border:1.5px solid var(--line); border-radius:16px; padding:10px 6px 8px; text-align:center; display:grid; justify-items:center; gap:2px; align-content:start; }
+  .tr-cell.got{ border-color:color-mix(in srgb, var(--gold-deep) 50%, var(--line)); background:color-mix(in srgb, var(--gold) 10%, var(--surface)); }
+  .tr-svg{ width:56px; height:auto; }
+  .tr-cell b{ font-size:12.5px; font-weight:900; line-height:1.3; }
+  .tr-cell span{ font-size:10.5px; color:var(--ink-soft); line-height:1.4; font-weight:700; }
+  .tr-cell small{ font-size:10.5px; color:var(--gold-deep); font-weight:900; font-family:'Fredoka','Zen Maru Gothic',sans-serif; }
+  .tr-cell:not(.got) .tr-svg{ opacity:.75; }
+  .md-box{ background:var(--surface); border:1.5px solid var(--line); border-radius:16px; padding:8px 10px; margin-bottom:18px; overflow-x:auto; }
+  .md-table{ width:100%; border-collapse:collapse; font-size:14px; }
+  .md-table th, .md-table td{ padding:5px 4px; text-align:center; border-bottom:1px solid var(--line); }
+  .md-table tr:last-child th, .md-table tr:last-child td{ border-bottom:none; }
+  .md-table thead th .md-svg{ width:26px; margin:0 auto; }
+  .md-table tbody th{ font-family:'Fredoka',sans-serif; font-weight:600; font-size:17px; color:var(--ink-soft); width:40px; }
+  .md-table td{ font-family:'Fredoka','Zen Maru Gothic',sans-serif; font-weight:600; font-size:17px; }
+  .md-table td.z{ color:var(--line); }
+  .md-rule tbody th{ display:flex; align-items:center; gap:6px; width:auto; font-size:13px; font-family:inherit; font-weight:900; color:var(--ink); text-align:left; }
+  .md-rule tbody th .md-svg{ width:22px; }
+  .md-rule td{ font-size:14px; }
+  .md-rule thead th{ font-size:12px; color:var(--ink-soft); font-weight:900; }
+  .md-result{ display:flex; align-items:center; gap:12px; background:var(--surface); border:2px solid color-mix(in srgb, var(--gold-deep) 45%, var(--line)); border-radius:18px; padding:10px 14px; margin:10px auto 0; max-width:420px; text-align:left; }
+  .mdr-medal{ width:58px; flex:none; }
+  .mdr-t{ display:grid; gap:2px; font-size:12px; color:var(--ink-soft); font-weight:700; line-height:1.5; }
+  .mdr-t b{ font-size:17px; color:var(--ink); font-weight:900; }
+  .mdr-t .mdr-new{ color:var(--gold-deep); font-weight:900; }
+  .mdr-t small{ font-size:11.5px; }
+  .md-svg.pop{ animation:mdPop .7s cubic-bezier(.3,1.6,.5,1) both; transform-origin:50% 60%; }
+  @keyframes mdPop{ from{ transform:scale(.2) rotate(-25deg); opacity:0; } to{ transform:none; opacity:1; } }
+  .md-modal{ width:110px; margin:0 auto; } .md-modal .tr-svg{ width:100%; }
+  @media (prefers-reduced-motion: reduce){ .md-svg.pop{ animation:none; } }
+  #allClear .weekend{ border:3px solid var(--gold-deep); }
+  #allClear .weekend .cur-tag{ display:none; }
 </style></head><body>
 <title>けいさんチャレンジ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1715,6 +1766,8 @@
     <section class="fish-card" id="deciCard" hidden></section>
     <section class="fish-card" id="hslCard" hidden></section>
     </div>
+    <h2 class="home-sec">メダル・トロフィー</h2>
+    <button class="md-card" id="medalCard"></button>
     <h2 class="home-sec">おへや</h2>
     <button class="room-card" id="roomCard"></button>
     <h2 class="home-sec">コレクション</h2>
@@ -2016,6 +2069,22 @@
     <div class="rm-tabs" id="rmTabs"></div>
     <div class="rm-grid" id="rmGrid"></div>
   </main>
+  <!-- 100問の メダル・トロフィー -->
+  <main id="view-medal" class="view" hidden>
+    <div class="shop-head">
+      <button class="icon-btn" id="mdBack" aria-label="もどる">←</button>
+      <h1>メダル・トロフィー</h1>
+    </div>
+    <h2 class="sec-title">トロフィーだな</h2>
+    <p class="sec-sub">100問で メダルを あつめると トロフィーが もらえるよ。下に いくほど むずかしい!</p>
+    <div class="md-shelf" id="mdShelf"></div>
+    <h2 class="sec-title">あつめた メダル</h2>
+    <p class="sec-sub">100問は 何回でも 挑戦 できるよ。1回ごとに メダルが 1こ。</p>
+    <div class="md-box" id="mdCount"></div>
+    <h2 class="sec-title">メダルの もらいかた</h2>
+    <p class="sec-sub">一発正解の 数と、かかった 時間で きまるよ。</p>
+    <div class="md-box" id="mdRule"></div>
+  </main>
   <main id="view-kuri" class="view" hidden>
     <div id="kuriMenu">
       <div class="shop-head">
@@ -2142,6 +2211,7 @@
       <p id="resultSub"></p>
       <div class="hana-praise" id="hanaPraise" hidden></div>
       <div class="got" id="resultGot" hidden></div>
+      <div class="md-result" id="mdResult" hidden></div>
     </section>
     <div class="stat-grid" id="statGrid"></div>
     <section class="reward-card" id="rewardCard"></section>
@@ -3971,7 +4041,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     speed:{ timerId:null, endAt:0, correct:0, attempted:0, streak:0, maxStreak:0 }
   };
 
-  var views = { pick:$('view-pick'), setup:$('view-setup'), shop:$('view-shop'), food:$('view-food'), toy:$('view-toy'), mode:$('view-mode'), play:$('view-play'), result:$('view-result'), fish:$('view-fish'), kuri:$('view-kuri'), deci:$('view-deci'), hsl:$('view-hsl'), room:$('view-room') };
+  var views = { pick:$('view-pick'), setup:$('view-setup'), shop:$('view-shop'), food:$('view-food'), toy:$('view-toy'), mode:$('view-mode'), play:$('view-play'), result:$('view-result'), fish:$('view-fish'), kuri:$('view-kuri'), deci:$('view-deci'), hsl:$('view-hsl'), room:$('view-room'), medal:$('view-medal') };
   function showView(name){
     Object.keys(views).forEach(function(k){ views[k].hidden = (k!==name); });
     window.scrollTo(0,0);
@@ -4211,7 +4281,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var name = op==='mix' ? '混ぜて' : OP_META[op].label;
     var best = best100(op), hist = log100(op).slice(-7), h = '';
     h += '<span class="cur-tag">ここから やろう!</span><h3 class="rec-h">100問 <ruby>記録<rt>きろく</rt></ruby></h3>' +
-      '<p class="rec-sub">'+name+'を 100問('+(op==='mix' ? '九九と 2桁 ± 1桁まで' : EASY100[op].desc)+')。自分の 記録を こえよう!</p><div class="rec-ops">';
+      '<p class="rec-sub">'+name+'を 100問('+(op==='mix' ? '九九と 2桁 ± 1桁まで' : EASY100[op].desc)+')。何回でも 挑戦して メダルを あつめよう!</p>'+Medal.ladder(op)+'<div class="rec-ops">';
     SINGLE_OPS.concat(['mix']).forEach(function(o){
       h += '<button data-op100="'+o+'" aria-pressed="'+(o===op)+'">'+(o==='mix' ? 'M' : OP_META[o].symbol)+'</button>';
     });
@@ -4225,7 +4295,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       });
       h += '</div><div class="rg-empty" style="padding:4px 0 0;text-align:left">速いほど 高く なるよ。</div>';
     }else h += '<div class="rg-empty">まだ 記録が ないよ。<br>1回目が 自己ベストに なるよ!</div>';
-    h += '</div><p class="rec-rule">正解'+WEEKEND_ACC+'%以上で <span class="coin" style="width:12px;height:12px;vertical-align:-2px"></span> ＋'+WEEKEND_BONUS+'。自己ベストを こえると さらに ＋'+BEST100_BONUS+'!</p>' +
+    h += '</div><p class="rec-rule">正解'+WEEKEND_ACC+'%以上で <span class="coin" style="width:12px;height:12px;vertical-align:-2px"></span> ＋'+WEEKEND_BONUS+'(1日1回)。自己ベストを こえると さらに ＋'+BEST100_BONUS+'!はじめての いろの メダルや トロフィーでも コインが もらえるよ。</p>' +
       '<button class="rec-go" id="weekendBtn">100問に 挑戦する</button>';
     c.className = 'weekend rec';
     c.innerHTML = h;
@@ -4300,6 +4370,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var d = dayState(), done = [d.p, d.c, d.w], cur = done.indexOf(false);
     var road = $('road'), ac = $('allClear'), card = $('todayCard');
     var n = getStamps(), best = best100(state.homeOp || 'add');
+    if(ac.contains(card)) $('st1').appendChild(card);
+    if(ac.contains($('weekendCard'))) $('st3').appendChild($('weekendCard'));
     if(cur < 0){
       road.hidden = true;
       var a = activePet(), sc = streakCount();
@@ -4308,7 +4380,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<h2>今日の <ruby>冒険<rt>ぼうけん</rt></ruby> 花丸!</h2><p>プリントも 挑戦も 100問も、全部 やりとげたね</p>' +
         '<div class="steps3"><span><i style="background:var(--op-mul)">✓</i>プリント</span><span><i style="background:var(--boss)">✓</i>挑戦</span><span><i style="background:var(--gold-deep)">✓</i>100問</span></div>' +
         '<div class="rw"><div class="big"><b>＋'+ALLCLEAR_BONUS+'</b><small>ボーナス コイン</small></div><div><b>'+sc+'日</b><small>🔥 連続</small></div><div><b>'+(n % STAMP_PER_CARD || (n ? STAMP_PER_CARD : 0))+'/'+STAMP_PER_CARD+'</b><small>★ スタンプ</small></div></div></div>' +
-        '<div class="again"><div><b>もう1枚 やる?</b><small>今日の プリントは 何枚でも OK</small></div><button id="againBtn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button></div>' +
+        '<div class="again"><div><b>もう1枚 やる?</b><small>今日の プリントは 何枚でも OK</small></div><button id="againBtn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button></div><div id="againSlot"></div>' +
+        '<div class="again"><div><b>100問 もう1回?</b><small>何回でも 挑戦して メダルを あつめよう</small></div><button id="again100" style="background:var(--gold-deep);box-shadow:0 4px 0 color-mix(in srgb, var(--gold-deep) 60%, #000)">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button></div><div id="again100Slot"></div>' +
         '<p class="bye">明日も また 会おうね。明日は 新しい ボスが 来るよ!</p>';
       Pet.mount($('heroPet'), a.sp, a.lv);
       var sv = $('heroPet').querySelector('svg'); if(sv) sv.classList.add('happy');
@@ -4325,18 +4398,21 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         })();
       }
       hero.querySelector('.hana').onclick = function(){ playHero(hero); };
-      if(state.printOpen) ac.appendChild(card);
+      if(state.printOpen) $('againSlot').appendChild(card);
+      if(state.w100Open) $('again100Slot').appendChild($('weekendCard'));
       $('againBtn').onclick = function(){ state.printOpen = !state.printOpen; renderRoad(); };
+      $('again100').onclick = function(){ state.w100Open = !state.w100Open; renderRoad(); };
       ac.hidden = false;
       var now = document.querySelector('#streakDots .now'); if(now){ now.classList.add('hana'); now.querySelector('i').textContent = '花'; }
       $('roadPet').innerHTML = '';
       return;
     }
     if(card.parentNode !== $('st1')) $('st1').appendChild(card);
+    if($('weekendCard').parentNode !== $('st3')) $('st3').appendChild($('weekendCard'));
     road.hidden = false; ac.hidden = true; ac.innerHTML = '';
     for(var i=0;i<3;i++){
       var st = $('st'+(i+1));
-      st.className = 'st ' + (i === cur ? 'is-cur' : done[i] ? 'is-done' : 'is-next') + (i === 0 && done[0] && state.printOpen ? ' open' : '');
+      st.className = 'st ' + (i === cur ? 'is-cur' : done[i] ? 'is-done' : 'is-next') + (i === 0 && done[0] && state.printOpen ? ' open' : '') + (i === 2 && done[2] && state.w100Open ? ' open' : '');
       $('pin'+(i+1)).textContent = done[i] ? '✓' : (i+1);
     }
     var wait = cur === 0 ? 'プリントの あとで' : '挑戦の あとで';
@@ -4347,9 +4423,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       ? '<span class="sr-boss">'+bossSVG(bossOp(), true)+'</span><span class="sr-t"><b>'+BOSS[bossOp()].name+'を たおした!</b>スタンプ '+n+'こ</span><button class="sr-btn" id="row2Btn">カード</button>'
       : '<span class="sr-boss">'+bossSVG(bossOp(), false)+'</span><span class="sr-t"><b>今日の <ruby>挑戦<rt>ちょうせん</rt></ruby></b>'+BOSS[bossOp()].name+'・'+CH_N+'問・スタンプ '+(n % STAMP_PER_CARD)+'/'+STAMP_PER_CARD+'</span><span class="sr-r">'+wait.replace('の ', 'の<br>')+'</span>';
     if($('row2Btn')) $('row2Btn').onclick = showStampInfo;
+    var w100Btn = function(){ state.w100Open = !state.w100Open; renderRoad(); };
     $('row3').innerHTML = done[2]
-      ? '<span class="sr-t"><b>100問 <ruby>記録<rt>きろく</rt></ruby> できた!</b>また 明日 記録を こえよう</span><span class="sr-r">自己ベスト<strong class="num">'+(best ? fmtClock(best.ms) : '－')+'</strong></span>'
+      ? '<span class="sr-t"><b>100問 <ruby>記録<rt>きろく</rt></ruby> できた!</b>何回でも 挑戦して メダルを あつめよう</span><button class="sr-btn" id="row3Btn">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button>'
       : '<span class="sr-t"><b>100問 <ruby>記録<rt>きろく</rt></ruby></b>'+(cur === 0 ? '🔒 プリントを 1枚 やると 開く' : name+'を 100問')+'</span><span class="sr-r">自己ベスト<strong class="num">'+(best ? fmtClock(best.ms) : '－')+'</strong></span>';
+    if($('row3Btn')) $('row3Btn').onclick = w100Btn;
     // the partner stands at the step to do now
     var a2 = activePet(), rp = $('roadPet'), rbb = $('roadBubble'), cs = $('st'+(cur+1));
     if(!rp.firstChild) Pet.mount(rp, a2.sp, a2.lv);
@@ -4510,6 +4588,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     Deci.card();
     Hsl.card();
     Room.card();
+    Medal.card();
     renderCollection();
     renderSaveBand(true);
     $('roadPet').innerHTML = '';
@@ -6953,6 +7032,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       banners.push({ type:'level', title:'自己ベスト 更新!', text:'100問を '+fmtClock(elapsed)+'で クリア!前の ベストは '+fmtClock(prevBest100.ms)+'。' });
     }
 
+    var medalGot = (pr && pr.kind==='weekend') ? Medal.award(state.op, firstTry, N, elapsed, bonuses) : null;
+    if(medalGot) state.w100Open = false;
     if(isCh && passed && !challengeDone()){
       safeSet('keisan_challenge', { d:todayKey(), done:true, boss:(pr && pr.boss) || bossOp() });
       bonuses.push({ label:'スペシャルコイン(5コイン分)', n:SPECIAL_VALUE });
@@ -6995,8 +7076,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       retryLabel: pr ? (isCh && !passed ? 'もう一度 ちょうせん' : 'もう1枚 やる') : null,
       retry: pr ? function(){ if(isCh){ if(!passed) startChallenge(); else startPrint(state.homeOp || 'add', printSize(), 'daily'); return; } if(isReview) startPrint(state.op, printSize(), 'review', pr.lv); else startPrint(state.op, printSize(), 'daily'); } : null,
       again: !!pr,
-      passed: passed
+      passed: passed,
+      medal: medalGot
     });
+    if(pr && pr.kind==='weekend'){ $('retryBtn').textContent = 'もう1回 100問'; $('retryBtn').onclick = function(){ startPrint(state.op, WEEKEND_N, 'weekend'); }; }
   }
 
   function finishJump(){
@@ -7116,6 +7199,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('resultSub').textContent = r.sub;
     $('resultSub').style.whiteSpace = 'pre-line';
     renderGot(r);
+    Medal.result(r.medal || null);
 
     var grid = $('statGrid'); grid.innerHTML = '';
     r.stats.forEach(function(s){
@@ -9928,6 +10012,193 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('roomCard').addEventListener('click', open);
 
     return { open:open, card:card, backdrop:backdrop, ITEMS:ITEMS, WALLS:WALLS, FLOORS:FLOORS };
+  })();
+
+  /* ---------- 100問の メダルと トロフィー (何回でも 挑戦して あつめる) ---------- */
+  var Medal = (function(){
+    var KEY = 'keisan_medal';
+    /* ランク: 上に いくほど 正解も 時間も きびしく なる。t = 秒 (九九: × ÷ / 2桁±1桁: ＋ － MIX) */
+    var RANKS = [
+      null,
+      { id:1, name:'ブロンズ', acc:90,  kuku:420, pm:450, coin:5,  face:'#E2A06A', rim:'#B9773F', hi:'#F3C69C' },
+      { id:2, name:'シルバー', acc:95,  kuku:330, pm:360, coin:10, face:'#D3DCE4', rim:'#98A6B3', hi:'#F2F6F9' },
+      { id:3, name:'ゴールド', acc:98,  kuku:270, pm:300, coin:15, face:'#FFC94A', rim:'#DE9A10', hi:'#FFE7A3' },
+      { id:4, name:'ダイヤ',   acc:100, kuku:225, pm:255, coin:30, face:'#A6E8F6', rim:'#3FAFD2', hi:'#E4FAFF' }
+    ];
+    var OPS = ['add','sub','mul','div','mix'];
+    var OPS4 = ['add','sub','mul','div'];
+    function lim(op, r){ return (op === 'mul' || op === 'div') ? RANKS[r].kuku : RANKS[r].pm; }
+    function rankOf(op, ok, n, ms){
+      var acc = ok / n * 100, best = 0;
+      for(var r = 1; r <= 4; r++) if(acc >= RANKS[r].acc && ms <= lim(op, r) * 1000) best = r;
+      return best;
+    }
+    function data(){
+      var m = safeGet(KEY);
+      if(!m || typeof m !== 'object') m = {};
+      m.c = m.c || {}; m.top = m.top || {}; m.tro = m.tro || {};
+      return m;
+    }
+    function cnt(m, op, r){ return (m.c[op] && m.c[op][r]) || 0; }
+    function total(m, minR){ var s = 0; OPS.forEach(function(o){ for(var r = minR || 1; r <= 4; r++) s += cnt(m, o, r); }); return s; }
+    function top(m, op){ return m.top[op] || 0; }
+    function all4(m, r){ return OPS4.every(function(o){ return top(m, o) >= r; }); }
+    function streak(minR){
+      /* さいごの 100問から さかのぼって minR いじょうが 何回 つづいたか */
+      var lg = printLog().filter(function(e){ return e.n === WEEKEND_N && e.k === 'weekend'; }), s = 0;
+      for(var i = lg.length - 1; i >= 0; i--){ if(rankOf(lg[i].op, lg[i].ok, lg[i].n, lg[i].ms) >= minR) s++; else break; }
+      return s;
+    }
+
+    /* トロフィー: だんだん むずかしく なる じゅん */
+    var TROPHIES = [
+      { id:'t_first', tier:1, name:'はじめての メダル',   cond:'メダルを 1こ もらう',                  coin:10,  ok:function(m){ return total(m) >= 1; } },
+      { id:'t_m10',   tier:1, name:'メダル 10こ',         cond:'メダルを 10こ あつめる',               coin:10,  ok:function(m){ return total(m) >= 10; } },
+      { id:'t_day3',  tier:2, name:'きょうは 3かい',      cond:'1日に メダルを 3こ もらう',            coin:15,  ok:function(m){ return m.day && m.day.d === todayKey() && m.day.n >= 3; } },
+      { id:'t_4s',    tier:2, name:'4しゅるい シルバー',  cond:'＋ － × ÷ ぜんぶで シルバー いじょう', coin:20,  ok:function(m){ return all4(m, 2); } },
+      { id:'t_m30',   tier:2, name:'メダル 30こ',         cond:'メダルを 30こ あつめる',               coin:20,  ok:function(m){ return total(m) >= 30; } },
+      { id:'t_g5',    tier:3, name:'ゴールド 5こ',        cond:'ゴールド いじょうの メダルを 5こ',     coin:20,  ok:function(m){ return total(m, 3) >= 5; } },
+      { id:'t_g3row', tier:3, name:'ゴールド 3れんぞく',  cond:'3回 つづけて ゴールド いじょう',       coin:30,  ok:function(){ return streak(3) >= 3; } },
+      { id:'t_mixg',  tier:3, name:'ミックス ゴールド',   cond:'MIX(まぜて)で ゴールド いじょう',      coin:30,  ok:function(m){ return top(m, 'mix') >= 3; } },
+      { id:'t_4g',    tier:3, name:'4しゅるい ゴールド',  cond:'＋ － × ÷ ぜんぶで ゴールド いじょう', coin:40,  ok:function(m){ return all4(m, 3); } },
+      { id:'t_m100',  tier:3, name:'メダル 100こ',        cond:'メダルを 100こ あつめる',              coin:50,  ok:function(m){ return total(m) >= 100; } },
+      { id:'t_d1',    tier:4, name:'はじめての ダイヤ',   cond:'ダイヤメダルを 1こ もらう',            coin:30,  ok:function(m){ return total(m, 4) >= 1; } },
+      { id:'t_4d',    tier:4, name:'100問 マスター',      cond:'＋ － × ÷ ぜんぶで ダイヤ',            coin:100, ok:function(m){ return all4(m, 4); } }
+    ];
+
+    /* ---- 絵 ---- */
+    var uid = 0;
+    function medalSVG(r, cls){
+      var id = 'md' + (++uid);
+      if(!r) return '<svg class="md-svg '+(cls||'')+'" viewBox="0 0 64 80" aria-hidden="true"><path d="M20 2h10l4 22h-10zM44 2h-10l-4 22h10z" fill="var(--line)"/><circle cx="32" cy="50" r="24" fill="var(--surface-2)" stroke="var(--line)" stroke-width="4"/><text x="32" y="58" text-anchor="middle" font-size="22" font-weight="900" fill="var(--ink-soft)" font-family="Fredoka,sans-serif">?</text></svg>';
+      var R = RANKS[r];
+      var mid = r === 4
+        ? '<path d="M22 46l5-7h10l5 7-10 13z" fill="#fff"/><path d="M22 46h20M27 39l5 7 5-7M32 46v13" stroke="'+R.rim+'" stroke-width="1.4" fill="none" stroke-linejoin="round"/>'
+        : '<path d="M32 36l4.1 8.4 9.2 1.3-6.7 6.5 1.6 9.2L32 57l-8.2 4.4 1.6-9.2-6.7-6.5 9.2-1.3z" fill="'+R.hi+'" stroke="'+R.rim+'" stroke-width="1.6" stroke-linejoin="round"/>';
+      return '<svg class="md-svg '+(cls||'')+'" viewBox="0 0 64 80" aria-label="'+R.name+'メダル">' +
+        '<path d="M20 2h10l4 22h-10z" fill="#E5484D"/><path d="M44 2h-10l-4 22h10z" fill="#5B7CFA"/>' +
+        '<circle cx="32" cy="50" r="25" fill="'+R.rim+'"/><circle cx="32" cy="50" r="20" fill="'+R.face+'"/>' +
+        '<clipPath id="'+id+'"><circle cx="32" cy="50" r="20"/></clipPath><path clip-path="url(#'+id+')" d="M6 40l40-20 6 6-40 20z" fill="#fff" opacity=".28"/>' +
+        mid + '</svg>';
+    }
+    function trophySVG(tier, got){
+      var R = RANKS[tier], body = got ? R.face : 'var(--surface-2)', rim = got ? R.rim : 'var(--line)', hi = got ? R.hi : 'var(--surface)';
+      return '<svg class="tr-svg" viewBox="0 0 80 84" aria-hidden="true">' +
+        '<path d="M18 14c-12 0-14 22 6 26M62 14c12 0 14 22-6 26" fill="none" stroke="'+rim+'" stroke-width="6" stroke-linecap="round"/>' +
+        '<path d="M16 8h48v12c0 18-10 30-24 30S16 38 16 20z" fill="'+body+'" stroke="'+rim+'" stroke-width="3" stroke-linejoin="round"/>' +
+        (got ? '<path d="M24 14v8c0 8 3 14 8 18" fill="none" stroke="'+hi+'" stroke-width="4" stroke-linecap="round"/>' : '') +
+        '<rect x="34" y="49" width="12" height="12" fill="'+rim+'"/><rect x="22" y="60" width="36" height="9" rx="3" fill="'+body+'" stroke="'+rim+'" stroke-width="3"/>' +
+        '<rect x="16" y="69" width="48" height="11" rx="3" fill="'+rim+'"/>' +
+        (got ? (tier === 4 ? '<path d="M32 24l4-5h8l4 5-8 10z" fill="#fff"/>' : '<path d="M40 18l3 6.2 6.8 1-4.9 4.8 1.2 6.8L40 33.6l-6.1 3.2 1.2-6.8-4.9-4.8 6.8-1z" fill="'+hi+'"/>')
+             : '<text x="40" y="35" text-anchor="middle" font-size="20" font-weight="900" fill="var(--ink-soft)" font-family="Fredoka,sans-serif">?</text>') +
+        '</svg>';
+    }
+    function sym(op){ return op === 'mix' ? 'M' : OP_META[op].symbol; }
+    function crit(op, r){ return RANKS[r].acc + '問・' + fmtClock(lim(op, r) * 1000); }
+
+    /* ---- 100問の あと ---- */
+    function award(op, ok, n, ms, bonuses){
+      var m = data(), r = rankOf(op, ok, n, ms), info = { op:op, rank:r, ok:ok, ms:ms, newTop:false, tro:[] };
+      if(r){
+        m.c[op] = m.c[op] || {};
+        m.c[op][r] = (m.c[op][r] || 0) + 1;
+        var t = todayKey();
+        m.day = (m.day && m.day.d === t) ? { d:t, n:m.day.n + 1 } : { d:t, n:1 };
+        if(r > top(m, op)){
+          /* はじめて この いろ(より上)に なった: 上がった ぶんの ランクの コインを ぜんぶ */
+          var add = 0; for(var k = top(m, op) + 1; k <= r; k++) add += RANKS[k].coin;
+          m.top[op] = r; info.newTop = true;
+          bonuses.push({ label:'はじめての '+RANKS[r].name+'('+sym(op)+')', n:add });
+        }
+        TROPHIES.forEach(function(T){
+          if(!m.tro[T.id] && T.ok(m)){ m.tro[T.id] = t; info.tro.push(T); bonuses.push({ label:'トロフィー「'+T.name+'」', n:T.coin }); }
+        });
+        safeSet(KEY, m);
+      }
+      /* つぎの めあて */
+      var base = Math.max(r, top(m, op));
+      if(base < 4){
+        var R = RANKS[base + 1];
+        info.next = { r:R.id, needOk:Math.max(0, Math.ceil(R.acc * n / 100) - ok), needSec:Math.max(0, Math.ceil(ms / 1000 - lim(op, R.id))) };
+      }
+      return info;
+    }
+    function result(info){
+      var box = $('mdResult');
+      if(!box) return;
+      if(!info){ box.hidden = true; box.innerHTML = ''; return; }
+      var h = '';
+      if(info.rank){
+        var R = RANKS[info.rank];
+        h += '<div class="mdr-medal">'+medalSVG(info.rank, 'pop')+'</div><div class="mdr-t"><b>'+R.name+'メダル!</b>' +
+          (info.newTop ? '<span class="mdr-new">'+sym(info.op)+' で はじめての '+R.name+'</span>' : '<span>'+sym(info.op)+' の '+R.name+'は '+cnt(data(), info.op, info.rank)+'こ目</span>');
+      }else h += '<div class="mdr-medal">'+medalSVG(0)+'</div><div class="mdr-t"><b>メダルまで あと すこし</b>';
+      if(info.next){
+        var N = RANKS[info.next.r], parts = [];
+        if(info.next.needOk) parts.push('一発正解 あと '+info.next.needOk+'問');
+        if(info.next.needSec) parts.push('あと '+(info.next.needSec >= 60 ? Math.floor(info.next.needSec/60)+'分'+(info.next.needSec%60 ? info.next.needSec%60+'秒' : '') : info.next.needSec+'秒')+' はやく');
+        h += '<small>つぎは '+N.name+'('+crit(info.op, N.id)+'いない)'+(parts.length ? '<br>'+parts.join('・') : '')+'</small>';
+      }else h += '<small>いちばん 上の ダイヤ!すごい!</small>';
+      h += '</div>';
+      box.innerHTML = h; box.hidden = false;
+      if(info.tro.length){
+        var T = info.tro[0], more = info.tro.slice(1).map(function(x){ return '「'+x.name+'」'; }).join('');
+        setTimeout(function(){
+          if(views.result.hidden) return;
+          showModal({ picHtml:'<div class="md-modal">'+trophySVG(T.tier, true)+'</div>', title:'トロフィー「'+T.name+'」!',
+            text: T.cond + '、たっせい!＋'+T.coin+'コイン' + (more ? '\nほかにも '+more+' を もらったよ!' : '') + '\nホームの「メダル・トロフィー」に かざったよ。', ok:'やったね!' });
+        }, 1500);
+      }
+    }
+
+    /* ---- 100問 カードの メダルの はしご ---- */
+    function ladder(op){
+      var m = data(), tp = top(m, op), h = '<div class="md-ladder" role="list">';
+      for(var r = 1; r <= 4; r++){
+        h += '<div class="md-step'+(r <= tp ? ' got' : '')+(r === tp + 1 ? ' next' : '')+'" role="listitem">'+medalSVG(r <= tp ? r : 0)+
+          '<b>'+RANKS[r].name+'</b><span>'+crit(op, r)+'</span></div>';
+      }
+      h += '</div>';
+      h += '<p class="md-hint">' + (tp < 4 ? 'つぎは <b>'+RANKS[tp+1].name+'</b>:一発正解 '+RANKS[tp+1].acc+'問 いじょう・'+fmtClock(lim(op, tp+1)*1000)+' いないで ゴール'
+                                        : 'ダイヤ たっせい!なんかいでも メダルを あつめよう') + '</p>';
+      return h;
+    }
+
+    /* ---- ホームの カード ---- */
+    function card(){
+      var c = $('medalCard'); if(!c) return;
+      var m = data(), got = TROPHIES.filter(function(T){ return m.tro[T.id]; }).length, h = '<span class="mdc-ops">';
+      OPS.forEach(function(o){ h += '<span class="mdc-op">'+medalSVG(top(m, o))+'<i>'+sym(o)+'</i></span>'; });
+      h += '</span><span class="mdc-t"><b>トロフィー '+got+'/'+TROPHIES.length+'</b><span>メダル '+total(m)+'こ。100問で あつめよう</span></span><span class="rm-go">›</span>';
+      c.innerHTML = h;
+    }
+    function open(){
+      var m = data(), h = '';
+      TROPHIES.forEach(function(T){
+        var g = m.tro[T.id];
+        h += '<div class="tr-cell'+(g ? ' got' : '')+'">'+trophySVG(T.tier, !!g)+'<b>'+(g ? T.name : '？？？')+'</b><span>'+T.cond+'</span>'+(g ? '<small>'+g.replace(/^\d+-/, '').replace('-', '/')+'</small>' : '<small>＋'+T.coin+'コイン</small>')+'</div>';
+      });
+      $('mdShelf').innerHTML = h;
+      var t = '<table class="md-table"><thead><tr><th></th>';
+      for(var r = 1; r <= 4; r++) t += '<th>'+medalSVG(r)+'</th>';
+      t += '</tr></thead><tbody>';
+      OPS.forEach(function(o){
+        t += '<tr><th>'+sym(o)+'</th>';
+        for(var r = 1; r <= 4; r++){ var n = cnt(m, o, r); t += '<td class="'+(n ? '' : 'z')+'">'+n+'</td>'; }
+        t += '</tr>';
+      });
+      t += '</tbody></table>';
+      $('mdCount').innerHTML = t;
+      var g = '<table class="md-table md-rule"><thead><tr><th></th><th>× ÷</th><th>＋ － M</th></tr></thead><tbody>';
+      for(var r = 1; r <= 4; r++) g += '<tr><th>'+medalSVG(r)+'<span>'+RANKS[r].name+'</span></th><td>'+RANKS[r].acc+'問・'+fmtClock(RANKS[r].kuku*1000)+'</td><td>'+RANKS[r].acc+'問・'+fmtClock(RANKS[r].pm*1000)+'</td></tr>';
+      g += '</tbody></table>';
+      $('mdRule').innerHTML = g;
+      showView('medal');
+    }
+    $('medalCard').addEventListener('click', open);
+    $('mdBack').addEventListener('click', function(){ goHome(); });
+
+    return { award:award, result:result, ladder:ladder, card:card, open:open, rankOf:rankOf, RANKS:RANKS, TROPHIES:TROPHIES };
   })();
 
   /* ---------- backup / restore ---------- */
