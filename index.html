@@ -1752,6 +1752,7 @@
   .sheets-d{ display:flex; gap:6px; }
   .sheets-d i{ width:22px; height:28px; border-radius:5px; border:2.5px solid #D9C7A8; background:#fff; }
   .sheets-d i.on{ background:var(--op-mul); border-color:var(--op-mul); }
+  .today .t2.stp{ color:var(--op-mul); font-weight:900; }
   .rec-rule{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin:8px 0 10px; line-height:1.6; }
   .rec-go{ width:100%; border:none; border-radius:18px; padding:15px; font:inherit; font-size:18px; font-weight:900; color:#fff; background:var(--gold-deep); box-shadow:0 5px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); cursor:pointer; }
   .rec-go:active{ transform:translateY(3px); box-shadow:0 2px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); }
@@ -4109,6 +4110,53 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     ]
   };
 
+  /* ---------- ステップ: 1つの レベルを 3つに 細かく(公文の「の1〜5」のように) ---------- */
+  function addCarries(a, b){ var c = 0, n = 0; while(a > 0 || b > 0 || c > 0){ var t = a % 10 + b % 10 + c; c = t >= 10 ? 1 : 0; if(c) n++; a = Math.floor(a / 10); b = Math.floor(b / 10); } return n; }
+  function subBorrows(a, b){ var br = 0, n = 0; while(a > 0 || b > 0){ var x = a % 10 - br, y = b % 10; if(x < y){ br = 1; n++; }else br = 0; a = Math.floor(a / 10); b = Math.floor(b / 10); } return n; }
+  var ALL = { t:'ぜんぶ まぜて' };
+  (function(){
+    function st(t, ok, g){ return { t:t, ok:ok, g:g }; }
+    var c0 = function(p){ return addCarries(p.a, p.b) === 0; }, c1 = function(p){ return addCarries(p.a, p.b) >= 1; }, cE = function(p){ return addCarries(p.a, p.b) === 1; }, cL = function(p){ return addCarries(p.a, p.b) <= 1; };
+    var b0 = function(p){ return subBorrows(p.a, p.b) === 0; }, b1 = function(p){ return subBorrows(p.a, p.b) >= 1; }, bE = function(p){ return subBorrows(p.a, p.b) === 1; }, bL = function(p){ return subBorrows(p.a, p.b) <= 1; };
+    var A = LEVELS.add, S = LEVELS.sub, M = LEVELS.mul, D = LEVELS.div;
+    A[0].steps = [st('くり上がりなし', c0), st('くり上がりあり', c1), ALL];
+    A[1].steps = [st('くり上がりなし', c0), st('くり上がり 1回だけ', cE), ALL];
+    A[2].steps = [st('くり上がりなし', c0), st('くり上がり 1回まで', cL), ALL];
+    A[3].steps = [st('くり上がりなし', c0), st('くり上がり 1回まで', cL), ALL];
+    S[0].steps = [st('くり下がりなし', b0), st('くり下がりあり', b1), ALL];
+    S[1].steps = [st('くり下がりなし', b0), st('くり下がり 1回だけ', bE), ALL];
+    S[2].steps = [st('くり下がりなし', b0), st('くり下がり 1回まで', bL), ALL];
+    S[3].steps = [st('くり下がりなし', b0), st('くり下がり 1回まで', bL), ALL];
+    var mb = function(lo, hi){ return function(p){ return p.b >= lo && p.b <= hi; }; };
+    M[0].steps = [st('2・3の だん', mb(2, 3)), st('4・5の だん', mb(4, 5)), ALL];
+    M[1].steps = [st('6・7の だん', mb(6, 7)), st('8・9の だん', mb(8, 9)), ALL];
+    M[2].steps = [
+      st('くり上がりなし', null, function(){ var b = pick(2, 4), m = Math.floor(9 / b), a = pick(1, m) * 10 + pick(1, m); return { a:a, b:b, answer:a * b }; }),
+      st('かける数 2〜5', null, function(){ var a = pick(11, 99), b = pick(2, 5); return { a:a, b:b, answer:a * b }; }),
+      ALL];
+    D[0].steps = [st('2・3で わる', mb(2, 3)), st('4・5で わる', mb(4, 5)), ALL];
+    D[1].steps = [st('6・7で わる', mb(6, 7)), st('8・9で わる', mb(8, 9)), ALL];
+    D[2].steps = [
+      st('答えが 2〜5', null, function(){ var b = pick(2, 9), q = pick(2, 5); return { a:b * q, b:b, answer:q }; }),
+      st('答えが 2〜9', null, function(){ var b = pick(2, 9), q = pick(2, 9); return { a:b * q, b:b, answer:q }; }),
+      ALL];
+  })();
+  /* その日の ステップは 最初の プリントの ときに 決めて、1日 同じ(合格で マスが 進んでも 今日は そのまま) */
+  function stepFor(op, lv){
+    var def = LEVELS[op][lv];
+    if(!def || !def.steps) return 2;
+    var t = todayKey(), rec = safeGet('keisan_stepday_' + op);
+    if(rec && rec.d === t && rec.lv === lv) return rec.s;
+    var s = Math.min(2, clearsAtLevel(op, lv));
+    safeSet('keisan_stepday_' + op, { d:t, lv:lv, s:s });
+    return s;
+  }
+  function stepText(op){
+    var lv = currentLevelIndex(op), def = LEVELS[op][lv];
+    if(!def || !def.steps) return '';
+    var s = stepFor(op, lv);
+    return 'ステップ ' + (s + 1) + '/3「' + def.steps[s].t + '」';
+  }
   function currentLevelIndex(op){
     var lv = safeGet('keisan_level_'+op) || 0;
     return Math.min(lv, LEVELS[op].length-1);
@@ -4118,7 +4166,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function genForOp(op, lvOverride){
     var lv = lvOverride==null ? currentLevelIndex(op) : lvOverride;
     var def = LEVELS[op][lv];
+    var stp = (def.steps && (lvOverride == null || lvOverride === currentLevelIndex(op))) ? def.steps[stepFor(op, lv)] : null;
     var p = def.gen();
+    if(stp && (stp.ok || stp.g)){
+      if(stp.g) p = stp.g();
+      else for(var tries = 0; tries < 80 && !stp.ok(p); tries++) p = def.gen();
+    }
     p.op = op; p.lv = lv;
     return p;
   }
@@ -4351,7 +4404,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     state.print = { n:n, kind:kind, lv:(kind==='review' ? lv : null) };
     setLive(op==='mix' ? 'add' : op);
     var qs = [];
-    for(var i=0;i<n;i++){ var q = kind==='review' ? genForOp(op, lv) : (kind==='weekend' ? gen100(op) : genProblem(op)); q.id = i; q.solved = false; q.mistakes = 0; qs.push(q); }
+    var seenQ = {};
+    for(var i=0;i<n;i++){
+      var q;
+      for(var tr = 0; tr < 12; tr++){
+        q = kind==='review' ? genForOp(op, lv) : (kind==='weekend' ? gen100(op) : genProblem(op));
+        if(!seenQ[q.op+'|'+q.a+'|'+q.b]) break;
+      }
+      seenQ[q.op+'|'+q.a+'|'+q.b] = 1;
+      q.id = i; q.solved = false; q.mistakes = 0; qs.push(q);
+    }
     beginRound('accuracy', qs);
   }
   function getStamps(){ return safeGet('keisan_stamps') || 0; }
@@ -4677,7 +4739,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }else{
       var info = levelInfoText(rec);
       var def = LEVELS[rec][currentLevelIndex(rec)];
-      $('todayMain').innerHTML = '<span class="sym num">'+meta.symbol+'</span><span><span class="t1">'+meta.label+'</span><br><span class="t2">'+info.label+'・'+rb(def.desc)+'</span></span>';
+      $('todayMain').innerHTML = '<span class="sym num">'+meta.symbol+'</span><span><span class="t1">'+meta.label+'</span><br><span class="t2">'+info.label+'・'+rb(def.desc)+'</span><br><span class="t2 stp">'+stepText(rec)+'</span></span>';
       $('todayMap').innerHTML = mapHTML(rec, true);
       var rv = reviewLv(rec);
       if(rv != null){
@@ -7142,7 +7204,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function levelRowHtml(op, stepped){
     var info = levelInfoText(op);
     var head = stepped ? '1マス 進んだ! 今は '+info.label : '今は '+info.label;
-    return '<b>'+head+'</b>'+info.note;
+    var stx = stepText(op);
+    return '<b>'+head+'</b>'+info.note+(stx ? '<br>今日は '+stx+(stepped ? '。あしたは つぎの ステップ!' : '') : '');
   }
 
   /* 100問の あと: つぎは なにで コインが ふえるか */
@@ -7237,12 +7300,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var isMax = lv === LEVELS[state.op].length-1;
       var stepped = false;
       var clearDayKey = 'keisan_clearday_' + state.op, firstClearToday = safeGet(clearDayKey) !== todayKey();
-      if(!isMax && passed && !isReview && firstClearToday){
+      if(passed && !isReview && firstClearToday && (!isMax || clearsAtLevel(state.op, lv) < 3)){
         safeSet(clearDayKey, todayKey());
         var clears = clearsAtLevel(state.op, lv) + 1;
         safeSet('keisan_clears_'+state.op+'_'+lv, clears);
-        stepped = true;
-        if(clears >= def.need){
+        stepped = !isMax;
+        if(!isMax && clears >= def.need){
           banners.push(levelUp(state.op, lv+1));
           bonuses.push({ label:'レベルアップ', n:LEVELUP_BONUS });
           stepped = false;
