@@ -1753,6 +1753,14 @@
   .sheets-d i{ width:22px; height:28px; border-radius:5px; border:2.5px solid #D9C7A8; background:#fff; }
   .sheets-d i.on{ background:var(--op-mul); border-color:var(--op-mul); }
   .today .t2.stp{ color:var(--op-mul); font-weight:900; }
+  .sheets{ flex-wrap:wrap; }
+  .sheets-d.wide{ width:100%; justify-content:space-between; gap:4px; }
+  .chip{ display:inline-flex; flex-direction:column; align-items:center; flex:1 1 0; min-width:0; padding:4px 2px; border-radius:12px; border:2.5px solid #E3D6C0; background:#fff; color:var(--ink-soft); font-weight:900; }
+  .chip .cs{ font-size:18px; line-height:1.15; color:var(--c); }
+  .chip small{ font-size:10px; font-weight:800; white-space:nowrap; }
+  .chip.on{ background:var(--c); border-color:var(--c); color:#fff; }
+  .chip.on .cs{ color:#fff; }
+  .chip.now{ border-color:var(--c); box-shadow:0 0 0 3px color-mix(in srgb, var(--c) 25%, #fff); color:var(--ink); }
   .rec-rule{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin:8px 0 10px; line-height:1.6; }
   .rec-go{ width:100%; border:none; border-radius:18px; padding:15px; font:inherit; font-size:18px; font-weight:900; color:#fff; background:var(--gold-deep); box-shadow:0 5px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); cursor:pointer; }
   .rec-go:active{ transform:translateY(3px); box-shadow:0 2px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); }
@@ -4381,6 +4389,19 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var t = todayKey();
     return printLog().filter(function(e){ return e.d === t && (e.k === 'daily' || e.k === 'review'); }).length;
   }
+  /* ---------- 今日の 5まいは アプリが 決める(自分の しんどに あわせて) ---------- */
+  function progressOf(op){ var lv = currentLevelIndex(op); return lv * 3 + Math.min(3, clearsAtLevel(op, lv)); }
+  function sheetPlan(){
+    var t = todayKey(), rec = safeGet('keisan_plan');
+    if(rec && rec.d === t && rec.ops && rec.ops.length === DAILY_SHEETS) return rec.ops;
+    var off = dayNo() % SINGLE_OPS.length, ops = SINGLE_OPS.slice(off).concat(SINGLE_OPS.slice(0, off)), weak = ops[0];
+    ops.forEach(function(o){ if(progressOf(o) < progressOf(weak)) weak = o; });
+    ops.push(weak);
+    safeSet('keisan_plan', { d:t, ops:ops });
+    return ops;
+  }
+  function assignedMode(){ return sheetsToday() < DAILY_SHEETS; }
+  function nextSheetOp(){ return sheetPlan()[Math.min(sheetsToday(), DAILY_SHEETS - 1)]; }
   function printTarget(op, n, rv){
     var lv = op==='mix' ? 2 : (rv!=null ? rv : currentLevelIndex(op));
     return Math.round(TARGET_SEC[Math.min(lv, TARGET_SEC.length-1)] * n / 10);
@@ -4720,12 +4741,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('opTabs').innerHTML = h;
   }
   function renderToday(rec){
+    var asg = assignedMode();
+    if(asg){ rec = state.homeOp = nextSheetOp(); state.review = null; }
+    $('opTabs').style.display = asg ? 'none' : '';
+    $('todayCard').querySelector('.today-label').textContent = asg ? 'きょうの プリント(自分の しんどに あわせて えらんだよ)' : '何を練習する?';
     var meta = OP_META[rec];
-    $('todayBtn').innerHTML = (rec==='mix' ? '混ぜて' : meta.label+'の') + 'プリントを始める';
+    $('todayBtn').innerHTML = asg ? 'プリント '+(sheetsToday() + 1)+'まい目を 始める('+meta.label+')' : (rec==='mix' ? '混ぜて' : meta.label+'の') + 'プリントを始める';
     renderPrintInfo(rec);
     var sn = sheetsToday(), sd = '';
-    for(var k = 0; k < DAILY_SHEETS; k++) sd += '<i class="'+(k < sn ? 'on' : '')+'"></i>';
-    $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">きょうの プリント <b class="num">'+Math.min(sn, DAILY_SHEETS)+'/'+DAILY_SHEETS+'</b>まい</span><span class="sheets-d">'+sd+'</span></div>' +
+    var plan = sheetPlan();
+    for(var k = 0; k < DAILY_SHEETS; k++){
+      if(sn < DAILY_SHEETS){
+        var po = plan[k], pl = currentLevelIndex(po);
+        sd += '<b class="chip'+(k < sn ? ' on' : (k === sn ? ' now' : ''))+'" style="--c:var('+OP_META[po].color+')"><span class="cs">'+OP_META[po].symbol+'</span><small>Lv'+(pl + 1)+'・'+(stepFor(po, pl) + 1)+'/3</small></b>';
+      }else sd += '<i class="on"></i>';
+    }
+    $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">きょうの プリント <b class="num">'+Math.min(sn, DAILY_SHEETS)+'/'+DAILY_SHEETS+'</b>まい</span><span class="sheets-d'+(sn < DAILY_SHEETS ? ' wide' : '')+'">'+sd+'</span></div>' +
       '<span class="sz-next">1まい '+SHEET_N+'問。'+(sn >= DAILY_SHEETS ? '5まい できたよ!もっと やっても OK' : 'あと <b>'+(DAILY_SHEETS - sn)+'まい</b>で 今日の プリントが クリア!')+'</span>';
     renderWeekend(rec);
     if(rec === 'mix'){
@@ -4740,7 +4771,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var info = levelInfoText(rec);
       var def = LEVELS[rec][currentLevelIndex(rec)];
       $('todayMain').innerHTML = '<span class="sym num">'+meta.symbol+'</span><span><span class="t1">'+meta.label+'</span><br><span class="t2">'+info.label+'・'+rb(def.desc)+'</span><br><span class="t2 stp">'+stepText(rec)+'</span></span>';
-      $('todayMap').innerHTML = mapHTML(rec, true);
+      $('todayMap').innerHTML = mapHTML(rec, !asg);
       var rv = reviewLv(rec);
       if(rv != null){
         var rdef = LEVELS[rec][rv];
@@ -4754,7 +4785,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }else{
       $('todayGoal').innerHTML = info.isMax ? '最高レベル! 自分の記録にチャレンジしよう'
         : 'あと <b class="num">'+info.remain+'</b>回合格で「'+info.next.name+'」にレベルアップ!(合格は 1日に 1回 かぞえるよ)';
-      $('todayAlt').hidden = false;
+      $('todayAlt').hidden = asg;
       $('todayHint').textContent = (info.isMax ? '' : '正解'+PASS_ACC+'%以上で、めあてタイムより早いと合格。合格で1マス進むよ。') +
         '';
       }
@@ -4818,6 +4849,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var a = activePet();
     var rec = recommendOp();
     if(!state.homeOp) state.homeOp = rec;
+    if(assignedMode()){ state.homeOp = nextSheetOp(); state.review = null; }
     var sel = state.homeOp;
     state.recOp = sel;
     setLive(sel);
@@ -4860,7 +4892,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     renderRoad();
   }
   $('opTabs').addEventListener('click', function(e){
-    var b = e.target.closest('.op-tab'); if(!b) return;
+    var b = e.target.closest('.op-tab'); if(!b || assignedMode()) return;
     state.homeOp = b.getAttribute('data-op');
     state.review = null;
     safeSet('keisan_last_op', state.homeOp);
@@ -7604,6 +7636,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var unlock = !$('unlockGoBtn').hidden;
     $('unlockGoBtn').className = 'btn ' + (unlock && !r.again ? 'btn-primary' : 'btn-ghost');
     $('retryBtn').className = 'btn ' + (unlock && !r.again ? 'btn-ghost' : 'btn-primary');
+    if(state.print && state.print.kind === 'daily' && assignedMode()){
+      var no = nextSheetOp(), nm = OP_META[no];
+      $('retryBtn').className = 'btn btn-primary';
+      $('retryBtn').textContent = 'つぎの プリント('+(sheetsToday() + 1)+'/'+DAILY_SHEETS+'まい・'+nm.label+')';
+      $('retryBtn').onclick = function(){ state.homeOp = no; startPrint(no, printSize(), 'daily'); };
+      note.innerHTML = 'きょうの プリント <b class="num">'+sheetsToday()+'/'+DAILY_SHEETS+'</b>まい おわり!つぎは <b>'+nm.label+'</b>(Lv.'+(currentLevelIndex(no) + 1)+'・'+stepText(no)+')';
+      note.hidden = false; ops.hidden = true;
+      return;
+    }
     if(!r.again){ note.hidden = true; ops.hidden = true; return; }
     if(r.passed) state.passRun = (state.passRun||0) + 1; else state.passRun = 0;
     var m = getMission(), left = MISSION_ROUNDS - m.n, msg;
