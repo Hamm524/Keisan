@@ -1738,6 +1738,15 @@
   .rg-bars span.best i{ background:var(--gold-deep); }
   .rg-bars span.best{ color:var(--gold-deep); font-weight:700; }
   .rg-empty{ font-size:12px; color:var(--ink-soft); font-weight:700; padding:16px 4px; text-align:center; line-height:1.6; }
+  .cp100{ background:#FFF8E1; border:2px solid color-mix(in srgb, var(--gold-deep) 35%, #fff); border-radius:16px; padding:10px 12px; margin:10px 0; }
+  .cp100-h{ display:flex; align-items:center; justify-content:space-between; gap:8px; font-weight:900; font-size:14px; }
+  .cp100-max{ display:flex; align-items:center; gap:4px; font-size:13px; color:var(--gold-deep); white-space:nowrap; }
+  .cp100-max b{ font-size:26px; line-height:1; }
+  .cp100 ul{ list-style:none; margin:6px 0 0; padding:0; }
+  .cp100 li{ display:flex; justify-content:space-between; gap:8px; font-size:13px; font-weight:700; padding:4px 0; border-top:1px dashed color-mix(in srgb, var(--gold-deep) 25%, #fff); }
+  .cp100 li b{ white-space:nowrap; color:var(--gold-deep); }
+  .cp100 li small{ display:block; font-size:11px; color:var(--ink-soft); font-weight:700; }
+  .cp100-note{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin-top:6px; line-height:1.55; }
   .rec-rule{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin:8px 0 10px; line-height:1.6; }
   .rec-go{ width:100%; border:none; border-radius:18px; padding:15px; font:inherit; font-size:18px; font-weight:900; color:#fff; background:var(--gold-deep); box-shadow:0 5px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); cursor:pointer; }
   .rec-go:active{ transform:translateY(3px); box-shadow:0 2px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); }
@@ -4429,6 +4438,33 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return b;
   }
   function fmtClock(ms){ var t = Math.round(ms/1000), m = Math.floor(t/60), x = t%60; return m+':'+(x<10?'0':'')+x; }
+  /* 100問の コインの もらいかた(始める前に 見せる)。finishAccuracy と おなじ 計算 */
+  function base100(op){
+    var ops = op==='mix' ? SINGLE_OPS : [op];
+    var full = Math.round(ops.reduce(function(s,o){ return s + (currentLevelIndex(o)+3)/10; },0) / ops.length * WEEKEND_N);
+    return weekendDone() ? Math.round(full * 10 / WEEKEND_N) : full;
+  }
+  function coinPlan100(op){
+    var R = Medal.RANKS, tp = Medal.topOf(op), rows = [], again = weekendDone();
+    rows.push({ l:'100問 とけたら', s: again ? '今日 2回目からは 10分の1' : '今日 1回目', n:base100(op), v:base100(op) });
+    if(!again) rows.push({ l:'正解 '+WEEKEND_ACC+'% いじょう', s:'1日1回', n:WEEKEND_BONUS, v:WEEKEND_BONUS });
+    rows.push({ l:'一発正解 90%で ＋'+BONUS_GREAT+'・ぜんぶで ＋'+(BONUS_PERFECT+2), s:'めあて '+fmtSec(printTarget(op, WEEKEND_N))+' いないで さらに ＋'+BONUS_FAST, n:BONUS_PERFECT+2+BONUS_FAST, v:'＋'+(BONUS_PERFECT+2+BONUS_FAST)+'まで' });
+    var best = best100(op);
+    if(best) rows.push({ l:'自己ベスト('+fmtClock(best.ms)+')を こえる', s:'', n:BEST100_BONUS, v:BEST100_BONUS });
+    var left = Medal.runsLeft();
+    var goal = Math.min(4, tp + 1);
+    rows.push({ l:'メダルを とる', s: left > 0 ? 'ブロンズ＋'+R[1].run+'・シルバー＋'+R[2].run+'・ゴールド＋'+R[3].run+'・ダイヤ＋'+R[4].run+'(今日 あと '+left+'回)' : '今日の メダルの コインは おしまい(あしたまた もらえるよ)', n: left > 0 ? R[goal].run : 0, v: left > 0 ? '＋'+R[1].run+'〜'+R[4].run : '－' });
+    if(tp < 4) rows.push({ l:'はじめての '+R[tp+1].name+'メダル', s:Medal.sym(op)+' で 一発正解 '+R[tp+1].acc+'問・'+fmtClock((op==='mul'||op==='div' ? R[tp+1].kuku : R[tp+1].pm)*1000)+' いない', n:R[tp+1].coin, v:R[tp+1].coin });
+    var max = rows.reduce(function(a,r){ return a + r.n; }, 0);
+    return { rows:rows, max:max, again:again };
+  }
+  function coinPlanHTML(op){
+    var P = coinPlan100(op), coin = '<span class="coin" style="width:14px;height:14px"></span>';
+    var h = '<div class="cp100"><div class="cp100-h"><span>もらえる コイン</span><span class="cp100-max">'+coin+'さいだい <b class="num">'+P.max+'</b></span></div><ul>';
+    P.rows.forEach(function(r){ h += '<li><span>'+r.l+(r.s ? '<small>'+r.s+'</small>' : '')+'</span><b class="num">'+(typeof r.v === 'number' ? '＋'+r.v : r.v)+'</b></li>'; });
+    h += '</ul><div class="cp100-note">'+(P.again ? '今日の 1回目の コインは もう もらったよ。2回目からは メダルや 自己ベストで コインを ふやそう!' : '2回目からは「100問 とけたら」が 10分の1に なるよ。メダルの コインは 1日'+Medal.RUN_MAX+'回まで 毎回 もらえるよ。')+'</div></div>';
+    return h;
+  }
   function renderWeekend(op){
     var c = $('weekendCard');
     c.hidden = false;
@@ -4450,7 +4486,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       });
       h += '</div><div class="rg-empty" style="padding:4px 0 0;text-align:left">速いほど 高く なるよ。</div>';
     }else h += '<div class="rg-empty">まだ 記録が ないよ。<br>1回目が 自己ベストに なるよ!</div>';
-    h += '</div><p class="rec-rule">正解'+WEEKEND_ACC+'%以上で <span class="coin" style="width:12px;height:12px;vertical-align:-2px"></span> ＋'+WEEKEND_BONUS+'(1日1回)。自己ベストを こえると さらに ＋'+BEST100_BONUS+'!はじめての いろの メダルや トロフィーでも コインが もらえるよ。</p>' +
+    h += '</div>' + coinPlanHTML(op) +
       '<button class="rec-go" id="weekendBtn">100問に 挑戦する</button>';
     c.className = 'weekend rec';
     c.innerHTML = h;
@@ -4536,7 +4572,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<div class="steps3"><span><i style="background:var(--op-mul)">✓</i>プリント</span><span><i style="background:var(--boss)">✓</i>挑戦</span><span><i style="background:var(--gold-deep)">✓</i>100問</span></div>' +
         '<div class="rw"><div class="big"><b>＋'+ALLCLEAR_BONUS+'</b><small>ボーナス コイン</small></div><div><b>'+sc+'日</b><small>🔥 連続</small></div><div><b>'+(n % STAMP_PER_CARD || (n ? STAMP_PER_CARD : 0))+'/'+STAMP_PER_CARD+'</b><small>★ スタンプ</small></div></div></div>' +
         '<div class="again"><div><b>もう1枚 やる?</b><small>今日の プリントは 何枚でも OK</small></div><button id="againBtn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button></div><div id="againSlot"></div>' +
-        '<div class="again"><div><b>100問 もう1回?</b><small>何回でも 挑戦して メダルを あつめよう</small></div><button id="again100" style="background:var(--gold-deep);box-shadow:0 4px 0 color-mix(in srgb, var(--gold-deep) 60%, #000)">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button></div><div id="again100Slot"></div>' +
+        '<div class="again"><div><b>100問 もう1回?</b><small>メダルを とると コイン!さいだい '+coinPlan100(state.homeOp || 'add').max+'コイン</small></div><button id="again100" style="background:var(--gold-deep);box-shadow:0 4px 0 color-mix(in srgb, var(--gold-deep) 60%, #000)">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button></div><div id="again100Slot"></div>' +
         '<p class="bye">明日も また 会おうね。明日は 新しい ボスが 来るよ!</p>';
       Pet.mount($('heroPet'), a.sp, a.lv);
       var sv = $('heroPet').querySelector('svg'); if(sv) sv.classList.add('happy');
@@ -4580,7 +4616,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if($('row2Btn')) $('row2Btn').onclick = showStampInfo;
     var w100Btn = function(){ state.w100Open = !state.w100Open; renderRoad(); };
     $('row3').innerHTML = done[2]
-      ? '<span class="sr-t"><b>100問 <ruby>記録<rt>きろく</rt></ruby> できた!</b>何回でも 挑戦して メダルを あつめよう</span><button class="sr-btn" id="row3Btn">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button>'
+      ? '<span class="sr-t"><b>100問 <ruby>記録<rt>きろく</rt></ruby> できた!</b>もう1回で さいだい '+coinPlan100(state.homeOp || 'add').max+'コイン(メダルで もらえるよ)</span><button class="sr-btn" id="row3Btn">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button>'
       : '<span class="sr-t"><b>100問 <ruby>記録<rt>きろく</rt></ruby></b>'+(cur === 0 ? '🔒 プリントを 1枚 やると 開く' : name+'を 100問')+'</span><span class="sr-r">自己ベスト<strong class="num">'+(best ? fmtClock(best.ms) : '－')+'</strong></span>';
     if($('row3Btn')) $('row3Btn').onclick = w100Btn;
     // the partner stands at the step to do now
@@ -7071,7 +7107,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   // bonuses: [{label, n}]
   function coinBanner(bonuses){
-    var chips = '<span class="chips">' + (state.baseCoins > 0 ? '<span>'+(state.mode==='speed' ? '正解した 問題' : state.questions.length+'問 とけた')+' +'+state.baseCoins+'</span>' : '');
+    var chips = '<span class="chips">' + (state.baseCoins > 0 ? '<span>'+(state.mode==='speed' ? '正解した 問題' : (state.baseLabel || state.questions.length+'問 とけた'))+' +'+state.baseCoins+'</span>' : '');
     (bonuses||[]).forEach(function(b){ chips += '<span>'+b.label+' +'+b.n+'</span>'; });
     chips += '</span>';
     var t = nextTreasure();
@@ -7081,6 +7117,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       txt += remain>0 ? '次のお宝「'+t.name+'」まで あと'+remain+'コイン。' : '「'+t.name+'」と こうかん できるよ!';
     }
     var low = state.lowLv ? '<span style="display:block;margin-top:6px">れんしゅう中の レベルだから、コインは すこし 少なめだよ。上の レベルに すすむと もっと もらえるよ!</span>' : '';
+    if(state.coinHint) low += '<span style="display:block;margin-top:6px;font-weight:800">'+state.coinHint+'</span>';
+    state.coinHint = null; state.baseLabel = null;
     return { type:'coin', title:'コイン +'+state.sessionCoins+' の 内わけ', text:chips+low+'<span style="display:block;margin-top:6px">'+txt+'</span>' };
   }
   function giveBonuses(list){
@@ -7099,6 +7137,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return '<b>'+head+'</b>'+info.note;
   }
 
+  /* 100問の あと: つぎは なにで コインが ふえるか */
+  function hint100(op, info, again){
+    var R = Medal.RANKS, t = [];
+    if(info && info.next){
+      var nx = R[info.next.r], first = info.next.r > Medal.topOf(op);
+      t.push('つぎは '+nx.name+'メダルで ＋'+nx.run+(first ? '、はじめてなら さらに ＋'+nx.coin : '')+'!');
+    }
+    if(again) t.push('今日の 2回目からは「100問 とけた」が 10分の1。メダルと 自己ベストで ふやそう。');
+    else if(weekendDone()) t.push('今日 もう1回 やると「100問 とけた」は 10分の1。メダルと 自己ベストで ふやそう。');
+    return t.join('<br>');
+  }
   function finishAccuracy(){
     var N = state.questions.length;
     var pr = state.print;
@@ -7117,7 +7166,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var bonuses = [], banners = [];
     // prints pay once: the same as a 10-question round at this level, whatever the length
     {
-      var base = Math.round(state.questions.reduce(function(s,q){ return s+coinPer(q); },0) * (pr && pr.kind==='weekend' && weekendDone() ? 10 / N : 1));
+      var again100 = !!(pr && pr.kind==='weekend' && weekendDone());
+      state.baseLabel = pr && pr.kind==='weekend' ? (again100 ? '100問 とけた(今日2回目)' : '100問 とけた(今日1回目)') : null;
+      var base = Math.round(state.questions.reduce(function(s,q){ return s+coinPer(q); },0) * (again100 ? 10 / N : 1));
       state.lowLv = state.questions.some(function(q){ return lowLvFactor(q) < 1; });
       state.sessionCoins += base; state.baseCoins += base; earn(base);
     }
@@ -7195,6 +7246,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     var medalGot = (pr && pr.kind==='weekend') ? Medal.award(state.op, firstTry, N, elapsed, bonuses) : null;
     if(medalGot) state.w100Open = false;
+    state.coinHint = (pr && pr.kind==='weekend') ? hint100(state.op, medalGot, again100) : null;
     if(isCh && passed && !challengeDone()){
       safeSet('keisan_challenge', { d:todayKey(), done:true, boss:(pr && pr.boss) || bossOp() });
       bonuses.push({ label:'スペシャルコイン(5コイン分)', n:SPECIAL_VALUE });
@@ -10754,12 +10806,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ランク: 上に いくほど 正解も 時間も きびしく なる。t = 秒 (九九: × ÷ / 2桁±1桁: ＋ － MIX) */
     var RANKS = [
       null,
-      { id:1, name:'ブロンズ', acc:95,  kuku:360, pm:390, coin:5,  face:'#E2A06A', rim:'#B9773F', hi:'#F3C69C' },
-      { id:2, name:'シルバー', acc:97,  kuku:300, pm:330, coin:10, face:'#D3DCE4', rim:'#98A6B3', hi:'#F2F6F9' },
-      { id:3, name:'ゴールド', acc:97,  kuku:240, pm:270, coin:15, face:'#FFC94A', rim:'#DE9A10', hi:'#FFE7A3' },
-      { id:4, name:'ダイヤ',   acc:100, kuku:210, pm:240, coin:30, face:'#A6E8F6', rim:'#3FAFD2', hi:'#E4FAFF' }
+      { id:1, name:'ブロンズ', acc:95,  kuku:360, pm:390, coin:5,  run:2, face:'#E2A06A', rim:'#B9773F', hi:'#F3C69C' },
+      { id:2, name:'シルバー', acc:97,  kuku:300, pm:330, coin:10, run:3, face:'#D3DCE4', rim:'#98A6B3', hi:'#F2F6F9' },
+      { id:3, name:'ゴールド', acc:97,  kuku:240, pm:270, coin:15, run:5, face:'#FFC94A', rim:'#DE9A10', hi:'#FFE7A3' },
+      { id:4, name:'ダイヤ',   acc:100, kuku:210, pm:240, coin:30, run:8, face:'#A6E8F6', rim:'#3FAFD2', hi:'#E4FAFF' }
     ];
     var OPS = ['add','sub','mul','div','mix'];
+    var RUN_MAX = 3;
     var OPS4 = ['add','sub','mul','div'];
     function lim(op, r){ return (op === 'mul' || op === 'div') ? RANKS[r].kuku : RANKS[r].pm; }
     function rankOf(op, ok, n, ms){
@@ -10966,6 +11019,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         m.c[op][r] = (m.c[op][r] || 0) + 1;
         var t = todayKey();
         m.day = (m.day && m.day.d === t) ? { d:t, n:m.day.n + 1 } : { d:t, n:1 };
+        /* メダルの コインは 毎回(1日 RUN_MAX 回まで)。2回目からの 100問でも がんばった ぶん もらえる */
+        if(m.day.n <= RUN_MAX) bonuses.push({ label:RANKS[r].name+'メダル', n:RANKS[r].run });
         if(r > top(m, op)){
           /* はじめて この いろ(より上)に なった: 上がった ぶんの ランクの コインを ぜんぶ */
           var add = 0; for(var k = top(m, op) + 1; k <= r; k++) add += RANKS[k].coin;
@@ -11080,7 +11135,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('medalCard').addEventListener('click', open);
     $('mdBack').addEventListener('click', function(){ goHome(); });
 
-    return { tick:tick, award:award, result:result, ladder:ladder, card:card, open:open, rankOf:rankOf, RANKS:RANKS, TROPHIES:TROPHIES, OPS4:OPS4 };
+    function runsLeft(){ var m = data(); return RUN_MAX - ((m.day && m.day.d === todayKey()) ? m.day.n : 0); }
+    return { topOf:function(op){ return top(data(), op); }, runsLeft:runsLeft, RUN_MAX:RUN_MAX, sym:sym, tick:tick, award:award, result:result, ladder:ladder, card:card, open:open, rankOf:rankOf, RANKS:RANKS, TROPHIES:TROPHIES, OPS4:OPS4 };
   })();
 
   /* ---------- backup / restore ---------- */
