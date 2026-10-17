@@ -365,7 +365,7 @@
   @media (min-width:600px){ .md-shelf{ grid-template-columns:repeat(4, 1fr); } }
   .tr-cell{ background:var(--surface); border:1.5px solid var(--line); border-radius:16px; padding:10px 6px 8px; text-align:center; display:grid; justify-items:center; gap:2px; align-content:start; }
   .tr-cell.got{ border-color:color-mix(in srgb, var(--gold-deep) 50%, var(--line)); background:color-mix(in srgb, var(--gold) 10%, var(--surface)); }
-  .tr-svg{ width:56px; height:auto; }
+  .tr-svg{ width:64px; height:auto; }
   .tr-cell b{ font-size:12.5px; font-weight:900; line-height:1.3; }
   .tr-cell span{ font-size:10.5px; color:var(--ink-soft); line-height:1.4; font-weight:700; }
   .tr-cell small{ font-size:10.5px; color:var(--gold-deep); font-weight:900; font-family:'Fredoka','Zen Maru Gothic',sans-serif; }
@@ -10081,41 +10081,50 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<clipPath id="'+id+'"><circle cx="32" cy="50" r="20"/></clipPath><path clip-path="url(#'+id+')" d="M6 40l40-20 6 6-40 20z" fill="#fff" opacity=".28"/>' +
         mid + '</svg>';
     }
-    /* トロフィーは 12こ ぜんぶ ちがう 形。色は ランクで きまる(まだなら グレー+？) */
+    /* トロフィーは 12こ ぜんぶ ちがう 形(ふちどりなし・つやあり・台つき)。色は ランクで きまる。まだなら グレー+？ */
     function trophySVG(id, got){
       var T = TROPHIES.filter(function(x){ return x.id === id; })[0] || TROPHIES[0], R = RANKS[T.tier];
-      var body = got ? R.face : 'var(--surface-2)', rim = got ? R.rim : 'var(--line)', hi = got ? R.hi : 'var(--surface)';
-      var st = 'stroke="'+rim+'" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
-      function star(cx, cy, r, f){ var p = []; for(var k = 0; k < 10; k++){ var a = (k * 36 - 90) * Math.PI / 180, rr = k % 2 ? r * .45 : r; p.push((cx + Math.cos(a) * rr).toFixed(1) + ',' + (cy + Math.sin(a) * rr).toFixed(1)); } return '<polygon points="'+p.join(' ')+'" fill="'+(f || hi)+'" stroke="'+rim+'" stroke-width="1.6" stroke-linejoin="round"/>'; }
-      function base(w){ return '<rect x="'+(40-w/2)+'" y="70" width="'+w+'" height="10" rx="3" fill="'+rim+'"/>'; }
-      function stand(){ return '<rect x="35" y="56" width="10" height="14" fill="'+rim+'"/>' + base(44); }
-      var q = '<text x="40" y="44" text-anchor="middle" font-size="22" font-weight="900" fill="var(--ink-soft)" font-family="Fredoka,sans-serif">?</text>';
-      var b = '';
+      var B = got ? R.face : '#E3DCCF', D = got ? R.rim : '#C9C0B0', H = got ? R.hi : '#F3EFE6';
+      var A1 = got ? '#E5484D' : '#D4CCBD', A2 = got ? '#3B63C9' : '#D4CCBD', PL = got ? '#2F4A7A' : '#BDB5A8';
+      function f(c, extra){ return ' fill="'+c+'"'+(extra || ''); }
+      function star(cx, cy, r, c){ var p = []; for(var k = 0; k < 10; k++){ var a = (k * 36 - 90) * Math.PI / 180, rr = k % 2 ? r * .46 : r; p.push((cx + Math.cos(a) * rr).toFixed(1) + ',' + (cy + Math.sin(a) * rr).toFixed(1)); } return '<polygon points="'+p.join(' ')+'"'+f(c || H)+'/>'; }
+      function mark(x, y, r, c){ return got ? star(x, y, r, c) : '<text x="'+x+'" y="'+(y + r * .5)+'" text-anchor="middle" font-size="'+(r * 1.6)+'" font-weight="900" fill="#B3AA99" font-family="Fredoka,sans-serif">?</text>'; }
+      function txt(x, y, size, t, c){ return '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-size="'+size+'" font-weight="900" fill="'+c+'" font-family="Fredoka,sans-serif">'+t+'</text>'; }
+      function plinth(){ return '<rect x="24" y="70" width="32" height="11" rx="1.5"'+f(PL)+'/><rect x="33" y="73.5" width="14" height="4" rx="1"'+f(B)+'/>'; }
+      function stem(y0){ return '<rect x="36.5" y="'+y0+'" width="7" height="'+(63 - y0)+'"'+f(D)+'/><path d="M29 69c0-6 4-8 11-8s11 2 11 8z"'+f(D)+'/>'; }
+      function shine(d){ return '<path d="'+d+'" fill="#fff" opacity=".45"/>'; }
+      var b = '', s4;
       switch(id){
-      case 't_first':   /* ちいさな カップ */
-        b = '<path d="M22 22c-10 0-10 16 4 18M58 22c10 0 10 16-4 18" fill="none" '+st+'/><path d="M22 14h36v10c0 14-8 22-18 22s-18-8-18-22z" fill="'+body+'" '+st+'/>'+stand()+(got ? star(40, 28, 8) : q); break;
-      case 't_m10':     /* リボンの ばら飾り */
-        b = '<path d="M26 50l-8 26 14-6 6 10 6-24zM54 50l8 26-14-6-6 10-6-24z" fill="'+rim+'" '+st+'/><circle cx="40" cy="34" r="26" fill="'+body+'" '+st+'/><circle cx="40" cy="34" r="17" fill="none" stroke="'+hi+'" stroke-width="3" stroke-dasharray="3 4"/>'+(got ? '<text x="40" y="42" text-anchor="middle" font-size="22" font-weight="900" fill="'+rim+'" font-family="Fredoka,sans-serif">10</text>' : q); break;
-      case 't_day3':    /* 星3つの たて */
-        b = '<path d="M16 10h48v28c0 16-10 26-24 34-14-8-24-18-24-34z" fill="'+body+'" '+st+'/>'+(got ? star(40, 22, 9)+star(28, 40, 8)+star(52, 40, 8) : q); break;
-      case 't_4s':      /* ＋－×÷ の ひょうしょうじょう(額) */
-        b = '<rect x="10" y="12" width="60" height="48" rx="6" fill="'+body+'" '+st+'/><rect x="17" y="19" width="46" height="34" rx="3" fill="none" stroke="'+hi+'" stroke-width="2"/>'+(got ? '<text x="29" y="35" text-anchor="middle" font-size="15" font-weight="900" fill="'+rim+'">＋</text><text x="51" y="35" text-anchor="middle" font-size="15" font-weight="900" fill="'+rim+'">－</text><text x="29" y="51" text-anchor="middle" font-size="15" font-weight="900" fill="'+rim+'">×</text><text x="51" y="51" text-anchor="middle" font-size="15" font-weight="900" fill="'+rim+'">÷</text>' : q)+'<path d="M30 60l-4 16h28l-4-16z" fill="'+rim+'"/>'+base(40); break;
-      case 't_m30':     /* でっかい 星 */
-        b = star(40, 36, 34, body).replace('stroke-width="1.6"', 'stroke-width="3"')+stand().replace('y="56"', 'y="62"').replace('height="14"', 'height="8"')+(got ? star(40, 38, 11) : q); break;
+      case 't_first':   /* ふたつ持ちの カップ */
+        b = '<path d="M22 18c-12 0-12 20 6 22M58 18c12 0 12 20-6 22" fill="none" stroke="'+D+'" stroke-width="4" stroke-linecap="round"/><path d="M20 12h40v6c0 16-8 26-20 26S20 34 20 18z"'+f(B)+'/><path d="M40 12h20v6c0 16-8 26-20 26z"'+f(D)+' opacity=".28"/>'+shine('M25 16h5v10c0 5 2 9 5 12-6-3-10-9-10-17z')+stem(44)+plinth()+mark(40, 25, 8); break;
+      case 't_m10':     /* ばら飾り(ロゼット) */
+        b = '<path d="M30 48l-9 28 11-5 6 9 4-28z"'+f(A1)+'/><path d="M50 48l9 28-11-5-6 9-4-28z"'+f(A2)+'/>';
+        var pts = []; for(var k = 0; k < 24; k++){ var a = (k * 15 - 90) * Math.PI / 180, rr = k % 2 ? 22 : 26; pts.push((40 + Math.cos(a) * rr).toFixed(1) + ',' + (32 + Math.sin(a) * rr).toFixed(1)); }
+        b += '<polygon points="'+pts.join(' ')+'"'+f(B)+'/><circle cx="40" cy="32" r="17"'+f(D)+' opacity=".35"/><circle cx="40" cy="32" r="15"'+f(H)+' opacity=".6"/>'+(got ? txt(40, 40, 22, '10', D) : mark(40, 32, 9)); break;
+      case 't_day3':    /* ペナント(ぶらさげる はた) */
+        b = '<rect x="10" y="4" width="60" height="7" rx="2"'+f(D)+'/><path d="M16 11h48v44l-6 8-6-8-6 8-6-8-6 8-6-8-6 8-6-8z"'+f(A1)+'/><path d="M16 11h14v44l-3 4-3-4-8 8z"'+f('#fff')+' opacity=".18"/>'+(got ? star(40, 24, 9)+star(29, 42, 7.5)+star(51, 42, 7.5) : mark(40, 32, 10)); break;
+      case 't_4s':      /* クリスタルの 盾(＋－×÷) */
+        s4 = '<polygon points="22,12 42,6 38,64 18,64"'+f(H)+'/><polygon points="42,6 64,2 60,64 38,64"'+f(B)+'/><polygon points="54,3 64,2 60,64 54,64"'+f(D)+' opacity=".35"/>'; 
+        b = s4+plinth().replace('y="70"', 'y="64"').replace('y="73.5"', 'y="67.5"')+(got ? txt(50, 27, 13, '＋－', '#fff')+txt(50, 45, 13, '×÷', '#fff') : mark(50, 32, 9)); break;
+      case 't_m30':     /* 星の トロフィー */
+        b = star(40, 29, 30, B)+star(40, 31, 17, '#fff').replace('/>', ' opacity=".35"/>')+'<rect x="36.5" y="50" width="7" height="13"'+f(D)+'/><path d="M29 69c0-6 4-8 11-8s11 2 11 8z"'+f(D)+'/>'+plinth()+(got ? '' : mark(40, 31, 9)); break;
       case 't_g5':      /* おうかん */
-        b = '<path d="M12 56l-4-34 18 14 14-24 14 24 18-14-4 34z" fill="'+body+'" '+st+'/><rect x="12" y="56" width="56" height="10" rx="3" fill="'+rim+'"/>'+(got ? '<circle cx="40" cy="46" r="4.5" fill="#E5484D"/><circle cx="24" cy="48" r="3.2" fill="#5B7CFA"/><circle cx="56" cy="48" r="3.2" fill="#1FA98E"/>' : q); break;
-      case 't_g3row':   /* ロケット(3れんぞく) */
-        b = '<path d="M40 6c12 10 16 26 12 44H28C24 32 28 16 40 6z" fill="'+body+'" '+st+'/><path d="M28 36l-12 16 12 2zM52 36l12 16-12 2z" fill="'+rim+'" '+st+'/><circle cx="40" cy="28" r="6" fill="'+(got ? '#fff' : 'var(--surface)')+'" stroke="'+rim+'" stroke-width="2.5"/>'+(got ? '<path d="M32 54c0 12 4 20 8 22 4-2 8-10 8-22z" fill="#FF9A3D" stroke="#E5484D" stroke-width="2.5" stroke-linejoin="round"/>' : '<path d="M32 54c0 12 4 20 8 22 4-2 8-10 8-22z" fill="none" stroke="'+rim+'" stroke-width="2.5"/>')+(got ? '' : q); break;
-      case 't_mixg':    /* にじいろ ちきゅう(ボール) */
-        b = '<circle cx="40" cy="32" r="26" fill="'+body+'" '+st+'/>'+(got ? '<path d="M18 36a22 22 0 0 1 44 0" fill="none" stroke="#E5484D" stroke-width="3"/><path d="M23 36a17 17 0 0 1 34 0" fill="none" stroke="#FFC53D" stroke-width="3"/><path d="M28 36a12 12 0 0 1 24 0" fill="none" stroke="#5B7CFA" stroke-width="3"/>' : q)+'<path d="M30 70c0-10 4-14 10-14s10 4 10 14z" fill="'+rim+'"/>'+base(40); break;
-      case 't_4g':      /* 4しょくの たて(まる) */
-        b = '<path d="M14 10h52v30c0 16-12 26-26 32C26 66 14 56 14 40z" fill="'+body+'" '+st+'/>'+(got ? '<path d="M40 10v62M14 38h52" stroke="'+rim+'" stroke-width="2.5" fill="none"/><path d="M17 13h23v25H14V13z" fill="#FF8A5C" opacity=".85"/><path d="M40 10h23v28H40z" fill="#5B7CFA" opacity=".85"/><path d="M14 38h26v30C26 62 14 54 14 40z" fill="#1FA98E" opacity=".85"/><path d="M40 38h26c0 14-10 24-26 30z" fill="#9B6BE8" opacity=".85"/>' : q); break;
-      case 't_m100':    /* りっぱな 大きい カップ(ふた つき) */
-        b = '<path d="M16 24c-14 0-14 24 8 26M64 24c14 0 14 24-8 26" fill="none" '+st+'/><path d="M16 22h48v6c0 18-10 30-24 30S16 46 16 28z" fill="'+body+'" '+st+'/><path d="M26 22c0-10 6-14 14-14s14 4 14 14" fill="'+body+'" '+st+'/><circle cx="40" cy="6" r="3.5" fill="'+rim+'"/>'+stand()+(got ? '<text x="40" y="46" text-anchor="middle" font-size="19" font-weight="900" fill="'+rim+'" font-family="Fredoka,sans-serif">100</text>' : q); break;
-      case 't_d1':      /* だいやもんど */
-        b = '<path d="M16 24l10-14h28l10 14-24 38z" fill="'+body+'" '+st+'/><path d="M16 24h48M26 10l6 14 8 38 8-38 6-14M32 24l8-14 8 14" fill="none" stroke="'+(got ? '#fff' : rim)+'" stroke-width="2" stroke-linejoin="round"/>'+(got ? '<path d="M24 22l6-8" stroke="#fff" stroke-width="3" stroke-linecap="round"/>' : '')+base(36).replace('y="70"', 'y="68"')+(got ? '' : q); break;
-      default:          /* t_4d 100問 マスター: げっけいじゅの かんむりと だいや */
-        b = '<path d="M20 70C6 56 6 30 18 14M60 70c14-14 14-40 2-56" fill="none" stroke="'+(got ? '#3FAE6A' : rim)+'" stroke-width="5" stroke-linecap="round"/><path d="M10 40l6-2M9 52l7-1M14 28l6 0M70 40l-6-2M71 52l-7-1M66 28l-6 0" stroke="'+(got ? '#3FAE6A' : rim)+'" stroke-width="3.5" stroke-linecap="round"/><path d="M28 28l6-9h12l6 9-12 22z" fill="'+body+'" '+st+'/>'+(got ? '<path d="M28 28h24M34 19l6 9 6-9M40 28v22" stroke="#fff" stroke-width="1.6" fill="none"/>' : q)+'<path d="M30 70c0-8 4-14 10-14s10 6 10 14z" fill="'+rim+'"/>'+base(40);
+        b = '<path d="M10 58L6 20l19 14 15-24 15 24 19-14-4 38z"'+f(B)+'/><path d="M40 10l15 24 19-14-4 38H40z"'+f(D)+' opacity=".25"/><rect x="10" y="56" width="60" height="9" rx="2"'+f(D)+'/><rect x="16" y="68" width="48" height="9" rx="4"'+f(A1)+'/>'+(got ? '<circle cx="40" cy="45" r="4.6"'+f('#E5484D')+'/><circle cx="23" cy="47" r="3.3"'+f(A2)+'/><circle cx="57" cy="47" r="3.3"'+f('#1FA98E')+'/>' : mark(40, 42, 8)); break;
+      case 't_g3row':   /* リボンの メダル「3」 */
+        b = '<path d="M18 2h15l9 32H29z"'+f(A1)+'/><path d="M62 2H47l-9 32h13z"'+f(A2)+'/><circle cx="40" cy="54" r="24"'+f(D)+'/><circle cx="40" cy="54" r="19"'+f(B)+'/>'+shine('M26 48a15 15 0 0 1 11-11c-6 2-11 7-11 11z')+(got ? txt(40, 63, 26, '3', D) : mark(40, 54, 10)); break;
+      case 't_mixg':    /* ちきゅうの トロフィー */
+        b = '<circle cx="40" cy="28" r="24"'+f(B)+'/><path d="M16 28a24 24 0 0 0 24 24V4z"'+f(D)+' opacity=".18"/>'+(got ? '<path d="M18 33a22 22 0 0 1 44 0" fill="none" stroke="#E5484D" stroke-width="3.2"/><path d="M24 33a16 16 0 0 1 32 0" fill="none" stroke="#FFC53D" stroke-width="3.2"/><path d="M30 33a10 10 0 0 1 20 0" fill="none" stroke="#3B63C9" stroke-width="3.2"/>' : mark(40, 28, 10))+shine('M24 18a18 18 0 0 1 10-9c-6 3-10 9-10 9z')+stem(50)+plinth(); break;
+      case 't_4g':      /* 月桂樹と 星 */
+        var lv = '';
+        for(var q = 0; q < 6; q++){ var ty = 62 - q * 9, tx = 13 + Math.sin(q * .55) * -3 + q * 1.2; lv += '<ellipse cx="'+(tx + 2).toFixed(1)+'" cy="'+ty+'" rx="7.5" ry="3.6" transform="rotate('+(-38 + q * 6)+' '+(tx + 2).toFixed(1)+' '+ty+')"'+f(D)+'/><ellipse cx="'+(80 - tx - 2).toFixed(1)+'" cy="'+ty+'" rx="7.5" ry="3.6" transform="rotate('+(38 - q * 6)+' '+(80 - tx - 2).toFixed(1)+' '+ty+')"'+f(D)+'/>'; }
+        b = lv+'<rect x="37" y="42" width="6" height="18"'+f(D)+'/>'+star(40, 28, 17, B)+'<path d="M8 58h64l-7 8 7 8H8l7-8z"'+f(A2)+'/>'+(got ? txt(40, 71, 10, '＋－×÷', '#fff') : ''); break;
+      case 't_m100':    /* ふた つきの 大きな カップ */
+        b = '<path d="M20 24c-14 0-15 24 8 25M60 24c14 0 15 24-8 25" fill="none" stroke="'+D+'" stroke-width="4" stroke-linecap="round"/><path d="M17 20h46v4c0 17-9 27-23 27S17 41 17 24z"'+f(B)+'/><path d="M40 20h23v4c0 17-9 27-23 27z"'+f(D)+' opacity=".25"/><path d="M26 20c0-9 5-13 14-13s14 4 14 13z"'+f(B)+'/><circle cx="40" cy="5" r="3.6"'+f(D)+'/>'+shine('M22 24h5v9c0 6 3 10 6 13-7-3-11-9-11-16z')+stem(51)+plinth()+(got ? txt(40, 41, 17, '100', H) : mark(40, 34, 9)); break;
+      case 't_d1':      /* ダイヤの トロフィー */
+        b = '<polygon points="24,6 56,6 70,26 10,26"'+f(H)+'/><polygon points="10,26 70,26 40,60"'+f(B)+'/><polygon points="40,26 70,26 40,60"'+f(D)+' opacity=".3"/><path d="M24 6l8 20 8 34 8-34 8-20M10 26h60" stroke="#fff" stroke-width="1.8" fill="none" opacity=".85"/><rect x="37" y="58" width="6" height="6"'+f(D)+'/><path d="M29 69c0-6 4-8 11-8s11 2 11 8z"'+f(D)+'/>'+plinth()+(got ? '' : mark(40, 24, 9)); break;
+      default:          /* t_4d 100問マスター: はねの ついた たまと ダイヤ */
+        var wing = '<path d="M33 40C20 42 8 34 3 20c8 3 14 3 21 7-4-3-9-7-11-12 9 2 17 6 22 12z"'+f(B)+'/><path d="M33 40C24 38 16 34 12 27"'+' fill="none" stroke="'+H+'" stroke-width="2" opacity=".8"/>';
+        b = wing+'<g transform="translate(80 0) scale(-1 1)">'+wing+'</g><circle cx="40" cy="38" r="14"'+f(D)+'/><circle cx="40" cy="38" r="10"'+f(B)+'/>'+mark(40, 38, 6.5, '#fff')+'<polygon points="40,6 47,15 40,25 33,15"'+f(got ? '#8BE8F7' : '#D8D1C3')+'/><path d="M33 15h14" stroke="#fff" stroke-width="1.4" opacity=".8"/>'+stem(52)+plinth(); break;
       }
       return '<svg class="tr-svg" viewBox="0 0 80 84" aria-hidden="true">' + b + '</svg>';
     }
