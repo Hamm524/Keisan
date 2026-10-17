@@ -10050,6 +10050,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       m.cnt = c; return c;
     }
     function cn(m){ return m.cnt || { p:0, q:0, b:0, o:{} }; }
+    function atMax(op){ return currentLevelIndex(op) >= LEVELS[op].length - 1; }
     function ops4done(m){ var o = cn(m).o; return OPS4.every(function(x){ return o[x]; });
     }
     function cnt(m, op, r){ return (m.c[op] && m.c[op][r]) || 0; }
@@ -10089,7 +10090,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { id:'t_p50',   g:'p', tier:3, name:'しあわせの ベル',     cond:'れんしゅうを 50回 やる',               coin:30, ok:function(m){ return cn(m).p >= 50; } },
       { id:'t_q3000', g:'p', tier:3, name:'けいさんの やま',     cond:'ぜんぶで 3000問 とく',                 coin:60, ok:function(m){ return cn(m).q >= 3000; } },
       { id:'t_b20',   g:'p', tier:3, name:'ボスたおしの しろ',   cond:'ボスを 20回 たおす',                   coin:60, ok:function(m){ return cn(m).b >= 20; } },
-      { id:'t_p100',  g:'p', tier:4, name:'けいさんの たいよう', cond:'れんしゅうを 100回 やる',              coin:80, ok:function(m){ return cn(m).p >= 100; } }
+      { id:'t_p100',  g:'p', tier:4, name:'けいさんの たいよう', cond:'れんしゅうを 100回 やる',              coin:80, ok:function(m){ return cn(m).p >= 100; } },
+      /* さきどりの トロフィー(クリスタル): その計算の いちばん上の レベルに すすむ */
+      { id:'t_lv_add', g:'s', tier:3, name:'たし算の さきどり', cond:'たし算で いちばん上の レベル(3桁＋3桁)に すすむ', coin:40, ok:function(){ return atMax('add'); } },
+      { id:'t_lv_sub', g:'s', tier:3, name:'ひき算の さきどり', cond:'ひき算で いちばん上の レベル(3桁－3桁)に すすむ', coin:40, ok:function(){ return atMax('sub'); } },
+      { id:'t_lv_mul', g:'s', tier:3, name:'かけ算の さきどり', cond:'かけ算で いちばん上の レベル(2桁×1桁)に すすむ', coin:40, ok:function(){ return atMax('mul'); } },
+      { id:'t_lv_div', g:'s', tier:3, name:'わり算の さきどり', cond:'わり算で いちばん上の レベルに すすむ',           coin:40, ok:function(){ return atMax('div'); } },
+      { id:'t_lv_all', g:'s', tier:4, name:'ぜんぶ さきどり',   cond:'＋ － × ÷ ぜんぶ いちばん上の レベルに すすむ',   coin:150, ok:function(){ return OPS4.every(atMax); } }
     ];
 
     /* ---- 絵 ---- */
@@ -10177,6 +10184,20 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         b = '<path d="M40 50c0 8 2 12 6 16" fill="none" stroke="'+D+'" stroke-width="4" stroke-linecap="round"/><circle cx="29" cy="24" r="13"'+f(B)+'/><circle cx="51" cy="24" r="13"'+f(B)+'/><circle cx="29" cy="46" r="13"'+f(B)+'/><circle cx="51" cy="46" r="13"'+f(B)+'/><circle cx="40" cy="35" r="7"'+f(D)+'/>'+(got ? txt(29, 29, 14, '＋', '#fff')+txt(51, 29, 14, '－', '#fff')+txt(29, 51, 14, '×', '#fff')+txt(51, 51, 14, '÷', '#fff') : mark(40, 35, 6))+plinth().replace('y="70"', 'y="72"').replace('y="73.5"', 'y="75.5"').replace('height="11"', 'height="9"'); break;
       case 't_d3':      /* 表彰台 */
         b = '<rect x="27" y="30" width="26" height="40"'+f(B)+'/><rect x="4" y="42" width="23" height="28"'+f(D)+'/><rect x="53" y="50" width="23" height="20"'+f(H)+'/>'+(got ? star(40, 18, 10, A1)+txt(40, 54, 22, '1', '#fff')+txt(15, 62, 17, '2', '#fff')+txt(64, 65, 15, '3', D) : mark(40, 20, 9))+'<rect x="2" y="70" width="76" height="6" rx="2"'+f(PL)+'/>'; break;
+      case 't_lv_add': case 't_lv_sub': case 't_lv_mul': case 't_lv_div': case 't_lv_all':   /* クリスタル(ガラス) */
+        var GC = { t_lv_add:'#FF8A5C', t_lv_sub:'#F2B21F', t_lv_mul:'#2FB67F', t_lv_div:'#4F7DF5', t_lv_all:'#7FE0F2' }[id], G = got ? GC : '#DDD5C7';
+        function gl(d, op){ return '<path d="'+d+'" fill="'+G+'" fill-opacity="'+(op || .78)+'"/>'; }
+        function glh(d){ return '<path d="'+d+'" fill="#fff" opacity=".55"/>'; }
+        var gs = got ? '#fff' : '#B3AA99';
+        if(id === 't_lv_add') b = gl('M24 62L30 10 54 4 56 62z')+'<path d="M24 62L30 10 40 8 38 62z" fill="#fff" opacity=".38"/>'+glh('M33 14l5-1-3 40-4 1z')+txt(46, 40, 26, '＋', gs)+plinth().replace('y="70"', 'y="64"').replace('y="73.5"', 'y="67.5"');
+        else if(id === 't_lv_sub') b = gl('M20 62V26Q20 6 40 6Q60 6 60 26V62z')+'<path d="M20 62V26Q20 6 40 6V62z" fill="#fff" opacity=".36"/>'+glh('M26 24Q27 14 36 11L34 50L27 52z')+txt(40, 44, 28, '－', gs)+plinth().replace('y="70"', 'y="64"').replace('y="73.5"', 'y="67.5"');
+        else if(id === 't_lv_mul') b = gl('M40 3L65 32L40 62L15 32z')+'<path d="M40 3L15 32L40 62z" fill="#fff" opacity=".36"/>'+glh('M38 9L24 27l5 2 9-14z')+'<path d="M15 32h50M40 3v59" stroke="#fff" stroke-width="1.2" opacity=".6"/>'+txt(40, 42, 24, '×', gs)+plinth().replace('y="70"', 'y="64"').replace('y="73.5"', 'y="67.5"');
+        else if(id === 't_lv_div') b = '<circle cx="40" cy="34" r="28" fill="'+G+'" fill-opacity=".78"/><path d="M40 6a28 28 0 0 0 0 56z" fill="#fff" opacity=".36"/><circle cx="40" cy="34" r="21" fill="none" stroke="#fff" stroke-width="1.5" opacity=".55"/>'+glh('M22 20a22 22 0 0 1 12-11l-3 5a17 17 0 0 0-7 10z')+txt(40, 44, 28, '÷', gs)+plinth().replace('y="70"', 'y="68"').replace('y="73.5"', 'y="71.5"').replace('height="11"', 'height="9"');
+        else{
+          var LC = got ? '#FF8A5C' : '#DDD5C7', RC = got ? '#2FB67F' : '#DDD5C7';
+          b = '<path d="M14 64V40l8-10 8 10v24z" fill="'+LC+'" fill-opacity=".8"/><path d="M50 64V40l8-10 8 10v24z" fill="'+RC+'" fill-opacity=".8"/><path d="M30 64V24l10-18 10 18v40z" fill="'+G+'" fill-opacity=".85"/><path d="M30 64V24l10-18v58z" fill="#fff" opacity=".36"/><path d="M14 64V40l8-10v34z" fill="#fff" opacity=".3"/><path d="M50 64V40l8-10v34z" fill="#fff" opacity=".3"/>'+(got ? star(40, 22, 8, '#FFC94A')+txt(40, 50, 13, '＋－×÷', '#fff') : mark(40, 30, 8))+plinth();
+        }
+        break;
       default:          /* t_4d 100問マスター: はねの ついた たまと ダイヤ */
         var wing = '<path d="M33 40C20 42 8 34 3 20c8 3 14 3 21 7-4-3-9-7-11-12 9 2 17 6 22 12z"'+f(B)+'/><path d="M33 40C24 38 16 34 12 27"'+' fill="none" stroke="'+H+'" stroke-width="2" opacity=".8"/>';
         b = wing+'<g transform="translate(80 0) scale(-1 1)">'+wing+'</g><circle cx="40" cy="38" r="14"'+f(D)+'/><circle cx="40" cy="38" r="10"'+f(B)+'/>'+mark(40, 38, 6.5, '#fff')+'<polygon points="40,6 47,15 40,25 33,15"'+f(got ? '#8BE8F7' : '#D8D1C3')+'/><path d="M33 15h14" stroke="#fff" stroke-width="1.4" opacity=".8"/>'+stem(52)+plinth(); break;
@@ -10286,7 +10307,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var m = data(), h = '';
       TROPHIES.forEach(function(T, ix){
         var g = m.tro[T.id];
-        if(T.g === 'p' && !TROPHIES[ix - 1].g) h += '</div><h3 class="md-grp">れんしゅうの トロフィー</h3><p class="md-grp-sub">プリントも ちょうせんも 100問も、やった ぶんだけ あつまるよ。</p><div class="md-shelf">';
+        if(ix > 0 && T.g !== TROPHIES[ix - 1].g) h += '</div><h3 class="md-grp">'+(T.g === 's' ? 'さきどりの トロフィー' : 'れんしゅうの トロフィー')+'</h3><p class="md-grp-sub">'+(T.g === 's' ? 'その 計算の いちばん上の レベルに すすむと もらえるよ。' : 'プリントも ちょうせんも 100問も、やった ぶんだけ あつまるよ。')+'</p><div class="md-shelf">';
         h += '<div class="tr-cell'+(g ? ' got' : '')+'">'+trophySVG(T.id, !!g)+'<b>'+(g ? T.name : '？？？')+'</b><span>'+T.cond+'</span>'+(g ? '<small>'+g.replace(/^\d+-/, '').replace('-', '/')+'</small>' : '<small>＋'+T.coin+'コイン</small>')+'</div>';
       });
       $('mdShelf').innerHTML = '<h3 class="md-grp">100問の トロフィー</h3><div class="md-shelf">' + h + '</div>';
