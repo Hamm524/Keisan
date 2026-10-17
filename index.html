@@ -1761,6 +1761,13 @@
   .chip.on{ background:var(--c); border-color:var(--c); color:#fff; }
   .chip.on .cs{ color:#fff; }
   .chip.now{ border-color:var(--c); box-shadow:0 0 0 3px color-mix(in srgb, var(--c) 25%, #fff); color:var(--ink); }
+  .today.asg .print-info, .today.asg .today-map, .today.asg .today-goal, .today.asg .today-hint, .today.asg .today-alt{ display:none; }
+  .today.asg .chip{ padding:8px 2px; }
+  .today.asg .chip .cs{ font-size:24px; }
+  .chip{ background:var(--surface-2, #fff); border-color:var(--line, #E3D6C0); }
+  .chip.on{ background:var(--c); border-color:var(--c); }
+  .today .g3btn{ background:var(--surface-2, #fff); color:var(--ink); }
+  .today.asg .today-label{ display:none; }
   .g3btn{ display:block; width:100%; margin-top:8px; padding:8px 12px; border-radius:14px; border:2.5px solid var(--op-mul); background:#fff; color:var(--ink); font-weight:900; font-size:14px; text-align:center; }
   .g3btn small{ display:block; font-size:11px; font-weight:800; color:var(--ink-soft); margin-top:2px; }
   .rec-rule{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin:8px 0 10px; line-height:1.6; }
@@ -4766,16 +4773,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var asg = assignedMode();
     if(asg){ rec = state.homeOp = nextSheetOp(); state.review = null; }
     $('opTabs').style.display = asg ? 'none' : '';
-    $('todayCard').querySelector('.today-label').textContent = asg ? 'きょうの プリント(自分の しんどに あわせて えらんだよ)' : '何を練習する?';
+    $('todayCard').classList.toggle('asg', asg);
+    $('todayCard').querySelector('.today-label').textContent = asg ? 'きょうの プリント' : '何を練習する?';
     var meta = OP_META[rec];
-    $('todayBtn').innerHTML = asg ? 'プリント '+(sheetsToday() + 1)+'まい目を 始める('+meta.label+')' : (rec==='mix' ? '混ぜて' : meta.label+'の') + 'プリントを始める';
+    $('todayBtn').innerHTML = asg ? 'プリント '+(sheetsToday() + 1)+'まい目 スタート' : (rec==='mix' ? '混ぜて' : meta.label+'の') + 'プリントを始める';
     renderPrintInfo(rec);
     var sn = sheetsToday(), sd = '';
     var plan = sheetPlan();
     for(var k = 0; k < DAILY_SHEETS; k++){
       if(sn < DAILY_SHEETS){
         var po = plan[k], pl = currentLevelIndex(po);
-        sd += '<b class="chip'+(k < sn ? ' on' : (k === sn ? ' now' : ''))+'" style="--c:var('+OP_META[po].color+')"><span class="cs">'+OP_META[po].symbol+'</span><small>Lv'+(pl + 1)+'・'+(stepFor(po, pl) + 1)+'/3</small></b>';
+        sd += '<b class="chip'+(k < sn ? ' on' : (k === sn ? ' now' : ''))+'" style="--c:var('+OP_META[po].color+')"><span class="cs">'+OP_META[po].symbol+'</span>'+(k < sn ? '<small>✓</small>' : '')+'</b>';
       }else sd += '<i class="on"></i>';
     }
     $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">きょうの プリント <b class="num">'+Math.min(sn, DAILY_SHEETS)+'/'+DAILY_SHEETS+'</b>まい</span><span class="sheets-d'+(sn < DAILY_SHEETS ? ' wide' : '')+'">'+sd+'</span></div>' +
@@ -4793,7 +4801,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }else{
       var info = levelInfoText(rec);
       var def = LEVELS[rec][currentLevelIndex(rec)];
-      $('todayMain').innerHTML = '<span class="sym num">'+meta.symbol+'</span><span><span class="t1">'+meta.label+'</span><br><span class="t2">'+info.label+'・'+rb(def.desc)+'</span><br><span class="t2 stp">'+stepText(rec)+'</span></span>';
+      $('todayMain').innerHTML = '<span class="sym num">'+meta.symbol+'</span><span><span class="t1">'+meta.label+'</span><br><span class="t2">'+(asg ? '' : info.label+'・')+rb(def.desc)+'</span><br><span class="t2 stp">'+stepText(rec)+'</span></span>';
       $('todayMap').innerHTML = mapHTML(rec, !asg);
       var rv = reviewLv(rec);
       if(rv != null){
