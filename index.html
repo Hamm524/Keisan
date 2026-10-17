@@ -10295,12 +10295,24 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var o = '<svg viewBox="0 0 340 200" aria-label="' + HOUSE[n] + '">';
       if(hs.deco.rainbow) o += '<g fill="none" stroke-width="7" opacity=".55"><path d="M40,180 A130,130 0 0 1 300,180" stroke="#FF8FB1"/><path d="M47,180 A123,123 0 0 1 293,180" stroke="#FFD24C"/><path d="M54,180 A116,116 0 0 1 286,180" stroke="#9BD66B"/><path d="M61,180 A109,109 0 0 1 279,180" stroke="#7FB8F0"/></g>';
       /* じめん・みち・草花 */
-      /* 花: x,y = ねもと、c = 花の 色、k 0 デイジー / 1 チューリップ、z = 大きさ */
+      /* 花: x,y = ねもと、c = 花の 色、k 0 デイジー / 1 チューリップ / 2 バラ / 3 パンジー / 4 ヒヤシンス、z = 大きさ */
       function flw(x, y, c, k, z){
         z = z || 1; var f = function(v){ return (+v).toFixed(1); }, hy = y - 9 * z, g = '';
         g += '<path d="M'+f(x)+','+f(y)+' Q'+f(x - .8 * z)+','+f(y - 4.5 * z)+' '+f(x)+','+f(hy + 1)+'" stroke="#4E9A4A" stroke-width="'+f(1.1 * z)+'" fill="none"/>';
         g += '<ellipse cx="'+f(x + 1.9 * z)+'" cy="'+f(y - 3.5 * z)+'" rx="'+f(2.3 * z)+'" ry="'+f(.95 * z)+'" transform="rotate(-35 '+f(x + 1.9 * z)+' '+f(y - 3.5 * z)+')" fill="#5DB35A"/>';
-        if(k){
+        if(k === 2){
+          g += '<circle cx="'+f(x)+'" cy="'+f(hy)+'" r="'+f(3 * z)+'" fill="'+c+'"/><path d="M'+f(x - 2 * z)+','+f(hy + .4 * z)+' A'+f(2 * z)+','+f(1.8 * z)+' 0 0 0 '+f(x + 2 * z)+','+f(hy + .2 * z)+
+            ' M'+f(x - 1.2 * z)+','+f(hy - .4 * z)+' A'+f(1.3 * z)+','+f(1.2 * z)+' 0 1 1 '+f(x + .9 * z)+','+f(hy + .8 * z)+' M'+f(x - .3 * z)+','+f(hy - 1.6 * z)+' Q'+f(x + 1.6 * z)+','+f(hy - 1.8 * z)+' '+f(x + 2.2 * z)+','+f(hy - .4 * z)+
+            '" stroke="'+shade(c, -.22)+'" stroke-width="'+f(.6 * z)+'" fill="none" stroke-linecap="round"/>';
+        } else if(k === 3){
+          var cd = shade(c, -.25);
+          g += '<circle cx="'+f(x - 1.5 * z)+'" cy="'+f(hy - 1.4 * z)+'" r="'+f(1.8 * z)+'" fill="'+cd+'"/><circle cx="'+f(x + 1.5 * z)+'" cy="'+f(hy - 1.4 * z)+'" r="'+f(1.8 * z)+'" fill="'+cd+'"/>';
+          g += '<circle cx="'+f(x - 2 * z)+'" cy="'+f(hy + .4 * z)+'" r="'+f(1.8 * z)+'" fill="'+c+'"/><circle cx="'+f(x + 2 * z)+'" cy="'+f(hy + .4 * z)+'" r="'+f(1.8 * z)+'" fill="'+c+'"/><circle cx="'+f(x)+'" cy="'+f(hy + 1.4 * z)+'" r="'+f(2 * z)+'" fill="'+c+'"/>';
+          g += '<circle cx="'+f(x)+'" cy="'+f(hy + .4 * z)+'" r="'+f(1.3 * z)+'" fill="#3B2D55" opacity=".75"/><circle cx="'+f(x)+'" cy="'+f(hy + .1 * z)+'" r="'+f(.5 * z)+'" fill="#FFD24C"/>';
+        } else if(k === 4){
+          for(var hk = 0; hk < 7; hk++){ var hr = hk < 3 ? 1.25 : hk < 6 ? 1.1 : .9, hx = x + [-1.1, 1.1, 0, -1, 1, 0, 0][hk] * z, hh = hy + [2, 2, 1, -.6, -.6, -1.9, -3.2][hk] * z;
+            g += '<circle cx="'+f(hx)+'" cy="'+f(hh)+'" r="'+f(hr * z)+'" fill="'+(hk % 2 ? shade(c, -.12) : c)+'"/>'; }
+        } else if(k){
           g += '<path d="M'+f(x - 2.7 * z)+','+f(hy - 2.4 * z)+' Q'+f(x - 3 * z)+','+f(hy + 2.9 * z)+' '+f(x)+','+f(hy + 2.9 * z)+' Q'+f(x + 3 * z)+','+f(hy + 2.9 * z)+' '+f(x + 2.7 * z)+','+f(hy - 2.4 * z)+
             ' L'+f(x + 1.35 * z)+','+f(hy - .7 * z)+' L'+f(x)+','+f(hy - 2.9 * z)+' L'+f(x - 1.35 * z)+','+f(hy - .7 * z)+' Z" fill="'+c+'"/>';
           g += '<path d="M'+f(x - 1.6 * z)+','+f(hy - .2 * z)+' Q'+f(x - 1.6 * z)+','+f(hy + 1.9 * z)+' '+f(x - .2 * z)+','+f(hy + 2.1 * z)+'" stroke="#fff" stroke-opacity=".5" stroke-width="'+f(.7 * z)+'" fill="none"/>';
@@ -10319,10 +10331,18 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }[yd];
       o += '<path d="M-40,176 Q170,164 380,176 L380,200 L-40,200 Z" fill="#8FD68C"/>' + (pat ? '<defs>' + pat + '</defs><path d="' + front + '" fill="url(#' + yid + ')"/>' : '<path d="' + front + '" fill="#7CC77A"/>');
       o += '<path d="M150,180 L170,180 L182,200 L138,200 Z" fill="' + (yd === 'h_ybrick' ? '#E9A585' : yd === 'h_ystone' ? '#D6D1C9' : '#E9D3A6') + '"/>';
-      if(yd === 'h_yflower') for(var fk = 0; fk < 64; fk++){
-        var fx = -38 + (fk % 32) * 13.4 + (fk >= 32 ? 6.7 : 0) + ((fk * 7) % 5) - 2, fy = (fk >= 32 ? 199 : 191) + ((fk * 3) % 4) - 1;
-        if(fx > 132 - (fy - 180) * .3 && fx < 188 + (fy - 180) * .3) continue;   /* みちは あける */
-        o += flw(fx, fy, FC[(fk * 3) % FC.length], (fk * 5) % 3 === 0 ? 1 : 0, .85);
+      if(yd === 'h_yflower'){
+        /* 土の うね(みちの ところは あける) */
+        o += '<path d="M-40,186.5 Q40,183 128,185 L124,200 L-40,200 Z M194,185 Q290,183 380,186.5 L380,200 L198,200 Z" fill="#9A6A48"/><path d="M-40,186.5 Q40,183 128,185 M194,185 Q290,183 380,186.5" stroke="#6FB86C" stroke-width="2" fill="none"/>';
+        var GRP = [['#E5484D', 2, 1], ['#FF9E6B', 1, 4], ['#FFD24C', 0, 3], ['#FFFFFF', 0, 4], ['#5B7CF0', 3, 2], ['#9B6BE0', 4, 3], ['#FF8FB1', 2, 1]];
+        for(var row = 0; row < 2; row++){
+          var xs = [];
+          for(var fx = -36 + row * 4.5; fx < 378; fx += 9) if(!(fx > 120 - row * 4 && fx < 200 + row * 4)) xs.push(fx);
+          xs.forEach(function(fx, q){   /* 色は ならびの じゅんに 7つに わける */
+            var gp = GRP[Math.floor(q / xs.length * 7)], kk = q % 2 ? gp[1] : gp[2];
+            o += flw(fx, row ? 199.5 : 192, gp[0], kk, row ? .95 : .85);
+          });
+        }
       }
       o += '<circle cx="34" cy="60" r="16" fill="#FFF3C4" opacity=".9"/><g fill="#fff" opacity=".9"><circle cx="250" cy="34" r="9"/><circle cx="262" cy="30" r="12"/><circle cx="274" cy="35" r="8"/></g>';
       var pin = '';   /* いまの へやの しるしは ほかの かべより 上に かく */
@@ -10358,7 +10378,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       function mv(id, g){ var p = pos[id] || [0, 0]; return '<g class="hy" data-y="' + id + '" transform="translate(' + (+p[0] || 0) + ' ' + (+p[1] || 0) + ')">' + g + '</g>'; }
       if(hs.deco.flower) o += mv('flower', (function(){
         var g = '';
-        [[180, 'FF8FB1', 1], [184.5, 'fff', 0], [189, 'FFD24C', 1], [193.5, 'B79CF0', 0], [198, 'FF6B6B', 1], [202.5, 'fff', 0], [207, 'FF8FB1', 1]].forEach(function(p, k){ g += flw(p[0], 168 - (k % 2) * 1.5, '#' + p[1], p[2], 1.05); });
+        [[180, 'E5484D', 2], [184.5, 'FF9E6B', 1], [189, 'FFD24C', 0], [193.5, 'FFFFFF', 4], [198, '5B7CF0', 3], [202.5, '9B6BE0', 4], [207, 'FF8FB1', 2]].forEach(function(p, k){ g += flw(p[0], 168 - (k % 2) * 1.5, '#' + p[1], p[2], 1.05); });
         g += '<path d="M176,167.5 h35 v9.5 a2,2 0 0 1 -2,2 h-31 a2,2 0 0 1 -2,-2 Z" fill="#C9775A"/><rect x="175" y="166" width="37" height="3" rx="1.5" fill="#B5654A"/><path d="M176,172.5 H211 M184,169 V172.5 M196,169 V172.5 M208,169 V172.5 M190,172.5 V179 M202,172.5 V179 M178,172.5 V179" stroke="#E3A285" stroke-width=".8"/>';
         g += '<ellipse cx="130" cy="177" rx="9" ry="2.5" fill="#5DAA5B"/>' + flw(124, 177, '#FF8FB1', 1, .95) + flw(129, 178, '#fff', 0, 1) + flw(134, 177, '#FFD24C', 1, .9) + flw(131.5, 176, '#B79CF0', 0, .8);
         return g;
@@ -10372,6 +10392,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(hs.deco.laundry) o += mv('laundry', '<g><rect x="312" y="140" width="3" height="46" fill="#A77A45"/><rect x="364" y="140" width="3" height="46" fill="#A77A45"/><path d="M313,143 Q340,150 366,143" stroke="#8A8296" stroke-width="1.2" fill="none"/>' +
         '<path d="M320,145 h12 l2,6 h-3 v12 h-10 v-12 h-3 Z" fill="#FF8FB1"/><path d="M338,147 h10 v14 h-10 Z" fill="#7FB8F0"/><path d="M352,146 h9 l-1,10 h-7 Z" fill="#FFD24C"/></g>');
       if(hs.deco.bench) o += mv('bench', '<g><rect x="232" y="172" width="34" height="4" rx="2" fill="#C99A62"/><rect x="232" y="164" width="34" height="3.5" rx="1.75" fill="#C99A62"/><rect x="235" y="167" width="2.5" height="17" fill="#8A6A45"/><rect x="261" y="167" width="2.5" height="17" fill="#8A6A45"/></g>');
+      if(hs.deco.fountain) o += mv('fountain', '<g><ellipse cx="292" cy="189" rx="19" ry="3.5" fill="#000" opacity=".08"/><path d="M274,178 h36 v8 a18,4 0 0 1 -36,0 Z" fill="#C9C3BA"/><ellipse cx="292" cy="178" rx="18" ry="4.2" fill="#E2DDD5"/><ellipse cx="292" cy="178.4" rx="15" ry="3" fill="#8FCBF0"/>' +
+        '<path d="M290,178 v-10 h4 v10 Z" fill="#D6D1C9"/><path d="M285,167 h14 l-2,3 h-10 Z" fill="#E2DDD5"/><ellipse cx="292" cy="167" rx="7" ry="1.6" fill="#8FCBF0"/>' +
+        '<g stroke="#BFE6FF" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-dasharray="3 2"><path d="M292,166 Q292,158 286,162 L284,176"><animate attributeName="stroke-dashoffset" from="10" to="0" dur=".8s" repeatCount="indefinite"/></path><path d="M292,166 Q292,158 298,162 L300,176"><animate attributeName="stroke-dashoffset" from="10" to="0" dur=".8s" repeatCount="indefinite"/></path><path d="M292,166 V158"><animate attributeName="stroke-dashoffset" from="10" to="0" dur=".6s" repeatCount="indefinite"/></path></g></g>');
       if(hs.deco.lamp) o += mv('lamp', '<g><rect x="374" y="136" width="3" height="50" fill="#5A5468"/><path d="M369,136 h13 l-2,-10 h-9 Z" fill="#5A5468"/><circle cx="375.5" cy="131" r="4.5" fill="#FFE58A"/><circle cx="375.5" cy="131" r="10" fill="#FFE58A" opacity=".25"/><rect x="371" y="184" width="11" height="3" rx="1.5" fill="#5A5468"/></g>');
       /* つぎに できる ところ(点線) */
       if(n < 5 && !mini){
@@ -10389,7 +10412,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { k:'wall', name:'かべ', list:[ ['h_wcream','クリーム','#FFF6E8',0], ['h_wpink','ピンク','#FFE1EA',30], ['h_wmint','ミント','#DCF3E6',30], ['h_wsky','そらいろ','#E0EEFF',30], ['h_wlemon','レモン','#FFF3B8',30], ['h_wlav','ラベンダー','#EEE4FF',30], ['h_wwood','き','#E7C9A0',40] ] },
       { k:'door', name:'ドア', list:[ ['h_dwood','き','#C99A62',0], ['h_dred','あか','#E5484D',20], ['h_dblue','あお','#5B7CFA',20], ['h_dgreen','みどり','#2FAE66',20], ['h_dpink','ピンク','#FF8FB1',20] ] },
       { k:'yard', name:'にわ', list:[ ['h_ylawn','しばふ','#7CC77A',0], ['h_ybrick','レンガ','#D98B6A',40], ['h_ystone','いしだたみ','#C9C4BC',40], ['h_ysand','すな','#F2DDB0',30], ['h_yflower','おはなばたけ','#FF8FB1',60] ] },
-      { k:'deco', name:'かざり', list:[ ['dog','いぬごや','',50], ['laundry','ものほし','',40], ['bench','ベンチ','',40], ['lamp','がいとう','',50],  ['flower','<ruby>花壇<rt>かだん</rt></ruby>','',0], ['post','ポスト','',30], ['tree','木','',40], ['fence','さく','',40], ['garland','ガーランド','',40], ['smoke','えんとつの けむり','',30], ['rainbow','にじ','',80] ] }
+      { k:'deco', name:'かざり', list:[ ['dog','いぬごや','',50], ['laundry','ものほし','',40], ['bench','ベンチ','',40], ['lamp','がいとう','',50],  ['flower','<ruby>花壇<rt>かだん</rt></ruby>','',0], ['fountain','ふんすい','',80], ['post','ポスト','',30], ['tree','木','',40], ['fence','さく','',40], ['garland','ガーランド','',40], ['smoke','えんとつの けむり','',30], ['rainbow','にじ','',80] ] }
     ], BYH = {};
     HPARTS.forEach(function(p){ p.list.forEach(function(x){ BYH[x[0]] = { id:x[0], name:x[1], c:x[2], price:x[3], part:p }; }); });
     function getHS(){
