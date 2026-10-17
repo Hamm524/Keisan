@@ -1767,7 +1767,7 @@
   .chip{ background:var(--surface-2, #fff); border-color:var(--line, #E3D6C0); }
   .chip.on{ background:var(--c); border-color:var(--c); }
   .today .g3btn{ background:var(--surface-2, #fff); color:var(--ink); }
-  .today.asg .today-label{ display:none; }
+  .today.asg .today-label, .today.asg .today-main, .today.asg .sheets-d{ display:none; }
   .g3btn{ display:block; width:100%; margin-top:8px; padding:8px 12px; border-radius:14px; border:2.5px solid var(--op-mul); background:#fff; color:var(--ink); font-weight:900; font-size:14px; text-align:center; }
   .g3btn small{ display:block; font-size:11px; font-weight:800; color:var(--ink-soft); margin-top:2px; }
   .rec-rule{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin:8px 0 10px; line-height:1.6; }
@@ -4418,13 +4418,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(safeGet('keisan_grade3')) return false;
     return SINGLE_OPS.some(function(o){ return currentLevelIndex(o) < G3_START[o]; });
   }
-  function applyGrade3(){
+  function applyGrade3(silent){
     SINGLE_OPS.forEach(function(o){
       if(currentLevelIndex(o) < G3_START[o]){ safeSet('keisan_level_' + o, G3_START[o]); safeSet('keisan_clears_' + o + '_' + G3_START[o], 0); }
     });
     safeSet('keisan_grade3', 1);
     safeSet('keisan_plan', null);
-    refreshHome();
+    if(!silent) refreshHome();
   }
   document.addEventListener('click', function(e){
     if(e.target.closest && e.target.closest('#g3Btn')) applyGrade3();
@@ -4770,6 +4770,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('opTabs').innerHTML = h;
   }
   function renderToday(rec){
+    if(grade3Open()) applyGrade3(true);
     var asg = assignedMode();
     if(asg){ rec = state.homeOp = nextSheetOp(); state.review = null; }
     $('opTabs').style.display = asg ? 'none' : '';
@@ -4788,7 +4789,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">今日の プリント <b class="num">'+Math.min(sn, DAILY_SHEETS)+'/'+DAILY_SHEETS+'</b>枚</span><span class="sheets-d'+(sn < DAILY_SHEETS ? ' wide' : '')+'">'+sd+'</span></div>' +
       '<span class="sz-next">1枚 '+SHEET_N+'問。'+(sn >= DAILY_SHEETS ? '5枚 できたよ!もっと やっても OK' : 'あと <b>'+(DAILY_SHEETS - sn)+'枚</b>で 今日の プリントが クリア!')+'</span>' +
-      (grade3Open() ? '<button type="button" class="btn g3btn" id="g3Btn">小3の 進度から 始める<small>'+rb('＋－は 3桁・×は 2桁×1桁・÷は 答えが2桁 から。今より 下のときだけ 進むよ')+'</small></button>' : '');
+      '';
     renderWeekend(rec);
     if(rec === 'mix'){
       $('todayMain').innerHTML = '<span class="sym num" style="font-size:15px">MIX</span><span><span class="t1">混ぜて練習</span><br><span class="t2">＋－×÷が混ざって出るよ</span></span>';
@@ -7670,9 +7671,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(state.print && state.print.kind === 'daily' && assignedMode()){
       var no = nextSheetOp(), nm = OP_META[no];
       $('retryBtn').className = 'btn btn-primary';
-      $('retryBtn').textContent = '次の プリント('+(sheetsToday() + 1)+'/'+DAILY_SHEETS+'枚・'+nm.label+')';
+      $('retryBtn').textContent = '次の プリント('+(sheetsToday() + 1)+'/'+DAILY_SHEETS+'枚)';
       $('retryBtn').onclick = function(){ state.homeOp = no; startPrint(no, printSize(), 'daily'); };
-      note.innerHTML = '今日の プリント <b class="num">'+sheetsToday()+'/'+DAILY_SHEETS+'</b>枚 終わり!次は <b>'+nm.label+'</b>(Lv.'+(currentLevelIndex(no) + 1)+'・'+stepText(no)+')';
+      note.innerHTML = '今日の プリント <b class="num">'+sheetsToday()+'/'+DAILY_SHEETS+'</b>枚 終わり!この 調子で 次の プリントも やろう!';
       note.hidden = false; ops.hidden = true;
       return;
     }
