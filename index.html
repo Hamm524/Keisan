@@ -10289,6 +10289,21 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---- おうちの そと見(へやの 数で そだつ) ---- */
     var HOUSE = ['', 'ちいさな おうち', 'はなれの ある おうち', '2かいだての おうち', 'となりの へやも ある おうち', 'とうの ある おやしき'];
     var GROW = ['', '', 'はなれ', '2かい', 'となりの へや', 'とう'];
+    /* 月ごとの 花 [なまえ, 7つの [色, 花A, 花B]](いまの きせつの 花ばたけ) */
+    var MONF = [
+      ['スイセン・つばき', [['#FFFFFF', 11, 11], ['#E5484D', 2, 2], ['#FFF3C4', 11, 11], ['#FF8FB1', 2, 2], ['#FFFFFF', 11, 11], ['#E5484D', 2, 2], ['#FFFFFF', 11, 2]]],
+      ['うめ・スイセン', [['#FF8FB1', 12, 12], ['#FFFFFF', 12, 11], ['#E5484D', 12, 12], ['#FFFFFF', 11, 11], ['#FFB8CF', 12, 12], ['#FFFFFF', 12, 11], ['#FF8FB1', 12, 12]]],
+      ['すみれ・ヒヤシンス', [['#7B4FC9', 9, 9], ['#FF8FB1', 4, 4], ['#9B6BE0', 9, 4], ['#FFFFFF', 4, 9], ['#7B4FC9', 9, 9], ['#7FB8F0', 4, 4], ['#B79CF0', 9, 9]]],
+      ['チューリップ', [['#E5484D', 1, 1], ['#FFD24C', 1, 1], ['#FF8FB1', 1, 1], ['#FFFFFF', 1, 1], ['#FF9E6B', 1, 1], ['#B79CF0', 1, 1], ['#FF6FA0', 1, 1]]],
+      ['バラ', [['#E5484D', 2, 2], ['#FF6FA0', 2, 2], ['#FF8FB1', 2, 2], ['#FFFFFF', 2, 2], ['#FFD24C', 2, 2], ['#FF9E6B', 2, 2], ['#C2185B', 2, 2]]],
+      ['あじさい', [['#7F9BF0', 10, 10], ['#9B8BE8', 10, 10], ['#B79CF0', 10, 10], ['#FF8FB1', 10, 10], ['#7FB8F0', 10, 10], ['#9B8BE8', 10, 10], ['#5B7CF0', 10, 10]]],
+      ['あさがお・ひまわり', [['#5B7CF0', 13, 13], ['#FFD24C', 5, 5], ['#B79CF0', 13, 13], ['#FF8FB1', 13, 13], ['#FFD24C', 5, 5], ['#7F9BF0', 13, 13], ['#9B6BE0', 13, 13]]],
+      ['ひまわり', [['#FFD24C', 5, 5], ['#FFE58A', 5, 5], ['#FFD24C', 5, 5], ['#FF9E6B', 5, 5], ['#FFD24C', 5, 5], ['#FFE58A', 5, 5], ['#FFD24C', 5, 5]]],
+      ['ひがんばな・コスモス', [['#E5484D', 14, 14], ['#FF8FB1', 6, 6], ['#E5484D', 14, 14], ['#FFFFFF', 6, 6], ['#E5484D', 14, 14], ['#FF6FA0', 6, 6], ['#E5484D', 14, 14]]],
+      ['コスモス・きく', [['#FF8FB1', 6, 6], ['#FFFFFF', 6, 8], ['#FFD24C', 8, 6], ['#FF9E6B', 8, 8], ['#E5484D', 8, 6], ['#B79CF0', 6, 8], ['#FF6FA0', 6, 8]]],
+      ['きく', [['#FFD24C', 8, 8], ['#FFFFFF', 8, 8], ['#FF9E6B', 8, 8], ['#E5484D', 8, 8], ['#B79CF0', 8, 8], ['#FFE58A', 8, 8], ['#FFD24C', 8, 8]]],
+      ['ポインセチア・サザンカ', [['#E5484D', 7, 7], ['#FF8FB1', 2, 2], ['#E5484D', 7, 2], ['#FFFFFF', 2, 2], ['#E5484D', 7, 7], ['#FF8FB1', 2, 7], ['#E5484D', 7, 7]]]
+    ];
     function houseSvg(n, hs, mini){
       hs = hs || getHS();
       var C = { roof:BYH[hs.roof].c, wall:BYH[hs.wall].c, door:BYH[hs.door].c };
@@ -10296,12 +10311,44 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var o = '<svg viewBox="0 0 340 200" aria-label="' + HOUSE[n] + '">';
       if(hs.deco.rainbow) o += '<g fill="none" stroke-width="7" opacity=".55"><path d="M40,180 A130,130 0 0 1 300,180" stroke="#FF8FB1"/><path d="M47,180 A123,123 0 0 1 293,180" stroke="#FFD24C"/><path d="M54,180 A116,116 0 0 1 286,180" stroke="#9BD66B"/><path d="M61,180 A109,109 0 0 1 279,180" stroke="#7FB8F0"/></g>';
       /* じめん・みち・草花 */
-      /* 花: x,y = ねもと、c = 花の 色、k 0 デイジー / 1 チューリップ / 2 バラ / 3 パンジー / 4 ヒヤシンス / 5 ひまわり / 6 コスモス / 7 ポインセチア / 8 きく、z = 大きさ */
+      /* 花: x,y = ねもと、c = 花の 色、k 0 デイジー / 1 チューリップ / 2 バラ / 3 パンジー / 4 ヒヤシンス / 5 ひまわり / 6 コスモス / 7 ポインセチア / 8 きく / 9 すみれ / 10 あじさい / 11 スイセン / 12 うめ / 13 あさがお / 14 ひがんばな、z = 大きさ */
       function flw(x, y, c, k, z){
-        z = z || 1; var f = function(v){ return (+v).toFixed(1); }, hy = y - (k === 5 ? 13 : 9) * z, g = '';
+        z = z || 1; var f = function(v){ return (+v).toFixed(1); }, hy = y - (k === 5 ? 13 : k === 9 ? 6.5 : 9) * z, g = '';
         g += '<path d="M'+f(x)+','+f(y)+' Q'+f(x - .8 * z)+','+f(y - 4.5 * z)+' '+f(x)+','+f(hy + 1)+'" stroke="#4E9A4A" stroke-width="'+f(1.1 * z)+'" fill="none"/>';
-        g += '<ellipse cx="'+f(x + 1.9 * z)+'" cy="'+f(y - 3.5 * z)+'" rx="'+f(2.3 * z)+'" ry="'+f(.95 * z)+'" transform="rotate(-35 '+f(x + 1.9 * z)+' '+f(y - 3.5 * z)+')" fill="#5DB35A"/>';
-        if(k === 5 || k === 6 || k === 8){
+        if(k !== 14) g += '<ellipse cx="'+f(x + 1.9 * z)+'" cy="'+f(y - 3.5 * z)+'" rx="'+f(2.3 * z)+'" ry="'+f(.95 * z)+'" transform="rotate(-35 '+f(x + 1.9 * z)+' '+f(y - 3.5 * z)+')" fill="#5DB35A"/>';
+        if(k === 11){
+          for(var na = 0; na < 6; na++){ var tn = na * 1.0472 - 1.5708, nx = x + Math.cos(tn) * 1.9 * z, ny = hy + Math.sin(tn) * 1.9 * z;
+            g += '<ellipse cx="'+f(nx)+'" cy="'+f(ny)+'" rx="'+f(1.6 * z)+'" ry="'+f(.95 * z)+'" transform="rotate('+f(tn * 57.3)+' '+f(nx)+' '+f(ny)+')" fill="'+c+'"/>'; }
+          g += '<circle cx="'+f(x)+'" cy="'+f(hy)+'" r="'+f(1.3 * z)+'" fill="#FFB13D"/><circle cx="'+f(x)+'" cy="'+f(hy)+'" r="'+f(.7 * z)+'" fill="#F08A24"/>';
+        } else if(k === 12){
+          g += '<path d="M'+f(x)+','+f(hy + 3 * z)+' l'+f(3 * z)+','+f(-2 * z)+'" stroke="#6B4A32" stroke-width="'+f(.7 * z)+'"/>';
+          for(var ua = 0; ua < 5; ua++){ var tu = ua * 1.2566 - 1.5708; g += '<circle cx="'+f(x + Math.cos(tu) * 1.5 * z)+'" cy="'+f(hy + Math.sin(tu) * 1.5 * z)+'" r="'+f(1.35 * z)+'" fill="'+c+'"/>'; }
+          for(var ub = 0; ub < 6; ub++){ var tv = ub * 1.0472; g += '<path d="M'+f(x)+','+f(hy)+' l'+f(Math.cos(tv) * 1.1 * z)+','+f(Math.sin(tv) * 1.1 * z)+'" stroke="#E39B12" stroke-width="'+f(.25 * z)+'"/><circle cx="'+f(x + Math.cos(tv) * 1.2 * z)+'" cy="'+f(hy + Math.sin(tv) * 1.2 * z)+'" r="'+f(.25 * z)+'" fill="#FFD24C"/>'; }
+          g += '<circle cx="'+f(x)+'" cy="'+f(hy)+'" r="'+f(.45 * z)+'" fill="'+shade(c, -.3)+'"/>';
+        } else if(k === 13){
+          g += '<path d="M'+f(x + 1 * z)+','+f(y - 5 * z)+' q'+f(2.6 * z)+','+f(-1.6 * z)+' '+f(2.2 * z)+','+f(1.6 * z)+' q'+f(-.8 * z)+','+f(1.4 * z)+' '+f(-2.2 * z)+','+f(-1.6 * z)+' Z" fill="#5DB35A"/>';
+          g += '<circle cx="'+f(x)+'" cy="'+f(hy)+'" r="'+f(3.1 * z)+'" fill="'+c+'"/><circle cx="'+f(x)+'" cy="'+f(hy)+'" r="'+f(1.7 * z)+'" fill="#fff" opacity=".55"/><circle cx="'+f(x)+'" cy="'+f(hy)+'" r="'+f(.7 * z)+'" fill="#fff"/>';
+          for(var aa = 0; aa < 5; aa++){ var ta = aa * 1.2566 - 1.5708; g += '<path d="M'+f(x)+','+f(hy)+' L'+f(x + Math.cos(ta) * 3 * z)+','+f(hy + Math.sin(ta) * 3 * z)+'" stroke="'+shade(c, -.2)+'" stroke-width="'+f(.35 * z)+'"/>'; }
+        } else if(k === 14){
+          for(var ha = 0; ha < 6; ha++){ var th = ha * 1.0472 + .5, ex = x + Math.cos(th) * 2.6 * z, ey = hy + Math.sin(th) * 1.6 * z;
+            g += '<path d="M'+f(x)+','+f(hy)+' Q'+f(x + Math.cos(th) * 2 * z)+','+f(hy + Math.sin(th) * 1.4 * z - .8 * z)+' '+f(ex)+','+f(ey - 1 * z)+'" stroke="'+c+'" stroke-width="'+f(.9 * z)+'" fill="none" stroke-linecap="round"/>'; }
+          for(var hb = 0; hb < 6; hb++){ var ts = -1.5708 + (hb - 2.5) * .38, sx = x + Math.cos(ts) * 4.2 * z, sy = hy + Math.sin(ts) * 3.6 * z;
+            g += '<path d="M'+f(x)+','+f(hy)+' Q'+f(x + Math.cos(ts) * 2 * z)+','+f(hy - 2.4 * z)+' '+f(sx)+','+f(sy)+'" stroke="'+shade(c, -.1)+'" stroke-width="'+f(.3 * z)+'" fill="none"/><circle cx="'+f(sx)+'" cy="'+f(sy)+'" r="'+f(.35 * z)+'" fill="#FFD24C"/>'; }
+        } else if(k === 10){
+          g += '<ellipse cx="'+f(x - 2.6 * z)+'" cy="'+f(y - 4 * z)+'" rx="'+f(2.6 * z)+'" ry="'+f(1.4 * z)+'" fill="#4E9A4A"/><ellipse cx="'+f(x + 2.6 * z)+'" cy="'+f(y - 4.5 * z)+'" rx="'+f(2.6 * z)+'" ry="'+f(1.4 * z)+'" fill="#5DB35A"/>';
+          g += '<circle cx="'+f(x)+'" cy="'+f(hy)+'" r="'+f(3.4 * z)+'" fill="'+shade(c, -.1)+'"/>';
+          [[0, -2], [-1.9, -.9], [1.9, -.9], [-1.4, 1.3], [1.4, 1.3], [0, .2], [0, 2.2], [-2.4, .6], [2.4, .6]].forEach(function(d, q){
+            var cx = x + d[0] * z, cy = hy + d[1] * z;
+            g += '<circle cx="'+f(cx)+'" cy="'+f(cy)+'" r="'+f(1.15 * z)+'" fill="'+(q % 3 ? c : shade(c, .2))+'"/><circle cx="'+f(cx)+'" cy="'+f(cy)+'" r="'+f(.3 * z)+'" fill="#fff" opacity=".7"/>';
+          });
+        } else if(k === 9){
+          var vd = shade(c, -.2);
+          g += '<ellipse cx="'+f(x - 2 * z)+'" cy="'+f(y - 1.2 * z)+'" rx="'+f(1.8 * z)+'" ry="'+f(1.3 * z)+'" fill="#4E9A4A"/><ellipse cx="'+f(x + 2.1 * z)+'" cy="'+f(y - 1.6 * z)+'" rx="'+f(1.7 * z)+'" ry="'+f(1.2 * z)+'" fill="#5DB35A"/>';
+          g += '<ellipse cx="'+f(x - 1.1 * z)+'" cy="'+f(hy - 1.5 * z)+'" rx="'+f(1 * z)+'" ry="'+f(1.9 * z)+'" transform="rotate(-25 '+f(x - 1.1 * z)+' '+f(hy - 1.5 * z)+')" fill="'+vd+'"/><ellipse cx="'+f(x + 1.1 * z)+'" cy="'+f(hy - 1.5 * z)+'" rx="'+f(1 * z)+'" ry="'+f(1.9 * z)+'" transform="rotate(25 '+f(x + 1.1 * z)+' '+f(hy - 1.5 * z)+')" fill="'+vd+'"/>';
+          g += '<ellipse cx="'+f(x - 1.7 * z)+'" cy="'+f(hy + .2 * z)+'" rx="'+f(1.5 * z)+'" ry="'+f(.9 * z)+'" fill="'+c+'"/><ellipse cx="'+f(x + 1.7 * z)+'" cy="'+f(hy + .2 * z)+'" rx="'+f(1.5 * z)+'" ry="'+f(.9 * z)+'" fill="'+c+'"/>';
+          g += '<ellipse cx="'+f(x)+'" cy="'+f(hy + 1.5 * z)+'" rx="'+f(1.4 * z)+'" ry="'+f(1.5 * z)+'" fill="'+c+'"/><path d="M'+f(x - .5 * z)+','+f(hy + 1.2 * z)+' v'+f(1.2 * z)+' M'+f(x + .5 * z)+','+f(hy + 1.2 * z)+' v'+f(1.2 * z)+'" stroke="'+shade(c, -.35)+'" stroke-width="'+f(.3 * z)+'"/>';
+          g += '<circle cx="'+f(x)+'" cy="'+f(hy + .3 * z)+'" r="'+f(.6 * z)+'" fill="#fff"/><circle cx="'+f(x)+'" cy="'+f(hy + .3 * z)+'" r="'+f(.3 * z)+'" fill="#FFD24C"/>';
+        } else if(k === 5 || k === 6 || k === 8){
           var np = k === 6 ? 8 : k === 5 ? 12 : 14, pr = k === 5 ? 3.2 : k === 6 ? 2.3 : 2.1, pl = k === 5 ? 1.7 : k === 6 ? 1.6 : 1.2, pw = k === 6 ? .95 : k === 5 ? .9 : .7;
           if(k === 5) g += '<ellipse cx="'+f(x - 2.4 * z)+'" cy="'+f(y - 7 * z)+'" rx="'+f(2.6 * z)+'" ry="'+f(1.1 * z)+'" transform="rotate(30 '+f(x - 2.4 * z)+' '+f(y - 7 * z)+')" fill="#5DB35A"/>';
           for(var pa = 0; pa < np; pa++){ var tt = pa * 6.2832 / np, px = x + Math.cos(tt) * pr * z, py = hy + Math.sin(tt) * pr * z;
@@ -10314,9 +10361,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             g += '<ellipse cx="'+f(qx)+'" cy="'+f(qy)+'" rx="'+f(2.4 * z)+'" ry="'+f(1 * z)+'" transform="rotate('+f(tq * 57.3)+' '+f(qx)+' '+f(qy)+')" fill="'+c+'"/>'; }
           g += '<circle cx="'+f(x - .6 * z)+'" cy="'+f(hy)+'" r="'+f(.55 * z)+'" fill="#FFD24C"/><circle cx="'+f(x + .6 * z)+'" cy="'+f(hy + .3 * z)+'" r="'+f(.55 * z)+'" fill="#7CC77A"/><circle cx="'+f(x)+'" cy="'+f(hy - .6 * z)+'" r="'+f(.55 * z)+'" fill="#FFD24C"/>';
         } else if(k === 2){
-          g += '<circle cx="'+f(x)+'" cy="'+f(hy)+'" r="'+f(3 * z)+'" fill="'+c+'"/><path d="M'+f(x - 2 * z)+','+f(hy + .4 * z)+' A'+f(2 * z)+','+f(1.8 * z)+' 0 0 0 '+f(x + 2 * z)+','+f(hy + .2 * z)+
-            ' M'+f(x - 1.2 * z)+','+f(hy - .4 * z)+' A'+f(1.3 * z)+','+f(1.2 * z)+' 0 1 1 '+f(x + .9 * z)+','+f(hy + .8 * z)+' M'+f(x - .3 * z)+','+f(hy - 1.6 * z)+' Q'+f(x + 1.6 * z)+','+f(hy - 1.8 * z)+' '+f(x + 2.2 * z)+','+f(hy - .4 * z)+
-            '" stroke="'+shade(c, -.22)+'" stroke-width="'+f(.6 * z)+'" fill="none" stroke-linecap="round"/>';
+          g += '<ellipse cx="'+f(x - 2.2 * z)+'" cy="'+f(y - 5.5 * z)+'" rx="'+f(2 * z)+'" ry="'+f(.9 * z)+'" transform="rotate(30 '+f(x - 2.2 * z)+' '+f(y - 5.5 * z)+')" fill="#4E9A4A"/>';
+          for(var ra = 0; ra < 5; ra++){ var tr = ra * 1.2566 - 1.2; g += '<circle cx="'+f(x + Math.cos(tr) * 1.9 * z)+'" cy="'+f(hy + Math.sin(tr) * 1.7 * z)+'" r="'+f(1.9 * z)+'" fill="'+shade(c, -.12)+'"/>'; }
+          g += '<circle cx="'+f(x)+'" cy="'+f(hy)+'" r="'+f(2.5 * z)+'" fill="'+c+'"/>';
+          g += '<path d="M'+f(x + .2 * z)+','+f(hy - .2 * z)+' a'+f(.6 * z)+','+f(.6 * z)+' 0 1 1 '+f(.8 * z)+','+f(.6 * z)+' a'+f(1.3 * z)+','+f(1.3 * z)+' 0 1 1 '+f(-1.9 * z)+','+f(-1.2 * z)+' a'+f(2.1 * z)+','+f(2.1 * z)+' 0 0 1 '+f(3.1 * z)+','+f(.5 * z)+
+            '" stroke="'+shade(c, -.3)+'" stroke-width="'+f(.55 * z)+'" fill="none" stroke-linecap="round"/>';
+          g += '<path d="M'+f(x - 2 * z)+','+f(hy - 1.2 * z)+' q'+f(.8 * z)+','+f(-1.2 * z)+' '+f(2.2 * z)+','+f(-1.3 * z)+'" stroke="#fff" stroke-opacity=".45" stroke-width="'+f(.6 * z)+'" fill="none" stroke-linecap="round"/>';
         } else if(k === 3){
           var cd = shade(c, -.25);
           g += '<circle cx="'+f(x - 1.5 * z)+'" cy="'+f(hy - 1.4 * z)+'" r="'+f(1.8 * z)+'" fill="'+cd+'"/><circle cx="'+f(x + 1.5 * z)+'" cy="'+f(hy - 1.4 * z)+'" r="'+f(1.8 * z)+'" fill="'+cd+'"/>';
@@ -10360,11 +10410,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var yk = yd === 'h_yflowerNow' ? ['Wi', 'Wi', 'Sp', 'Sp', 'Sp', 'Su', 'Su', 'Su', 'Au', 'Au', 'Au', 'Wi'][new Date().getMonth()] : yd.slice(9);
         /* 土の うね(みちの ところは あける)、冬は ゆき */
         o += '<path d="M-40,186.5 Q40,183 128,185 L124,200 L-40,200 Z M194,185 Q290,183 380,186.5 L380,200 L198,200 Z" fill="' + (yk === 'Wi' ? '#EEF1F7' : '#9A6A48') + '"/>' + (yk === 'Wi' ? '<g fill="#fff">' + [-30, 10, 52, 96, 210, 252, 296, 340].map(function(x){ return '<ellipse cx="'+x+'" cy="187" rx="14" ry="2.2"/>'; }).join('') + '</g>' : '') + '<path d="M-40,186.5 Q40,183 128,185 M194,185 Q290,183 380,186.5" stroke="#6FB86C" stroke-width="2" fill="none"/>';
-        var GRP = {   /* [色, 花A, 花B] を 左から 7つ */
-          Sp:[['#FF8FB1', 1, 2], ['#FFB8CF', 4, 1], ['#FFD24C', 1, 3], ['#FFFFFF', 0, 4], ['#B79CF0', 3, 1], ['#FF6FA0', 1, 4], ['#FFB8CF', 2, 0]],
-          Su:[['#FFD24C', 5, 5], ['#FF9E6B', 5, 0], ['#5B7CF0', 4, 3], ['#FFFFFF', 0, 5], ['#E5484D', 2, 5], ['#7FB8F0', 4, 0], ['#FFD24C', 5, 1]],
-          Au:[['#FF8FB1', 6, 6], ['#FFFFFF', 6, 8], ['#FFD24C', 8, 6], ['#FF9E6B', 8, 8], ['#E5484D', 8, 6], ['#B79CF0', 6, 8], ['#FF6FA0', 6, 8]],
-          Wi:[['#E5484D', 7, 2], ['#FFFFFF', 0, 4], ['#E5484D', 2, 7], ['#FFFFFF', 4, 0], ['#E5484D', 7, 7], ['#FFFFFF', 0, 2], ['#E5484D', 2, 7]],
+        var GRP = yd === 'h_yflowerNow' ? MONF[new Date().getMonth()][1] : {   /* [色, 花A, 花B] を 左から 7つ */
+          Sp:[['#FF8FB1', 1, 2], ['#FFB8CF', 4, 1], ['#FFD24C', 1, 3], ['#FFFFFF', 0, 4], ['#7B4FC9', 9, 3], ['#FF6FA0', 1, 4], ['#FFB8CF', 2, 0]],
+          Su:[['#FFD24C', 5, 5], ['#5B7CF0', 13, 13], ['#7F9BF0', 10, 10], ['#FFFFFF', 13, 5], ['#B79CF0', 10, 13], ['#FF8FB1', 13, 13], ['#FFD24C', 5, 5]],
+          Au:[['#FF8FB1', 6, 6], ['#FFFFFF', 6, 8], ['#FFD24C', 8, 6], ['#E5484D', 14, 14], ['#FF9E6B', 8, 8], ['#B79CF0', 6, 8], ['#FF6FA0', 6, 8]],
+          Wi:[['#FFFFFF', 11, 11], ['#FF8FB1', 12, 12], ['#E5484D', 2, 2], ['#FFF3C4', 11, 11], ['#E5484D', 7, 7], ['#FFFFFF', 12, 11], ['#FF8FB1', 12, 2]],
+          h_yflowerR:[['#E5484D', 2, 2], ['#FF6FA0', 2, 2], ['#FF8FB1', 2, 2], ['#FFFFFF', 2, 2], ['#FFD24C', 2, 2], ['#FF9E6B', 2, 2], ['#C2185B', 2, 2]],
+          h_yflowerV:[['#7B4FC9', 9, 9], ['#9B6BE0', 9, 9], ['#B79CF0', 9, 9], ['#FFFFFF', 9, 9], ['#FFD24C', 9, 9], ['#9B6BE0', 9, 9], ['#5B3FB0', 9, 9]],
           h_yflowerY:[['#FFD24C', 0, 1], ['#FFE58A', 2, 4], ['#FFD24C', 3, 0], ['#FFFFFF', 0, 2], ['#FFD24C', 1, 4], ['#FFE58A', 0, 3], ['#FFD24C', 2, 0]],
           h_yflowerP:[['#FF8FB1', 2, 1], ['#FFB8CF', 4, 0], ['#FF6FA0', 3, 1], ['#FFFFFF', 0, 2], ['#FFB8CF', 1, 4], ['#FF8FB1', 0, 3], ['#FF6FA0', 2, 1]],
           h_yflowerB:[['#5B7CF0', 3, 4], ['#7FB8F0', 2, 0], ['#9B6BE0', 4, 1], ['#B79CF0', 0, 3], ['#5B7CF0', 1, 2], ['#7FB8F0', 4, 0], ['#9B6BE0', 3, 2]],
@@ -10471,7 +10523,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { k:'roof', name:'やね', list:[ ['h_rred','あか','#E98B6D',0], ['h_rblue','あお','#6FA8DC',30], ['h_rgreen','みどり','#6DBB6B',30], ['h_rpurple','むらさき','#A98BE8',30], ['h_rpink','ピンク','#F38FAE',30], ['h_rchoco','チョコ','#8A5A44',30], ['h_rgold','きんいろ','#E8B83A',60] ] },
       { k:'wall', name:'かべ', list:[ ['h_wcream','クリーム','#FFF6E8',0], ['h_wpink','ピンク','#FFE1EA',30], ['h_wmint','ミント','#DCF3E6',30], ['h_wsky','そらいろ','#E0EEFF',30], ['h_wlemon','レモン','#FFF3B8',30], ['h_wlav','ラベンダー','#EEE4FF',30], ['h_wwood','き','#E7C9A0',40] ] },
       { k:'door', name:'ドア', list:[ ['h_dwood','き','#C99A62',0], ['h_dred','あか','#E5484D',20], ['h_dblue','あお','#5B7CFA',20], ['h_dgreen','みどり','#2FAE66',20], ['h_dpink','ピンク','#FF8FB1',20] ] },
-      { k:'yard', name:'にわ', list:[ ['h_ylawn','しばふ','#7CC77A',0], ['h_ybrick','レンガ','#D98B6A',40], ['h_ystone','いしだたみ','#C9C4BC',40], ['h_ysand','すな','#F2DDB0',30], ['h_yflower','にじいろの 花ばたけ','linear-gradient(90deg,#E5484D,#FFD24C,#5B7CF0,#FF8FB1)',60], ['h_yflowerY','きいろの 花ばたけ','#FFD24C',60], ['h_yflowerP','ピンクの 花ばたけ','#FF8FB1',60], ['h_yflowerB','あお・むらさきの 花ばたけ','linear-gradient(90deg,#5B7CF0,#9B6BE0)',60], ['h_yflowerW','しろい 花ばたけ','#FFFFFF',60], ['h_yflowerNow','いまの きせつの 花ばたけ','conic-gradient(#FF8FB1 0 25%,#FFD24C 0 50%,#FF9E6B 0 75%,#EEF1F7 0)',60], ['h_yflowerSp','春の 花ばたけ','#FFB8CF',60], ['h_yflowerSu','夏の 花ばたけ (ひまわり)','#FFD24C',60], ['h_yflowerAu','秋の 花ばたけ (コスモス)','#FF9E6B',60], ['h_yflowerWi','冬の 花ばたけ (ゆき)','#E5484D',60], ['h_yflowerM','のはらの 花ばたけ','linear-gradient(90deg,#FFFFFF,#9B6BE0,#5DAA5B)',60] ] },
+      { k:'yard', name:'にわ', list:[ ['h_ylawn','しばふ','#7CC77A',0], ['h_ybrick','レンガ','#D98B6A',40], ['h_ystone','いしだたみ','#C9C4BC',40], ['h_ysand','すな','#F2DDB0',30], ['h_yflower','にじいろの 花ばたけ','linear-gradient(90deg,#E5484D,#FFD24C,#5B7CF0,#FF8FB1)',60], ['h_yflowerY','きいろの 花ばたけ','#FFD24C',60], ['h_yflowerP','ピンクの 花ばたけ','#FF8FB1',60], ['h_yflowerB','あお・むらさきの 花ばたけ','linear-gradient(90deg,#5B7CF0,#9B6BE0)',60], ['h_yflowerW','しろい 花ばたけ','#FFFFFF',60], ['h_yflowerNow','いまの きせつの 花ばたけ','conic-gradient(#FF8FB1 0 25%,#FFD24C 0 50%,#FF9E6B 0 75%,#EEF1F7 0)',60], ['h_yflowerSp','春の 花ばたけ','#FFB8CF',60], ['h_yflowerSu','夏の 花ばたけ (ひまわり)','#FFD24C',60], ['h_yflowerAu','秋の 花ばたけ (コスモス)','#FF9E6B',60], ['h_yflowerWi','冬の 花ばたけ (ゆき)','#E5484D',60], ['h_yflowerR','バラの 花ばたけ','#E5484D',60], ['h_yflowerV','すみれの 花ばたけ','#7B4FC9',60], ['h_yflowerM','のはらの 花ばたけ','linear-gradient(90deg,#FFFFFF,#9B6BE0,#5DAA5B)',60] ] },
       { k:'deco', name:'かざり', list:[ ['dog','いぬごや','',50], ['laundry','ものほし','',40], ['bench','ベンチ','',40], ['lamp','がいとう','',50],  ['flower','<ruby>花壇<rt>かだん</rt></ruby>','',0], ['fountain','ふんすい','',80], ['gazebo','ガゼボ','',120], ['gazeboW','しろい ガゼボ','',120], ['ajisai','あじさい','',40], ['bike','じてんしゃ','',60], ['mill','ふうしゃ','',100], ['lantern','いしの ランタン','',50], ['well','いど','',70], ['bunny','うさぎの おきもの','',40], ['sakura','さくらの 木','',90], ['picnic','ピクニック','',60], ['stump','きりかぶの いす','',30], ['post','ポスト','',30], ['tree','木','',40], ['fence','さく','',40], ['garland','ガーランド','',40], ['smoke','えんとつの けむり','',30], ['rainbow','にじ','',80] ] }
     ], BYH = {};
     HPARTS.forEach(function(p){ p.list.forEach(function(x){ BYH[x[0]] = { id:x[0], name:x[1], c:x[2], price:x[3], part:p }; }); });
@@ -10511,12 +10563,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     $('rmHouse').addEventListener('pointerup', hEnd);
     $('rmHouse').addEventListener('pointercancel', hEnd);
-    var SEASON = { Sp:['🌷', '春', 'チューリップ・ヒヤシンス・パンジー'], Su:['🌻', '夏', 'ひまわり・バラ・ヒヤシンス'], Au:['🍁', '秋', 'コスモス・きく'], Wi:['❄️', '冬', 'ポインセチア・つばき'] };
+    var SEASON = { Sp:['🌷', '春', 'チューリップ・すみれ・ヒヤシンス'], Su:['🌻', '夏', 'ひまわり・あさがお・あじさい'], Au:['🍁', '秋', 'コスモス・きく・ひがんばな'], Wi:['❄️', '冬', 'スイセン・うめ・つばき'] };
     function seasonLab(yd){
       var m = new Date().getMonth(), now = ['Wi', 'Wi', 'Sp', 'Sp', 'Sp', 'Su', 'Su', 'Su', 'Au', 'Au', 'Au', 'Wi'][m];
       var k = yd === 'h_yflowerNow' ? now : SEASON[(yd || '').slice(9)] ? yd.slice(9) : null; if(!k) return '';
       var z = SEASON[k];
-      return '<em class="rm-hsea">' + z[0] + ' ' + (yd === 'h_yflowerNow' ? 'いまは ' + z[1] + '(' + (m + 1) + 'がつ)。' : z[1] + 'の 花: ') + z[2] + (yd === 'h_yflowerNow' ? 'が さく きせつ' : '') + '</em>';
+      if(yd === 'h_yflowerNow') return '<em class="rm-hsea">' + z[0] + ' いまは ' + z[1] + 'の ' + (m + 1) + 'がつ。' + MONF[m][0] + 'が さく ころだよ</em>';
+      return '<em class="rm-hsea">' + z[0] + ' ' + z[1] + 'の 花: ' + z[2] + '</em>';
     }
     function renderHouse(grow){
       var n = roomN(), b = $('rmHouse'), h = getHS();
