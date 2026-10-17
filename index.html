@@ -387,6 +387,23 @@
   .rc-p small{ width:100%; font-size:10px; color:var(--ink-soft); font-weight:700; }
   .rc-p.own{ color:var(--good); }
   .rm-card.cant{ cursor:pointer; } .rm-card.cant .rc-pic{ opacity:.5; }
+  .hub{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px; margin-bottom:8px; }
+  .hub-tile{ border:1.5px solid var(--line); background:var(--surface); border-radius:18px; padding:8px 6px 10px; cursor:pointer; color:var(--ink); font:inherit; display:flex; flex-direction:column; align-items:center; gap:2px; text-align:center; min-width:0; }
+  .hub-tile:active{ transform:scale(.97); }
+  .hub-art{ width:100%; height:72px; display:flex; align-items:flex-end; justify-content:center; border-radius:12px; overflow:hidden; margin-bottom:4px; }
+  .hub-tile b{ font-size:14px; font-weight:900; }
+  .hub-tile small{ font-size:11px; color:var(--ink-soft); font-weight:700; line-height:1.35; }
+  .hub-house{ background:linear-gradient(#BFE6FF, #E9F7FF 75%); }
+  .hub-house svg{ width:100%; height:100%; display:block; }
+  .hub-tro{ background:color-mix(in srgb, var(--gold) 16%, var(--surface)); align-items:center; gap:2px; }
+  .hub-tro svg{ height:64px; width:auto; }
+  .hub-tro .mdc-op{ width:22px; } .hub-tro .mdc-op svg{ height:auto; width:22px; }
+  .hub-col{ background:color-mix(in srgb, var(--op-div) 10%, var(--surface)); align-items:center; }
+  .hub-col .hp{ width:46px; margin:0 -9px; } .hub-col .hp svg{ width:100%; height:auto; display:block; }
+  .hub-col .hp:nth-child(2){ width:56px; z-index:1; }
+  .hub-gem{ position:absolute; } .hub-col{ position:relative; }
+  .hub-col .gm{ position:absolute; right:6px; top:6px; display:flex; align-items:center; gap:2px; font-size:11px; font-weight:900; color:var(--ink); background:var(--surface); border-radius:100px; padding:1px 6px 1px 2px; }
+  .hub-col .gm svg{ width:14px; height:14px; }
   .room-card{ width:100%; border:1.5px solid var(--line); background:var(--surface); border-radius:18px; padding:8px; cursor:pointer; color:var(--ink); font:inherit; text-align:left; display:grid; grid-template-columns:44% 1fr auto; align-items:center; gap:10px; margin-bottom:8px; }
   .room-card .rm-mini{ border-radius:12px; box-shadow:none; pointer-events:none; }
   .rm-ct{ display:grid; gap:2px; } .rm-ct b{ font-size:15px; } .rm-ct span{ font-size:11.5px; color:var(--ink-soft); line-height:1.45; }
@@ -1699,7 +1716,7 @@
   #allClear .today .cur-tag{ display:none; }
 
   /* training: two small cards side by side */
-  .train{ display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; }
+  .train{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; }
   .train .fish-card{ margin:0; flex-direction:column; align-items:stretch; gap:6px; padding:10px 12px 12px; box-shadow:none; border:1.5px solid var(--line); }
   .train .fish-card .fc-ico{ display:none; }
   .train .fish-card .fc-text{ font-size:11px; }
@@ -1818,12 +1835,12 @@
     <section class="fish-card" id="deciCard" hidden></section>
     <section class="fish-card" id="hslCard" hidden></section>
     </div>
-    <h2 class="home-sec">メダル・トロフィー</h2>
-    <button class="md-card" id="medalCard"></button>
-    <h2 class="home-sec">おへや</h2>
-    <button class="room-card" id="roomCard"></button>
-    <h2 class="home-sec">コレクション</h2>
-    <button class="collect" id="collectRow"></button>
+    <h2 class="home-sec">わたしの せかい</h2>
+    <div class="hub">
+      <button class="hub-tile" id="roomCard"></button>
+      <button class="hub-tile" id="medalCard"></button>
+      <button class="hub-tile" id="collectRow"></button>
+    </div>
     <div class="save-band" id="saveBand" hidden>
       <div class="save-band-text"><b id="saveBandTitle"></b><span class="sb-sub" id="saveBandSub"></span><br class="sb-br"><button class="save-band-link" id="backupMoreBtn">元にもどす・他の方法</button></div>
       <button class="save-band-btn" id="backupExportBtn">保存する</button>
@@ -4603,6 +4620,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var allOwned = Object.keys(p.owned||{}).length;
     if(allOwned > shown) pets += '<span class="num">+'+(allOwned-shown)+'</span>';
     else if(n < PARTNERS.length) pets += '<span class="lock">'+Pet.svg(PARTNERS.filter(function(sp){ return !(p.owned && p.owned[sp] != null); })[0], 0)+'</span>';
+    var act = activePet().sp, oth = Object.keys(p.owned || {}).filter(function(sp){ return sp !== act; });
+    var three = oth.length ? [oth[0], act].concat(oth.slice(1, 2)) : [act];   /* いまの 相棒が まんなか */
+    $('collectRow').innerHTML = '<span class="hub-art hub-col">' + three.map(function(sp){ return '<span class="hp">' + Pet.svg(sp, (p.owned && p.owned[sp]) || 0) + '</span>'; }).join('') +
+      '<span class="gm">' + gemSVG(owned.length ? (GEMS.filter(function(x){ return owned.indexOf(x.id) >= 0; })[0] || GEMS[0]).color : '#C9C2D6') + owned.length + '/' + GEMS.length + '</span></span>' +
+      '<b>コレクション</b><small>仲間 ' + n + '/' + PARTNERS.length + '</small>';
+    return;
     $('collectRow').innerHTML =
       '<span class="collect-row"><span class="cl">宝石</span><span class="c-gems">'+g+'</span></span>' +
       '<span class="collect-row"><span class="cl">仲間</span><span class="c-pets">'+pets+'</span><span class="cn">'+n+'/'+PARTNERS.length+'</span></span>' +
@@ -10154,7 +10177,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---- おうちの そと見(へやの 数で そだつ) ---- */
     var HOUSE = ['', 'ちいさな おうち', 'はなれの ある おうち', '2かいだての おうち', 'となりの へやも ある おうち', 'とうの ある おやしき'];
     var GROW = ['', '', 'はなれ', '2かい', 'となりの へや', 'とう'];
-    function houseSvg(n, hs){
+    function houseSvg(n, hs, mini){
       hs = hs || getHS();
       var C = { roof:BYH[hs.roof].c, wall:BYH[hs.wall].c, door:BYH[hs.door].c };
       C.roofD = shade(C.roof, -.14); C.wall2 = shade(C.wall, -.05); C.trim = shade(C.wall, -.16);
@@ -10198,11 +10221,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(hs.deco.fence){ var f = ''; for(var k = 0; k < 15; k++){ var x = 6 + k * 10 + (k > 6 ? 168 : 0); if(x > 330) break; f += '<path d="M'+x+',192 V178 l3,-4 l3,4 V192 Z" fill="#fff" stroke="#D9CBB4" stroke-width=".8"/>'; } o += '<rect x="4" y="182" width="140" height="3" fill="#fff"/><rect x="176" y="182" width="160" height="3" fill="#fff"/>' + f; }
       if(hs.deco.smoke && n >= 3) o += '<g fill="#fff" opacity=".8" class="rm-smoke"><circle cx="192" cy="24" r="5"/><circle cx="198" cy="14" r="6"/><circle cx="206" cy="6" r="7"/></g>';
       /* つぎに できる ところ(点線) */
-      if(n < 5){
+      if(n < 5 && !mini){
         var gh = { 2:'<rect x="208" y="120" width="56" height="60"/><path d="M206,100 L272,126 L272,132 L206,108 Z"/>', 3:'<rect x="116" y="70" width="88" height="40"/><path d="M160,26 L222,78 L98,78 Z"/>', 4:'<rect x="52" y="124" width="60" height="56"/><path d="M114,104 L44,130 L44,136 L114,112 Z"/>', 5:'<rect x="262" y="74" width="40" height="106"/><path d="M282,20 L308,78 L256,78 Z"/>' }[n + 1];
         var tx = { 2:236, 3:160, 4:82, 5:282 }[n + 1], ty = { 2:150, 3:56, 4:154, 5:130 }[n + 1];
         o += '<g class="hg" data-r="add"><title>へやを ふやす</title>' + gh + '<text x="'+tx+'" y="'+ty+'" text-anchor="middle">＋' + ROOM_PRICE[n] + '</text></g>';
       }
+      if(mini) o = o.replace('viewBox="0 0 340 200"', 'viewBox="' + ['', '76 46 168 120', '76 46 204 136', '70 10 220 180', '30 10 260 180', '20 0 300 200'][n] + '"');
       return o + '</svg>';
     }
     /* おうちの かいぞう: keisan_house = { t, roof, wall, door, deco:{id:1}, own:{id:1} } */
@@ -10327,8 +10351,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     function card(){
       var c = $('roomCard'); if(!c) return;
-      c.innerHTML = '<div class="rm-stage rm-mini"></div><span class="rm-ct"><b>おへや</b><span>かぐを 買って すきな ように かざろう</span></span><span class="rm-go">›</span>';
-      build(c.querySelector('.rm-stage'), true);
+      var n = roomN();
+      c.innerHTML = '<span class="hub-art hub-house">' + houseSvg(n, null, true).replace(/ class="hw[^"]*" data-r="\d"/g, '').replace(/<title>[^<]*<\/title>/g, '') + '</span><b>おうち</b><small>へや ' + n + 'つ</small>';
     }
     $('roomCard').addEventListener('click', open);
 
@@ -10636,10 +10660,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---- ホームの カード ---- */
     function card(){
       var c = $('medalCard'); if(!c) return;
-      var m = data(), got = TROPHIES.filter(function(T){ return m.tro[T.id]; }).length, h = '<span class="mdc-ops">';
-      OPS.forEach(function(o){ h += '<span class="mdc-op">'+medalSVG(top(m, o))+'<i>'+sym(o)+'</i></span>'; });
-      h += '</span><span class="mdc-t"><b>トロフィー '+got+'/'+TROPHIES.length+'</b><span>メダル '+total(m)+'こ。100問で あつめよう</span></span><span class="rm-go">›</span>';
-      c.innerHTML = h;
+      var m = data(), have = TROPHIES.filter(function(T){ return m.tro[T.id]; }), got = have.length;
+      var last = Object.keys(m.tro).filter(function(id){ return have.some(function(T){ return T.id === id; }); }).pop();
+      c.innerHTML = '<span class="hub-art hub-tro">' + trophySVG(last || TROPHIES[0].id, !!last) + '</span><b>トロフィー</b><small>' + got + '/' + TROPHIES.length + '・メダル ' + total(m) + '</small>';
     }
     function open(){
       var m = data(), h = '';
