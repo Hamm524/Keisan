@@ -8074,7 +8074,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function best(m, l){ return getD().best[m+l] || 0; }
     function totalStars(){ var b = getD().best, t = 0; Object.keys(b).forEach(function(k){ t += +b[k] || 0; }); return t; }
     function grade(){ return getD().grade; }
-    function gradeOk(m, l){ return grade() >= NEED[m][l]; }
+    function gradeOk(m, l){ return true; }   /* 学年では ロックしない。★で すすむ */
+    window.__deciAhead = function(){ var b = getD().best, g = grade(), mx = 0; Object.keys(NEED).forEach(function(m){ [0,1,2].forEach(function(l){ if((+b[m+l] || 0) >= 1 && NEED[m][l] > mx) mx = NEED[m][l]; }); }); return Math.max(0, mx - g); };
     function isOpen(m, l){ return gradeOk(m, l) && (l === 0 || best(m, l-1) >= 1); }
     function noRed(){ return grade() < 5; }   /* 約分は 5年: それまでは 約分 しなくても 正解 */
     function modeOf(id){ for(var i=0;i<MODES.length;i++) if(MODES[i].id === id) return MODES[i]; }
@@ -8228,17 +8229,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       setLive('div');
       var s = getD();
       $('dcTotal').innerHTML = starSVG(true)+'<span>あつめた 星 <b class="num">'+totalStars()+'</b> / 27</span>';
-      $('dcGrade').innerHTML = '<span class="dc-gl">ならった ところ まで ひらく<small>おうちの人が えらんでね</small></span><span class="dc-gb">' +
+      $('dcGrade').innerHTML = '<span class="dc-gl">いまの 学年<small>★を とると 先の ないようにも すすめるよ</small></span><span class="dc-gb">' +
         [3,4,5,6].map(function(g){ return '<button class="dc-small'+(s.grade === g ? ' sel' : '')+'" data-g="'+g+'">'+g+'年</button>'; }).join('')+'</span>';
       $('dcLessons').innerHTML = LESSONS.map(function(L, i){
-        return '<button class="dc-lesson'+(s.grade < LNEED[L.id] ? ' locked' : '')+'" data-ls="'+L.id+'"><span class="lno">レッスン '+(i+1)+'</span><span class="lt">'+L.title+'</span><span class="ld">'+L.sub+'</span>'+(s.lessons[L.id] ? stamp('dc-stamp') : '')+(s.grade < LNEED[L.id] ? '<span class="lock">🔒 '+LNEED[L.id]+'年で ならうよ</span>' : '')+'</button>';
+        return '<button class="dc-lesson" data-ls="'+L.id+'"><span class="lno">レッスン '+(i+1)+'</span><span class="lt">'+L.title+'</span><span class="ld">'+L.sub+'</span>'+(s.lessons[L.id] ? stamp('dc-stamp') : '')+'<span class="lock" style="color:var(--ink-soft)">小'+LNEED[L.id]+'の ないよう'+(LNEED[L.id] > s.grade ? ' ・ 先どり!' : '')+'</span></button>';
       }).join('');
       $('dcCourses').innerHTML = MODES.map(function(m){
         return '<section class="dc-course" style="--mc:var('+m.color+')"><h3>'+m.name+'</h3><p>'+(m.id === 'frac' && s.grade < 5 ? 'まずは 分母が 同じ 分数から。' : m.desc)+'</p><div class="dc-levels">' +
           [0,1,2].map(function(l){
             var open = isOpen(m.id, l), need = NEED[m.id][l];
-            return '<button class="dc-lvl'+(open ? '' : ' locked')+(s.grade < need ? ' later' : '')+'" data-m="'+m.id+'" data-l="'+l+'"><span class="ln">'+LV[l]+'</span><span class="ld">'+m.levels[l]+'</span>' +
-              (open ? '<span class="st">'+starsHTML(best(m.id, l))+'</span>' : '<span class="lock">🔒 '+(s.grade < need ? need+'年で ならうよ' : 'まえの レベルで ★1こ')+'</span>')+'</button>';
+            return '<button class="dc-lvl'+(open ? '' : ' locked')+'" data-m="'+m.id+'" data-l="'+l+'"><span class="ln">'+LV[l]+'</span><span class="ld">'+m.levels[l]+'</span>' +
+              (open ? '<span class="st">'+starsHTML(best(m.id, l))+'</span><span class="lock" style="color:var(--ink-soft)">小'+need+(need > s.grade ? ' ・ 先どり!' : '')+'</span>' : '<span class="lock">🔒 まえの レベルで ★1こ</span>')+'</button>';
           }).join('')+'</div></section>';
       }).join('');
       show('menu');
@@ -8252,7 +8253,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('dcGrade').addEventListener('click', function(e){
       var b = e.target.closest('[data-g]'); if(!b) return;
       var s = getD(); s.grade = +b.getAttribute('data-g'); safeSet(KEY, s);
-      toast(s.grade+'年までの ところを ひらいたよ'); openMenu();
+      toast('いまの 学年を '+s.grade+'年に したよ'); openMenu();
     });
     $('dcCourses').addEventListener('click', function(e){
       var b = e.target.closest('.dc-lvl'); if(!b) return;
@@ -10096,8 +10097,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { id:'t_lv_sub', g:'s', tier:3, name:'ひき算の さきどり', cond:'ひき算で いちばん上の レベル(3桁－3桁)に すすむ', coin:40, ok:function(){ return atMax('sub'); } },
       { id:'t_lv_mul', g:'s', tier:3, name:'かけ算の さきどり', cond:'かけ算で いちばん上の レベル(2桁×1桁)に すすむ', coin:40, ok:function(){ return atMax('mul'); } },
       { id:'t_lv_div', g:'s', tier:3, name:'わり算の さきどり', cond:'わり算で いちばん上の レベルに すすむ',           coin:40, ok:function(){ return atMax('div'); } },
-      { id:'t_lv_all', g:'s', tier:4, name:'ぜんぶ さきどり',   cond:'＋ － × ÷ ぜんぶ いちばん上の レベルに すすむ',   coin:150, ok:function(){ return OPS4.every(atMax); } }
+      { id:'t_lv_all', g:'s', tier:4, name:'ぜんぶ さきどり',   cond:'＋ － × ÷ ぜんぶ いちばん上の レベルに すすむ',   coin:150, ok:function(){ return OPS4.every(atMax); } },
+      { id:'t_ah1', g:'s', tier:2, name:'1学年 さき',   cond:'小数・分数で、いまの 学年より 1つ 先の 学年の ないようを ★1こ クリアする', coin:40,  ok:function(){ return ahead() >= 1; } },
+      { id:'t_ah2', g:'s', tier:3, name:'2学年 さき',   cond:'小数・分数で、いまの 学年より 2つ 先の 学年の ないようを ★1こ クリアする', coin:80,  ok:function(){ return ahead() >= 2; } },
+      { id:'t_ah3', g:'s', tier:4, name:'3学年 さき',   cond:'小数・分数で、いまの 学年より 3つ 先の 学年の ないようを ★1こ クリアする', coin:150, ok:function(){ return ahead() >= 3; } }
     ];
+    function ahead(){ try{ return window.__deciAhead ? window.__deciAhead() : 0; }catch(e){ return 0; } }
 
     /* ---- 絵 ---- */
     var uid = 0;
@@ -10184,14 +10189,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         b = '<path d="M40 50c0 8 2 12 6 16" fill="none" stroke="'+D+'" stroke-width="4" stroke-linecap="round"/><circle cx="29" cy="24" r="13"'+f(B)+'/><circle cx="51" cy="24" r="13"'+f(B)+'/><circle cx="29" cy="46" r="13"'+f(B)+'/><circle cx="51" cy="46" r="13"'+f(B)+'/><circle cx="40" cy="35" r="7"'+f(D)+'/>'+(got ? txt(29, 29, 14, '＋', '#fff')+txt(51, 29, 14, '－', '#fff')+txt(29, 51, 14, '×', '#fff')+txt(51, 51, 14, '÷', '#fff') : mark(40, 35, 6))+plinth().replace('y="70"', 'y="72"').replace('y="73.5"', 'y="75.5"').replace('height="11"', 'height="9"'); break;
       case 't_d3':      /* 表彰台 */
         b = '<rect x="27" y="30" width="26" height="40"'+f(B)+'/><rect x="4" y="42" width="23" height="28"'+f(D)+'/><rect x="53" y="50" width="23" height="20"'+f(H)+'/>'+(got ? star(40, 18, 10, A1)+txt(40, 54, 22, '1', '#fff')+txt(15, 62, 17, '2', '#fff')+txt(64, 65, 15, '3', D) : mark(40, 20, 9))+'<rect x="2" y="70" width="76" height="6" rx="2"'+f(PL)+'/>'; break;
-      case 't_lv_add': case 't_lv_sub': case 't_lv_mul': case 't_lv_div': case 't_lv_all':   /* カットガラス(公文の トロフィーを まねた クリスタル) */
+      case 't_lv_add': case 't_lv_sub': case 't_lv_mul': case 't_lv_div': case 't_lv_all': case 't_ah1': case 't_ah2': case 't_ah3':   /* カットガラス(公文の トロフィーを まねた クリスタル) */
         var gid = 'gl' + (++uid), TN = '#5E97F5';
         var gA = got ? '#EAF3FF' : '#EFEAE0', gB = got ? TN : '#D9D1C3', BL = got ? '#4F8DE8' : '#CFC7B8', BD = got ? '#2F63B8' : '#B9B1A2', BH = got ? '#9CC8FF' : '#E3DCCF', GP = got ? '#F2C14E' : '#C9C0B0';
         var defs = '<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+gA+'"/><stop offset=".3" stop-color="'+gA+'"/><stop offset="1" stop-color="'+gB+'"/></linearGradient></defs>';
         var fl = '#fff', FO = got ? '.75' : '.9';
         function lines(d){ return '<path d="'+d+'" fill="none" stroke="'+fl+'" stroke-width="1.4" stroke-linejoin="round" opacity="'+FO+'"/>'; }
         function glint(x, y, c){ return got ? '<path d="M'+x+' '+y+'l5 3-3 5-5-3z" fill="'+c+'" opacity=".55"/>' : ''; }
-        var sym = { t_lv_add:'＋', t_lv_sub:'－', t_lv_mul:'×', t_lv_div:'÷' }[id];
+        var sym = { t_lv_add:'＋', t_lv_sub:'－', t_lv_mul:'×', t_lv_div:'÷', t_ah1:'+1', t_ah2:'+2', t_ah3:'+3' }[id];
         function engr(x, y, sz){ return got ? '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-size="'+sz+'" font-weight="900" fill="#2F63B8" opacity=".92" font-family="Fredoka,sans-serif">'+sym+'</text>' : '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-size="'+sz+'" font-weight="900" fill="#B3AA99" font-family="Fredoka,sans-serif">?</text>'; }
         function baseB(w, y0){ var xl = 40 - w / 2; return '<path d="M'+(xl - 4)+' 80L'+xl+' '+y0+'h'+w+'l4 '+(80 - y0)+'z"'+f(BL)+'/><path d="M'+xl+' '+y0+'h'+w+'l-2 4H'+(xl + 2)+'z"'+f(BH)+'/><path d="M'+(xl - 4)+' 80L'+xl+' '+y0+'l6 0-2 '+(80 - y0)+'z"'+f(BD)+' opacity=".35"/><rect x="33" y="'+(y0 + 9)+'" width="14" height="5" rx="1"'+f(GP)+'/>'; }
         var gp = '', G = 'fill="url(#'+gid+')"';
@@ -10203,6 +10208,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           gp = '<path d="M22 60V26L40 4L58 26V60z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M22 26H58M31 26L40 4L49 26M31 26V60M49 26V60')+glint(24, 30, '#7FD6FF')+glint(50, 44, '#FF86B6')+engr(40, 48, 24)+baseB(42, 60);
         }else if(id === 't_lv_div'){  /* なみの かたち(ほのおのような ガラス) */
           gp = '<path d="M24 60C16 44 22 26 34 16C40 11 45 8 52 2C48 14 58 22 58 36C58 48 54 55 48 60z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M30 22C26 34 30 48 34 58M52 2C50 18 48 40 40 58')+glint(22, 40, '#7FD6FF')+glint(50, 24, '#FFD36B')+engr(42, 46, 22)+baseB(34, 60);
+        }else if(id === 't_ah1'){      /* ひしがた(ダイヤの カット) */
+          gp = '<path d="M40 2L62 30L40 58L18 30z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M18 30H62M40 2L30 30 40 58 50 30z')+glint(24, 28, '#FFB454')+glint(46, 38, '#FF7FB0')+engr(40, 36, 17)+baseB(30, 58);
+        }else if(id === 't_ah2'){      /* 三角の とう(ピラミッド) */
+          gp = '<path d="M40 2L66 60H14z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M40 2V60M27 31H53M20 46H60')+glint(30, 36, '#9BE7A0')+glint(44, 48, '#FFD36B')+engr(40, 56, 20)+baseB(46, 60);
+        }else if(id === 't_ah3'){      /* ほしの かたちの ガラス */
+          var sp = []; for(var k = 0; k < 10; k++){ var an = (k * 36 - 90) * Math.PI / 180, rr = k % 2 ? 13 : 31; sp.push((40 + Math.cos(an) * rr).toFixed(1) + ' ' + (32 + Math.sin(an) * rr).toFixed(1)); }
+          gp = '<path d="M'+sp.join('L')+'z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M'+sp[0].replace(' ',' ')+'L40 32L'+sp[4]+'M'+sp[2]+'L40 32L'+sp[6]+'M40 32L'+sp[8])+glint(52, 24, '#FFB454')+glint(26, 36, '#7FD6FF')+engr(40, 38, 14)+baseB(26, 64);
         }else{                         /* ぜんぶ さきどり: つみかさねた ほうせき(2025ねんの オブジェ) */
           gp = '<path d="M16 62L12 44L28 33H52L68 44L64 62z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M12 44H68M28 33L34 44 40 33 46 44 52 33M34 44L28 62M46 44L52 62M34 44L40 62 46 44')+'<path d="M40 2L56 10L58 25L46 36H30L22 22L26 8z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M40 2L40 36M26 8L40 20 56 10M22 22L40 20 58 25')+glint(14, 46, '#FFB454')+glint(52, 40, '#FF86B6')+glint(24, 12, '#9BE7A0')+(got ? star(40, 27, 7, '#FFC94A')+'<text x="40" y="56" text-anchor="middle" font-size="8.5" font-weight="900" fill="#2F63B8" font-family="Fredoka,sans-serif">＋－×÷</text>' : mark(40, 27, 7))+'<path d="M22 82L28 62h24l6 20z"'+f(BL)+'/><path d="M28 62h24l-2 4H30z"'+f(BH)+'/><path d="M22 82L28 62h7l-5 20z"'+f(BD)+' opacity=".35"/><rect x="33" y="71" width="14" height="6" rx="1"'+f(GP)+'/>';
         }
