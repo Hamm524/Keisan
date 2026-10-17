@@ -3393,10 +3393,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   "use strict";
 
   var OP_META = {
-    add:{ symbol:'＋', label:'たし算', color:'--op-add' },
-    sub:{ symbol:'－', label:'ひき算', color:'--op-sub' },
+    add:{ symbol:'＋', label:'足し算', color:'--op-add' },
+    sub:{ symbol:'－', label:'引き算', color:'--op-sub' },
     mul:{ symbol:'×',  label:'かけ算', color:'--op-mul' },
-    div:{ symbol:'÷',  label:'わり算', color:'--op-div' },
+    div:{ symbol:'÷',  label:'割り算', color:'--op-div' },
     mix:{ symbol:'MIX',label:'混ぜて練習', color:'--op-mix' }
   };
   var ACCURACY_UNLOCK = 80; // % — speed mode gate
@@ -3411,7 +3411,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   var TARGET_SEC = [60, 90, 120, 150, 180]; // 10問の目標タイム(レベルごと)
   /* 今日のプリント(公文式): 毎日決まった枚数、合格=正解90%以上かつ めあてタイム以内 */
   var PRINT_SIZES = [10, 20, 50];
-  var SHEET_N = 20, DAILY_SHEETS = 5;   /* 公文: 1日5まい。1まい20問 */
+  var SHEET_N = 20, DAILY_SHEETS = 5;   /* 公文: 1日5枚。1枚20問 */
   var SIZE_UP_PASSES = 5;    // この回数 合格すると 問題数が ふえる
   var PASS_ACC = 90;
   var WEEKEND_N = 100, WEEKEND_BONUS = 5, WEEKEND_ACC = 80, BEST100_BONUS = 10, ALLCLEAR_BONUS = 20;
@@ -4105,27 +4105,27 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   var LEVELS = {
     add:[
       { name:'簡単',       desc:'2桁 ＋ 1桁',  need:3, gen:function(){ var a=pick(10,99),b=pick(1,9); return {a:a,b:b,answer:a+b}; } },
-      { name:'ふつう',         desc:'2桁 ＋ 2桁',  need:3, gen:function(){ var a=pick(10,99),b=pick(10,99); return {a:a,b:b,answer:a+b}; } },
+      { name:'普通',         desc:'2桁 ＋ 2桁',  need:3, gen:function(){ var a=pick(10,99),b=pick(10,99); return {a:a,b:b,answer:a+b}; } },
       { name:'少し難しい', desc:'3桁 ＋ 2桁',  need:3, gen:function(){ var a=pick(100,999),b=pick(10,99); return {a:a,b:b,answer:a+b}; } },
       { name:'難しい',     desc:'3桁 ＋ 3桁',  need:3, gen:function(){ var a=pick(100,999),b=pick(100,999); return {a:a,b:b,answer:a+b}; } },
       { name:'とても難しい', desc:'4桁 ＋ 3〜4桁', need:0, gen:function(){ var a=pick(1000,9999),b=pick(100,9999); return {a:a,b:b,answer:a+b}; } }
     ],
     sub:[
       { name:'簡単',       desc:'2桁 － 1桁',  need:3, gen:function(){ var a=pick(10,99),b=pick(1,9); return {a:a,b:b,answer:a-b}; } },
-      { name:'ふつう',         desc:'2桁 － 2桁',  need:3, gen:function(){ var a=pick(10,99),b=pick(10,99); if(b>a){var t=a;a=b;b=t;} return {a:a,b:b,answer:a-b}; } },
+      { name:'普通',         desc:'2桁 － 2桁',  need:3, gen:function(){ var a=pick(10,99),b=pick(10,99); if(b>a){var t=a;a=b;b=t;} return {a:a,b:b,answer:a-b}; } },
       { name:'少し難しい', desc:'3桁 － 2桁',  need:3, gen:function(){ var a=pick(100,999),b=pick(10,99); return {a:a,b:b,answer:a-b}; } },
       { name:'難しい',     desc:'3桁 － 3桁',  need:3, gen:function(){ var a=pick(100,999),b=pick(100,999); if(b>a){var t=a;a=b;b=t;} return {a:a,b:b,answer:a-b}; } },
       { name:'とても難しい', desc:'4桁 － 3〜4桁', need:0, gen:function(){ var a=pick(1000,9999),b=pick(100,9999); if(b>a){var t=a;a=b;b=t;} return {a:a,b:b,answer:a-b}; } }
     ],
     mul:[
-      { name:'簡単',   desc:'2〜5のだん',        need:3, gen:function(){ var a=pick(2,9),b=pick(2,5); return {a:a,b:b,answer:a*b}; } },
-      { name:'ふつう',     desc:'2〜9のだん(九九全部)', need:3, gen:function(){ var a=pick(2,9),b=pick(2,9); return {a:a,b:b,answer:a*b}; } },
+      { name:'簡単',   desc:'2〜5の段',        need:3, gen:function(){ var a=pick(2,9),b=pick(2,5); return {a:a,b:b,answer:a*b}; } },
+      { name:'普通',     desc:'2〜9の段(九九全部)', need:3, gen:function(){ var a=pick(2,9),b=pick(2,9); return {a:a,b:b,answer:a*b}; } },
       { name:'難しい', desc:'2桁 × 1桁',         need:3, gen:function(){ var a=pick(11,99),b=pick(2,9); return {a:a,b:b,answer:a*b}; } },
       { name:'とても難しい', desc:'3桁 × 1桁',       need:0, gen:function(){ var a=pick(101,999),b=pick(2,9); return {a:a,b:b,answer:a*b}; } }
     ],
     div:[
-      { name:'簡単',   desc:'2〜5でわる',            need:3, gen:function(){ var b=pick(2,5),q=pick(2,5); return {a:b*q,b:b,answer:q}; } },
-      { name:'ふつう',     desc:'2〜9でわる(九九のはんたい)', need:3, gen:function(){ var b=pick(2,9),q=pick(2,9); return {a:b*q,b:b,answer:q}; } },
+      { name:'簡単',   desc:'2〜5で割る',            need:3, gen:function(){ var b=pick(2,5),q=pick(2,5); return {a:b*q,b:b,answer:q}; } },
+      { name:'普通',     desc:'2〜9で割る(九九の逆)', need:3, gen:function(){ var b=pick(2,9),q=pick(2,9); return {a:b*q,b:b,answer:q}; } },
       { name:'難しい', desc:'答えが2桁になることも',    need:3, gen:function(){ var b=pick(2,9),q=pick(2,12); return {a:b*q,b:b,answer:q}; } },
       { name:'とても難しい', desc:'2桁 ÷ 1桁(答えが2桁)', need:0, gen:function(){ var b=pick(2,9),q=pick(10,Math.floor(99/b)); return {a:b*q,b:b,answer:q}; } }
     ]
@@ -4134,7 +4134,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   /* ---------- ステップ: 1つの レベルを 3つに 細かく(公文の「の1〜5」のように) ---------- */
   function addCarries(a, b){ var c = 0, n = 0; while(a > 0 || b > 0 || c > 0){ var t = a % 10 + b % 10 + c; c = t >= 10 ? 1 : 0; if(c) n++; a = Math.floor(a / 10); b = Math.floor(b / 10); } return n; }
   function subBorrows(a, b){ var br = 0, n = 0; while(a > 0 || b > 0){ var x = a % 10 - br, y = b % 10; if(x < y){ br = 1; n++; }else br = 0; a = Math.floor(a / 10); b = Math.floor(b / 10); } return n; }
-  var ALL = { t:'ぜんぶ まぜて' };
+  var ALL = { t:'全部 混ぜて' };
   (function(){
     function st(t, ok, g){ return { t:t, ok:ok, g:g }; }
     var c0 = function(p){ return addCarries(p.a, p.b) === 0; }, c1 = function(p){ return addCarries(p.a, p.b) >= 1; }, cE = function(p){ return addCarries(p.a, p.b) === 1; }, cL = function(p){ return addCarries(p.a, p.b) <= 1; };
@@ -4149,14 +4149,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     S[2].steps = [st('くり下がりなし', b0), st('くり下がり 1回まで', bL), ALL];
     S[3].steps = [st('くり下がりなし', b0), st('くり下がり 1回まで', bL), ALL];
     var mb = function(lo, hi){ return function(p){ return p.b >= lo && p.b <= hi; }; };
-    M[0].steps = [st('2・3の だん', mb(2, 3)), st('4・5の だん', mb(4, 5)), ALL];
-    M[1].steps = [st('6・7の だん', mb(6, 7)), st('8・9の だん', mb(8, 9)), ALL];
+    M[0].steps = [st('2・3の 段', mb(2, 3)), st('4・5の 段', mb(4, 5)), ALL];
+    M[1].steps = [st('6・7の 段', mb(6, 7)), st('8・9の 段', mb(8, 9)), ALL];
     M[2].steps = [
       st('くり上がりなし', null, function(){ var b = pick(2, 4), m = Math.floor(9 / b), a = pick(1, m) * 10 + pick(1, m); return { a:a, b:b, answer:a * b }; }),
       st('かける数 2〜5', null, function(){ var a = pick(11, 99), b = pick(2, 5); return { a:a, b:b, answer:a * b }; }),
       ALL];
-    D[0].steps = [st('2・3で わる', mb(2, 3)), st('4・5で わる', mb(4, 5)), ALL];
-    D[1].steps = [st('6・7で わる', mb(6, 7)), st('8・9で わる', mb(8, 9)), ALL];
+    D[0].steps = [st('2・3で 割る', mb(2, 3)), st('4・5で 割る', mb(4, 5)), ALL];
+    D[1].steps = [st('6・7で 割る', mb(6, 7)), st('8・9で 割る', mb(8, 9)), ALL];
     D[2].steps = [
       st('答えが 2〜5', null, function(){ var b = pick(2, 9), q = pick(2, 5); return { a:b * q, b:b, answer:q }; }),
       st('答えが 2〜9', null, function(){ var b = pick(2, 9), q = pick(2, 9); return { a:b * q, b:b, answer:q }; }),
@@ -4203,7 +4203,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return d <= 1 ? 1 : (d === 2 ? 0.7 : 0.5);
   }
   function coinPer(q){ return ((q.lv|0) + 3) / 10 * lowLvFactor(q); }
-  /* 100問は 速さの 練習: たし算・ひき算は 2桁と 1桁まで、かけ算・わり算は 九九の はんい。横書きで 暗算 */
+  /* 100問は 速さの 練習: 足し算・引き算は 2桁と 1桁まで、かけ算・割り算は 九九の はんい。横書きで 暗算 */
   var EASY100 = {
     add:{ desc:'2桁 ＋ 1桁まで', gen:function(){ var b=pick(1,9),a=pick(1,99-b); return {a:a,b:b,answer:a+b}; } },
     sub:{ desc:'2桁 － 1桁まで', gen:function(){ var b=pick(1,9),a=pick(b+1,99); return {a:a,b:b,answer:a-b}; } },
@@ -4237,7 +4237,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var lv = currentLevelIndex(op);
     var def = LEVELS[op][lv];
     var isMax = lv === LEVELS[op].length-1;
-    if(isMax) return { label:'Lv.'+(lv+1)+' '+def.name, note:'最高レベル「'+def.name+'」を 練習ちゅう!', isMax:true };
+    if(isMax) return { label:'Lv.'+(lv+1)+' '+def.name, note:'最高レベル「'+def.name+'」を 練習中!', isMax:true };
     var remain = Math.max(0, def.need - clearsAtLevel(op,lv));
     var next = LEVELS[op][lv+1];
     return { label:'Lv.'+(lv+1)+' '+def.name, note:'次の「'+next.name+'」まで あと'+remain+'マス', remain:remain, def:def, next:next, lv:lv, isMax:false };
@@ -4402,7 +4402,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var t = todayKey();
     return printLog().filter(function(e){ return e.d === t && (e.k === 'daily' || e.k === 'review'); }).length;
   }
-  /* ---------- 今日の 5まいは アプリが 決める(自分の しんどに あわせて) ---------- */
+  /* ---------- 今日の 5枚は アプリが 決める(自分の 進み具合に 合わせて) ---------- */
   function progressOf(op){ var lv = currentLevelIndex(op); return lv * 3 + Math.min(3, clearsAtLevel(op, lv)); }
   function sheetPlan(){
     var t = todayKey(), rec = safeGet('keisan_plan');
@@ -4560,7 +4560,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return b;
   }
   function fmtClock(ms){ var t = Math.round(ms/1000), m = Math.floor(t/60), x = t%60; return m+':'+(x<10?'0':'')+x; }
-  /* 100問の コインの もらいかた(始める前に 見せる)。finishAccuracy と おなじ 計算 */
+  /* 100問の コインの もらい方(始める前に 見せる)。finishAccuracy と 同じ 計算 */
   function base100(op){
     var ops = op==='mix' ? SINGLE_OPS : [op];
     var full = Math.round(ops.reduce(function(s,o){ return s + (currentLevelIndex(o)+3)/10; },0) / ops.length * WEEKEND_N);
@@ -4568,25 +4568,25 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   function coinPlan100(op){
     var R = Medal.RANKS, tp = Medal.topOf(op), rows = [], again = weekendDone();
-    rows.push({ l:'100問 とけたら', s: again ? '今日 2回目からは 10分の1' : '今日 1回目', n:base100(op), v:base100(op) });
-    if(!again) rows.push({ l:'正解 '+WEEKEND_ACC+'% いじょう', s:'1日1回', n:WEEKEND_BONUS, v:WEEKEND_BONUS });
-    rows.push({ l:'一発正解 90%で ＋'+BONUS_GREAT+'・ぜんぶで ＋'+(BONUS_PERFECT+2), s:'めあて '+fmtSec(printTarget(op, WEEKEND_N))+' いないで さらに ＋'+BONUS_FAST, n:BONUS_PERFECT+2+BONUS_FAST, v:'＋'+(BONUS_PERFECT+2+BONUS_FAST)+'まで' });
+    rows.push({ l:'100問 解けたら', s: again ? '今日 2回目からは 10分の1' : '今日 1回目', n:base100(op), v:base100(op) });
+    if(!again) rows.push({ l:'正解 '+WEEKEND_ACC+'% 以上', s:'1日1回', n:WEEKEND_BONUS, v:WEEKEND_BONUS });
+    rows.push({ l:'一発正解 90%で ＋'+BONUS_GREAT+'・全部で ＋'+(BONUS_PERFECT+2), s:'めあて '+fmtSec(printTarget(op, WEEKEND_N))+' 以内で さらに ＋'+BONUS_FAST, n:BONUS_PERFECT+2+BONUS_FAST, v:'＋'+(BONUS_PERFECT+2+BONUS_FAST)+'まで' });
     var best = best100(op);
-    if(best) rows.push({ l:'自己ベスト('+fmtClock(best.ms)+')を こえる', s:'', n:BEST100_BONUS, v:BEST100_BONUS });
+    if(best) rows.push({ l:'自己ベスト('+fmtClock(best.ms)+')を 超える', s:'', n:BEST100_BONUS, v:BEST100_BONUS });
     var vol = todayVolume();
-    rows.push({ l:'今日 たくさん とく', s:volumeHint(vol).replace(/^今日 \d+問。?/, '') || '今日の 計算は ぜんぶ おわり!', n:0, v:'＋3〜15' });
+    rows.push({ l:'今日 たくさん 解く', s:volumeHint(vol).replace(/^今日 \d+問。?/, '') || '今日の 計算は 全部 終わり!', n:0, v:'＋3〜15' });
     var left = Medal.runsLeft();
     var goal = Math.min(4, tp + 1);
-    rows.push({ l:'メダルを とる', s: left > 0 ? 'ブロンズ＋'+R[1].run+'・シルバー＋'+R[2].run+'・ゴールド＋'+R[3].run+'・ダイヤ＋'+R[4].run+'(今日 あと '+left+'回)' : '今日の メダルの コインは おしまい(あしたまた もらえるよ)', n: left > 0 ? R[goal].run : 0, v: left > 0 ? '＋'+R[1].run+'〜'+R[4].run : '－' });
-    if(tp < 4) rows.push({ l:'はじめての '+R[tp+1].name+'メダル', s:Medal.sym(op)+' で 一発正解 '+R[tp+1].acc+'問・'+fmtClock((op==='mul'||op==='div' ? R[tp+1].kuku : R[tp+1].pm)*1000)+' いない', n:R[tp+1].coin, v:R[tp+1].coin });
+    rows.push({ l:'メダルを とる', s: left > 0 ? 'ブロンズ＋'+R[1].run+'・シルバー＋'+R[2].run+'・ゴールド＋'+R[3].run+'・ダイヤ＋'+R[4].run+'(今日 あと '+left+'回)' : '今日の メダルの コインは おしまい(明日また もらえるよ)', n: left > 0 ? R[goal].run : 0, v: left > 0 ? '＋'+R[1].run+'〜'+R[4].run : '－' });
+    if(tp < 4) rows.push({ l:'初めての '+R[tp+1].name+'メダル', s:Medal.sym(op)+' で 一発正解 '+R[tp+1].acc+'問・'+fmtClock((op==='mul'||op==='div' ? R[tp+1].kuku : R[tp+1].pm)*1000)+' 以内', n:R[tp+1].coin, v:R[tp+1].coin });
     var max = rows.reduce(function(a,r){ return a + r.n; }, 0);
     return { rows:rows, max:max, again:again };
   }
   function coinPlanHTML(op){
     var P = coinPlan100(op), coin = '<span class="coin" style="width:14px;height:14px"></span>';
-    var h = '<div class="cp100"><div class="cp100-h"><span>もらえる コイン</span><span class="cp100-max">'+coin+'さいだい <b class="num">'+P.max+'</b></span></div><ul>';
+    var h = '<div class="cp100"><div class="cp100-h"><span>もらえる コイン</span><span class="cp100-max">'+coin+'最大 <b class="num">'+P.max+'</b></span></div><ul>';
     P.rows.forEach(function(r){ h += '<li><span>'+r.l+(r.s ? '<small>'+r.s+'</small>' : '')+'</span><b class="num">'+(typeof r.v === 'number' ? '＋'+r.v : r.v)+'</b></li>'; });
-    h += '</ul><div class="cp100-note">'+(P.again ? '今日の 1回目の コインは もう もらったよ。2回目からは メダルや 自己ベストで コインを ふやそう!' : '2回目からは「100問 とけたら」が 10分の1に なるよ。メダルの コインは 1日'+Medal.RUN_MAX+'回まで 毎回 もらえるよ。')+'</div></div>';
+    h += '</ul><div class="cp100-note">'+(P.again ? '今日の 1回目の コインは もう もらったよ。2回目からは メダルや 自己ベストで コインを 増やそう!' : '2回目からは「100問 解けたら」が 10分の1に なるよ。メダルの コインは 1日'+Medal.RUN_MAX+'回まで 毎回 もらえるよ。')+'</div></div>';
     return h;
   }
   function renderWeekend(op){
@@ -4696,7 +4696,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<div class="steps3"><span><i style="background:var(--op-mul)">✓</i>プリント</span><span><i style="background:var(--boss)">✓</i>挑戦</span><span><i style="background:var(--gold-deep)">✓</i>100問</span></div>' +
         '<div class="rw"><div class="big"><b>＋'+ALLCLEAR_BONUS+'</b><small>ボーナス コイン</small></div><div><b>'+sc+'日</b><small>🔥 連続</small></div><div><b>'+(n % STAMP_PER_CARD || (n ? STAMP_PER_CARD : 0))+'/'+STAMP_PER_CARD+'</b><small>★ スタンプ</small></div></div></div>' +
         '<div class="again"><div><b>もう1枚 やる?</b><small>今日の プリントは 何枚でも OK</small></div><button id="againBtn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button></div><div id="againSlot"></div>' +
-        '<div class="again"><div><b>100問 もう1回?</b><small>メダルを とると コイン!さいだい '+coinPlan100(state.homeOp || 'add').max+'コイン</small></div><button id="again100" style="background:var(--gold-deep);box-shadow:0 4px 0 color-mix(in srgb, var(--gold-deep) 60%, #000)">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button></div><div id="again100Slot"></div>' +
+        '<div class="again"><div><b>100問 もう1回?</b><small>メダルを とると コイン!最大 '+coinPlan100(state.homeOp || 'add').max+'コイン</small></div><button id="again100" style="background:var(--gold-deep);box-shadow:0 4px 0 color-mix(in srgb, var(--gold-deep) 60%, #000)">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button></div><div id="again100Slot"></div>' +
         '<p class="bye">明日も また 会おうね。明日は 新しい ボスが 来るよ!</p>';
       Pet.mount($('heroPet'), a.sp, a.lv);
       var sv = $('heroPet').querySelector('svg'); if(sv) sv.classList.add('happy');
@@ -4732,7 +4732,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     var wait = cur === 0 ? 'プリントの あとで' : '挑戦の あとで';
     var name = (state.homeOp && state.homeOp !== 'mix') ? OP_META[state.homeOp].label : '混ぜて';
-    $('row1').innerHTML = done[0] ? '<span class="sr-t"><b>プリント '+DAILY_SHEETS+'まい できた!</b>今日の 練習は 何枚でも OK</span><button class="sr-btn" id="row1Btn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button>' : '';
+    $('row1').innerHTML = done[0] ? '<span class="sr-t"><b>プリント '+DAILY_SHEETS+'枚 できた!</b>今日の 練習は 何枚でも OK</span><button class="sr-btn" id="row1Btn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button>' : '';
     if($('row1Btn')) $('row1Btn').onclick = function(){ state.printOpen = !state.printOpen; renderRoad(); };
     $('row2').innerHTML = done[1]
       ? '<span class="sr-boss">'+bossSVG(bossOp(), true)+'</span><span class="sr-t"><b>'+BOSS[bossOp()].name+'を たおした!</b>スタンプ '+n+'こ</span><button class="sr-btn" id="row2Btn">カード</button>'
@@ -4740,14 +4740,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if($('row2Btn')) $('row2Btn').onclick = showStampInfo;
     var w100Btn = function(){ state.w100Open = !state.w100Open; renderRoad(); };
     $('row3').innerHTML = done[2]
-      ? '<span class="sr-t"><b>100問 <ruby>記録<rt>きろく</rt></ruby> できた!</b>もう1回で さいだい '+coinPlan100(state.homeOp || 'add').max+'コイン(メダルで もらえるよ)</span><button class="sr-btn" id="row3Btn">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button>'
-      : '<span class="sr-t"><b>100問 <ruby>記録<rt>きろく</rt></ruby></b>'+(cur === 0 ? '🔒 プリントを '+DAILY_SHEETS+'まい やると 開く' : name+'を 100問')+'</span><span class="sr-r">自己ベスト<strong class="num">'+(best ? fmtClock(best.ms) : '－')+'</strong></span>';
+      ? '<span class="sr-t"><b>100問 <ruby>記録<rt>記録</rt></ruby> できた!</b>もう1回で 最大 '+coinPlan100(state.homeOp || 'add').max+'コイン(メダルで もらえるよ)</span><button class="sr-btn" id="row3Btn">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button>'
+      : '<span class="sr-t"><b>100問 <ruby>記録<rt>記録</rt></ruby></b>'+(cur === 0 ? '🔒 プリントを '+DAILY_SHEETS+'枚 やると 開く' : name+'を 100問')+'</span><span class="sr-r">自己ベスト<strong class="num">'+(best ? fmtClock(best.ms) : '－')+'</strong></span>';
     if($('row3Btn')) $('row3Btn').onclick = w100Btn;
     // the partner stands at the step to do now
     var a2 = activePet(), rp = $('roadPet'), rbb = $('roadBubble'), cs = $('st'+(cur+1));
     if(!rp.firstChild) Pet.mount(rp, a2.sp, a2.lv);
     if(rp.parentNode !== cs){ cs.insertBefore(rbb, cs.firstChild); cs.insertBefore(rp, cs.firstChild); }
-    rbb.textContent = ['まずは プリント '+Math.min(sheetsToday(), DAILY_SHEETS)+'/'+DAILY_SHEETS+'まい!', 'ボスに 挑もう!', '100問に 挑戦!'][cur];
+    rbb.textContent = ['まずは プリント '+Math.min(sheetsToday(), DAILY_SHEETS)+'/'+DAILY_SHEETS+'枚!', 'ボスに 挑もう!', '100問に 挑戦!'][cur];
     $('goalText').textContent = '全部 おわると 今日の 花丸!(＋'+ALLCLEAR_BONUS+'コイン)';
   }
   function rb(t){ return String(t).replace(/桁/g, '<ruby>桁<rt>けた</rt></ruby>'); }
@@ -4774,9 +4774,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(asg){ rec = state.homeOp = nextSheetOp(); state.review = null; }
     $('opTabs').style.display = asg ? 'none' : '';
     $('todayCard').classList.toggle('asg', asg);
-    $('todayCard').querySelector('.today-label').textContent = asg ? 'きょうの プリント' : '何を練習する?';
+    $('todayCard').querySelector('.today-label').textContent = asg ? '今日の プリント' : '何を練習する?';
     var meta = OP_META[rec];
-    $('todayBtn').innerHTML = asg ? 'プリント '+(sheetsToday() + 1)+'まい目 スタート' : (rec==='mix' ? '混ぜて' : meta.label+'の') + 'プリントを始める';
+    $('todayBtn').innerHTML = asg ? 'プリント '+(sheetsToday() + 1)+'枚目 スタート' : (rec==='mix' ? '混ぜて' : meta.label+'の') + 'プリントを始める';
     renderPrintInfo(rec);
     var sn = sheetsToday(), sd = '';
     var plan = sheetPlan();
@@ -4786,9 +4786,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         sd += '<b class="chip'+(k < sn ? ' on' : (k === sn ? ' now' : ''))+'" style="--c:var('+OP_META[po].color+')"><span class="cs">'+OP_META[po].symbol+'</span>'+(k < sn ? '<small>✓</small>' : '')+'</b>';
       }else sd += '<i class="on"></i>';
     }
-    $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">きょうの プリント <b class="num">'+Math.min(sn, DAILY_SHEETS)+'/'+DAILY_SHEETS+'</b>まい</span><span class="sheets-d'+(sn < DAILY_SHEETS ? ' wide' : '')+'">'+sd+'</span></div>' +
-      '<span class="sz-next">1まい '+SHEET_N+'問。'+(sn >= DAILY_SHEETS ? '5まい できたよ!もっと やっても OK' : 'あと <b>'+(DAILY_SHEETS - sn)+'まい</b>で 今日の プリントが クリア!')+'</span>' +
-      (grade3Open() ? '<button type="button" class="btn g3btn" id="g3Btn">小3の しんどから はじめる<small>＋－は 3桁・×は 2桁×1桁・÷は 答えが2桁 から。いまより 下のときだけ すすむよ</small></button>' : '');
+    $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">今日の プリント <b class="num">'+Math.min(sn, DAILY_SHEETS)+'/'+DAILY_SHEETS+'</b>枚</span><span class="sheets-d'+(sn < DAILY_SHEETS ? ' wide' : '')+'">'+sd+'</span></div>' +
+      '<span class="sz-next">1枚 '+SHEET_N+'問。'+(sn >= DAILY_SHEETS ? '5枚 できたよ!もっと やっても OK' : 'あと <b>'+(DAILY_SHEETS - sn)+'枚</b>で 今日の プリントが クリア!')+'</span>' +
+      (grade3Open() ? '<button type="button" class="btn g3btn" id="g3Btn">小3の 進度から 始める<small>'+rb('＋－は 3桁・×は 2桁×1桁・÷は 答えが2桁 から。今より 下のときだけ 進むよ')+'</small></button>' : '');
     renderWeekend(rec);
     if(rec === 'mix'){
       $('todayMain').innerHTML = '<span class="sym num" style="font-size:15px">MIX</span><span><span class="t1">混ぜて練習</span><br><span class="t2">＋－×÷が混ざって出るよ</span></span>';
@@ -4815,7 +4815,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         $('todayHint').textContent = '';
       }else{
       $('todayGoal').innerHTML = info.isMax ? '最高レベル! 自分の記録にチャレンジしよう'
-        : 'あと <b class="num">'+info.remain+'</b>回合格で「'+info.next.name+'」にレベルアップ!(合格は 1日に 1回 かぞえるよ)';
+        : 'あと <b class="num">'+info.remain+'</b>回合格で「'+info.next.name+'」にレベルアップ!(合格は 1日に 1回 数えるよ)';
       $('todayAlt').hidden = asg;
       $('todayHint').textContent = (info.isMax ? '' : '正解'+PASS_ACC+'%以上で、めあてタイムより早いと合格。合格で1マス進むよ。') +
         '';
@@ -7044,7 +7044,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     renderDots();
   }
 
-  /* 2桁どうし・3桁の たし算ひき算、2桁×1桁の かけ算は 筆算で出す */
+  /* 2桁どうし・3桁の 足し算引き算、2桁×1桁の かけ算は 筆算で出す */
   $('hsSwitch').addEventListener('click', function(){
     if(busy || !state.current) return;
     state.current.hs = !state.hissan;
@@ -7238,7 +7238,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   // bonuses: [{label, n}]
   function coinBanner(bonuses){
-    var chips = '<span class="chips">' + (state.baseCoins > 0 ? '<span>'+(state.mode==='speed' ? '正解した 問題' : (state.baseLabel || state.questions.length+'問 とけた'))+' +'+state.baseCoins+'</span>' : '');
+    var chips = '<span class="chips">' + (state.baseCoins > 0 ? '<span>'+(state.mode==='speed' ? '正解した 問題' : (state.baseLabel || state.questions.length+'問 解けた'))+' +'+state.baseCoins+'</span>' : '');
     (bonuses||[]).forEach(function(b){ chips += '<span>'+b.label+' +'+b.n+'</span>'; });
     chips += '</span>';
     var t = nextTreasure();
@@ -7268,21 +7268,21 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var info = levelInfoText(op);
     var head = stepped ? '1マス 進んだ! 今は '+info.label : '今は '+info.label;
     var stx = stepText(op);
-    return '<b>'+head+'</b>'+info.note+(stx ? '<br>今日は '+stx+(stepped ? '。あしたは つぎの ステップ!' : '') : '');
+    return '<b>'+head+'</b>'+info.note+(stx ? '<br>今日は '+stx+(stepped ? '。明日は 次の ステップ!' : '') : '');
   }
 
-  /* 100問の あと: つぎは なにで コインが ふえるか */
+  /* 100問の 後: 次は 何で コインが 増えるか */
   function hint100(op, info, again){
     var R = Medal.RANKS, t = [];
     if(info && info.next){
       var nx = R[info.next.r], first = info.next.r > Medal.topOf(op);
-      t.push('つぎは '+nx.name+'メダルで ＋'+nx.run+(first ? '、はじめてなら さらに ＋'+nx.coin : '')+'!');
+      t.push('次は '+nx.name+'メダルで ＋'+nx.run+(first ? '、初めてなら さらに ＋'+nx.coin : '')+'!');
     }
-    if(again) t.push('今日の 2回目からは「100問 とけた」が 10分の1。メダルと 自己ベストで ふやそう。');
-    else if(weekendDone()) t.push('今日 もう1回 やると「100問 とけた」は 10分の1。メダルと 自己ベストで ふやそう。');
+    if(again) t.push('今日の 2回目からは「100問 解けた」が 10分の1。メダルと 自己ベストで 増やそう。');
+    else if(weekendDone()) t.push('今日 もう1回 やると「100問 解けた」は 10分の1。メダルと 自己ベストで 増やそう。');
     return t.join('<br>');
   }
-  /* 今日 とけた 問題の かず(プリント・100問・ちょうせん)。計算の ぶんだけ コインが ふえる */
+  /* 今日 解けた 問題の 数(プリント・100問・挑戦)。計算の 分だけ コインが 増える */
   var VOL_STEPS = [[50, 3], [100, 5], [200, 10], [300, 15]];
   function todayVolume(){
     var t = todayKey();
@@ -7290,12 +7290,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   function volumeBonuses(before, after, bonuses, banners){
     VOL_STEPS.forEach(function(v){
-      if(before < v[0] && after >= v[0]) bonuses.push({ label:'今日 '+v[0]+'問 とけた', n:v[1] });
+      if(before < v[0] && after >= v[0]) bonuses.push({ label:'今日 '+v[0]+'問 解けた', n:v[1] });
     });
   }
   function volumeHint(v){
     for(var i = 0; i < VOL_STEPS.length; i++) if(v < VOL_STEPS[i][0]) return '今日 '+v+'問。あと '+(VOL_STEPS[i][0]-v)+'問で ＋'+VOL_STEPS[i][1]+'コイン!';
-    return '今日 '+v+'問! さいだいまで とけたよ。';
+    return '今日 '+v+'問! 最大まで 解けたよ。';
   }
   function finishAccuracy(){
     var N = state.questions.length;
@@ -7316,7 +7316,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     // prints pay once: the same as a 10-question round at this level, whatever the length
     {
       var again100 = !!(pr && pr.kind==='weekend' && weekendDone());
-      state.baseLabel = pr && pr.kind==='weekend' ? (again100 ? '100問 とけた(今日2回目)' : '100問 とけた(今日1回目)') : null;
+      state.baseLabel = pr && pr.kind==='weekend' ? (again100 ? '100問 解けた(今日2回目)' : '100問 解けた(今日1回目)') : null;
       var base = Math.round(state.questions.reduce(function(s,q){ return s+coinPer(q); },0) * (again100 ? 10 / N : 1));
       state.lowLv = state.questions.some(function(q){ return lowLvFactor(q) < 1; });
       state.sessionCoins += base; state.baseCoins += base; earn(base);
@@ -7422,7 +7422,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
                    : (accuracy===100 ? 'パーフェクト!' : (accuracy>=70 ? 'よくできました!' : (accuracy>=40 ? 'がんばったね!' : '次は もっと とけるよ!')));
     var sub = (pr ? (pr.kind==='weekend' ? '100問チャレンジ' : (isReview ? '復習プリント ' : '今日のプリント ')+N+'問') + (passed ? '、合格だよ!' : '、おつかれさま!') : '全部で ' + (N+totalMistakes) + '問 答えて、'+N+'問すべて 正解したよ。');
     if(compare) sub += '\n' + compare;
-    if(pr && pr.kind === 'daily'){ var shn = sheetsToday(); sub += '\nきょうの プリント ' + Math.min(shn, DAILY_SHEETS) + '/' + DAILY_SHEETS + 'まい' + (shn === DAILY_SHEETS ? ' クリア!' : ''); }
+    if(pr && pr.kind === 'daily'){ var shn = sheetsToday(); sub += '\n今日の プリント ' + Math.min(shn, DAILY_SHEETS) + '/' + DAILY_SHEETS + '枚' + (shn === DAILY_SHEETS ? ' クリア!' : ''); }
     if(!fast && accuracy>=PASS_ACC) sub += '\nめあての '+fmtSec(target)+' より 早いと 合格だよ。';
     if(isCh){
       title = passed ? BOSS[bossOp()].name+'を たおした!' : 'おしい!';
@@ -7670,9 +7670,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(state.print && state.print.kind === 'daily' && assignedMode()){
       var no = nextSheetOp(), nm = OP_META[no];
       $('retryBtn').className = 'btn btn-primary';
-      $('retryBtn').textContent = 'つぎの プリント('+(sheetsToday() + 1)+'/'+DAILY_SHEETS+'まい・'+nm.label+')';
+      $('retryBtn').textContent = '次の プリント('+(sheetsToday() + 1)+'/'+DAILY_SHEETS+'枚・'+nm.label+')';
       $('retryBtn').onclick = function(){ state.homeOp = no; startPrint(no, printSize(), 'daily'); };
-      note.innerHTML = 'きょうの プリント <b class="num">'+sheetsToday()+'/'+DAILY_SHEETS+'</b>まい おわり!つぎは <b>'+nm.label+'</b>(Lv.'+(currentLevelIndex(no) + 1)+'・'+stepText(no)+')';
+      note.innerHTML = '今日の プリント <b class="num">'+sheetsToday()+'/'+DAILY_SHEETS+'</b>枚 終わり!次は <b>'+nm.label+'</b>(Lv.'+(currentLevelIndex(no) + 1)+'・'+stepText(no)+')';
       note.hidden = false; ops.hidden = true;
       return;
     }
@@ -8422,9 +8422,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var LV = ['かんたん','ふつう','むずかしい'];
     var MODES = [
       { id:'dec', name:'小数の 計算', color:'--op-div', desc:'小数点の いちを そろえるのが コツ。',
-        levels:['小数第1位の たし算・ひき算','けたが ちがう 小数・小数×整数','小数×小数・小数の わり算'] },
+        levels:['小数第1位の 足し算・引き算','けたが ちがう 小数・小数×整数','小数×小数・小数の 割り算'] },
       { id:'frac', name:'分数の 計算', color:'--op-add', desc:'こたえは 約分して かこう。',
-        levels:['分母が 同じ たし算・ひき算','分母が ちがう(通分)','分数の かけ算・わり算'] },
+        levels:['分母が 同じ 足し算・引き算','分母が ちがう(通分)','分数の かけ算・割り算'] },
       { id:'red', name:'約分マシン', color:'--op-mul', desc:'分子と分母を 同じ数で わって 小さく しよう。',
         levels:['2・3・5で われる','大きめの 数','すごく 大きな 数'] }
     ];
@@ -8514,7 +8514,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         hint = '<b>小数点を とって 整数の かけ算</b>: '+a.v+' × '+b.v+' を 計算しよう。<br>そのあと こたえの <b>右から '+(a.s+b.s)+'けた目</b> に 小数点を うつよ。';
       }else if(t === '÷'){
         var r = rdec(pick([1,2]), .1, 9.9), m = ri(2, 9); a = dNorm(dMul(r, D(m, 0))); b = D(m, 0); op = '÷'; ans = r;
-        hint = '<b>整数の わり算と 同じように</b> 計算しよう。わられる数の 小数点の <b>真上</b>に、こたえの 小数点を うつよ。';
+        hint = '<b>整数の 割り算と 同じように</b> 計算しよう。わられる数の 小数点の <b>真上</b>に、こたえの 小数点を うつよ。';
       }else{
         var qq = ri(2, 9); b = rdec(1, .2, .9); a = dNorm(dMul(D(qq, 0), b)); op = '÷'; ans = D(qq, 0);
         var a10 = dNorm(dMul(a, D(10, 0)));
@@ -9152,18 +9152,18 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return { card:renderCard, open:openMenu };
   })();
 
-  /* ---------- ひっさん教室 (かけ算・わり算の 筆算を 1だんずつ) ---------- */
+  /* ---------- ひっさん教室 (かけ算・割り算の 筆算を 1だんずつ) ---------- */
   var Hsl = (function(){
     var KEY = 'keisan_hsl', G_N = 3, S_N = 5, LESSON_COIN = 3, GUIDE_COIN = 3, STAR_COIN = 2;
     var COURSES = [
       { op:'mul', name:'かけ算の ひっさん', color:'--op-mul', desc:'一の位から じゅんに かけて、くりあがりは 小さく 書こう。',
         levels:[ { id:'M1', name:'2けた × 1けた', ex:'26 × 3' }, { id:'M2', name:'3けた × 1けた', ex:'214 × 4' }, { id:'M3', name:'2けた × 2けた', ex:'23 × 45' } ] },
-      { op:'div', name:'わり算の ひっさん', color:'--op-div', desc:'たてる → かける → ひく → おろす を くりかえそう。',
-        levels:[ { id:'D1', name:'2けた ÷ 1けた', ex:'72 ÷ 3' }, { id:'D2', name:'あまりの ある わり算', ex:'87 ÷ 4・25 ÷ 4' },
+      { op:'div', name:'割り算の ひっさん', color:'--op-div', desc:'たてる → かける → ひく → おろす を くりかえそう。',
+        levels:[ { id:'D1', name:'2けた ÷ 1けた', ex:'72 ÷ 3' }, { id:'D2', name:'あまりの ある 割り算', ex:'87 ÷ 4・25 ÷ 4' },
                  { id:'D3', name:'3けた ÷ 1けた', ex:'618 ÷ 3' }, { id:'D4', name:'2けたで わる', ex:'96 ÷ 32' } ] }
     ];
     var LESSONS = [
-      { id:'LD', title:'わり算の ひっさんの ひみつ', sub:'72この あめを 3人で わけよう', op:'div', N:72, d:3, go:'D1' },
+      { id:'LD', title:'割り算の ひっさんの ひみつ', sub:'72この あめを 3人で わけよう', op:'div', N:72, d:3, go:'D1' },
       { id:'LM', title:'かけ算の ひっさんの ひみつ', sub:'26 × 3 を ブロックで', op:'mul', N:26, d:3, go:'M1' }
     ];
     var DIV_CHIPS = ['たてる','かける','ひく','おろす'], MUL_CHIPS = ['かける','くりあがり','たす'];
@@ -9356,7 +9356,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           cell(P, 7, C(s), sum % 10, 'in', id2);
           var terms = [];
           if(xs) terms.push(x); if(ys) terms.push(y);
-          var say2 = s === 0 ? 'さいごに たし算。'+PLACE[0]+'は '+B(x)+' を そのまま おろそう。'
+          var say2 = s === 0 ? 'さいごに 足し算。'+PLACE[0]+'は '+B(x)+' を そのまま おろそう。'
             : (terms.length ? B(terms.join(' + '))+(c2 ? ' に くりあがりの '+B(c2)+' を たそう' : ' を たそう') : 'くりあがりの '+B(c2)+' を 書こう')+'。'+(s > 0 && s < tl-1 ? '<br>2けたに なったら 一の位を 書いて、1 くりあがり。' : '');
           step(P, { chip:2, cells:[id2], hl:hl2, tip:s === 0 ? B(x)+' を そのまま おろそう' : (terms.length ? B(terms.join(' + ')) : '')+(c2 ? (terms.length ? ' ＋ ' : '')+'くりあがり '+B(c2) : '')+' = ?', say:(s === 0 ? '' : PLACE[s]+': ')+say2,
             wrong:(function(terms, c2, sum){ return function(v){
@@ -9389,7 +9389,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var c = $('hslCard'); if(!c) return;
       var s = getH(), segs = '';
       lvList().forEach(function(x){ segs += '<i class="'+((s.best[x.l.id] || 0) >= 1 ? 'on' : '')+'"></i>'; });
-      c.innerHTML = '<span class="fc-ico">'+icoSVG()+'</span><span class="fc-text"><b>ひっさん教室</b>かけ算・わり算の ひっさんを 1だんずつ。★ '+totalStars()+'/'+maxStars()+'<span class="fc-segs">'+segs+'</span></span>' +
+      c.innerHTML = '<span class="fc-ico">'+icoSVG()+'</span><span class="fc-text"><b>ひっさん教室</b>かけ算・割り算の ひっさんを 1だんずつ。★ '+totalStars()+'/'+maxStars()+'<span class="fc-segs">'+segs+'</span></span>' +
         '<button class="fc-go" id="hlGo">れんしゅう</button>';
       c.hidden = false;
     }
@@ -9695,7 +9695,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var goId = F.lesson ? F.lesson.go : F.id;
         $('hlPlayInner').hidden = true;
         $('hlClear').innerHTML = '<div class="dc-clear">'+stamp('dc-stampbig')+'<div><div class="dc-ctitle">'+(F.lesson ? 'レッスン クリア!' : 'せつめい つき クリア!')+(first ? ' <span class="dc-coin">コイン +'+(F.lesson ? LESSON_COIN : GUIDE_COIN)+'</span>' : '')+'</div>' +
-          '<p>'+(F.op === 'div' ? 'たてる → かける → ひく → おろす。この 4つを くりかえせば、どんな わり算も できるよ。' : '一の位から かけて、くりあがりを わすれずに たそう。')+'</p></div></div>' +
+          '<p>'+(F.op === 'div' ? 'たてる → かける → ひく → おろす。この 4つを くりかえせば、どんな 割り算も できるよ。' : '一の位から かけて、くりあがりを わすれずに たそう。')+'</p></div></div>' +
           '<div class="dc-btnrow">'+(F.lesson ? '<button class="btn btn-primary" id="hlToG">せつめい つきで れんしゅう</button>' : '<button class="btn btn-primary" id="hlToS">ひとりで やってみる</button>') +
           '<button class="btn btn-ghost" id="hlToMenu">メニューに もどる</button></div>';
         $('hlClear').hidden = false;
@@ -11040,10 +11040,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { id:'t_b20',   g:'p', tier:3, name:'ボスたおしの しろ',   cond:'ボスを 20回 たおす',                   coin:60, ok:function(m){ return cn(m).b >= 20; } },
       { id:'t_p100',  g:'p', tier:4, name:'けいさんの たいよう', cond:'れんしゅうを 100回 やる',              coin:80, ok:function(m){ return cn(m).p >= 100; } },
       /* さきどりの トロフィー(クリスタル): その計算の いちばん上の レベルに すすむ */
-      { id:'t_lv_add', g:'s', tier:3, name:'たし算の さきどり', cond:'たし算で いちばん上の レベル(3桁＋3桁)に すすむ', coin:40, ok:function(){ return atMax('add'); } },
-      { id:'t_lv_sub', g:'s', tier:3, name:'ひき算の さきどり', cond:'ひき算で いちばん上の レベル(3桁－3桁)に すすむ', coin:40, ok:function(){ return atMax('sub'); } },
+      { id:'t_lv_add', g:'s', tier:3, name:'足し算の さきどり', cond:'足し算で いちばん上の レベル(3桁＋3桁)に すすむ', coin:40, ok:function(){ return atMax('add'); } },
+      { id:'t_lv_sub', g:'s', tier:3, name:'引き算の さきどり', cond:'引き算で いちばん上の レベル(3桁－3桁)に すすむ', coin:40, ok:function(){ return atMax('sub'); } },
       { id:'t_lv_mul', g:'s', tier:3, name:'かけ算の さきどり', cond:'かけ算で いちばん上の レベル(2桁×1桁)に すすむ', coin:40, ok:function(){ return atMax('mul'); } },
-      { id:'t_lv_div', g:'s', tier:3, name:'わり算の さきどり', cond:'わり算で いちばん上の レベルに すすむ',           coin:40, ok:function(){ return atMax('div'); } },
+      { id:'t_lv_div', g:'s', tier:3, name:'割り算の さきどり', cond:'割り算で いちばん上の レベルに すすむ',           coin:40, ok:function(){ return atMax('div'); } },
       { id:'t_lv_all', g:'s', tier:4, name:'ぜんぶ さきどり',   cond:'＋ － × ÷ ぜんぶ いちばん上の レベルに すすむ',   coin:150, ok:function(){ return OPS4.every(atMax); } },
       { id:'t_ah1', g:'s', tier:2, name:'1学年 さき',   cond:'小数・分数で、いまの 学年より 1つ 先の 学年の ないようを ★1こ クリアする', coin:40,  ok:function(){ return ahead() >= 1; } },
       { id:'t_ah2', g:'s', tier:3, name:'2学年 さき',   cond:'小数・分数で、いまの 学年より 2つ 先の 学年の ないようを ★1こ クリアする', coin:80,  ok:function(){ return ahead() >= 2; } },
@@ -11184,7 +11184,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         m.c[op][r] = (m.c[op][r] || 0) + 1;
         var t = todayKey();
         m.day = (m.day && m.day.d === t) ? { d:t, n:m.day.n + 1 } : { d:t, n:1 };
-        /* メダルの コインは 毎回(1日 RUN_MAX 回まで)。2回目からの 100問でも がんばった ぶん もらえる */
+        /* メダルの コインは 毎回(1日 RUN_MAX 回まで)。2回目からの 100問でも がんばった 分 もらえる */
         if(m.day.n <= RUN_MAX) bonuses.push({ label:RANKS[r].name+'メダル', n:RANKS[r].run });
         if(r > top(m, op)){
           /* はじめて この いろ(より上)に なった: 上がった ぶんの ランクの コインを ぜんぶ */
