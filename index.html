@@ -387,7 +387,14 @@
   .rc-p small{ width:100%; font-size:10px; color:var(--ink-soft); font-weight:700; }
   .rc-p.own{ color:var(--good); }
   .rm-card.cant{ cursor:pointer; } .rm-card.cant .rc-pic{ opacity:.5; }
-  .hub{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px; margin-bottom:8px; }
+  .hub{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px; margin-bottom:8px; }
+  .hub-room{ grid-column:1 / -1; border:1.5px solid var(--line); background:var(--surface); border-radius:20px; padding:8px; cursor:pointer; color:var(--ink); font:inherit; text-align:left; display:grid; gap:8px; }
+  .hub-room:active{ transform:scale(.99); }
+  .hub-rh{ display:flex; align-items:center; gap:10px; padding:0 4px; }
+  .hub-rh .hx{ width:64px; height:42px; flex:none; border-radius:10px; overflow:hidden; background:linear-gradient(#BFE6FF, #E9F7FF 75%); }
+  .hub-rh .hx svg{ width:100%; height:100%; display:block; }
+  .hub-rh > span:nth-child(2){ flex:1; display:grid; gap:1px; min-width:0; } .hub-rh b{ font-size:15px; font-weight:900; } .hub-rh small{ font-size:11.5px; color:var(--ink-soft); font-weight:700; }
+  .hub-room .rm-stage{ border-radius:14px; box-shadow:none; pointer-events:none; }
   .hub-tile{ border:1.5px solid var(--line); background:var(--surface); border-radius:18px; padding:8px 6px 10px; cursor:pointer; color:var(--ink); font:inherit; display:flex; flex-direction:column; align-items:center; gap:2px; text-align:center; min-width:0; }
   .hub-tile:active{ transform:scale(.97); }
   .hub-art{ width:100%; height:72px; display:flex; align-items:flex-end; justify-content:center; border-radius:12px; overflow:hidden; margin-bottom:4px; }
@@ -1742,9 +1749,15 @@
   /* tablets */
   @media (min-width:700px){
     .app:has(#view-setup:not([hidden])){ max-width:620px; }
-    .home-nav{ gap:10px; padding-top:8px; }
-    .home-nav .care{ flex:0 1 150px; flex-direction:row; justify-content:center; }
-    .home-nav .care-head{ flex-direction:row; gap:8px; font-size:14px; }
+    /* タブレット: 下の メニューを 大きく(見おとさない ように) */
+    .home-nav{ gap:12px; padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px)); box-shadow:0 -8px 24px -14px rgba(46,42,61,.35); }
+    .home-nav .care{ flex:0 1 170px; flex-direction:column; justify-content:center; padding:8px 6px 9px; border-radius:18px; background:var(--surface-2); }
+    .home-nav .care-head{ flex-direction:column; gap:4px; font-size:16px; font-weight:900; color:var(--ink); }
+    .home-nav .care-ico{ font-size:34px; height:40px; }
+    .home-nav .care-wide .care-ico{ width:38px; height:38px; }
+    .home-nav .hunger-track{ width:56px; height:6px; }
+    .home-nav .nav-home{ background:var(--ink); } .home-nav .nav-home .care-head{ color:var(--surface); }
+    #view-setup{ padding-bottom:calc(124px + env(safe-area-inset-bottom,0px)); }
   }
   @media (min-width:1000px){
     .app:has(#view-setup:not([hidden])){ max-width:1080px; }
@@ -1837,7 +1850,7 @@
     </div>
     <h2 class="home-sec">わたしの せかい</h2>
     <div class="hub">
-      <button class="hub-tile" id="roomCard"></button>
+      <button class="hub-room" id="roomCard"></button>
       <button class="hub-tile" id="medalCard"></button>
       <button class="hub-tile" id="collectRow"></button>
     </div>
@@ -1858,6 +1871,7 @@
       <button class="care care-wide" id="openToy">
         <span class="care-head"><span class="care-ico" id="toyIco"></span>あそぶ<span class="care-sub" id="toySub" style="margin-left:6px"></span><span class="care-go">›</span></span>
       </button>
+      <button class="care" id="navRoom"><span class="care-head"><span class="care-ico">🏡</span>おうち<span class="care-go">›</span></span></button>
       <button class="care" id="openShop">
         <span class="care-head"><span class="care-ico">💎</span>ショップ<span class="care-go">›</span></span>
         <span class="care-sub" id="treasureLabel"></span>
@@ -9713,8 +9727,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
 
     /* ステージを つくる(card のときは さわれない 小さい 見本) */
-    function build(stage, mini){
-      var r = getRoom(mini ? 0 : RI);
+    function build(stage, mini, at){
+      var r = getRoom(mini ? at || 0 : RI);
       if(!mini && pv){
         if(pv.it) r.items.push(pv.it);
         else if(pv.d.id.charAt(0) === 'w') r.wall = pv.d.id; else r.floor = pv.d.id;
@@ -9737,10 +9751,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         els.push({ el:el, fe:fe });
       });
       if(mini){
-        var a = activePet(), p = document.createElement('div');
-        p.className = 'rm-pet'; p.innerHTML = Pet.svg(a.sp, a.lv);
-        var y = 84; p.style.left = '36%'; p.style.bottom = (100 - y) + '%'; p.style.width = (PET_W * depth(y)) + '%'; p.style.zIndex = 100 + y * 10 + 5;
-        stage.appendChild(p);
+        var a = activePet(), who = [a.sp];
+        if(typeof hereOf === 'function') hereOf(at || 0).forEach(function(sp){ if(who.indexOf(sp) < 0 && who.length < 3) who.push(sp); });
+        who.forEach(function(sp, k){
+          var p = document.createElement('div'), x = [42, 18, 70][k], y = [88, 76, 80][k];
+          p.className = 'rm-pet'; p.innerHTML = Pet.svg(sp, sp === a.sp ? a.lv : petLv(sp) || 0);
+          if(k === 0) moodPet(p);
+          p.style.left = x + '%'; p.style.bottom = (100 - y) + '%'; p.style.width = (PET_W * depth(y)) + '%'; p.style.zIndex = 100 + y * 10 + 5;
+          stage.appendChild(p);
+        });
       }
       return { r:r, els:els };
     }
@@ -10351,10 +10370,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     function card(){
       var c = $('roomCard'); if(!c) return;
-      var n = roomN();
-      c.innerHTML = '<span class="hub-art hub-house">' + houseSvg(n, null, true).replace(/ class="hw[^"]*" data-r="\d"/g, '').replace(/<title>[^<]*<\/title>/g, '') + '</span><b>おうち</b><small>へや ' + n + 'つ</small>';
+      var n = roomN(), at = Math.max(0, locOf(activePet().sp));
+      c.innerHTML = '<span class="hub-rh"><span class="hx">' + houseSvg(n, null, true).replace(/ class="hw[^"]*" data-r="\d"/g, '').replace(/<title>[^<]*<\/title>/g, '') + '</span>' +
+        '<span><b>おうち</b><small>' + petName(activePet().sp) + (n > 1 ? 'は へや ' + (at + 1) + 'に いるよ' : 'は おへやで のんびり') + '</small></span><span class="rm-go">›</span></span><span class="rm-stage rm-mini"></span>';
+      build(c.querySelector('.rm-stage'), true, at);
     }
     $('roomCard').addEventListener('click', open);
+    $('navRoom').addEventListener('click', open);
 
     return { open:open, card:card, backdrop:backdrop, ITEMS:ITEMS, WALLS:WALLS, FLOORS:FLOORS };
   })();
