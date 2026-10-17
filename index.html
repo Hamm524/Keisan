@@ -2002,7 +2002,7 @@
     <div class="shop-head">
       <button class="icon-btn" id="toyBack" aria-label="もどる">←</button>
       <h1>あそぶ</h1>
-      <button class="rm-edit" id="toyRoomBtn">🏠 おへや</button>
+      <button class="rm-edit" id="toyRoomBtn">🏠 お部屋</button>
     </div>
     <p class="toy-hint" id="toyHint"></p>
     <section class="toy-stage" id="toyStage">
@@ -2195,8 +2195,8 @@
   <main id="view-room" class="view" hidden>
     <div class="shop-head">
       <button class="icon-btn" id="rmBack" aria-label="もどる">←</button>
-      <h1>おへや</h1>
-      <button class="rm-edit" id="rmEdit">🔨 もようがえ</button>
+      <h1>お部屋</h1>
+      <button class="rm-edit" id="rmEdit">🔨 模様がえ</button>
     </div>
     <div class="rm-house" id="rmHouse"></div>
     <div class="rm-tabs" id="rmRooms"></div>
@@ -2209,16 +2209,16 @@
     <div class="rm-tools" id="rmTools" hidden>
       <b id="rmToolName"></b>
       <button class="rm-tb" id="rmStore">しまう</button>
-      <div class="rm-trow" id="rmDirRow"><span>むき</span><button class="rm-tb rm-o" data-o="0">前むき</button><button class="rm-tb rm-o" data-o="3">◀ 左むき</button><button class="rm-tb rm-o" data-o="1">右むき ▶</button><button class="rm-tb rm-o" data-o="2">後ろむき</button><button class="rm-tb" id="rmFlip">↔ はんてん</button></div>
+      <div class="rm-trow" id="rmDirRow"><span>向き</span><button class="rm-tb rm-o" data-o="0">前向き</button><button class="rm-tb rm-o" data-o="3">◀ 左向き</button><button class="rm-tb rm-o" data-o="1">右向き ▶</button><button class="rm-tb rm-o" data-o="2">後ろ向き</button><button class="rm-tb" id="rmFlip">↔ 反転</button></div>
       <div class="rm-trow"><span>大きさ</span><button class="rm-tb" id="rmSmall">－ 小さく</button><i id="rmSizeVal"></i><button class="rm-tb" id="rmBig">＋ 大きく</button></div>
-      <div class="rm-trow" id="rmLiftRow"><span>たかさ</span><button class="rm-tb" id="rmDown">⬇ さげる</button><i id="rmLiftVal"></i><button class="rm-tb" id="rmUp">⬆ あげる</button></div>
-      <div class="rm-trow" id="rmPhotoRow"><span>しゃしん</span><div class="rm-phs" id="rmPhotos"></div></div>
+      <div class="rm-trow" id="rmLiftRow"><span>高さ</span><button class="rm-tb" id="rmDown">⬇ 下げる</button><i id="rmLiftVal"></i><button class="rm-tb" id="rmUp">⬆ 上げる</button></div>
+      <div class="rm-trow" id="rmPhotoRow"><span>写真</span><div class="rm-phs" id="rmPhotos"></div></div>
     </div>
     <p class="food-say rm-say" id="rmSay"></p>
     <div class="rm-rtools"><button class="rm-tb" id="rmMates">🐾 この 部屋の 仲間</button><button class="rm-tb" id="rmToy">🎮 遊ぶ画面の 部屋に する</button><button class="rm-tb" id="rmSize">📐 部屋の 広さ</button></div>
     <div class="rm-mates" id="rmSizeBox" hidden></div>
     <div class="rm-mates" id="rmMatesBox" hidden></div>
-    <h2 class="sec-title">おへやの ショップ</h2>
+    <h2 class="sec-title">お部屋の ショップ</h2>
     <p class="sec-sub">コインで 家具や <ruby>壁<rt>かべ</rt></ruby>紙を 買って、好きな 所に 置こう。1回 買えば ずっと 使えるよ。</p>
     <div class="rm-tabs" id="rmTabs"></div>
     <div class="rm-grid" id="rmGrid"></div>
@@ -9545,24 +9545,24 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var WALLS = [
       { id:'w_cream', name:'クリーム', price:0, bg:'#FFF6E8', p:null },
       { id:'w_dot', name:'ピンクの 水玉', price:40, bg:'#FFE9F1', p:function(i){ return pat(i, 34, 34, '<circle cx="8" cy="8" r="4.5" fill="#FFD0E0"/><circle cx="25" cy="25" r="4.5" fill="#FFD0E0"/>'); } },
-      { id:'w_stripe', name:'そらいろ しましま', price:40, bg:'#E8F5FF', p:function(i){ return pat(i, 32, 10, '<rect width="14" height="10" fill="#D3ECFF"/>'); } },
-      { id:'w_flower', name:'おはな', price:60, bg:'#FFF8E7', p:function(i){
+      { id:'w_stripe', name:'空色の しましま', price:40, bg:'#E8F5FF', p:function(i){ return pat(i, 32, 10, '<rect width="14" height="10" fill="#D3ECFF"/>'); } },
+      { id:'w_flower', name:'お花', price:60, bg:'#FFF8E7', p:function(i){
           function fl(x, y, c){ var o = ''; for(var k = 0; k < 5; k++){ var a = k*72*Math.PI/180; o += '<circle cx="'+(x+Math.sin(a)*4.6).toFixed(1)+'" cy="'+(y-Math.cos(a)*4.6).toFixed(1)+'" r="3.6" fill="'+c+'"/>'; } return o + '<circle cx="'+x+'" cy="'+y+'" r="2.6" fill="#FFD66B"/>'; }
           return pat(i, 56, 56, fl(14, 14, '#FFC4D6') + fl(42, 42, '#C9E7FF') + '<path d="M40,12 q4,-4 8,0 q-4,4 -8,0" fill="#C9EBB5"/><path d="M12,40 q4,-4 8,0 q-4,4 -8,0" fill="#C9EBB5"/>'); } },
-      { id:'w_forest', name:'もりの 木', price:80, bg:'#E7F6E2', p:function(i){ return pat(i, 64, 70, '<path d="M16,10 L30,40 L2,40 Z" fill="#CBEAC0"/><rect x="14" y="40" width="4" height="9" fill="#E3D2B5"/><path d="M48,40 L60,64 L36,64 Z" fill="#D6EFCB"/><rect x="46" y="64" width="4" height="6" fill="#E3D2B5"/>'); } },
-      { id:'w_brick', name:'おしろの レンガ', price:100, bg:'#F3E4D3', p:function(i){ return pat(i, 48, 28, '<rect x="1" y="1" width="46" height="12" rx="2" fill="#EAD4BE"/><rect x="-23" y="15" width="46" height="12" rx="2" fill="#EAD4BE"/><rect x="25" y="15" width="46" height="12" rx="2" fill="#EAD4BE"/>'); } },
-      { id:'w_sea', name:'うみの なか', price:100, bg:'#BCE6FA', grad:['#D4F1FF','#9FD8F3'], p:function(i){ return pat(i, 90, 90, '<circle cx="14" cy="18" r="5" fill="#fff" opacity=".45"/><circle cx="22" cy="8" r="3" fill="#fff" opacity=".45"/><path d="M58,52 q10,-9 20,0 q-10,9 -20,0 Z M78,52 l7,-5 l0,10 Z" fill="#FFC98F" opacity=".75"/><circle cx="62" cy="50" r="1.4" fill="#5B5770"/><circle cx="40" cy="78" r="3.5" fill="#fff" opacity=".4"/>'); } },
-      { id:'w_night', name:'ほしぞら', price:120, bg:'#34407A', p:function(i){ return pat(i, 80, 80, '<path d="M14,10 l2,5 5,.5 -4,3.4 1.3,5 -4.3,-2.8 -4.3,2.8 1.3,-5 -4,-3.4 5,-.5 Z" fill="#FFE58A"/><circle cx="52" cy="22" r="1.8" fill="#fff" opacity=".85"/><circle cx="36" cy="54" r="1.4" fill="#fff" opacity=".7"/><path d="M62,52 l1.4,3.4 3.6,.3 -2.8,2.4 .9,3.5 -3.1,-2 -3.1,2 .9,-3.5 -2.8,-2.4 3.6,-.3 Z" fill="#FFF3C4"/><circle cx="8" cy="66" r="1.2" fill="#fff" opacity=".7"/>'); } },
-      { id:'w_sweets', name:'おかしの へや', price:150, bg:'#FFF0F6', p:function(i){ return pat(i, 60, 60, '<rect x="8" y="10" width="9" height="3.4" rx="1.7" fill="#FFB0C8" transform="rotate(30 12 12)"/><rect x="40" y="16" width="9" height="3.4" rx="1.7" fill="#A8DCF7" transform="rotate(-25 44 18)"/><rect x="22" y="40" width="9" height="3.4" rx="1.7" fill="#FFE07A" transform="rotate(70 26 42)"/><rect x="46" y="46" width="9" height="3.4" rx="1.7" fill="#B9E8B0" transform="rotate(10 50 48)"/><circle cx="18" cy="28" r="6" fill="#F7D3A8"/><circle cx="18" cy="28" r="2.4" fill="#FFF0F6"/>'); }, top:'#FFD0E2' }
+      { id:'w_forest', name:'森の 木', price:80, bg:'#E7F6E2', p:function(i){ return pat(i, 64, 70, '<path d="M16,10 L30,40 L2,40 Z" fill="#CBEAC0"/><rect x="14" y="40" width="4" height="9" fill="#E3D2B5"/><path d="M48,40 L60,64 L36,64 Z" fill="#D6EFCB"/><rect x="46" y="64" width="4" height="6" fill="#E3D2B5"/>'); } },
+      { id:'w_brick', name:'お城の レンガ', price:100, bg:'#F3E4D3', p:function(i){ return pat(i, 48, 28, '<rect x="1" y="1" width="46" height="12" rx="2" fill="#EAD4BE"/><rect x="-23" y="15" width="46" height="12" rx="2" fill="#EAD4BE"/><rect x="25" y="15" width="46" height="12" rx="2" fill="#EAD4BE"/>'); } },
+      { id:'w_sea', name:'海の 中', price:100, bg:'#BCE6FA', grad:['#D4F1FF','#9FD8F3'], p:function(i){ return pat(i, 90, 90, '<circle cx="14" cy="18" r="5" fill="#fff" opacity=".45"/><circle cx="22" cy="8" r="3" fill="#fff" opacity=".45"/><path d="M58,52 q10,-9 20,0 q-10,9 -20,0 Z M78,52 l7,-5 l0,10 Z" fill="#FFC98F" opacity=".75"/><circle cx="62" cy="50" r="1.4" fill="#5B5770"/><circle cx="40" cy="78" r="3.5" fill="#fff" opacity=".4"/>'); } },
+      { id:'w_night', name:'星空', price:120, bg:'#34407A', p:function(i){ return pat(i, 80, 80, '<path d="M14,10 l2,5 5,.5 -4,3.4 1.3,5 -4.3,-2.8 -4.3,2.8 1.3,-5 -4,-3.4 5,-.5 Z" fill="#FFE58A"/><circle cx="52" cy="22" r="1.8" fill="#fff" opacity=".85"/><circle cx="36" cy="54" r="1.4" fill="#fff" opacity=".7"/><path d="M62,52 l1.4,3.4 3.6,.3 -2.8,2.4 .9,3.5 -3.1,-2 -3.1,2 .9,-3.5 -2.8,-2.4 3.6,-.3 Z" fill="#FFF3C4"/><circle cx="8" cy="66" r="1.2" fill="#fff" opacity=".7"/>'); } },
+      { id:'w_sweets', name:'おかしの 部屋', price:150, bg:'#FFF0F6', p:function(i){ return pat(i, 60, 60, '<rect x="8" y="10" width="9" height="3.4" rx="1.7" fill="#FFB0C8" transform="rotate(30 12 12)"/><rect x="40" y="16" width="9" height="3.4" rx="1.7" fill="#A8DCF7" transform="rotate(-25 44 18)"/><rect x="22" y="40" width="9" height="3.4" rx="1.7" fill="#FFE07A" transform="rotate(70 26 42)"/><rect x="46" y="46" width="9" height="3.4" rx="1.7" fill="#B9E8B0" transform="rotate(10 50 48)"/><circle cx="18" cy="28" r="6" fill="#F7D3A8"/><circle cx="18" cy="28" r="2.4" fill="#FFF0F6"/>'); }, top:'#FFD0E2' }
     ];
     /* ---- ゆか ---- */
     var FLOORS = [
       { id:'f_wood', name:'フローリング', price:0, bg:'#EAC9A0', base:'#D7B286', p:function(i){ return pat(i, 120, 22, '<rect y="20.5" width="120" height="1.5" fill="#D9B385"/><rect x="40" width="1.5" height="22" fill="#DDB88B"/>'); } },
-      { id:'f_tile', name:'しろい タイル', price:40, bg:'#F5F2EC', base:'#DCD4C6', p:function(i){ return pat(i, 48, 48, '<rect width="24" height="24" fill="#E9E3D8"/><rect x="24" y="24" width="24" height="24" fill="#E9E3D8"/>'); } },
+      { id:'f_tile', name:'白い タイル', price:40, bg:'#F5F2EC', base:'#DCD4C6', p:function(i){ return pat(i, 48, 48, '<rect width="24" height="24" fill="#E9E3D8"/><rect x="24" y="24" width="24" height="24" fill="#E9E3D8"/>'); } },
       { id:'f_tatami', name:'たたみ', price:50, bg:'#DCE2A6', base:'#B9C27E', p:function(i){ return pat(i, 140, 60, '<rect width="140" height="60" fill="none" stroke="#B4BE73" stroke-width="3"/><path d="M0,10 H140 M0,20 H140 M0,30 H140 M0,40 H140 M0,50 H140" stroke="#CFD694" stroke-width="1.2"/>'); } },
       { id:'f_carpet', name:'ピンクの じゅうたん', price:60, bg:'#F8CCDA', base:'#E9AFC2', p:function(i){ return pat(i, 22, 22, '<circle cx="6" cy="6" r="2" fill="#F3B9CB"/><circle cx="17" cy="17" r="2" fill="#F3B9CB"/>'); } },
       { id:'f_grass', name:'しばふ', price:80, bg:'#AEDD8C', base:'#93C872', p:function(i){ return pat(i, 40, 30, '<path d="M8,22 l2,-8 2,8 M26,12 l2,-8 2,8" stroke="#94CC72" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="34" cy="26" r="2" fill="#FFF3A6"/>'); } },
-      { id:'f_cloud', name:'ふわふわ くも', price:120, bg:'#EAF4FF', base:'#CFE3F7', p:function(i){ return pat(i, 110, 50, '<g fill="#fff"><circle cx="20" cy="26" r="12"/><circle cx="36" cy="20" r="15"/><circle cx="52" cy="28" r="11"/><rect x="20" y="26" width="32" height="12"/></g><g fill="#fff" opacity=".8"><circle cx="86" cy="44" r="8"/><circle cx="97" cy="40" r="10"/></g>'); } }
+      { id:'f_cloud', name:'ふわふわ 雲', price:120, bg:'#EAF4FF', base:'#CFE3F7', p:function(i){ return pat(i, 110, 50, '<g fill="#fff"><circle cx="20" cy="26" r="12"/><circle cx="36" cy="20" r="15"/><circle cx="52" cy="28" r="11"/><rect x="20" y="26" width="32" height="12"/></g><g fill="#fff" opacity=".8"><circle cx="86" cy="44" r="8"/><circle cx="97" cy="40" r="10"/></g>'); } }
     ];
 
     /* ---- 家具・かざり ----
@@ -9572,20 +9572,20 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { id:'cushion', name:'ふかふかクッション', price:30, z:'floor', w:22, vb:[140,64], act:'sleep', seat:[.5,.36,.82],
         b:'<ellipse cx="70" cy="40" rx="68" ry="23" fill="#F2A65A"/><ellipse cx="70" cy="36" rx="50" ry="13" fill="#FFE3C2"/>',
         f:'<path d="M2,40 A68,23 0 0 0 138,40 L120,38 A50,13 0 0 1 20,38 Z" fill="#E8954A"/>' },
-      { id:'chair', name:'きいろい いす', price:40, z:'floor', w:13, vb:[80,120], act:'sit', seat:[.5,.42,.78],
+      { id:'chair', name:'黄色い いす', price:40, z:'floor', w:13, vb:[80,120], act:'sit', seat:[.5,.42,.78],
         b:'<rect x="14" y="4" width="52" height="58" rx="18" fill="#F2C14E"/><rect x="22" y="12" width="36" height="40" rx="12" fill="#F7D272"/><rect x="12" y="98" width="7" height="22" rx="3" fill="#C9973A"/><rect x="61" y="98" width="7" height="22" rx="3" fill="#C9973A"/>',
         f:'<rect x="6" y="60" width="68" height="40" rx="12" fill="#F7D272"/><rect x="6" y="88" width="68" height="12" rx="6" fill="#E6B640"/>' },
-      { id:'plant', name:'はっぱの 木', price:40, z:'floor', w:11, vb:[80,140], act:'look',
+      { id:'plant', name:'葉っぱの 木', price:40, z:'floor', w:11, vb:[80,140], act:'look',
         b:'<path d="M40,96 Q12,80 10,52 Q28,58 40,92 Z" fill="#7CC77A"/><path d="M40,96 Q68,76 70,44 Q50,54 40,92 Z" fill="#8FD68C"/><path d="M40,96 Q30,50 40,8 Q52,50 40,96 Z" fill="#6DBB6B"/><path d="M40,96 Q20,70 26,30 Q40,60 40,92 Z" fill="#9BDD98"/><path d="M16,94 L64,94 L58,138 L22,138 Z" fill="#E98B6D"/><rect x="12" y="90" width="56" height="10" rx="5" fill="#F2A285"/>' },
-      { id:'rug_round', name:'まるい ラグ', price:30, z:'rug', w:46, vb:[200,56],
+      { id:'rug_round', name:'丸い ラグ', price:30, z:'rug', w:46, vb:[200,56],
         b:'<ellipse cx="100" cy="28" rx="99" ry="27" fill="#FFD6A5"/><ellipse cx="100" cy="28" rx="80" ry="20" fill="none" stroke="#FFE8C9" stroke-width="6"/><ellipse cx="100" cy="28" rx="52" ry="12" fill="#FFC88A"/>' },
       { id:'rug_stripe', name:'しましまの ラグ', price:40, z:'rug', w:52, vb:[220,56],
         b:'<rect x="2" y="2" width="216" height="52" rx="16" fill="#CFE8FF"/><rect x="2" y="12" width="216" height="8" fill="#FFD0E0"/><rect x="2" y="28" width="216" height="8" fill="#FFF1B8"/><rect x="2" y="44" width="216" height="6" fill="#C9EBB5"/>' },
       { id:'lamp', name:'スタンドライト', price:50, z:'floor', w:10, vb:[60,170], act:'look', tap:'light',
         b:'<defs><radialGradient id="rmGlowG"><stop offset="0" stop-color="#FFF6C0" stop-opacity="1"/><stop offset="1" stop-color="#FFF6C0" stop-opacity="0"/></radialGradient></defs><circle class="rm-glow" cx="30" cy="40" r="74" fill="url(#rmGlowG)"/><ellipse cx="30" cy="164" rx="22" ry="6" fill="#B9A58A"/><rect x="27" y="50" width="6" height="114" rx="3" fill="#C9B79C"/><path d="M8,52 L16,8 L44,8 L52,52 Z" fill="#FFE08A"/><path class="rm-lit" d="M8,52 L16,8 L44,8 L52,52 Z" fill="#FFF6C8"/><rect x="6" y="48" width="48" height="6" rx="3" fill="#F2C94C"/>' },
-      { id:'table', name:'まるい テーブル', price:60, z:'floor', w:20, vb:[140,104], act:'look',
+      { id:'table', name:'丸い テーブル', price:60, z:'floor', w:20, vb:[140,104], act:'look',
         b:'<ellipse cx="70" cy="96" rx="34" ry="7" fill="#B98A55"/><rect x="62" y="38" width="16" height="58" rx="5" fill="#C99A62"/><ellipse cx="70" cy="38" rx="66" ry="17" fill="#C99A62"/><ellipse cx="70" cy="33" rx="66" ry="17" fill="#E8C597"/><path d="M52,30 Q52,20 60,20 L72,20 Q78,20 78,28 Q84,26 84,31 Q84,36 77,35 Q74,40 64,40 Q52,40 52,30 Z" fill="#fff"/><ellipse cx="65" cy="21" rx="10" ry="3" fill="#C98A5A"/><path d="M98,26 Q104,10 110,26 Z" fill="#FF8FB1"/><ellipse cx="104" cy="27" rx="9" ry="3" fill="#FFF"/>' },
-      { id:'toybox', name:'おもちゃばこ', price:60, z:'floor', w:17, vb:[120,100], act:'look',
+      { id:'toybox', name:'おもちゃ箱', price:60, z:'floor', w:17, vb:[120,100], act:'look',
         b:'<circle cx="36" cy="30" r="16" fill="#FF8FB1"/><circle cx="31" cy="25" r="4" fill="#fff" opacity=".7"/><path d="M78,40 L86,6" stroke="#B79CF0" stroke-width="5" stroke-linecap="round"/><path d="M86,2 l3.5,7 7.7,1 -5.6,5.4 1.4,7.6 -7,-3.7 -7,3.7 1.4,-7.6 -5.6,-5.4 7.7,-1 Z" fill="#FFD24C"/><rect x="58" y="22" width="18" height="18" rx="4" fill="#7FC6B8"/><rect x="6" y="38" width="108" height="62" rx="10" fill="#7FB8F0"/><rect x="6" y="38" width="108" height="12" rx="6" fill="#5F9EE0"/><path d="M46,72 Q60,82 74,72" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/>' },
       { id:'shelf', name:'本だな', price:80, z:'floor', w:18, vb:[120,160], act:'look',
         b:'<rect x="4" y="2" width="112" height="156" rx="8" fill="#C99A62"/><rect x="12" y="10" width="96" height="140" rx="4" fill="#E8C597"/><rect x="12" y="54" width="96" height="6" fill="#C99A62"/><rect x="12" y="102" width="96" height="6" fill="#C99A62"/>' +
@@ -9601,10 +9601,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { id:'bed', name:'ベッド', price:150, z:'floor', w:36, vb:[200,130], act:'sleep', seat:[.5,.36,.84],
         b:'<rect x="18" y="6" width="164" height="84" rx="34" fill="#F7B7C8"/><path d="M40,30 q10,-12 20,0 q10,-12 20,0" stroke="#FFD6E2" stroke-width="5" fill="none" stroke-linecap="round"/><rect x="12" y="66" width="176" height="44" rx="14" fill="#FFFDF7"/><ellipse cx="100" cy="68" rx="44" ry="14" fill="#fff"/><ellipse cx="100" cy="70" rx="40" ry="9" fill="#F4EEE4"/>',
         f:'<rect x="8" y="84" width="184" height="34" rx="12" fill="#8FC7F2"/><path d="M8,96 H192" stroke="#B9DDF7" stroke-width="6"/><circle cx="40" cy="106" r="4" fill="#fff" opacity=".7"/><circle cx="100" cy="108" r="4" fill="#fff" opacity=".7"/><circle cx="160" cy="106" r="4" fill="#fff" opacity=".7"/><rect x="20" y="116" width="10" height="14" rx="3" fill="#E89AAE"/><rect x="170" y="116" width="10" height="14" rx="3" fill="#E89AAE"/>' },
-      { id:'tent', name:'ひみつの テント', price:160, z:'floor', w:28, vb:[180,150], act:'sit', seat:[.5,.06,.7],
+      { id:'tent', name:'秘密の テント', price:160, z:'floor', w:28, vb:[180,150], act:'sit', seat:[.5,.06,.7],
         b:'<path d="M90,4 L176,146 L4,146 Z" fill="#F6A5B8"/><path d="M90,4 L132,146 L48,146 Z" fill="#FFC4D3"/><path d="M90,30 L126,146 L54,146 Z" fill="#8A5A6C"/><rect x="86" y="0" width="8" height="10" rx="3" fill="#E07B95"/><path d="M94,2 L116,8 L94,14 Z" fill="#FFD24C"/>',
         f:'<path d="M90,30 L70,146 L54,146 Z" fill="#FFB0C4"/><path d="M90,30 L110,146 L126,146 Z" fill="#FFB0C4"/><path d="M4,146 L176,146" stroke="#E07B95" stroke-width="4"/>' },
-      { id:'aquarium', name:'すいそう', price:180, z:'floor', w:22, vb:[160,150], act:'watch',
+      { id:'aquarium', name:'水そう', price:180, z:'floor', w:22, vb:[160,150], act:'watch',
         b:'<rect x="12" y="98" width="136" height="50" rx="6" fill="#8A9BB0"/><rect x="20" y="106" width="56" height="34" rx="4" fill="#A5B4C6"/><rect x="84" y="106" width="56" height="34" rx="4" fill="#A5B4C6"/>' +
           '<rect x="8" y="10" width="144" height="88" rx="10" fill="#D5F1FF"/><rect x="14" y="20" width="132" height="72" rx="6" fill="#9ED9F5"/><path d="M14,82 Q40,76 70,82 Q100,88 146,80 L146,86 Q146,92 140,92 L20,92 Q14,92 14,86 Z" fill="#F2DDB0"/>' +
           '<path d="M34,84 Q28,66 36,52 Q30,66 38,84 Z" fill="#6DBB6B"/><path d="M124,84 Q132,62 122,46 Q130,62 120,84 Z" fill="#7CC77A"/><rect x="8" y="6" width="144" height="8" rx="4" fill="#6E7F94"/>' +
@@ -9623,10 +9623,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           '<rect x="4" y="66" width="192" height="34" rx="4" fill="#fff"/><g fill="#E6E1D8"><rect x="27" y="66" width="1.5" height="34"/><rect x="51" y="66" width="1.5" height="34"/><rect x="75" y="66" width="1.5" height="34"/><rect x="99" y="66" width="1.5" height="34"/><rect x="123" y="66" width="1.5" height="34"/><rect x="147" y="66" width="1.5" height="34"/><rect x="171" y="66" width="1.5" height="34"/></g>' +
           '<g fill="#2E2A3D"><rect x="20" y="66" width="14" height="20" rx="2"/><rect x="44" y="66" width="14" height="20" rx="2"/><rect x="92" y="66" width="14" height="20" rx="2"/><rect x="116" y="66" width="14" height="20" rx="2"/><rect x="140" y="66" width="14" height="20" rx="2"/></g>' +
           '<rect x="10" y="98" width="180" height="8" rx="3" fill="#2E2A3D"/><rect x="20" y="106" width="12" height="44" rx="3" fill="#3A3346"/><rect x="168" y="106" width="12" height="44" rx="3" fill="#3A3346"/>' },
-      { id:'slide', name:'すべりだい', price:300, z:'floor', w:38, vb:[240,170], act:'slide',
+      { id:'slide', name:'すべり台', price:300, z:'floor', w:38, vb:[240,170], act:'slide',
         b:'<rect x="18" y="20" width="8" height="150" rx="3" fill="#7FB8F0"/><rect x="58" y="20" width="8" height="150" rx="3" fill="#7FB8F0"/><g stroke="#7FB8F0" stroke-width="6" stroke-linecap="round"><path d="M22,60 H62 M22,96 H62 M22,132 H62"/></g><rect x="12" y="26" width="64" height="12" rx="6" fill="#5F9EE0"/>' +
           '<path d="M66,30 Q110,34 150,96 Q176,140 236,150 L236,166 Q168,160 140,110 Q106,52 66,48 Z" fill="#FF9E6B"/><path d="M66,30 Q110,34 150,96 Q176,140 236,150" stroke="#FFC3A0" stroke-width="5" fill="none" stroke-linecap="round"/><rect x="226" y="148" width="10" height="22" rx="3" fill="#E07B4F"/>' },
-      { id:'castle', name:'おひめさまベッド', price:400, z:'floor', w:40, vb:[220,220], act:'sleep', seat:[.5,.27,.86],
+      { id:'castle', name:'おひめ様ベッド', price:400, z:'floor', w:40, vb:[220,220], act:'sleep', seat:[.5,.27,.86],
         b:'<rect x="18" y="30" width="10" height="186" rx="4" fill="#E8C15A"/><rect x="192" y="30" width="10" height="186" rx="4" fill="#E8C15A"/><path d="M10,34 Q110,-6 210,34 L210,44 L10,44 Z" fill="#F7B7C8"/><path d="M10,44 Q60,62 110,44 Q160,62 210,44" stroke="#FFD6E2" stroke-width="6" fill="none"/><path d="M98,12 l6,-10 6,10 6,-10 6,10 L120,24 L100,24 Z" fill="#FFD24C" transform="translate(-6 -4)"/>' +
           '<path d="M14,44 Q4,130 30,208 L44,208 Q26,120 40,44 Z" fill="#FFD0DE" opacity=".9"/><path d="M206,44 Q216,130 190,208 L176,208 Q194,120 180,44 Z" fill="#FFD0DE" opacity=".9"/>' +
           '<rect x="40" y="96" width="140" height="72" rx="30" fill="#D9C4F5"/><circle cx="110" cy="122" r="12" fill="#FFD24C"/><circle cx="110" cy="122" r="6" fill="#FF8FB1"/><rect x="26" y="150" width="168" height="40" rx="14" fill="#FFFDF7"/><ellipse cx="110" cy="152" rx="44" ry="13" fill="#fff"/>',
@@ -9634,22 +9634,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
       { id:'partition', name:'しきりの かべ', price:60, z:'floor', w:15, vb:[100,180],
         b:'<rect x="6" y="4" width="88" height="168" rx="6" fill="#F4EEE4"/><rect x="6" y="4" width="88" height="10" rx="5" fill="#C99A62"/><rect x="14" y="22" width="72" height="66" rx="4" fill="none" stroke="#E2D6C3" stroke-width="3"/><rect x="14" y="96" width="72" height="66" rx="4" fill="none" stroke="#E2D6C3" stroke-width="3"/><rect x="2" y="168" width="96" height="10" rx="3" fill="#C99A62"/>' },
-      { id:'partwin', name:'まどの ある しきり', price:80, z:'floor', w:17, vb:[110,180],
+      { id:'partwin', name:'窓の ある しきり', price:80, z:'floor', w:17, vb:[110,180],
         b:'<path d="M6,180 V20 Q55,-8 104,20 V180 Z" fill="#F4EEE4"/><path d="M26,96 V48 Q55,22 84,48 V96 Z" fill="#BFE6FF"/><path d="M55,30 V96 M26,70 H84" stroke="#fff" stroke-width="4"/><path d="M26,96 V48 Q55,22 84,48 V96 Z" fill="none" stroke="#C99A62" stroke-width="4"/><rect x="20" y="96" width="70" height="6" rx="3" fill="#C99A62"/><circle cx="34" cy="128" r="6" fill="#FF8FB1"/><circle cx="76" cy="140" r="6" fill="#FFD24C"/><rect x="2" y="170" width="106" height="10" rx="3" fill="#C99A62"/>' },
-      { id:'pillar', name:'はしら', price:40, z:'floor', w:6, vb:[40,210],
+      { id:'pillar', name:'柱', price:40, z:'floor', w:6, vb:[40,210],
         b:'<rect x="2" y="2" width="36" height="12" rx="3" fill="#E2D6C3"/><rect x="7" y="14" width="26" height="180" fill="#FFFDF7"/><path d="M14,18 V190 M20,18 V190 M26,18 V190" stroke="#EDE5D8" stroke-width="2"/><rect x="2" y="194" width="36" height="14" rx="3" fill="#E2D6C3"/>' },
       { id:'counter', name:'カウンター', price:90, z:'floor', w:30, vb:[200,100], act:'look',
         b:'<rect x="4" y="2" width="192" height="14" rx="5" fill="#C99A62"/><rect x="12" y="16" width="176" height="82" fill="#E7C9A0"/><rect x="22" y="26" width="72" height="62" rx="4" fill="#DDBB8E"/><rect x="106" y="26" width="72" height="62" rx="4" fill="#DDBB8E"/><circle cx="86" cy="57" r="3" fill="#A77A45"/><circle cx="114" cy="57" r="3" fill="#A77A45"/>' },
-      { id:'counterh', name:'たかい カウンター', price:110, z:'floor', w:30, vb:[200,140], act:'look',
+      { id:'counterh', name:'高い カウンター', price:110, z:'floor', w:30, vb:[200,140], act:'look',
         b:'<rect x="4" y="2" width="192" height="14" rx="5" fill="#7FB8F0"/><rect x="12" y="16" width="176" height="122" fill="#FFFDF7"/><g fill="#E3F0FF"><rect x="22" y="28" width="46" height="98" rx="4"/><rect x="77" y="28" width="46" height="98" rx="4"/><rect x="132" y="28" width="46" height="98" rx="4"/></g><rect x="40" y="70" width="10" height="3" rx="1.5" fill="#7FB8F0"/><rect x="95" y="70" width="10" height="3" rx="1.5" fill="#7FB8F0"/><rect x="150" y="70" width="10" height="3" rx="1.5" fill="#7FB8F0"/>' },
 
-      { id:'window', name:'まど', price:50, z:'wall', w:22, vb:[130,110], sky:true },
-      { id:'frame', name:'相棒の しゃしん', price:40, z:'wall', w:13, vb:[90,104], photo:true },
-      { id:'clock', name:'かけどけい', price:50, z:'wall', w:11, vb:[90,90], clock:true },
+      { id:'window', name:'窓', price:50, z:'wall', w:22, vb:[130,110], sky:true },
+      { id:'frame', name:'相棒の 写真', price:40, z:'wall', w:13, vb:[90,104], photo:true },
+      { id:'clock', name:'かけ時計', price:50, z:'wall', w:11, vb:[90,90], clock:true },
       { id:'garland', name:'ガーランド', price:30, z:'wall', w:38, vb:[240,56],
         b:'<path d="M4,6 Q120,40 236,6" stroke="#C9B79C" stroke-width="2.4" fill="none"/>' +
           (function(){ var c = ['#FF8FB1','#FFD24C','#7FB8F0','#9BD66B','#B79CF0','#FF9E6B','#FF8FB1','#7FC6B8'], o = ''; for(var k = 0; k < 8; k++){ var t = (k+.5)/8, x = 4 + t*232, y = 6 + 34*4*t*(1-t)*.98; o += '<path d="M'+(x-11).toFixed(1)+','+(y-1).toFixed(1)+' L'+(x+11).toFixed(1)+','+(y-1).toFixed(1)+' L'+x.toFixed(1)+','+(y+24).toFixed(1)+' Z" fill="'+c[k]+'"/>'; } return o; })() },
-      { id:'stars', name:'ほしの ライト', price:70, z:'wall', w:38, vb:[240,60],
+      { id:'stars', name:'星の ライト', price:70, z:'wall', w:38, vb:[240,60],
         b:'<path d="M4,8 Q120,46 236,8" stroke="#C9B79C" stroke-width="2" fill="none"/>' +
           (function(){ var o = ''; for(var k = 0; k < 7; k++){ var t = (k+.5)/7, x = 4 + t*232, y = 8 + 38*4*t*(1-t)*.98 + 9;
             o += '<g class="rm-tw" style="animation-delay:'+(-k*.7)+'s"><path transform="translate('+x.toFixed(1)+' '+y.toFixed(1)+')" d="M0,-9 l2.6,5.4 6,.8 -4.3,4.1 1,5.9 -5.3,-2.8 -5.3,2.8 1,-5.9 -4.3,-4.1 6,-.8 Z" fill="'+(k%2 ? '#FFE58A' : '#FFF3C4')+'"/></g>'; } return o; })() },
@@ -9700,7 +9700,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---- 絵 ---- */
     var uid = 0;
     function depth(y){ return y > 100 ? 1 + (y - 100) * .03 : .72 + .28 * Math.max(0, (y - WALL) / (100 - WALL)); }
-    var SZK = [1.22, 1, .82, .68], SZN = ['せまい', 'ふつう', 'ひろい', 'とても ひろい'], SZP = [0, 0, 200, 400], SK = 1;
+    var SZK = [1.22, 1, .82, .68], SZN = ['せまい', 'ふつう', '広い', 'とても 広い'], SZP = [0, 0, 200, 400], SK = 1;
     function szOf(r){ var z = r && r.sz != null ? +r.sz : 1; return z >= 0 && z <= 3 ? z : 1; }
     var SIDE = .62, SIZES = [.5, .6, .7, .8, .9, 1, 1.15, 1.3, 1.5, 1.75, 2], FRONT = 114, LIFT = 50;
     function skyNow(){ var h = new Date().getHours(); return h >= 19 || h < 5 ? 'night' : h >= 16 ? 'eve' : 'day'; }
@@ -9940,11 +9940,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     var TALK = {
       sleep:['すやすや…', 'ふかふかで ねむく なっちゃう', 'おやすみ〜'],
-      sit:['ここ すわりごこち いいね!', 'ひとやすみ〜', 'ここ だいすき!'],
+      sit:['ここ 座りごこち いいね!', 'ひと休み〜', 'ここ 大好き!'],
       look:['これ すてき!', 'なんだろう?', 'いいね!'],
-      watch:['わあ、見て 見て!', 'たのしいね!', 'ずっと 見ていたいな'],
+      watch:['わあ、見て 見て!', '楽しいね!', 'ずっと 見ていたいな'],
       music:['ドレミ〜♪', 'ピアノ ひけたよ!'],
-      slide:['すべりだい たのしい!', 'もう 1回!']
+      slide:['すべり台 楽しい!', 'もう 1回!']
     };
     function useItem(P, i, byUser){
       var it = S.r.items[i]; if(!it) return;
@@ -9952,7 +9952,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       leave(P);
       var talk = TALK[d.act] || TALK.look, nm = petName(P.sp);
       if(d.seat){
-        if(S.used[i] && S.used[i] !== P.sp){ if(byUser) say(petName(S.used[i]) + 'が つかってるよ'); return wander(P); }
+        if(S.used[i] && S.used[i] !== P.sp){ if(byUser) say(petName(S.used[i]) + 'が 使ってるよ'); return wander(P); }
         S.used[i] = P.sp; P.seat = i;
         var st = seatOf(it), g = geo(it);
         walkTo(P, Math.max(5, Math.min(95, it.x + (it.x > 50 ? -1 : 1) * (g.vw / 2 + 4))), Math.min(99, it.y + 2), null, null, function(){
@@ -10059,7 +10059,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           var wasSleep = P.el.classList.contains('sleep');
           if(P.seat != null){ getUp(P); }
           Pet.spin(el); bubble(P, '♥');
-          say(petName(P.sp) + '「' + (wasSleep ? 'ふあ〜、おはよう!' : any(['えへへ', 'なあに?', 'あそぼう!', 'この おへや すき!'])) + '」');
+          say(petName(P.sp) + '「' + (wasSleep ? 'ふあ〜、おはよう!' : any(['えへへ', 'なあに?', '遊ぼう!', 'この 部屋 好き!'])) + '」');
           next(P, 2200);
         });
         S.pets.push(P);
@@ -10076,11 +10076,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function setEdit(on){
       edit = on; sel = -1;
       $('rmStage').classList.toggle('editing', on);
-      $('rmEdit').textContent = on ? '✓ できた' : '🔨 もようがえ';
+      $('rmEdit').textContent = on ? '✓ できた' : '🔨 模様がえ';
       $('rmEdit').classList.toggle('on', on);
       if(on && S) S.pets.forEach(function(P){ clearTimeout(P.t); leave(P); P.el.classList.remove('walk'); });
       if(!on && S) S.pets.forEach(function(P, k){ next(P, 400 + k * 500); });
-      say(on ? 'かぐを ゆびで うごかしてね。タップで えらぶと むき・大きさ・たかさを かえられるよ。下の ほうへ ひっぱると 手前に くるよ' : '');
+      say(on ? '家具を 指で 動かしてね。タップで 選ぶと 向き・大きさ・高さを 変えられるよ。下の 方へ 引っぱると 手前に 来るよ' : '');
       renderTools();
     }
     function selectIt(i){
@@ -10099,7 +10099,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var k = sizeIdx(it);
       $('rmSizeVal').textContent = Math.round((+it.s || 1) * 100) + '%';
       $('rmSmall').disabled = k <= 0; $('rmBig').disabled = k >= SIZES.length - 1;
-      $('rmLiftVal').textContent = (+it.h || 0) ? Math.round(it.h / 5) + 'だん' : 'ゆか';
+      $('rmLiftVal').textContent = (+it.h || 0) ? Math.round(it.h / 5) + '段' : 'ゆか';
       $('rmDown').disabled = !(+it.h); $('rmUp').disabled = (+it.h || 0) >= LIFT;
       if(d.photo){
         var cur = it.p === 'all' ? 'all' : photoSp(it.p), list = ownedList();
@@ -10128,12 +10128,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     $('rmSmall').addEventListener('click', tool(function(it, d){ return resize(it, d, Math.max(0, sizeIdx(it) - 1)); }));
     $('rmBig').addEventListener('click', tool(function(it, d){ return resize(it, d, Math.min(SIZES.length - 1, sizeIdx(it) + 1)); }));
-    $('rmUp').addEventListener('click', tool(function(it){ it.h = Math.min(LIFT, (+it.h || 0) + 5); say('ほかの かぐの 上に のせたい ときは、たかさを あわせてね'); }));
+    $('rmUp').addEventListener('click', tool(function(it){ it.h = Math.min(LIFT, (+it.h || 0) + 5); say('ほかの 家具の 上に 乗せたい ときは、高さを 合わせてね'); }));
     $('rmDown').addEventListener('click', tool(function(it){ it.h = Math.max(0, (+it.h || 0) - 5); if(!it.h) delete it.h; }));
     $('rmPhotos').addEventListener('click', tool(function(it, d, e){
       var b = e.target.closest('.rm-ph'); if(!b) return false;
       it.p = b.dataset.p;
-      say(it.p === 'all' ? 'みんなの しゃしんに したよ' : petName(it.p) + 'の しゃしんに したよ');
+      say(it.p === 'all' ? 'みんなの 写真に したよ' : petName(it.p) + 'の 写真に したよ');
     }));
     function clampIt(it, d){
       var g = geo(it), half = g.w / 2;
@@ -10158,9 +10158,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(d.act){ if(!S.pets[0]) return; var P = lead(); clearTimeout(P.t); if(P.seat === i) return; useItem(P, i, true); }
         else if(d.photo){
           var pp = S.r.items[i].p, who = pp === 'all' ? null : photoSp(pp), P2 = S.pets.filter(function(q){ return q.sp === who; })[0];
-          if(pp === 'all'){ S.pets.forEach(function(q){ Pet.cheer(q.el); bubble(q, '♥'); }); say('みんなで とった しゃしん!'); }
-          else if(P2){ Pet.cheer(P2.el); bubble(P2, '♥'); say(petName(who) + '「わたしの しゃしん!」'); }
-          else{ Pet.cheer(lead().el); bubble(lead(), '♥'); say(petName(lead().sp) + '「' + petName(who) + 'の しゃしんだ!」'); }
+          if(pp === 'all'){ S.pets.forEach(function(q){ Pet.cheer(q.el); bubble(q, '♥'); }); say('みんなで とった 写真!'); }
+          else if(P2){ Pet.cheer(P2.el); bubble(P2, '♥'); say(petName(who) + '「私の 写真!」'); }
+          else{ Pet.cheer(lead().el); bubble(lead(), '♥'); say(petName(lead().sp) + '「' + petName(who) + 'の 写真だ!」'); }
         }
         return;
       }
@@ -10199,7 +10199,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(pv && S.r.items[sel] === pv.it){ endPreview(); return; }
       var nm = BY[S.r.items[sel].k].name;
       S.r.items.splice(sel, 1); lampOn = {}; saveRoom(S.r); sel = -1;
-      render(); say(nm + 'を しまったよ。下の 「もってる」から また おけるよ');
+      render(); say(nm + 'を しまったよ。下の 「持ってる」から また 置けるよ');
     });
     $('rmEdit').addEventListener('click', function(){ setEdit(!edit); });
 
@@ -10215,8 +10215,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var r = S ? S.r : getRoom(), coins = getCoins(), g = $('rmGrid'); g.innerHTML = '';
       if(tab === 'wp'){
         var ws = document.createElement('div'); ws.className = 'rm-wside';
-        ws.innerHTML = 'かべの' + [['all', 'ぜんぶ'], ['l', 'ひだり はんぶん'], ['r', 'みぎ はんぶん']].map(function(x){ return '<button class="' + (wside === x[0] ? 'on' : '') + '" data-ws="' + x[0] + '">' + x[1] + '</button>'; }).join('');
-        ws.addEventListener('click', function(e){ var b = e.target.closest('[data-ws]'); if(!b) return; wside = b.getAttribute('data-ws'); renderShop(); say(wside === 'all' ? 'かべ ぜんぶに はるよ' : (wside === 'l' ? 'ひだり' : 'みぎ') + 'はんぶんだけ かえられるよ'); });
+        ws.innerHTML = 'かべの' + [['all', '全部'], ['l', '左 半分'], ['r', '右 半分']].map(function(x){ return '<button class="' + (wside === x[0] ? 'on' : '') + '" data-ws="' + x[0] + '">' + x[1] + '</button>'; }).join('');
+        ws.addEventListener('click', function(e){ var b = e.target.closest('[data-ws]'); if(!b) return; wside = b.getAttribute('data-ws'); renderShop(); say(wside === 'all' ? 'かべ 全部に はるよ' : (wside === 'l' ? '左' : '右') + '半分だけ 変えられるよ'); });
         g.appendChild(ws);
       }
       listFor(tab).forEach(function(d){
@@ -10225,11 +10225,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         c.className = 'rm-card' + (using ? ' using' : '') + (!own && coins < d.price ? ' cant' : '');
         var pving = pv && pv.d.id === d.id;
         if(pving) c.className += ' pving';
-        var tag = pving ? '<span class="rc-p own" style="color:#3F7FD0">おためし中</span>'
-          : using ? '<span class="rc-p own">つかってる</span>'
+        var tag = pving ? '<span class="rc-p own" style="color:#3F7FD0">お試し中</span>'
+          : using ? '<span class="rc-p own">使ってる</span>'
           : surf && own ? '<span class="rc-p own">これに する ›</span>'
-          : left > 0 ? '<span class="rc-p own">おく ›<small>しまってある '+left+'</small></span>'
-          : '<span class="rc-p num"><span class="coin"></span>'+d.price+(own ? '<small>もってる '+own+'</small>' : '')+'</span>';
+          : left > 0 ? '<span class="rc-p own">置く ›<small>しまってある '+left+'</small></span>'
+          : '<span class="rc-p num"><span class="coin"></span>'+d.price+(own ? '<small>持ってる '+own+'</small>' : '')+'</span>';
         c.innerHTML = '<span class="rc-pic'+(surf ? ' surf' : '')+'">' + thumb(d) + '</span><b>'+d.name+'</b>' + tag;
         c.addEventListener('click', function(){ pick(d); });
         g.appendChild(c);
@@ -10254,8 +10254,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('rmPv').hidden = !pv;
       if(!pv) return;
       var d = pv.d, c = getCoins();
-      $('rmPvName').innerHTML = 'おためし中: ' + d.name + '<small>' + (pv.it ? 'ゆびで うごかして みてね。' : '') + (c < d.price ? 'あと ' + (d.price - c) + 'コイン あつめると 買えるよ' : '気に入ったら 買おう') + '</small>';
-      $('rmPvBuy').innerHTML = 'かう <span class="coin"></span>' + d.price;
+      $('rmPvName').innerHTML = 'お試し中: ' + d.name + '<small>' + (pv.it ? '指で 動かして みてね。' : '') + (c < d.price ? 'あと ' + (d.price - c) + 'コイン 集めると 買えるよ' : '気に入ったら 買おう') + '</small>';
+      $('rmPvBuy').innerHTML = '買う <span class="coin"></span>' + d.price;
     }
     function startPreview(d){
       var r = S.r, surf = !!d.bg;
@@ -10266,7 +10266,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       render();
       if(pv.it) selectIt(S.r.items.indexOf(pv.it));
       renderPv();
-      say(surf ? 'ためしに ' + d.name + 'に して みたよ。どうかな?' : 'ためしに ' + d.name + 'を おいて みたよ。ゆびで うごかして みてね');
+      say(surf ? '試しに ' + d.name + 'に して みたよ。どうかな?' : '試しに ' + d.name + 'を 置いて みたよ。指で 動かして みてね');
       $('rmStage').scrollIntoView({ block:'nearest', behavior:'smooth' });
     }
     function endPreview(){
@@ -10277,14 +10277,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function buyPreview(){
       if(!pv) return;
       var d = pv.d;
-      if(!buyGate(d.price, d.name+'を かう?', thumb(d), 'かう', buyPreview)) return;
+      if(!buyGate(d.price, d.name+'を 買う?', thumb(d), '買う', buyPreview)) return;
       addOwn(d.id);
       var it = pv.it; pv = null;
       if(!it) setSurf(S.r, d.id);
       saveRoom(S.r); render(); renderPv();
       if(it) selectIt(S.r.items.indexOf(it));
       Pet.cheer(lead().el);
-      say(petName(lead().sp) + '「わあ、' + d.name + (it ? 'が きた!' : 'に なった!') + '」');
+      say(petName(lead().sp) + '「わあ、' + d.name + (it ? 'が 来た!' : 'に なった!') + '」');
     }
     $('rmPvBuy').addEventListener('click', buyPreview);
     $('rmPvNo').addEventListener('click', endPreview);
@@ -10313,7 +10313,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       r.items.push(it); saveRoom(r);
       if(!edit) setEdit(true);
       render(); selectIt(r.items.length - 1);
-      say(d.name + 'を おいたよ!ゆびで すきな ところに うごかしてね');
+      say(d.name + 'を 置いたよ!指で 好きな 所に 動かしてね');
       $('rmStage').scrollIntoView({ block:'nearest', behavior:'smooth' });
     }
     /* ---- おうちの そと見(へやの 数で そだつ) ---- */
@@ -10322,12 +10322,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* 月ごとの 花 [なまえ, 7つの [色, 花A, 花B]](いまの きせつの 花ばたけ) */
     var MONF = [
       ['スイセン・つばき', [['#FFFFFF', 11, 11], ['#E5484D', 2, 2], ['#FFF3C4', 11, 11], ['#FF8FB1', 2, 2], ['#FFFFFF', 11, 11], ['#E5484D', 2, 2], ['#FFFFFF', 11, 2]]],
-      ['うめ・スイセン', [['#FF8FB1', 12, 12], ['#FFFFFF', 12, 11], ['#E5484D', 12, 12], ['#FFFFFF', 11, 11], ['#FFB8CF', 12, 12], ['#FFFFFF', 12, 11], ['#FF8FB1', 12, 12]]],
+      ['梅・スイセン', [['#FF8FB1', 12, 12], ['#FFFFFF', 12, 11], ['#E5484D', 12, 12], ['#FFFFFF', 11, 11], ['#FFB8CF', 12, 12], ['#FFFFFF', 12, 11], ['#FF8FB1', 12, 12]]],
       ['すみれ・ヒヤシンス', [['#7B4FC9', 9, 9], ['#FF8FB1', 4, 4], ['#9B6BE0', 9, 4], ['#FFFFFF', 4, 9], ['#7B4FC9', 9, 9], ['#7FB8F0', 4, 4], ['#B79CF0', 9, 9]]],
       ['チューリップ', [['#E5484D', 1, 1], ['#FFD24C', 1, 1], ['#FF8FB1', 1, 1], ['#FFFFFF', 1, 1], ['#FF9E6B', 1, 1], ['#B79CF0', 1, 1], ['#FF6FA0', 1, 1]]],
       ['バラ', [['#E5484D', 2, 2], ['#FF6FA0', 2, 2], ['#FF8FB1', 2, 2], ['#FFFFFF', 2, 2], ['#FFD24C', 2, 2], ['#FF9E6B', 2, 2], ['#C2185B', 2, 2]]],
       ['あじさい', [['#7F9BF0', 10, 10], ['#9B8BE8', 10, 10], ['#B79CF0', 10, 10], ['#FF8FB1', 10, 10], ['#7FB8F0', 10, 10], ['#9B8BE8', 10, 10], ['#5B7CF0', 10, 10]]],
-      ['あさがお・ひまわり', [['#5B7CF0', 13, 13], ['#FFD24C', 5, 5], ['#B79CF0', 13, 13], ['#FF8FB1', 13, 13], ['#FFD24C', 5, 5], ['#7F9BF0', 13, 13], ['#9B6BE0', 13, 13]]],
+      ['朝顔・ひまわり', [['#5B7CF0', 13, 13], ['#FFD24C', 5, 5], ['#B79CF0', 13, 13], ['#FF8FB1', 13, 13], ['#FFD24C', 5, 5], ['#7F9BF0', 13, 13], ['#9B6BE0', 13, 13]]],
       ['ひまわり', [['#FFD24C', 5, 5], ['#FFE58A', 5, 5], ['#FFD24C', 5, 5], ['#FF9E6B', 5, 5], ['#FFD24C', 5, 5], ['#FFE58A', 5, 5], ['#FFD24C', 5, 5]]],
       ['ひがんばな・コスモス', [['#E5484D', 14, 14], ['#FF8FB1', 6, 6], ['#E5484D', 14, 14], ['#FFFFFF', 6, 6], ['#E5484D', 14, 14], ['#FF6FA0', 6, 6], ['#E5484D', 14, 14]]],
       ['コスモス・きく', [['#FF8FB1', 6, 6], ['#FFFFFF', 6, 8], ['#FFD24C', 8, 6], ['#FF9E6B', 8, 8], ['#E5484D', 8, 6], ['#B79CF0', 6, 8], ['#FF6FA0', 6, 8]]],
@@ -10341,7 +10341,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var o = '<svg viewBox="0 0 340 200" aria-label="' + HOUSE[n] + '">';
       if(hs.deco.rainbow) o += '<g fill="none" stroke-width="7" opacity=".55"><path d="M40,180 A130,130 0 0 1 300,180" stroke="#FF8FB1"/><path d="M47,180 A123,123 0 0 1 293,180" stroke="#FFD24C"/><path d="M54,180 A116,116 0 0 1 286,180" stroke="#9BD66B"/><path d="M61,180 A109,109 0 0 1 279,180" stroke="#7FB8F0"/></g>';
       /* じめん・みち・草花 */
-      /* 花: x,y = ねもと、c = 花の 色、k 0 デイジー / 1 チューリップ / 2 バラ / 3 パンジー / 4 ヒヤシンス / 5 ひまわり / 6 コスモス / 7 ポインセチア / 8 きく / 9 すみれ / 10 あじさい / 11 スイセン / 12 うめ / 13 あさがお / 14 ひがんばな、z = 大きさ */
+      /* 花: x,y = ねもと、c = 花の 色、k 0 デイジー / 1 チューリップ / 2 バラ / 3 パンジー / 4 ヒヤシンス / 5 ひまわり / 6 コスモス / 7 ポインセチア / 8 きく / 9 すみれ / 10 あじさい / 11 スイセン / 12 梅 / 13 朝顔 / 14 ひがんばな、z = 大きさ */
       function flw(x, y, c, k, z){
         z = z || 1; var f = function(v){ return (+v).toFixed(1); }, hy = y - (k === 5 ? 13 : k === 9 ? 6.5 : 9) * z, g = '';
         g += '<path d="M'+f(x)+','+f(y)+' Q'+f(x - .8 * z)+','+f(y - 4.5 * z)+' '+f(x)+','+f(hy + 1)+'" stroke="#4E9A4A" stroke-width="'+f(1.1 * z)+'" fill="none"/>';
@@ -10469,7 +10469,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var g = '<g class="hw' + (i === RI ? ' cur' : '') + '" data-r="' + i + '"><title>部屋 ' + (i + 1) + '</title><clipPath id="'+id+'">' + shape + '/></clipPath>' + shape + ' fill="'+lit+'"/>';
         if(sp) g += '<g clip-path="url(#'+id+')">' + Pet.svg(sp, petLv(sp) || 0).replace('<svg ', '<svg x="'+(x - w*.1)+'" y="'+(y + 2)+'" width="'+(w*1.2)+'" height="'+(h*1.5)+'" style="width:'+(w*1.2)+'px;height:'+(h*1.5)+'px" preserveAspectRatio="xMidYMin meet" ') + '</g>';
         g += shape + ' class="hwf" fill="none" stroke="#fff" stroke-width="3"/>';
-        if(i === RI && !mini && roomN() > 1) pin = '<g class="hpin"><rect x="'+(x + w/2 - 14)+'" y="'+(y - 25)+'" width="28" height="15" rx="7.5" fill="#E5484D"/><path d="M'+(x + w/2 - 5)+','+(y - 11)+' L'+(x + w/2 + 5)+','+(y - 11)+' L'+(x + w/2)+','+(y - 5)+' Z" fill="#E5484D"/><text x="'+(x + w/2)+'" y="'+(y - 14)+'" text-anchor="middle">いま</text></g>';
+        if(i === RI && !mini && roomN() > 1) pin = '<g class="hpin"><rect x="'+(x + w/2 - 14)+'" y="'+(y - 25)+'" width="28" height="15" rx="7.5" fill="#E5484D"/><path d="M'+(x + w/2 - 5)+','+(y - 11)+' L'+(x + w/2 + 5)+','+(y - 11)+' L'+(x + w/2)+','+(y - 5)+' Z" fill="#E5484D"/><text x="'+(x + w/2)+'" y="'+(y - 14)+'" text-anchor="middle">今</text></g>';
         if(!round) g += '<path d="M'+(x + w/2)+','+y+' V'+(y + h)+'" stroke="#fff" stroke-width="2"/><rect x="'+(x - 3)+'" y="'+(y + h)+'" width="'+(w + 6)+'" height="4" rx="2" fill="#C99A62"/>';
         return g + '</g>';
       }
@@ -10593,7 +10593,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     $('rmHouse').addEventListener('pointerup', hEnd);
     $('rmHouse').addEventListener('pointercancel', hEnd);
-    var SEASON = { Sp:['🌷', '春', 'チューリップ・すみれ・ヒヤシンス'], Su:['🌻', '夏', 'ひまわり・あさがお・あじさい'], Au:['🍁', '秋', 'コスモス・きく・ひがんばな'], Wi:['❄️', '冬', 'スイセン・うめ・つばき'] };
+    var SEASON = { Sp:['🌷', '春', 'チューリップ・すみれ・ヒヤシンス'], Su:['🌻', '夏', 'ひまわり・朝顔・あじさい'], Au:['🍁', '秋', 'コスモス・きく・ひがんばな'], Wi:['❄️', '冬', 'スイセン・梅・つばき'] };
     function seasonLab(yd){
       var m = new Date().getMonth(), now = ['Wi', 'Wi', 'Sp', 'Sp', 'Sp', 'Su', 'Su', 'Su', 'Au', 'Au', 'Au', 'Wi'][m];
       var k = yd === 'h_yflowerNow' ? now : SEASON[(yd || '').slice(9)] ? yd.slice(9) : null; if(!k) return '';
@@ -10634,7 +10634,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function pickH(id){
       var d = BYH[id], h = getHS();
       if(!hOwn(h, id)){
-        if(!buyGate(d.price, d.part.name + 'を「' + d.name + '」に する?', null, 'かう', function(){ pickH(id); })) return;
+        if(!buyGate(d.price, d.part.name + 'を「' + d.name + '」に する?', null, '買う', function(){ pickH(id); })) return;
         h.own[id] = 1; renderCoins();
       }
       if(d.part.k === 'deco'){ if(h.deco[id]) delete h.deco[id]; else h.deco[id] = 1; }
@@ -10669,7 +10669,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     function buyRoom(){
       var n = roomN(); if(n >= 5) return;
-      if(!buyGate(ROOM_PRICE[n], 'へやを ふやす?', null, 'ふやす', buyRoom)) return;
+      if(!buyGate(ROOM_PRICE[n], '部屋を 増やす?', null, '増やす', buyRoom)) return;
       safeSet(NK, n + 1); goRoom(n); renderRooms(); renderHouse(true);
       hPop('🎉 家に ' + GROW[n + 1] + 'が できたよ!');
     }
@@ -10679,28 +10679,28 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(v === 'add') buyRoom(); else goRoom(+v);
     });
     function renderMates(){
-      var all = ownedList(), here = hereOf(RI), h = '<p>タップで この へやに いれたり、でて もらったり できるよ(1つの へやに 5ひきまで)</p><div class="rm-mgrid">';
+      var all = ownedList(), here = hereOf(RI), h = '<p>タップで この 部屋に 入れたり、出て もらったり できるよ(1つの 部屋に 5ひきまで)</p><div class="rm-mgrid">';
       var pp = getPets() || {};
       all.forEach(function(sp){
         var loc = locOf(sp), cls = loc === RI ? ' here' : loc >= 0 ? ' else' : '';
-        h += '<button class="rm-mate'+cls+'" data-sp="'+sp+'">'+Pet.svg(sp, (pp.owned && pp.owned[sp]) || 0)+'<span>'+petName(sp)+'</span><small>'+(loc === RI ? 'ここ' : loc >= 0 ? 'へや '+(loc + 1) : '—')+'</small></button>';
+        h += '<button class="rm-mate'+cls+'" data-sp="'+sp+'">'+Pet.svg(sp, (pp.owned && pp.owned[sp]) || 0)+'<span>'+petName(sp)+'</span><small>'+(loc === RI ? 'ここ' : loc >= 0 ? '部屋 '+(loc + 1) : '—')+'</small></button>';
       });
       $('rmMatesBox').innerHTML = h + '</div>';
     }
     function szPic(k){ var w = 40 * [.6, .75, .88, 1][k]; return '<svg viewBox="0 0 44 28"><rect x="' + (22 - w / 2) + '" y="4" width="' + w + '" height="20" rx="3" fill="#FFF1E0" stroke="#C99A62" stroke-width="2"/><rect x="' + (22 - w / 2) + '" y="15" width="' + w + '" height="9" rx="2" fill="#E8C597"/></svg>'; }
     function renderSize(){
-      var r = S ? S.r : getRoom(), z = szOf(r), own = Math.max(1, +r.szOwn || 1), h = '<p>ひろく すると かぐも なかまも 小さく 見えて、たくさん おけるよ(へやごとに えらべる)</p><div class="rm-szs">';
+      var r = S ? S.r : getRoom(), z = szOf(r), own = Math.max(1, +r.szOwn || 1), h = '<p>広く すると 家具も 仲間も 小さく 見えて、たくさん 置けるよ(部屋ごとに 選べる)</p><div class="rm-szs">';
       SZN.forEach(function(nm, k){ h += '<button class="rm-sz' + (k === z ? ' on' : '') + '" data-sz="' + k + '">' + szPic(k) + nm + (k > own ? '<small><span class="coin"></span>' + SZP[k] + '</small>' : '') + '</button>'; });
       $('rmSizeBox').innerHTML = h + '</div>';
     }
     function pickSize(k){
       var r = S.r, own = Math.max(1, +r.szOwn || 1);
       if(k > own){
-        if(!buyGate(SZP[k], 'へやを「' + SZN[k] + '」に ひろげる?', szPic(k), 'ひろげる', function(){ pickSize(k); })) return;
+        if(!buyGate(SZP[k], '部屋を「' + SZN[k] + '」に 広げる?', szPic(k), '広げる', function(){ pickSize(k); })) return;
         r.szOwn = k;
       }
       r.sz = k; saveRoom(r); sel = -1; render(); renderSize();
-      say('へやを「' + SZN[k] + '」に したよ');
+      say('部屋を「' + SZN[k] + '」に したよ');
     }
     $('rmSize').addEventListener('click', function(){ var b = $('rmSizeBox'); b.hidden = !b.hidden; if(!b.hidden) renderSize(); });
     $('rmSizeBox').addEventListener('click', function(e){ var b = e.target.closest('[data-sz]'); if(b) pickSize(+b.getAttribute('data-sz')); });
@@ -10711,12 +10711,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var b = e.target.closest('[data-sp]'); if(!b) return;
       var sp = b.getAttribute('data-sp'), q = selGet(), here = hereOf(RI);
       if(here.indexOf(sp) >= 0) q.pets[sp] = -1;
-      else if(here.length >= 5){ toast('この へやは いっぱい(5ひきまで)'); return; }
+      else if(here.length >= 5){ toast('この 部屋は いっぱい(5ひきまで)'); return; }
       else q.pets[sp] = RI;
       selSave(q); render(); renderMates();
     });
     $('rmToy').addEventListener('click', function(){
-      var q = selGet(); q.toy = RI; selSave(q); renderRooms(); toast('あそぶ画面の うしろを この へやに したよ');
+      var q = selGet(); q.toy = RI; selSave(q); renderRooms(); toast('遊ぶ画面の 後ろを この 部屋に したよ');
     });
     $('rmTabs').addEventListener('click', function(e){ var b = e.target.closest('.rm-tab'); if(!b) return; tab = b.getAttribute('data-t'); renderShop(); });
 
@@ -10724,7 +10724,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       setLive('add');
       edit = false; sel = -1; lampOn = {}; pv = null; renderPv();
       RI = Math.min(selGet().cur | 0, roomN() - 1); S = null; $('rmMatesBox').hidden = true;
-      $('rmEdit').textContent = '🔨 もようがえ'; $('rmEdit').classList.remove('on');
+      $('rmEdit').textContent = '🔨 模様がえ'; $('rmEdit').classList.remove('on');
       showView('room');
       render();
       say(petName(activePet().sp) + '「ここが みんなの 部屋だよ!」');
@@ -10736,7 +10736,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var c = $('roomCard'); if(!c) return;
       var n = roomN(), at = Math.max(0, locOf(activePet().sp));
       c.innerHTML = '<span class="hub-rh"><span class="hx">' + houseSvg(n, null, true).replace(/ class="hw[^"]*" data-r="\d"/g, '').replace(/<title>[^<]*<\/title>/g, '') + '</span>' +
-        '<span><b>おうち</b><small>' + petName(activePet().sp) + (n > 1 ? 'は へや ' + (at + 1) + 'に いるよ' : 'は おへやで のんびり') + '</small></span><span class="rm-go">›</span></span><span class="rm-stage rm-mini"></span>';
+        '<span><b>おうち</b><small>' + petName(activePet().sp) + (n > 1 ? 'は 部屋 ' + (at + 1) + 'に いるよ' : 'は お部屋で のんびり') + '</small></span><span class="rm-go">›</span></span><span class="rm-stage rm-mini"></span>';
       build(c.querySelector('.rm-stage'), true, at);
     }
     $('roomCard').addEventListener('click', open);
