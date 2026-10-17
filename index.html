@@ -385,6 +385,13 @@
   }
   .rm-house{ width:100%; }   /* view が flex なので 中みの はばに ちぢんでいた */
   .rm-hsea{ display:block; font-style:normal; font-size:13px; font-weight:800; color:#2E2A3D; background:#EAF7E4; padding:7px 12px; text-align:center; line-height:1.4; }
+  #rmSay{ display:none; }
+  .rm-sb{ position:absolute; z-index:9000; left:50%; top:30%; transform:translate(-50%, calc(-100% - 10px)); max-width:min(72%, 360px); width:max-content; background:#fff; color:#2E2A3D; border-radius:16px; padding:7px 13px; font-size:max(13px, 3.1cqw); font-weight:800; line-height:1.4; text-align:center; box-shadow:0 6px 18px -8px rgba(46,42,61,.45), 0 0 0 1.5px rgba(46,42,61,.08); pointer-events:none; animation:rm-sb .25s cubic-bezier(.3,1.5,.5,1); }
+  .rm-sb::after{ content:''; position:absolute; left:calc(50% + var(--tx, 0px)); bottom:-7px; margin-left:-8px; border:8px solid transparent; border-bottom:0; border-top-color:#fff; filter:drop-shadow(0 1.5px 0 rgba(46,42,61,.08)); }
+  .rm-sb.n{ top:auto; bottom:6%; transform:translateX(-50%); background:rgba(255,255,255,.94); border-radius:14px; }
+  .rm-sb.n::after{ display:none; }
+  .rm-sb.bye{ opacity:0; transition:opacity .3s; }
+  @keyframes rm-sb{ 0%{ opacity:0; scale:.8; } 100%{ opacity:1; scale:1; } }
   .rm-hpop{ position:absolute; left:50%; bottom:14px; transform:translateX(-50%); white-space:nowrap; background:rgba(255,255,255,.95); color:#2E2A3D; border-radius:100px; padding:7px 16px; font-size:14px; font-weight:900; box-shadow:0 6px 16px -8px rgba(46,42,61,.5); pointer-events:none; animation:rm-hpop 2.6s ease both; }
   @keyframes rm-hpop{ 0%{ opacity:0; transform:translate(-50%, 10px) scale(.9); } 12%{ opacity:1; transform:translate(-50%, 0) scale(1); } 80%{ opacity:1; } 100%{ opacity:0; transform:translate(-50%, -6px); } }
   .rm-hedit{ background:var(--surface); padding:8px 10px 10px; display:grid; gap:8px; }
@@ -9865,7 +9872,28 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---- おへやの 画面 ---- */
     var S = null, edit = false, sel = -1, tab = 'item', lampOn = {}, clockT = 0;
     function live(){ return S && !views.room.hidden; }
-    function say(t){ $('rmSay').textContent = t; }
+    /* ことばは 話した 子の ふきだしに。なまえ「…」なら その子、ほかは へやの さいしょの 仲間、だれも いなければ ゆかの あんないカード */
+    var sayB = null, sayRaf = 0, sayT = 0;
+    function say(t){
+      var st = $('rmStage'); $('rmSay').textContent = t;
+      if(sayB){ sayB.remove(); sayB = null; } cancelAnimationFrame(sayRaf); clearTimeout(sayT);
+      if(!st || !S || $('view-room').hidden) return;
+      var m = /^(.+?)「([\s\S]*)」$/.exec(t), sp = null, txt = t;
+      if(m){ var q = S.pets.filter(function(p){ return petName(p.sp) === m[1]; })[0]; if(q){ sp = q.sp; txt = m[2]; } }
+      else if(S.pets.length) sp = S.pets[0].sp;
+      var b = document.createElement('div'); b.className = 'rm-sb' + (sp ? '' : ' n'); b.textContent = txt; sayB = b;
+      (function pos(){
+        if(!b.isConnected) st.appendChild(b);
+        var sr = st.getBoundingClientRect(), P = sp && S && S.pets.filter(function(p){ return p.sp === sp; })[0];
+        if(P && P.el.isConnected){
+          var r = P.el.getBoundingClientRect(), x = r.left + r.width / 2 - sr.left, y = r.top + r.height * .12 - sr.top, h = b.offsetHeight, w = b.offsetWidth / 2;
+          var cx = Math.max(w + 6, Math.min(sr.width - w - 6, x));
+          b.style.left = cx + 'px'; b.style.top = Math.max(h + 10, y) + 'px'; b.style.setProperty('--tx', (x - cx) + 'px');
+        }
+        sayRaf = requestAnimationFrame(pos);
+      })();
+      sayT = setTimeout(function(){ cancelAnimationFrame(sayRaf); b.classList.add('bye'); setTimeout(function(){ b.remove(); if(sayB === b) sayB = null; }, 300); }, Math.min(8000, 2200 + txt.length * 90));
+    }
 
     function ownedList(){
       var p = getPets() || {}, act = activePet(), list = [act.sp];
@@ -10610,7 +10638,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(d.part.k === 'deco'){ if(h.deco[id]) delete h.deco[id]; else h.deco[id] = 1; }
       else h[d.part.k] = id;
       h.t = Date.now(); safeSet(HK, h);
-      renderHouse(); hMsg = 'おうちを リフォーム したよ!'; say(hMsg);
+      renderHouse(); hMsg = 'おうちを リフォーム したよ!';
     }
     $('rmHouse').addEventListener('click', function(e){
       var hb = e.target.closest('[data-h]');
@@ -10641,7 +10669,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var n = roomN(); if(n >= 5) return;
       if(!buyGate(ROOM_PRICE[n], 'へやを ふやす?', null, 'ふやす', buyRoom)) return;
       safeSet(NK, n + 1); goRoom(n); renderRooms(); renderHouse(true);
-      say('おうちに ' + GROW[n + 1] + 'が できたよ! かぐを 買って かざろう');
+      hPop('🎉 おうちに ' + GROW[n + 1] + 'が できたよ!');
     }
     $('rmRooms').addEventListener('click', function(e){
       var b = e.target.closest('[data-r]'); if(!b) return;
