@@ -4407,7 +4407,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function sheetPlan(){
     var t = todayKey(), rec = safeGet('keisan_plan');
     if(rec && rec.d === t && rec.ops && rec.ops.length === DAILY_SHEETS) return rec.ops;
-    var off = dayNo() % SINGLE_OPS.length, ops = SINGLE_OPS.slice(off).concat(SINGLE_OPS.slice(0, off)), weak = ops[0];
+    var off = Math.max(0, SINGLE_OPS.indexOf('mul')), ops = SINGLE_OPS.slice(off).concat(SINGLE_OPS.slice(0, off)), weak = ops[0];
     ops.forEach(function(o){ if(progressOf(o) < progressOf(weak)) weak = o; });
     ops.push(weak);
     safeSet('keisan_plan', { d:t, ops:ops });
