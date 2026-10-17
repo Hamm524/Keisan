@@ -357,6 +357,32 @@
   .rm-house.edit .hy{ cursor:grab; filter:drop-shadow(0 0 1.5px #FFC53D) drop-shadow(0 0 3px #FFC53D); }
   .rm-house.edit .hy.drag{ cursor:grabbing; filter:drop-shadow(0 0 3px #E39B12) drop-shadow(0 0 6px #FFC53D); }
   .rm-hbtn{ position:absolute; right:10px; top:8px; border:none; background:rgba(255,255,255,.9); color:#2E2A3D; border-radius:100px; padding:6px 12px; font:inherit; font-size:12.5px; font-weight:900; cursor:pointer; }
+  /* リフォーム中: 画面いっぱい */
+  .rm-house.edit{ position:fixed; inset:0; z-index:18; max-width:none; margin:0; border-radius:0; box-shadow:none; background:var(--surface); overflow-y:auto; overscroll-behavior:contain; display:flex; flex-direction:column; }
+  body.rm-rf-open{ overflow:hidden; }
+  .rm-rfh{ position:sticky; top:0; z-index:2; display:flex; align-items:center; gap:10px; padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px; background:var(--surface); border-bottom:1.5px solid var(--line); }
+  .rm-rfh b{ flex:1; font-size:18px; font-weight:900; }
+  .rm-house.edit .rm-hbtn{ position:static; background:var(--ink); color:var(--surface); font-size:15px; padding:9px 18px; }
+  .rm-rfv{ position:sticky; top:58px; z-index:1; background:linear-gradient(#BFE6FF, #E9F7FF 70%); box-shadow:0 8px 16px -12px rgba(46,42,61,.4); }
+  .rm-rfv svg{ display:block; width:100%; height:auto; max-height:46vh; margin:0 auto; }
+  .rm-rfhint{ margin:0; padding:2px 12px 8px; text-align:center; font-size:12.5px; font-weight:800; color:#4A4458; }
+  .rm-house.edit .rm-hedit{ padding:12px 14px calc(24px + env(safe-area-inset-bottom,0px)); gap:14px; }
+  .rm-house.edit .rm-hrow{ flex-direction:column; gap:6px; }
+  .rm-house.edit .rm-hrow > span{ font-size:14px; padding-top:0; color:var(--ink); }
+  .rm-house.edit .rm-hrow > div{ gap:8px; }
+  .rm-house.edit .rm-hc{ font-size:15px; padding:9px 14px 9px 10px; gap:6px; }
+  .rm-house.edit .rm-hc i{ width:24px; height:24px; }
+  .rm-house.edit .rm-hc small{ font-size:13px; } .rm-house.edit .rm-hc .coin{ width:14px; height:14px; }
+  .rm-hc rt{ font-size:9px; }
+  /* タブレット横: 左に いえ、右に えらぶ ところ */
+  @media (min-width:900px) and (orientation:landscape){
+    .rm-house.edit{ display:grid; grid-template-columns:minmax(0, 1.4fr) minmax(320px, 1fr); grid-template-rows:auto 1fr; overflow:hidden; }
+    .rm-house.edit .rm-rfh{ grid-column:1 / -1; }
+    .rm-house.edit .rm-rfv{ position:static; display:flex; flex-direction:column; justify-content:flex-end; box-shadow:none; }
+    .rm-house.edit .rm-rfhint{ background:var(--surface); padding:10px 12px 14px; font-size:14px; }
+    .rm-house.edit .rm-rfv svg{ max-height:calc(100vh - 140px); }
+    .rm-house.edit .rm-hedit{ overflow-y:auto; border-left:1.5px solid var(--line); }
+  }
   .rm-hedit{ background:var(--surface); padding:8px 10px 10px; display:grid; gap:8px; }
   .rm-hrow{ display:flex; align-items:flex-start; gap:8px; }
   .rm-hrow > span{ font-size:12px; font-weight:900; color:var(--ink-soft); min-width:3.6em; padding-top:8px; }
@@ -10311,13 +10337,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(mini) o = o.replace('viewBox="0 0 340 200"', 'viewBox="' + ['', '76 46 168 120', '76 46 204 136', '70 10 220 180', '30 10 260 180', '20 0 300 200'][n] + '"');
       return o + '</svg>';
     }
-    /* おうちの かいぞう: keisan_house = { t, roof, wall, door, deco:{id:1}, own:{id:1} } */
+    /* おうちの リフォーム: keisan_house = { t, roof, wall, door, deco:{id:1}, own:{id:1} } */
     var HK = 'keisan_house', HPARTS = [
       { k:'roof', name:'やね', list:[ ['h_rred','あか','#E98B6D',0], ['h_rblue','あお','#6FA8DC',30], ['h_rgreen','みどり','#6DBB6B',30], ['h_rpurple','むらさき','#A98BE8',30], ['h_rpink','ピンク','#F38FAE',30], ['h_rchoco','チョコ','#8A5A44',30], ['h_rgold','きんいろ','#E8B83A',60] ] },
       { k:'wall', name:'かべ', list:[ ['h_wcream','クリーム','#FFF6E8',0], ['h_wpink','ピンク','#FFE1EA',30], ['h_wmint','ミント','#DCF3E6',30], ['h_wsky','そらいろ','#E0EEFF',30], ['h_wlemon','レモン','#FFF3B8',30], ['h_wlav','ラベンダー','#EEE4FF',30], ['h_wwood','き','#E7C9A0',40] ] },
       { k:'door', name:'ドア', list:[ ['h_dwood','き','#C99A62',0], ['h_dred','あか','#E5484D',20], ['h_dblue','あお','#5B7CFA',20], ['h_dgreen','みどり','#2FAE66',20], ['h_dpink','ピンク','#FF8FB1',20] ] },
       { k:'yard', name:'にわ', list:[ ['h_ylawn','しばふ','#7CC77A',0], ['h_ybrick','レンガ','#D98B6A',40], ['h_ystone','いしだたみ','#C9C4BC',40], ['h_ysand','すな','#F2DDB0',30], ['h_yflower','おはなばたけ','#FF8FB1',60] ] },
-      { k:'deco', name:'かざり', list:[ ['dog','いぬごや','',50], ['laundry','ものほし','',40], ['bench','ベンチ','',40], ['lamp','がいとう','',50],  ['flower','はなだん','',0], ['post','ポスト','',30], ['tree','木','',40], ['fence','さく','',40], ['garland','ガーランド','',40], ['smoke','えんとつの けむり','',30], ['rainbow','にじ','',80] ] }
+      { k:'deco', name:'かざり', list:[ ['dog','いぬごや','',50], ['laundry','ものほし','',40], ['bench','ベンチ','',40], ['lamp','がいとう','',50],  ['flower','<ruby>花壇<rt>かだん</rt></ruby>','',0], ['post','ポスト','',30], ['tree','木','',40], ['fence','さく','',40], ['garland','ガーランド','',40], ['smoke','えんとつの けむり','',30], ['rainbow','にじ','',80] ] }
     ], BYH = {};
     HPARTS.forEach(function(p){ p.list.forEach(function(x){ BYH[x[0]] = { id:x[0], name:x[1], c:x[2], price:x[3], part:p }; }); });
     function getHS(){
@@ -10328,7 +10354,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       return h;
     }
     function hOwn(h, id){ return !BYH[id].price || h.own[id]; }
-    var hEdit = false, hDrag = null, YLIM = { x:[-300, 300], y:[-14, 12] };
+    var hEdit = false, hMsg = '', hDrag = null, YLIM = { x:[-300, 300], y:[-14, 12] };
     function svgPt(svg, e){ var p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); }
     $('rmHouse').addEventListener('pointerdown', function(e){
       if(!hEdit) return;
@@ -10358,8 +10384,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('rmHouse').addEventListener('pointercancel', hEnd);
     function renderHouse(grow){
       var n = roomN(), b = $('rmHouse'), h = getHS();
-      var x = '<span class="rm-hlab">' + HOUSE[n] + (n < 5 ? '<small>つぎは ' + GROW[n + 1] + '</small>' : '') + '</span>' +
-        '<button class="rm-hbtn" data-h="edit">' + (hEdit ? '✓ できた' : '🎨 かいぞう') + '</button>' + houseSvg(n, h);
+      var x = hEdit ?
+        '<div class="rm-rfh"><b>🎨 おうちの リフォーム</b><button class="rm-hbtn" data-h="edit">✓ できた</button></div>' +
+        '<div class="rm-rfv">' + houseSvg(n, h) + '<p class="rm-rfhint">' + (hMsg || 'えらぶと すぐ かわるよ。にわの かざりは ゆびで うごかせるよ') + '</p></div>' :
+        '<span class="rm-hlab">' + HOUSE[n] + (n < 5 ? '<small>つぎは ' + GROW[n + 1] + '</small>' : '') + '</span>' +
+        '<button class="rm-hbtn" data-h="edit">🎨 リフォーム</button>' + houseSvg(n, h);
+      hMsg = '';
       if(hEdit){
         x += '<div class="rm-hedit">';
         HPARTS.forEach(function(p){
@@ -10375,7 +10405,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }
       b.innerHTML = x;
       b.classList.toggle('edit', hEdit);
-      if(hEdit) say('にわの かざりは ゆびで うごかせるよ');
+      document.body.classList.toggle('rm-rf-open', hEdit);
       if(grow){ b.classList.remove('grow'); void b.offsetWidth; b.classList.add('grow'); }
     }
     function pickH(id){
@@ -10387,11 +10417,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(d.part.k === 'deco'){ if(h.deco[id]) delete h.deco[id]; else h.deco[id] = 1; }
       else h[d.part.k] = id;
       h.t = Date.now(); safeSet(HK, h);
-      renderHouse(); say('おうちを かいぞう したよ!');
+      renderHouse(); hMsg = 'おうちを リフォーム したよ!'; say(hMsg);
     }
     $('rmHouse').addEventListener('click', function(e){
       var hb = e.target.closest('[data-h]');
-      if(hb){ var hv = hb.getAttribute('data-h'); if(hv === 'edit'){ hEdit = !hEdit; renderHouse(); } else pickH(hv); return; }
+      if(hb){ var hv = hb.getAttribute('data-h'); if(hv === 'edit'){ hEdit = !hEdit; renderHouse(); if(!hEdit) say('すてきな おうちに なったね!'); } else pickH(hv); return; }
       var g = e.target.closest('[data-r]'); if(!g) return;
       var v = g.getAttribute('data-r');
       if(v === 'add') buyRoom(); else goRoom(+v);
