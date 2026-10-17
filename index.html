@@ -367,6 +367,15 @@
   .rm-hc.on{ border-color:var(--gold); background:#FFF6DA; color:#2E2A3D; }
   .rm-smoke circle{ animation:rm-smoke 3s ease-out infinite; } .rm-smoke circle:nth-child(2){ animation-delay:1s; } .rm-smoke circle:nth-child(3){ animation-delay:2s; }
   @keyframes rm-smoke{ 0%{ opacity:0; transform:translateY(8px); } 30%{ opacity:.9; } 100%{ opacity:0; transform:translateY(-10px); } }
+  .rm-szs{ display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:6px; }
+  .rm-sz{ border:2px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:14px; padding:6px 4px; font:inherit; font-size:12px; font-weight:900; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .rm-sz svg{ width:44px; height:28px; }
+  .rm-sz small{ display:inline-flex; align-items:center; gap:2px; font-size:10.5px; color:var(--ink-soft); } .rm-sz .coin{ width:12px; height:12px; }
+  .rm-sz.on{ border-color:var(--gold); background:#FFF6DA; color:#2E2A3D; }
+  .rm-wside{ grid-column:1 / -1; display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:12px; font-weight:900; color:var(--ink-soft); }
+  .rm-wside button{ border:1.5px solid var(--line); background:var(--surface); color:var(--ink); border-radius:100px; padding:6px 12px; font:inherit; font-size:12.5px; font-weight:900; cursor:pointer; }
+  .rm-wside button.on{ background:var(--ink); border-color:var(--ink); color:var(--surface); }
+  .rm-wsplit{ position:absolute; top:0; width:1.4%; margin-left:-.7%; background:linear-gradient(90deg, rgba(0,0,0,.06), #fff 40%, #fff 60%, rgba(0,0,0,.06)); z-index:1; }
   .rm-rtools{ max-width:720px; margin:0 auto 10px; display:flex; gap:8px; flex-wrap:wrap; }
   .rm-tab.add{ border-style:dashed; display:inline-flex; align-items:center; gap:4px; }
   .rm-tab.add .coin{ width:14px; height:14px; }
@@ -2155,7 +2164,8 @@
       <div class="rm-trow" id="rmPhotoRow"><span>しゃしん</span><div class="rm-phs" id="rmPhotos"></div></div>
     </div>
     <p class="food-say rm-say" id="rmSay"></p>
-    <div class="rm-rtools"><button class="rm-tb" id="rmMates">🐾 この へやの なかま</button><button class="rm-tb" id="rmToy">🎮 あそぶ画面の へやに する</button></div>
+    <div class="rm-rtools"><button class="rm-tb" id="rmMates">🐾 この へやの なかま</button><button class="rm-tb" id="rmToy">🎮 あそぶ画面の へやに する</button><button class="rm-tb" id="rmSize">📐 へやの ひろさ</button></div>
+    <div class="rm-mates" id="rmSizeBox" hidden></div>
     <div class="rm-mates" id="rmMatesBox" hidden></div>
     <h2 class="sec-title">おへやの ショップ</h2>
     <p class="sec-sub">コインで かぐや かべがみを 買って、すきな ところに おこう。1回 買えば ずっと つかえるよ。</p>
@@ -9571,6 +9581,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           '<rect x="40" y="96" width="140" height="72" rx="30" fill="#D9C4F5"/><circle cx="110" cy="122" r="12" fill="#FFD24C"/><circle cx="110" cy="122" r="6" fill="#FF8FB1"/><rect x="26" y="150" width="168" height="40" rx="14" fill="#FFFDF7"/><ellipse cx="110" cy="152" rx="44" ry="13" fill="#fff"/>',
         f:'<rect x="22" y="168" width="176" height="36" rx="12" fill="#B79CF0"/><path d="M22,180 H198" stroke="#D3C2F7" stroke-width="6"/><g fill="#FFE58A"><circle cx="56" cy="192" r="3.5"/><circle cx="110" cy="194" r="3.5"/><circle cx="164" cy="192" r="3.5"/></g><rect x="30" y="202" width="10" height="16" rx="3" fill="#E8C15A"/><rect x="180" y="202" width="10" height="16" rx="3" fill="#E8C15A"/>' },
 
+      { id:'partition', name:'しきりの かべ', price:60, z:'floor', w:15, vb:[100,180],
+        b:'<rect x="6" y="4" width="88" height="168" rx="6" fill="#F4EEE4"/><rect x="6" y="4" width="88" height="10" rx="5" fill="#C99A62"/><rect x="14" y="22" width="72" height="66" rx="4" fill="none" stroke="#E2D6C3" stroke-width="3"/><rect x="14" y="96" width="72" height="66" rx="4" fill="none" stroke="#E2D6C3" stroke-width="3"/><rect x="2" y="168" width="96" height="10" rx="3" fill="#C99A62"/>' },
+      { id:'partwin', name:'まどの ある しきり', price:80, z:'floor', w:17, vb:[110,180],
+        b:'<path d="M6,180 V20 Q55,-8 104,20 V180 Z" fill="#F4EEE4"/><path d="M26,96 V48 Q55,22 84,48 V96 Z" fill="#BFE6FF"/><path d="M55,30 V96 M26,70 H84" stroke="#fff" stroke-width="4"/><path d="M26,96 V48 Q55,22 84,48 V96 Z" fill="none" stroke="#C99A62" stroke-width="4"/><rect x="20" y="96" width="70" height="6" rx="3" fill="#C99A62"/><circle cx="34" cy="128" r="6" fill="#FF8FB1"/><circle cx="76" cy="140" r="6" fill="#FFD24C"/><rect x="2" y="170" width="106" height="10" rx="3" fill="#C99A62"/>' },
+      { id:'pillar', name:'はしら', price:40, z:'floor', w:6, vb:[40,210],
+        b:'<rect x="2" y="2" width="36" height="12" rx="3" fill="#E2D6C3"/><rect x="7" y="14" width="26" height="180" fill="#FFFDF7"/><path d="M14,18 V190 M20,18 V190 M26,18 V190" stroke="#EDE5D8" stroke-width="2"/><rect x="2" y="194" width="36" height="14" rx="3" fill="#E2D6C3"/>' },
+      { id:'counter', name:'カウンター', price:90, z:'floor', w:30, vb:[200,100], act:'look',
+        b:'<rect x="4" y="2" width="192" height="14" rx="5" fill="#C99A62"/><rect x="12" y="16" width="176" height="82" fill="#E7C9A0"/><rect x="22" y="26" width="72" height="62" rx="4" fill="#DDBB8E"/><rect x="106" y="26" width="72" height="62" rx="4" fill="#DDBB8E"/><circle cx="86" cy="57" r="3" fill="#A77A45"/><circle cx="114" cy="57" r="3" fill="#A77A45"/>' },
+      { id:'counterh', name:'たかい カウンター', price:110, z:'floor', w:30, vb:[200,140], act:'look',
+        b:'<rect x="4" y="2" width="192" height="14" rx="5" fill="#7FB8F0"/><rect x="12" y="16" width="176" height="122" fill="#FFFDF7"/><g fill="#E3F0FF"><rect x="22" y="28" width="46" height="98" rx="4"/><rect x="77" y="28" width="46" height="98" rx="4"/><rect x="132" y="28" width="46" height="98" rx="4"/></g><rect x="40" y="70" width="10" height="3" rx="1.5" fill="#7FB8F0"/><rect x="95" y="70" width="10" height="3" rx="1.5" fill="#7FB8F0"/><rect x="150" y="70" width="10" height="3" rx="1.5" fill="#7FB8F0"/>' },
+
       { id:'window', name:'まど', price:50, z:'wall', w:22, vb:[130,110], sky:true },
       { id:'frame', name:'相棒の しゃしん', price:40, z:'wall', w:13, vb:[90,104], photo:true },
       { id:'clock', name:'かけどけい', price:50, z:'wall', w:11, vb:[90,90], clock:true },
@@ -9602,6 +9623,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(!Array.isArray(r.items)) r.items = [];
       r.items = r.items.filter(function(it){ return it && BY[it.k]; });
       if(!BY[r.wall]) r.wall = 'w_cream';
+      if(r.wall2 && (!BY[r.wall2] || r.wall2 === r.wall)) delete r.wall2;
       if(!BY[r.floor]) r.floor = 'f_wood';
       return r;
     }
@@ -9610,8 +9632,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function saveRoom(r){
       r.t = Date.now();
       if(pv){
-        var c = { t:r.t, wall:r.wall, floor:r.floor, items:r.items.filter(function(it){ return it !== pv.it; }) };
-        if(pv.old){ c.wall = pv.old.wall; c.floor = pv.old.floor; }
+        var c = { t:r.t, wall:r.wall, wall2:r.wall2, sz:r.sz, szOwn:r.szOwn, floor:r.floor, items:r.items.filter(function(it){ return it !== pv.it; }) };
+        if(pv.old){ c.wall = pv.old.wall; c.wall2 = pv.old.wall2; c.floor = pv.old.floor; }
         safeSet(rkey(RI), c);
       } else safeSet(rkey(RI), r);
     }
@@ -9627,6 +9649,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---- 絵 ---- */
     var uid = 0;
     function depth(y){ return y > 100 ? 1 + (y - 100) * .03 : .72 + .28 * Math.max(0, (y - WALL) / (100 - WALL)); }
+    var SZK = [1.22, 1, .82, .68], SZN = ['せまい', 'ふつう', 'ひろい', 'とても ひろい'], SZP = [0, 0, 200, 400], SK = 1;
+    function szOf(r){ var z = r && r.sz != null ? +r.sz : 1; return z >= 0 && z <= 3 ? z : 1; }
     var SIDE = .62, SIZES = [.5, .6, .7, .8, .9, 1, 1.15, 1.3, 1.5, 1.75, 2], FRONT = 114, LIFT = 50;
     function skyNow(){ var h = new Date().getHours(); return h >= 19 || h < 5 ? 'night' : h >= 16 ? 'eve' : 'day'; }
     function windowSvg(){
@@ -9706,7 +9730,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     /* 家具の 大きさ・いち(すべて ステージに たいする %) */
     function geo(it){
-      var d = BY[it.k], s = (d.z === 'wall' ? 1 : depth(it.y)) * (+it.s || 1), w = d.w * s, h = w * d.vb[1] / d.vb[0] * 4 / 3;
+      var d = BY[it.k], s = (d.z === 'wall' ? 1 : depth(it.y)) * (+it.s || 1), w = d.w * s * SK, h = w * d.vb[1] / d.vb[0] * 4 / 3;
       var fl = d.z === 'floor', o = fl ? it.o | 0 : 0, lift = fl ? +it.h || 0 : 0;
       /* 上に のせた ものは、下の 家具より 前に かく */
       var z = d.z === 'wall' ? 2 : d.z === 'rug' ? 3 + Math.round(Math.min(it.y, 100)) : 100 + Math.round((it.y + (lift ? 6 : 0)) * 10) + (lift ? 4 : 0);
@@ -9732,12 +9756,18 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ステージを つくる(card のときは さわれない 小さい 見本) */
     function build(stage, mini, at){
       var r = getRoom(mini ? at || 0 : RI);
+      SK = SZK[szOf(r)];
       if(!mini && pv){
         if(pv.it) r.items.push(pv.it);
-        else if(pv.d.id.charAt(0) === 'w') r.wall = pv.d.id; else r.floor = pv.d.id;
+        else setSurf(r, pv.d.id);
       }
       stage.innerHTML = '';
       var wall = document.createElement('div'); wall.className = 'rm-wall'; wall.innerHTML = surfSvg(BY[r.wall]); wall.style.height = WALL + '%';
+      if(r.wall2 && BY[r.wall2]){
+        var w2 = document.createElement('div'); w2.className = 'rm-wall'; w2.innerHTML = surfSvg(BY[r.wall2]); w2.style.cssText = 'height:' + WALL + '%;left:50%;z-index:1';
+        var sp = document.createElement('div'); sp.className = 'rm-wsplit'; sp.style.cssText = 'left:50%;height:' + WALL + '%';
+        stage.appendChild(wall); wall = document.createDocumentFragment(); wall.appendChild(w2); wall.appendChild(sp);
+      }
       var floor = document.createElement('div'); floor.className = 'rm-floor'; floor.innerHTML = surfSvg(BY[r.floor]); floor.style.top = WALL + '%';
       var base = document.createElement('div'); base.className = 'rm-base'; base.style.top = (WALL - 1.6) + '%'; base.style.background = BY[r.floor].base;
       stage.appendChild(wall); stage.appendChild(floor); stage.appendChild(base);
@@ -9760,7 +9790,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           var p = document.createElement('div'), x = [42, 18, 70][k], y = [88, 76, 80][k];
           p.className = 'rm-pet'; p.innerHTML = Pet.svg(sp, sp === a.sp ? a.lv : petLv(sp) || 0);
           if(k === 0) moodPet(p);
-          p.style.left = x + '%'; p.style.bottom = (100 - y) + '%'; p.style.width = (PET_W * depth(y)) + '%'; p.style.zIndex = 100 + y * 10 + 5;
+          p.style.left = x + '%'; p.style.bottom = (100 - y) + '%'; p.style.width = (PET_W * depth(y) * SK) + '%'; p.style.zIndex = 100 + y * 10 + 5;
           stage.appendChild(p);
         });
       }
@@ -9771,13 +9801,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
        家具の 大きさは おへやと 同じ「相棒との くらべっこ」に なるよう、手前の 相棒の はば PW(px) から きめる */
     function backdrop(box, W, H, FL, PW){
       var r = getRoom(toyIdx()), WL = H - FL, RW = PW / PET_W * 100, X0 = 0;
+      SK = SZK[szOf(r)];
       box.innerHTML = '';
       function add(cls, css, html){ var e = document.createElement('div'); e.className = cls; e.style.cssText = css; e.innerHTML = html; box.appendChild(e); return e; }
       add('rm-wall', 'height:' + WL + 'px', surfSvg(BY[r.wall]));
+      if(r.wall2 && BY[r.wall2]){ add('rm-wall', 'height:' + WL + 'px;left:50%;z-index:1', surfSvg(BY[r.wall2])); add('rm-wsplit', 'left:50%;height:' + WL + 'px', ''); }
       add('rm-floor', 'top:' + WL + 'px', surfSvg(BY[r.floor]));
       add('rm-base', 'top:' + (WL - 4) + 'px;height:5px;background:' + BY[r.floor].base, '');
       r.items.forEach(function(it){
-        var g = geo(it), d = g.d, w = d.w / 100 * RW * g.s, h = w * d.vb[1] / d.vb[0], z = g.z;
+        var g = geo(it), d = g.d, w = d.w / 100 * RW * g.s * SK, h = w * d.vb[1] / d.vb[0], z = g.z;
         var pos = d.z === 'wall'
           ? 'top:' + Math.max(4, Math.min(WL - h - 6, it.y / WALL * WL - h / 2)) + 'px'
           : 'bottom:' + ((100 - it.y) / (100 - WALL) * FL + g.lift / 100 * RW * .75) + 'px';
@@ -9813,7 +9845,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       P.x = x; P.y = y;
       var el = P.el;
       el.style.transitionDuration = (ms || 0) + 'ms';
-      el.style.left = x + '%'; el.style.bottom = (100 - y) + '%'; el.style.width = (PET_W * s) + '%';
+      el.style.left = x + '%'; el.style.bottom = (100 - y) + '%'; el.style.width = (PET_W * s * SK) + '%';
       el.style.zIndex = z != null ? z : 100 + Math.round(y * 10) + 5;
     }
     function freeSpot(){ return { x:8 + Math.random() * 84, y:WALL + 12 + Math.random() * (100 - WALL - 16) }; }
@@ -10107,8 +10139,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function renderShop(){
       $('rmTabs').innerHTML = TABS.map(function(t){ return '<button class="rm-tab'+(t.id === tab ? ' sel' : '')+'" data-t="'+t.id+'">'+t.name+'</button>'; }).join('');
       var r = S ? S.r : getRoom(), coins = getCoins(), g = $('rmGrid'); g.innerHTML = '';
+      if(tab === 'wp'){
+        var ws = document.createElement('div'); ws.className = 'rm-wside';
+        ws.innerHTML = 'かべの' + [['all', 'ぜんぶ'], ['l', 'ひだり はんぶん'], ['r', 'みぎ はんぶん']].map(function(x){ return '<button class="' + (wside === x[0] ? 'on' : '') + '" data-ws="' + x[0] + '">' + x[1] + '</button>'; }).join('');
+        ws.addEventListener('click', function(e){ var b = e.target.closest('[data-ws]'); if(!b) return; wside = b.getAttribute('data-ws'); renderShop(); say(wside === 'all' ? 'かべ ぜんぶに はるよ' : (wside === 'l' ? 'ひだり' : 'みぎ') + 'はんぶんだけ かえられるよ'); });
+        g.appendChild(ws);
+      }
       listFor(tab).forEach(function(d){
-        var own = ownN(d.id), surf = !!d.bg, using = surf && (r.wall === d.id || r.floor === d.id), left = surf ? 0 : own - placedN(r, d.id);
+        var own = ownN(d.id), surf = !!d.bg, using = surf && (wside === 'r' ? (r.wall2 || r.wall) === d.id : wside === 'l' ? r.wall === d.id : (r.wall === d.id && !r.wall2) || r.floor === d.id), left = surf ? 0 : own - placedN(r, d.id);
         var c = document.createElement('button');
         c.className = 'rm-card' + (using ? ' using' : '') + (!own && coins < d.price ? ' cant' : '');
         var pving = pv && pv.d.id === d.id;
@@ -10149,7 +10187,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var r = S.r, surf = !!d.bg;
       if(pv) pv = null;
       var base = getRoom();
-      pv = { d:d, it:surf ? null : emptySpot(base, d), old:surf ? { wall:base.wall, floor:base.floor } : null };
+      pv = { d:d, it:surf ? null : emptySpot(base, d), old:surf ? { wall:base.wall, wall2:base.wall2, floor:base.floor } : null };
       if(!surf && !edit) setEdit(true);
       render();
       if(pv.it) selectIt(S.r.items.indexOf(pv.it));
@@ -10168,7 +10206,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(!buyGate(d.price, d.name+'を かう?', thumb(d), 'かう', buyPreview)) return;
       addOwn(d.id);
       var it = pv.it; pv = null;
-      if(!it){ if(d.id.charAt(0) === 'w') S.r.wall = d.id; else S.r.floor = d.id; }
+      if(!it) setSurf(S.r, d.id);
       saveRoom(S.r); render(); renderPv();
       if(it) selectIt(S.r.items.indexOf(it));
       Pet.cheer(lead().el);
@@ -10176,6 +10214,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     $('rmPvBuy').addEventListener('click', buyPreview);
     $('rmPvNo').addEventListener('click', endPreview);
+    var wside = 'all';
+    function setSurf(r, id){
+      if(id.charAt(0) !== 'w'){ r.floor = id; return; }
+      if(wside === 'all'){ r.wall = id; delete r.wall2; }
+      else if(wside === 'l'){ if(!r.wall2) r.wall2 = r.wall; r.wall = id; }
+      else r.wall2 = id;
+      if(r.wall2 === r.wall) delete r.wall2;
+    }
     function pick(d){
       var r = S.r, surf = !!d.bg;
       if(pv && pv.d.id === d.id) return;
@@ -10183,7 +10229,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       r = S.r;
       if(surf){
         if(!ownN(d.id)){ startPreview(d); return; }
-        if(d.id.charAt(0) === 'w') r.wall = d.id; else r.floor = d.id;
+        setSurf(r, d.id);
         saveRoom(r); render(); Pet.cheer(lead().el);
         say(petName(lead().sp) + '「わあ、' + d.name + 'に なった!」');
         return;
@@ -10387,6 +10433,23 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       });
       $('rmMatesBox').innerHTML = h + '</div>';
     }
+    function szPic(k){ var w = 40 * [.6, .75, .88, 1][k]; return '<svg viewBox="0 0 44 28"><rect x="' + (22 - w / 2) + '" y="4" width="' + w + '" height="20" rx="3" fill="#FFF1E0" stroke="#C99A62" stroke-width="2"/><rect x="' + (22 - w / 2) + '" y="15" width="' + w + '" height="9" rx="2" fill="#E8C597"/></svg>'; }
+    function renderSize(){
+      var r = S ? S.r : getRoom(), z = szOf(r), own = Math.max(1, +r.szOwn || 1), h = '<p>ひろく すると かぐも なかまも 小さく 見えて、たくさん おけるよ(へやごとに えらべる)</p><div class="rm-szs">';
+      SZN.forEach(function(nm, k){ h += '<button class="rm-sz' + (k === z ? ' on' : '') + '" data-sz="' + k + '">' + szPic(k) + nm + (k > own ? '<small><span class="coin"></span>' + SZP[k] + '</small>' : '') + '</button>'; });
+      $('rmSizeBox').innerHTML = h + '</div>';
+    }
+    function pickSize(k){
+      var r = S.r, own = Math.max(1, +r.szOwn || 1);
+      if(k > own){
+        if(!buyGate(SZP[k], 'へやを「' + SZN[k] + '」に ひろげる?', szPic(k), 'ひろげる', function(){ pickSize(k); })) return;
+        r.szOwn = k;
+      }
+      r.sz = k; saveRoom(r); sel = -1; render(); renderSize();
+      say('へやを「' + SZN[k] + '」に したよ');
+    }
+    $('rmSize').addEventListener('click', function(){ var b = $('rmSizeBox'); b.hidden = !b.hidden; if(!b.hidden) renderSize(); });
+    $('rmSizeBox').addEventListener('click', function(e){ var b = e.target.closest('[data-sz]'); if(b) pickSize(+b.getAttribute('data-sz')); });
     $('rmMates').addEventListener('click', function(){
       var b = $('rmMatesBox'); b.hidden = !b.hidden; if(!b.hidden) renderMates();
     });
