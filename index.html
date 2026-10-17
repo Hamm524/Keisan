@@ -10195,20 +10195,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         function engr(x, y, sz){ return got ? '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-size="'+sz+'" font-weight="900" fill="#2F63B8" opacity=".92" font-family="Fredoka,sans-serif">'+sym+'</text>' : '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-size="'+sz+'" font-weight="900" fill="#B3AA99" font-family="Fredoka,sans-serif">?</text>'; }
         function baseB(w, y0){ var xl = 40 - w / 2; return '<path d="M'+(xl - 4)+' 80L'+xl+' '+y0+'h'+w+'l4 '+(80 - y0)+'z"'+f(BL)+'/><path d="M'+xl+' '+y0+'h'+w+'l-2 4H'+(xl + 2)+'z"'+f(BH)+'/><path d="M'+(xl - 4)+' 80L'+xl+' '+y0+'l6 0-2 '+(80 - y0)+'z"'+f(BD)+' opacity=".35"/><rect x="33" y="'+(y0 + 9)+'" width="14" height="5" rx="1"'+f(GP)+'/>'; }
         var gp = '', G = 'fill="url(#'+gid+')"';
-        if(id === 't_lv_add'){        /* 六角の カットクリスタル(左の しゃしん) */
-          gp = '<path d="M22 10h36l12 16-8 32H18L10 26z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M22 10l6 16h24l6-16M10 26h60M28 26l-10 32M52 26l10 32M28 26L40 58 52 26')+glint(14, 24, '#FFB454')+glint(54, 40, '#FF7FB0')+glint(26, 40, '#7FD6FF')+engr(40, 46, 26)+baseB(34, 60);
-        }else if(id === 't_lv_sub'){  /* カットの たま(まんなかの しゃしん) */
-          gp = '<circle cx="40" cy="32" r="27" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/><circle cx="40" cy="32" r="18" fill="none" stroke="#fff" stroke-width="1.4" opacity="'+FO+'"/>';
-          var sp = ''; for(var k = 0; k < 12; k++){ var an = k * 30 * Math.PI / 180; sp += 'M'+(40 + Math.sin(an) * 18).toFixed(1)+' '+(32 - Math.cos(an) * 18).toFixed(1)+'L'+(40 + Math.sin(an) * 27).toFixed(1)+' '+(32 - Math.cos(an) * 27).toFixed(1); }
-          gp += lines(sp)+glint(16, 20, '#9BE7A0')+glint(52, 14, '#FFD36B')+glint(54, 44, '#FF86B6')+engr(40, 42, 28)+baseB(26, 60);
-        }else if(id === 't_lv_mul'){  /* カットの まるい かたまり(みぎの しゃしん) */
-          gp = '<g transform="rotate(12 40 32)"><ellipse cx="40" cy="32" rx="22" ry="28" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/><ellipse cx="40" cy="32" rx="14" ry="19" fill="none" stroke="#fff" stroke-width="1.4" opacity="'+FO+'"/>'+lines('M40 4V13M18 32H26M62 32H54M40 60V51M24 14l7 8M56 14l-7 8M24 50l7-8M56 50l-7-8')+'</g>'+glint(24, 12, '#7FD6FF')+glint(50, 46, '#FFB454')+engr(40, 42, 26)+baseB(30, 61).replace('rx="1"', 'rx="1"');
-        }else if(id === 't_lv_div'){  /* ひし形の カット */
-          gp = '<path d="M40 3L66 24L40 60L14 24z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M14 24h52M40 3L28 24 40 60 52 24 40 3M28 24L40 14 52 24')+glint(20, 22, '#FFB454')+glint(48, 36, '#7FD6FF')+engr(40, 46, 22)+baseB(30, 61);
-        }else{                         /* ぜんぶ さきどり: 大きな カットの たま+ 青い ガラスの だい */
-          gp = '<circle cx="40" cy="28" r="26" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/><circle cx="40" cy="28" r="17" fill="none" stroke="#fff" stroke-width="1.4" opacity="'+FO+'"/>';
-          var sq = ''; for(var k2 = 0; k2 < 12; k2++){ var an2 = k2 * 30 * Math.PI / 180; sq += 'M'+(40 + Math.sin(an2) * 17).toFixed(1)+' '+(28 - Math.cos(an2) * 17).toFixed(1)+'L'+(40 + Math.sin(an2) * 26).toFixed(1)+' '+(28 - Math.cos(an2) * 26).toFixed(1); }
-          gp += lines(sq)+glint(18, 16, '#FFB454')+glint(52, 12, '#9BE7A0')+glint(52, 40, '#FF86B6')+(got ? star(40, 28, 9, '#FFC94A')+'<text x="40" y="45" text-anchor="middle" font-size="8.5" font-weight="900" fill="#2F63B8" font-family="Fredoka,sans-serif">＋－×÷</text>' : mark(40, 28, 9))+'<path d="M24 82L30 54h20l6 28z"'+f(BL)+'/><path d="M30 54h20l-2 4H32z"'+f(BH)+'/><path d="M24 82L30 54h7l-5 28z"'+f(BD)+' opacity=".35"/><rect x="33" y="66" width="14" height="6" rx="1"'+f(GP)+'/>';
+        if(id === 't_lv_add'){        /* 五角形の かたむいた ほうせき */
+          gp = '<path d="M38 3L66 20L58 52H22L12 22z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M38 3L30 28 12 22M38 3L50 26 66 20M30 28H50M30 28L22 52M50 26L58 52M30 28L40 52 50 26')+glint(14, 20, '#FFB454')+glint(54, 38, '#FF7FB0')+engr(40, 46, 22)+baseB(34, 58);
+        }else if(id === 't_lv_sub'){  /* オベリスク(とがった 塔) */
+          gp = '<path d="M28 60L31 18L40 2L49 18L52 60z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M40 2V60M31 18H49M31 18L40 26 49 18')+glint(32, 30, '#9BE7A0')+glint(42, 48, '#FFD36B')+engr(40, 50, 22)+baseB(40, 60);
+        }else if(id === 't_lv_mul'){  /* えんぴつがた(六角の はしら) */
+          gp = '<path d="M22 60V26L40 4L58 26V60z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M22 26H58M31 26L40 4L49 26M31 26V60M49 26V60')+glint(24, 30, '#7FD6FF')+glint(50, 44, '#FF86B6')+engr(40, 48, 24)+baseB(42, 60);
+        }else if(id === 't_lv_div'){  /* なみの かたち(ほのおのような ガラス) */
+          gp = '<path d="M24 60C16 44 22 26 34 16C40 11 45 8 52 2C48 14 58 22 58 36C58 48 54 55 48 60z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M30 22C26 34 30 48 34 58M52 2C50 18 48 40 40 58')+glint(22, 40, '#7FD6FF')+glint(50, 24, '#FFD36B')+engr(42, 46, 22)+baseB(34, 60);
+        }else{                         /* ぜんぶ さきどり: つみかさねた ほうせき(2025ねんの オブジェ) */
+          gp = '<path d="M16 62L12 44L28 33H52L68 44L64 62z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M12 44H68M28 33L34 44 40 33 46 44 52 33M34 44L28 62M46 44L52 62M34 44L40 62 46 44')+'<path d="M40 2L56 10L58 25L46 36H30L22 22L26 8z" '+G+' stroke="'+gB+'" stroke-width="1" stroke-opacity=".5"/>'+lines('M40 2L40 36M26 8L40 20 56 10M22 22L40 20 58 25')+glint(14, 46, '#FFB454')+glint(52, 40, '#FF86B6')+glint(24, 12, '#9BE7A0')+(got ? star(40, 27, 7, '#FFC94A')+'<text x="40" y="56" text-anchor="middle" font-size="8.5" font-weight="900" fill="#2F63B8" font-family="Fredoka,sans-serif">＋－×÷</text>' : mark(40, 27, 7))+'<path d="M22 82L28 62h24l6 20z"'+f(BL)+'/><path d="M28 62h24l-2 4H30z"'+f(BH)+'/><path d="M22 82L28 62h7l-5 20z"'+f(BD)+' opacity=".35"/><rect x="33" y="71" width="14" height="6" rx="1"'+f(GP)+'/>';
         }
         b = defs + gp;
         break;
