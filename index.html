@@ -341,11 +341,6 @@
   .rm-tabs{ display:flex; gap:6px; margin:0 0 10px; overflow-x:auto; padding-bottom:2px; }
   .rm-tab{ flex:none; border:1.5px solid var(--line); background:var(--surface); color:var(--ink); border-radius:100px; padding:8px 14px; font:inherit; font-size:13px; font-weight:900; cursor:pointer; }
   .rm-tab.sel{ background:var(--ink); border-color:var(--ink); color:var(--surface); }
-  .rm-gift{ display:flex; align-items:center; justify-content:center; gap:8px; width:100%; max-width:720px; margin:0 auto 10px; padding:12px 14px; border:none; border-radius:18px; font:inherit; font-size:15px; font-weight:900; cursor:pointer; background:var(--gold-deep); color:#fff; box-shadow:0 4px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); }
-  .rm-gift:active{ transform:translateY(3px); box-shadow:0 1px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); }
-  .rm-gift small{ font-size:11.5px; font-weight:800; opacity:.92; }
-  .rm-gift.done{ background:#FFF3D6; color:var(--ink-soft); box-shadow:none; cursor:default; font-size:13px; }
-  .hub-gift{ position:absolute; top:8px; right:10px; background:#E5484D; color:#fff; font-size:11px; font-weight:900; padding:3px 8px; border-radius:999px; }
   .rm-house{ max-width:720px; margin:0 auto 10px; border-radius:22px; overflow:hidden; box-shadow:var(--shadow); background:linear-gradient(#BFE6FF, #E9F7FF 70%); position:relative; }
   .rm-house svg{ display:block; width:100%; height:auto; }
   .rm-house .hw{ cursor:pointer; }
@@ -2213,7 +2208,6 @@
       <h1>お部屋</h1>
       <button class="rm-edit" id="rmEdit">🔨 模様がえ</button>
     </div>
-    <button class="rm-gift" id="rmGift" hidden></button>
     <div class="rm-house" id="rmHouse"></div>
     <div class="rm-tabs" id="rmRooms"></div>
     <section class="rm-stage" id="rmStage"></section>
@@ -10731,7 +10725,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function buyRoom(){
       var n = roomN(); if(n >= 5) return;
       if(!buyGate(ROOM_PRICE[n], '部屋を 増やす?', null, '増やす', buyRoom)) return;
-      safeSet(NK, n + 1); goRoom(n); renderRooms(); renderHouse(true); giftRender();
+      safeSet(NK, n + 1); goRoom(n); renderRooms(); renderHouse(true);
       hPop('🎉 家に ' + GROW[n + 1] + 'が できたよ!');
     }
     $('rmRooms').addEventListener('click', function(e){
@@ -10800,33 +10794,6 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<span><b>おうち</b><small>' + petName(activePet().sp) + (n > 1 ? 'は 部屋 ' + (at + 1) + 'に いるよ' : 'は お部屋で のんびり') + '</small></span><span class="rm-go">›</span></span><span class="rm-stage rm-mini"></span>';
       build(c.querySelector('.rm-stage'), true, at);
     }
-    /* おうちの おみやげ: 1日1回 部屋の数×5コイン */
-    var GK = 'keisan_omiyage', GIFT_PER = 5;
-    function giftOk(){ return safeGet(GK) !== todayKey(); }
-    function giftN(){ return roomN() * GIFT_PER; }
-    function giftRender(){
-      var b = $('rmGift'); if(!b) return;
-      b.hidden = false;
-      if(giftOk()){
-        b.className = 'rm-gift';
-        b.innerHTML = '🎁 おうちの おみやげ <span class="coin" style="width:16px;height:16px"></span>＋' + giftN() + ' <small>タップで もらう</small>';
-      }else{
-        b.className = 'rm-gift done';
-        b.innerHTML = '今日の おみやげは もらったよ。あしたも ＋' + giftN() + '!' + (roomN() < 5 ? '(部屋を ふやすと もっと もらえるよ)' : '');
-      }
-    }
-    $('rmGift').addEventListener('click', function(){
-      if(!giftOk()) return;
-      var n = giftN(); safeSet(GK, todayKey()); earn(n);
-      hPop('🎁 おみやげ ＋' + n + 'コイン!'); say(petName(activePet().sp) + '「おみやげだよ!」'); giftRender(); card();
-    });
-    var _open = open;
-    open = function(){ _open(); giftRender(); };
-    var _card = card;
-    card = function(){
-      _card();
-      var c = $('roomCard'); if(c && giftOk()){ var g = document.createElement('span'); g.className = 'hub-gift'; g.textContent = '🎁 おみやげ'; c.style.position = 'relative'; c.appendChild(g); }
-    };
     $('roomCard').addEventListener('click', open);
     $('navRoom').addEventListener('click', open);
 
