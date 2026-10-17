@@ -404,6 +404,18 @@
   .rm-wside{ grid-column:1 / -1; display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:12px; font-weight:900; color:var(--ink-soft); }
   .rm-wside button{ border:1.5px solid var(--line); background:var(--surface); color:var(--ink); border-radius:100px; padding:6px 12px; font:inherit; font-size:12.5px; font-weight:900; cursor:pointer; }
   .rm-wside button.on{ background:var(--ink); border-color:var(--ink); color:var(--surface); }
+  .rm-plate{ position:absolute; left:50%; top:4%; transform:translateX(-50%); z-index:2; background:#C99A62; color:#fff; border:2.5px solid #A77A45; border-radius:10px; padding:3px 14px 4px; font-size:max(13px, 3.6cqw); font-weight:900; letter-spacing:.05em; box-shadow:0 3px 0 rgba(0,0,0,.12); pointer-events:none; }
+  .rm-plate::before{ content:''; position:absolute; left:50%; top:-9px; width:18px; height:9px; margin-left:-9px; border:2px solid #A77A45; border-bottom:none; border-radius:9px 9px 0 0; }
+  .rm-empty{ position:absolute; left:50%; top:30%; transform:translate(-50%, -50%); z-index:2; text-align:center; color:#6B6478; font-size:max(14px, 3.4cqw); font-weight:900; background:rgba(255,255,255,.75); border-radius:16px; padding:8px 16px; pointer-events:none; white-space:nowrap; }
+  .rm-empty small{ display:block; font-size:.78em; font-weight:700; margin-top:2px; }
+  #rmStage.swR{ animation:rm-swR .38s cubic-bezier(.2,.8,.3,1); } #rmStage.swL{ animation:rm-swL .38s cubic-bezier(.2,.8,.3,1); }
+  @keyframes rm-swR{ 0%{ opacity:0; transform:translateX(18%); } 100%{ opacity:1; transform:none; } }
+  @keyframes rm-swL{ 0%{ opacity:0; transform:translateX(-18%); } 100%{ opacity:1; transform:none; } }
+  .rm-house .hpin{ animation:rm-pin 1s ease-in-out infinite; pointer-events:none; }
+  .rm-house .hpin text{ fill:#fff; font:900 9.5px 'Zen Maru Gothic',sans-serif; }
+  @keyframes rm-pin{ 0%, 100%{ transform:translateY(0); } 50%{ transform:translateY(-4px); } }
+  .rm-house .hw.cur .hwf{ stroke:#E5484D; }
+  #rmRooms .rm-tab{ padding:10px 18px; font-size:15px; } #rmRooms .rm-tab.sel{ background:#E5484D; border-color:#E5484D; color:#fff; box-shadow:0 4px 10px -4px rgba(229,72,77,.6); }
   .rm-wsplit{ position:absolute; top:0; width:1.4%; margin-left:-.7%; background:linear-gradient(90deg, rgba(0,0,0,.06), #fff 40%, #fff 60%, rgba(0,0,0,.06)); z-index:1; }
   .rm-rtools{ max-width:720px; margin:0 auto 10px; display:flex; gap:8px; flex-wrap:wrap; }
   .rm-tab.add{ border-style:dashed; display:inline-flex; align-items:center; gap:4px; }
@@ -9999,6 +10011,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var b = build(stage, false);
       S = { r:b.r, els:b.els, used:{}, pets:[] };
       stage.classList.toggle('editing', edit);
+      if(roomN() > 1){ var pl = document.createElement('div'); pl.className = 'rm-plate'; pl.textContent = 'へや ' + (RI + 1); stage.appendChild(pl); }
+      if(!b.r.items.length && !pv){ var em = document.createElement('div'); em.className = 'rm-empty'; em.innerHTML = 'まだ からっぽの へやだよ<small>下の ショップで かぐを 買って おこう</small>'; stage.appendChild(em); }
       petsHere().forEach(function(p, k){
         var el = document.createElement('div');
         el.className = 'rm-pet'; el.innerHTML = Pet.svg(p.sp, p.lv);
@@ -10290,12 +10304,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       o += '<path d="M-40,176 Q170,164 380,176 L380,200 L-40,200 Z" fill="#8FD68C"/>' + (pat ? '<defs>' + pat + '</defs><path d="' + front + '" fill="url(#' + yid + ')"/>' : '<path d="' + front + '" fill="#7CC77A"/>');
       o += '<path d="M150,180 L170,180 L182,200 L138,200 Z" fill="' + (yd === 'h_ybrick' ? '#E9A585' : yd === 'h_ystone' ? '#D6D1C9' : '#E9D3A6') + '"/>';
       o += '<circle cx="34" cy="60" r="16" fill="#FFF3C4" opacity=".9"/><g fill="#fff" opacity=".9"><circle cx="250" cy="34" r="9"/><circle cx="262" cy="30" r="12"/><circle cx="274" cy="35" r="8"/></g>';
+      var pin = '';   /* いまの へやの しるしは ほかの かべより 上に かく */
       function win(i, x, y, w, h, round){
         var here = hereOf(i), sp = here[0], id = 'rmhw' + (uid++), lit = here.length ? '#FFE7A3' : '#BFE6FF';
         var shape = round ? '<circle cx="'+(x+w/2)+'" cy="'+(y+h/2)+'" r="'+(w/2)+'"' : '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="3"';
         var g = '<g class="hw' + (i === RI ? ' cur' : '') + '" data-r="' + i + '"><title>へや ' + (i + 1) + '</title><clipPath id="'+id+'">' + shape + '/></clipPath>' + shape + ' fill="'+lit+'"/>';
         if(sp) g += '<g clip-path="url(#'+id+')">' + Pet.svg(sp, petLv(sp) || 0).replace('<svg ', '<svg x="'+(x - w*.1)+'" y="'+(y + 2)+'" width="'+(w*1.2)+'" height="'+(h*1.5)+'" style="width:'+(w*1.2)+'px;height:'+(h*1.5)+'px" preserveAspectRatio="xMidYMin meet" ') + '</g>';
         g += shape + ' class="hwf" fill="none" stroke="#fff" stroke-width="3"/>';
+        if(i === RI && !mini && roomN() > 1) pin = '<g class="hpin"><rect x="'+(x + w/2 - 14)+'" y="'+(y - 25)+'" width="28" height="15" rx="7.5" fill="#E5484D"/><path d="M'+(x + w/2 - 5)+','+(y - 11)+' L'+(x + w/2 + 5)+','+(y - 11)+' L'+(x + w/2)+','+(y - 5)+' Z" fill="#E5484D"/><text x="'+(x + w/2)+'" y="'+(y - 14)+'" text-anchor="middle">いま</text></g>';
         if(!round) g += '<path d="M'+(x + w/2)+','+y+' V'+(y + h)+'" stroke="#fff" stroke-width="2"/><rect x="'+(x - 3)+'" y="'+(y + h)+'" width="'+(w + 6)+'" height="4" rx="2" fill="#C99A62"/>';
         return g + '</g>';
       }
@@ -10338,7 +10354,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }
       if(!mini) o = o.replace('viewBox="0 0 340 200"', 'viewBox="-40 0 420 200"');   /* にわの ぶん ひろく */
       if(mini) o = o.replace('viewBox="0 0 340 200"', 'viewBox="' + ['', '76 46 168 120', '76 46 204 136', '70 10 220 180', '30 10 260 180', '20 0 300 200'][n] + '"');
-      return o + '</svg>';
+      return o + pin + '</svg>';
     }
     /* おうちの リフォーム: keisan_house = { t, roof, wall, door, deco:{id:1}, own:{id:1} } */
     var HK = 'keisan_house', HPARTS = [
@@ -10436,7 +10452,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function renderRooms(){
       renderHouse();
       var n = roomN(), h = '';
-      for(var i = 0; i < n; i++) h += '<button class="rm-tab'+(i === RI ? ' sel' : '')+'" data-r="'+i+'">へや '+(i + 1)+'</button>';
+      for(var i = 0; i < n; i++) h += '<button class="rm-tab'+(i === RI ? ' sel' : '')+'" data-r="'+i+'">'+(i === RI ? '📍 ' : '')+'へや '+(i + 1)+'</button>';
       if(n < 5) h += '<button class="rm-tab add" data-r="add">＋ ふやす <span class="coin"></span>'+ROOM_PRICE[n]+'</button>';
       $('rmRooms').innerHTML = h;
       $('rmToy').textContent = toyIdx() === RI ? '🎮 あそぶ画面の へや ✓' : '🎮 あそぶ画面の へやに する';
@@ -10446,9 +10462,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(i === RI) return;
       if(edit) setEdit(false);
       if(pv){ pv = null; renderPv(); }
-      stopPets(); S = null; RI = i; sel = -1; lampOn = {};
+      stopPets(); S = null; var from = RI; RI = i; sel = -1; lampOn = {};
       var q = selGet(); q.cur = i; selSave(q);
       render(); say('へや ' + (i + 1) + ' に きたよ');
+      var st = $('rmStage'); st.classList.remove('swR', 'swL'); void st.offsetWidth; st.classList.add(i > from ? 'swR' : 'swL');
     }
     function buyRoom(){
       var n = roomN(); if(n >= 5) return;
