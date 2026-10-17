@@ -4451,6 +4451,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     rows.push({ l:'一発正解 90%で ＋'+BONUS_GREAT+'・ぜんぶで ＋'+(BONUS_PERFECT+2), s:'めあて '+fmtSec(printTarget(op, WEEKEND_N))+' いないで さらに ＋'+BONUS_FAST, n:BONUS_PERFECT+2+BONUS_FAST, v:'＋'+(BONUS_PERFECT+2+BONUS_FAST)+'まで' });
     var best = best100(op);
     if(best) rows.push({ l:'自己ベスト('+fmtClock(best.ms)+')を こえる', s:'', n:BEST100_BONUS, v:BEST100_BONUS });
+    var vol = todayVolume();
+    rows.push({ l:'今日 たくさん とく', s:volumeHint(vol).replace(/^今日 \d+問。?/, '') || '今日の 計算は ぜんぶ おわり!', n:0, v:'＋3〜15' });
     var left = Medal.runsLeft();
     var goal = Math.min(4, tp + 1);
     rows.push({ l:'メダルを とる', s: left > 0 ? 'ブロンズ＋'+R[1].run+'・シルバー＋'+R[2].run+'・ゴールド＋'+R[3].run+'・ダイヤ＋'+R[4].run+'(今日 あと '+left+'回)' : '今日の メダルの コインは おしまい(あしたまた もらえるよ)', n: left > 0 ? R[goal].run : 0, v: left > 0 ? '＋'+R[1].run+'〜'+R[4].run : '－' });
@@ -7117,6 +7119,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       txt += remain>0 ? '次のお宝「'+t.name+'」まで あと'+remain+'コイン。' : '「'+t.name+'」と こうかん できるよ!';
     }
     var low = state.lowLv ? '<span style="display:block;margin-top:6px">れんしゅう中の レベルだから、コインは すこし 少なめだよ。上の レベルに すすむと もっと もらえるよ!</span>' : '';
+    if(state.volHint) low += '<span style="display:block;margin-top:6px;font-weight:800">'+state.volHint+'</span>';
+    state.volHint = null;
     if(state.coinHint) low += '<span style="display:block;margin-top:6px;font-weight:800">'+state.coinHint+'</span>';
     state.coinHint = null; state.baseLabel = null;
     return { type:'coin', title:'コイン +'+state.sessionCoins+' の 内わけ', text:chips+low+'<span style="display:block;margin-top:6px">'+txt+'</span>' };
@@ -7148,6 +7152,21 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     else if(weekendDone()) t.push('今日 もう1回 やると「100問 とけた」は 10分の1。メダルと 自己ベストで ふやそう。');
     return t.join('<br>');
   }
+  /* 今日 とけた 問題の かず(プリント・100問・ちょうせん)。計算の ぶんだけ コインが ふえる */
+  var VOL_STEPS = [[50, 3], [100, 5], [200, 10], [300, 15]];
+  function todayVolume(){
+    var t = todayKey();
+    return printLog().reduce(function(s, e){ return s + (e.d === t ? (e.n | 0) : 0); }, 0);
+  }
+  function volumeBonuses(before, after, bonuses, banners){
+    VOL_STEPS.forEach(function(v){
+      if(before < v[0] && after >= v[0]) bonuses.push({ label:'今日 '+v[0]+'問 とけた', n:v[1] });
+    });
+  }
+  function volumeHint(v){
+    for(var i = 0; i < VOL_STEPS.length; i++) if(v < VOL_STEPS[i][0]) return '今日 '+v+'問。あと '+(VOL_STEPS[i][0]-v)+'問で ＋'+VOL_STEPS[i][1]+'コイン!';
+    return '今日 '+v+'問! さいだいまで とけたよ。';
+  }
   function finishAccuracy(){
     var N = state.questions.length;
     var pr = state.print;
@@ -7161,7 +7180,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var passed = accuracy >= PASS_ACC && fast;
     var isCh = !!(pr && pr.kind==='challenge');
     if(isCh) passed = accuracy >= CH_ACC;
-    state.chGot = null;
+    state.chGot = null; state.volHint = null;
 
     var bonuses = [], banners = [];
     // prints pay once: the same as a 10-question round at this level, whatever the length
@@ -7198,8 +7217,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var prevBest100 = pr.kind === 'weekend' ? best100(state.op) : null;
       var entry = { d:todayKey(), op:state.op, n:N, ok:firstTry, ms:elapsed, pass:passed, k:pr.kind };
       if(isReview) entry.rv = pr.lv;
+      var volBefore = todayVolume();
       log.push(entry);
       safeSet('keisan_print_log', log.slice(-200));
+      var volAfter = volBefore + N;
+      volumeBonuses(volBefore, volAfter, bonuses, banners);
+      state.volHint = volumeHint(volAfter);
     }
 
     // sugoroku: one pass = one square
