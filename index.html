@@ -10203,8 +10203,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var o = '<svg viewBox="0 0 340 200" aria-label="' + HOUSE[n] + '">';
       if(hs.deco.rainbow) o += '<g fill="none" stroke-width="7" opacity=".55"><path d="M40,180 A130,130 0 0 1 300,180" stroke="#FF8FB1"/><path d="M47,180 A123,123 0 0 1 293,180" stroke="#FFD24C"/><path d="M54,180 A116,116 0 0 1 286,180" stroke="#9BD66B"/><path d="M61,180 A109,109 0 0 1 279,180" stroke="#7FB8F0"/></g>';
       /* じめん・みち・草花 */
-      o += '<path d="M0,176 Q170,166 340,176 L340,200 L0,200 Z" fill="#8FD68C"/><path d="M0,186 Q170,178 340,186 L340,200 L0,200 Z" fill="#7CC77A"/>';
-      o += '<path d="M150,180 L170,180 L182,200 L138,200 Z" fill="#E9D3A6"/>';
+      var yd = hs.yard, yid = 'rmy' + (uid++), front = 'M-40,186 Q170,177 380,186 L380,200 L-40,200 Z', pat = {
+        h_ybrick:'<pattern id="'+yid+'" width="16" height="8" patternUnits="userSpaceOnUse"><rect width="16" height="8" fill="#D98B6A"/><path d="M0,.5 H16 M0,4.5 H16 M4,0 V4 M12,4 V8" stroke="#F3C8A8" stroke-width="1"/></pattern>',
+        h_ystone:'<pattern id="'+yid+'" width="18" height="10" patternUnits="userSpaceOnUse"><rect width="18" height="10" fill="#B9B3AA"/><ellipse cx="5" cy="3" rx="4.2" ry="2.4" fill="#D6D1C9"/><ellipse cx="13" cy="7.5" rx="4.4" ry="2.2" fill="#D6D1C9"/><ellipse cx="14" cy="2" rx="2.6" ry="1.6" fill="#CCC6BD"/></pattern>',
+        h_ysand:'<pattern id="'+yid+'" width="12" height="8" patternUnits="userSpaceOnUse"><rect width="12" height="8" fill="#F2DDB0"/><circle cx="3" cy="2" r=".9" fill="#DCC08A"/><circle cx="9" cy="6" r=".9" fill="#DCC08A"/></pattern>',
+        h_yflower:'<pattern id="'+yid+'" width="20" height="10" patternUnits="userSpaceOnUse"><rect width="20" height="10" fill="#7CC77A"/><circle cx="4" cy="3" r="2" fill="#FF8FB1"/><circle cx="12" cy="7" r="2" fill="#FFD24C"/><circle cx="17" cy="2.5" r="1.8" fill="#fff"/><circle cx="8" cy="8" r="1.6" fill="#B79CF0"/></pattern>'
+      }[yd];
+      o += '<path d="M-40,176 Q170,164 380,176 L380,200 L-40,200 Z" fill="#8FD68C"/>' + (pat ? '<defs>' + pat + '</defs><path d="' + front + '" fill="url(#' + yid + ')"/>' : '<path d="' + front + '" fill="#7CC77A"/>');
+      o += '<path d="M150,180 L170,180 L182,200 L138,200 Z" fill="' + (yd === 'h_ybrick' ? '#E9A585' : yd === 'h_ystone' ? '#D6D1C9' : '#E9D3A6') + '"/>';
       o += '<circle cx="34" cy="60" r="16" fill="#FFF3C4" opacity=".9"/><g fill="#fff" opacity=".9"><circle cx="250" cy="34" r="9"/><circle cx="262" cy="30" r="12"/><circle cx="274" cy="35" r="8"/></g>';
       function win(i, x, y, w, h, round){
         var here = hereOf(i), sp = here[0], id = 'rmhw' + (uid++), lit = here.length ? '#FFE7A3' : '#BFE6FF';
@@ -10239,12 +10245,18 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(hs.deco.post) o += '<rect x="128" y="168" width="3" height="16" fill="#8A6A45"/><rect x="121" y="156" width="17" height="13" rx="5" fill="#E5484D"/><rect x="124" y="160" width="10" height="2" fill="#fff"/>';
       if(hs.deco.fence){ var f = ''; for(var k = 0; k < 15; k++){ var x = 6 + k * 10 + (k > 6 ? 168 : 0); if(x > 330) break; f += '<path d="M'+x+',192 V178 l3,-4 l3,4 V192 Z" fill="#fff" stroke="#D9CBB4" stroke-width=".8"/>'; } o += '<rect x="4" y="182" width="140" height="3" fill="#fff"/><rect x="176" y="182" width="160" height="3" fill="#fff"/>' + f; }
       if(hs.deco.smoke && n >= 3) o += '<g fill="#fff" opacity=".8" class="rm-smoke"><circle cx="192" cy="24" r="5"/><circle cx="198" cy="14" r="6"/><circle cx="206" cy="6" r="7"/></g>';
+      if(hs.deco.dog) o += '<g><path d="M-36,168 L-21,152 L-6,168 Z" fill="' + C.roof + '"/><rect x="-33" y="166" width="24" height="20" fill="#E3C08F"/><path d="M-26,186 V178 A5,5 0 0 1 -16,178 V186 Z" fill="#6B4A32"/><rect x="-28" y="160" width="14" height="5" rx="2" fill="#fff"/><circle cx="-4" cy="186" r="4" fill="#E5484D"/><ellipse cx="-4" cy="187" rx="5" ry="2" fill="#C9C2D6"/></g>';
+      if(hs.deco.laundry) o += '<g><rect x="312" y="140" width="3" height="46" fill="#A77A45"/><rect x="364" y="140" width="3" height="46" fill="#A77A45"/><path d="M313,143 Q340,150 366,143" stroke="#8A8296" stroke-width="1.2" fill="none"/>' +
+        '<path d="M320,145 h12 l2,6 h-3 v12 h-10 v-12 h-3 Z" fill="#FF8FB1"/><path d="M338,147 h10 v14 h-10 Z" fill="#7FB8F0"/><path d="M352,146 h9 l-1,10 h-7 Z" fill="#FFD24C"/></g>';
+      if(hs.deco.bench) o += '<g><rect x="232" y="172" width="34" height="4" rx="2" fill="#C99A62"/><rect x="232" y="164" width="34" height="3.5" rx="1.75" fill="#C99A62"/><rect x="235" y="167" width="2.5" height="17" fill="#8A6A45"/><rect x="261" y="167" width="2.5" height="17" fill="#8A6A45"/></g>';
+      if(hs.deco.lamp) o += '<g><rect x="374" y="136" width="3" height="50" fill="#5A5468"/><path d="M369,136 h13 l-2,-10 h-9 Z" fill="#5A5468"/><circle cx="375.5" cy="131" r="4.5" fill="#FFE58A"/><circle cx="375.5" cy="131" r="10" fill="#FFE58A" opacity=".25"/><rect x="371" y="184" width="11" height="3" rx="1.5" fill="#5A5468"/></g>';
       /* つぎに できる ところ(点線) */
       if(n < 5 && !mini){
         var gh = { 2:'<rect x="208" y="120" width="56" height="60"/><path d="M206,100 L272,126 L272,132 L206,108 Z"/>', 3:'<rect x="116" y="70" width="88" height="40"/><path d="M160,26 L222,78 L98,78 Z"/>', 4:'<rect x="52" y="124" width="60" height="56"/><path d="M114,104 L44,130 L44,136 L114,112 Z"/>', 5:'<rect x="262" y="74" width="40" height="106"/><path d="M282,20 L308,78 L256,78 Z"/>' }[n + 1];
         var tx = { 2:236, 3:160, 4:82, 5:282 }[n + 1], ty = { 2:150, 3:56, 4:154, 5:130 }[n + 1];
         o += '<g class="hg" data-r="add"><title>へやを ふやす</title>' + gh + '<text x="'+tx+'" y="'+ty+'" text-anchor="middle">＋' + ROOM_PRICE[n] + '</text></g>';
       }
+      if(!mini) o = o.replace('viewBox="0 0 340 200"', 'viewBox="-40 0 420 200"');   /* にわの ぶん ひろく */
       if(mini) o = o.replace('viewBox="0 0 340 200"', 'viewBox="' + ['', '76 46 168 120', '76 46 204 136', '70 10 220 180', '30 10 260 180', '20 0 300 200'][n] + '"');
       return o + '</svg>';
     }
@@ -10253,12 +10265,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { k:'roof', name:'やね', list:[ ['h_rred','あか','#E98B6D',0], ['h_rblue','あお','#6FA8DC',30], ['h_rgreen','みどり','#6DBB6B',30], ['h_rpurple','むらさき','#A98BE8',30], ['h_rpink','ピンク','#F38FAE',30], ['h_rchoco','チョコ','#8A5A44',30], ['h_rgold','きんいろ','#E8B83A',60] ] },
       { k:'wall', name:'かべ', list:[ ['h_wcream','クリーム','#FFF6E8',0], ['h_wpink','ピンク','#FFE1EA',30], ['h_wmint','ミント','#DCF3E6',30], ['h_wsky','そらいろ','#E0EEFF',30], ['h_wlemon','レモン','#FFF3B8',30], ['h_wlav','ラベンダー','#EEE4FF',30], ['h_wwood','き','#E7C9A0',40] ] },
       { k:'door', name:'ドア', list:[ ['h_dwood','き','#C99A62',0], ['h_dred','あか','#E5484D',20], ['h_dblue','あお','#5B7CFA',20], ['h_dgreen','みどり','#2FAE66',20], ['h_dpink','ピンク','#FF8FB1',20] ] },
-      { k:'deco', name:'かざり', list:[ ['flower','はなだん','',0], ['post','ポスト','',30], ['tree','木','',40], ['fence','さく','',40], ['garland','ガーランド','',40], ['smoke','えんとつの けむり','',30], ['rainbow','にじ','',80] ] }
+      { k:'yard', name:'にわ', list:[ ['h_ylawn','しばふ','#7CC77A',0], ['h_ybrick','レンガ','#D98B6A',40], ['h_ystone','いしだたみ','#C9C4BC',40], ['h_ysand','すな','#F2DDB0',30], ['h_yflower','おはなばたけ','#FF8FB1',60] ] },
+      { k:'deco', name:'かざり', list:[ ['dog','いぬごや','',50], ['laundry','ものほし','',40], ['bench','ベンチ','',40], ['lamp','がいとう','',50],  ['flower','はなだん','',0], ['post','ポスト','',30], ['tree','木','',40], ['fence','さく','',40], ['garland','ガーランド','',40], ['smoke','えんとつの けむり','',30], ['rainbow','にじ','',80] ] }
     ], BYH = {};
     HPARTS.forEach(function(p){ p.list.forEach(function(x){ BYH[x[0]] = { id:x[0], name:x[1], c:x[2], price:x[3], part:p }; }); });
     function getHS(){
       var h = safeGet(HK); if(!h || typeof h !== 'object') h = {};
-      if(!BYH[h.roof]) h.roof = 'h_rred'; if(!BYH[h.wall]) h.wall = 'h_wcream'; if(!BYH[h.door]) h.door = 'h_dwood';
+      if(!BYH[h.roof]) h.roof = 'h_rred'; if(!BYH[h.wall]) h.wall = 'h_wcream'; if(!BYH[h.door]) h.door = 'h_dwood'; if(!BYH[h.yard]) h.yard = 'h_ylawn';
       if(!h.deco || typeof h.deco !== 'object') h.deco = { flower:1 };
       if(!h.own || typeof h.own !== 'object') h.own = {};
       return h;
