@@ -373,9 +373,10 @@
   .rm-house.edit .rm-hc{ font-size:15px; padding:9px 14px 9px 10px; gap:6px; }
   .rm-house.edit .rm-hc i{ width:24px; height:24px; }
   .rm-house.edit .rm-hc small{ font-size:13px; } .rm-house.edit .rm-hc .coin{ width:14px; height:14px; }
-  .rm-house ruby, .rm-tab ruby{ position:relative; display:inline-block; }
-  .rm-house rt, .rm-tab rt{ position:absolute; left:50%; bottom:100%; transform:translateX(-50%); font-size:9px; line-height:1; white-space:nowrap; letter-spacing:0; font-weight:700; margin-bottom:1px; }
+  .rb{ position:relative; display:inline-block; }
+  .rb > .rk{ position:absolute; left:50%; bottom:100%; transform:translateX(-50%); font-size:9px; line-height:1; white-space:nowrap; letter-spacing:0; font-weight:700; margin-bottom:1px; }
   .rm-house.edit .rm-hc{ padding-top:12px; }
+  .rm-rfhint{ padding-top:12px !important; }
   /* タブレット横: 左に いえ、右に えらぶ ところ */
   @media (min-width:900px) and (orientation:landscape){
     .rm-house.edit{ display:grid; grid-template-columns:minmax(0, 1.4fr) minmax(320px, 1fr); grid-template-rows:auto 1fr; overflow:hidden; }
@@ -10203,6 +10204,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     });
     $('rmEdit').addEventListener('click', function(){ setEdit(!edit); });
 
+    /* ふりがなを span に(Safari は rt を 自由に おけない) */
+    function rbFix(h){ return h.replace(/<ruby>([^<]*)<rt>([^<]*)<\/rt><\/ruby>/g, '<span class="rb">$1<span class="rk">$2</span></span>'); }
     /* ---- おへやの ショップ ---- */
     var TABS = [ { id:'item', name:'家具' }, { id:'wall', name:'<ruby>壁<rt>かべ</rt></ruby>の <ruby>飾<rt>かざ</rt></ruby>り' }, { id:'wp', name:'<ruby>壁<rt>かべ</rt></ruby>紙' }, { id:'fl', name:'<ruby>床<rt>ゆか</rt></ruby>' } ];
     function listFor(t){
@@ -10211,7 +10214,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       return ITEMS.filter(function(d){ return t === 'wall' ? d.z === 'wall' : d.z !== 'wall'; });
     }
     function renderShop(){
-      $('rmTabs').innerHTML = TABS.map(function(t){ return '<button class="rm-tab'+(t.id === tab ? ' sel' : '')+'" data-t="'+t.id+'">'+t.name+'</button>'; }).join('');
+      $('rmTabs').innerHTML = rbFix(TABS.map(function(t){ return '<button class="rm-tab'+(t.id === tab ? ' sel' : '')+'" data-t="'+t.id+'">'+t.name+'</button>'; }).join(''));
       var r = S ? S.r : getRoom(), coins = getCoins(), g = $('rmGrid'); g.innerHTML = '';
       if(tab === 'wp'){
         var ws = document.createElement('div'); ws.className = 'rm-wside';
@@ -10622,7 +10625,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         });
         x += '</div>';
       }
-      b.innerHTML = x;
+      b.innerHTML = rbFix(x);
       b.classList.toggle('edit', hEdit);
       document.body.classList.toggle('rm-rf-open', hEdit);
       if(grow){ b.classList.remove('grow'); void b.offsetWidth; b.classList.add('grow'); }
