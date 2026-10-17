@@ -325,6 +325,16 @@
   .rm-tabs{ display:flex; gap:6px; margin:0 0 10px; overflow-x:auto; padding-bottom:2px; }
   .rm-tab{ flex:none; border:1.5px solid var(--line); background:var(--surface); color:var(--ink); border-radius:100px; padding:8px 14px; font:inherit; font-size:13px; font-weight:900; cursor:pointer; }
   .rm-tab.sel{ background:var(--ink); border-color:var(--ink); color:var(--surface); }
+  .rm-rtools{ max-width:720px; margin:0 auto 10px; display:flex; gap:8px; flex-wrap:wrap; }
+  .rm-tab.add{ border-style:dashed; display:inline-flex; align-items:center; gap:4px; }
+  .rm-tab.add .coin{ width:14px; height:14px; }
+  .rm-mates{ max-width:720px; margin:0 auto 12px; background:var(--surface); border-radius:18px; box-shadow:var(--shadow); padding:10px; }
+  .rm-mates p{ font-size:12px; color:var(--ink-soft); margin:0 0 8px; }
+  .rm-mgrid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(78px, 1fr)); gap:6px; }
+  .rm-mate{ border:2px solid var(--line); background:var(--surface-2); border-radius:14px; padding:4px 2px 5px; font:inherit; font-size:10.5px; font-weight:800; color:var(--ink-soft); cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:1px; }
+  .rm-mate svg{ width:52px; height:auto; }
+  .rm-mate.here{ border-color:var(--good); background:#EAF8EC; color:var(--ink); }
+  .rm-mate.else{ opacity:.7; }
   .rm-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(104px, 1fr)); gap:8px; }
   .rm-card{ position:relative; background:var(--surface); border-radius:18px; box-shadow:var(--shadow); padding:10px 6px 8px; display:flex; flex-direction:column; gap:3px; align-items:center; border:2px solid transparent; font:inherit; color:var(--ink); text-align:center; cursor:pointer; }
   .rm-card.using{ border-color:var(--good); }
@@ -2055,6 +2065,7 @@
       <h1>おへや</h1>
       <button class="rm-edit" id="rmEdit">🔨 もようがえ</button>
     </div>
+    <div class="rm-tabs" id="rmRooms"></div>
     <section class="rm-stage" id="rmStage"></section>
     <div class="rm-pv" id="rmPv" hidden>
       <b id="rmPvName"></b>
@@ -2067,6 +2078,8 @@
       <button class="rm-tb" id="rmStore">しまう</button>
     </div>
     <p class="food-say rm-say" id="rmSay"></p>
+    <div class="rm-rtools"><button class="rm-tb" id="rmMates">🐾 この へやの なかま</button><button class="rm-tb" id="rmToy">🎮 あそぶ画面の へやに する</button></div>
+    <div class="rm-mates" id="rmMatesBox" hidden></div>
     <h2 class="sec-title">おへやの ショップ</h2>
     <p class="sec-sub">コインで かぐや かべがみを 買って、すきな ところに おこう。1回 買えば ずっと つかえるよ。</p>
     <div class="rm-tabs" id="rmTabs"></div>
@@ -9493,9 +9506,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     WALLS.concat(FLOORS, ITEMS).forEach(function(d){ BY[d.id] = d; });
 
     /* ---- 保存 ---- */
-    function getRoom(){
-      var r = safeGet(KEY);
-      if(!r || typeof r !== 'object') r = { t:0, wall:'w_cream', floor:'f_wood', items:[{ k:'cushion', x:66, y:90, f:0 }] };
+    var RI = 0, ROOM_PRICE = [0, 300, 500, 800, 1200], SELK = 'keisan_roomsel', NK = 'keisan_roomn';
+    function rkey(i){ return i ? KEY + (i + 1) : KEY; }
+    function roomN(){ var n = +safeGet(NK) || 1; return Math.max(1, Math.min(5, n)); }
+    function selGet(){ var q = safeGet(SELK); if(!q || typeof q !== 'object') q = {}; if(!q.pets || typeof q.pets !== 'object') q.pets = {}; return q; }
+    function selSave(q){ q.t = Date.now(); safeSet(SELK, q); }
+    function toyIdx(){ var i = selGet().toy | 0; return i >= 0 && i < roomN() ? i : 0; }
+    function getRoom(i){
+      if(i == null) i = RI;
+      var r = safeGet(rkey(i));
+      if(!r || typeof r !== 'object') r = i ? { t:0, wall:'w_cream', floor:'f_wood', items:[] } : { t:0, wall:'w_cream', floor:'f_wood', items:[{ k:'cushion', x:66, y:90, f:0 }] };
       if(!Array.isArray(r.items)) r.items = [];
       r.items = r.items.filter(function(it){ return it && BY[it.k]; });
       if(!BY[r.wall]) r.wall = 'w_cream';
@@ -9509,12 +9529,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(pv){
         var c = { t:r.t, wall:r.wall, floor:r.floor, items:r.items.filter(function(it){ return it !== pv.it; }) };
         if(pv.old){ c.wall = pv.old.wall; c.floor = pv.old.floor; }
-        safeSet(KEY, c);
-      } else safeSet(KEY, r);
+        safeSet(rkey(RI), c);
+      } else safeSet(rkey(RI), r);
     }
     function getOwn(){ var o = safeGet(OWN); return (o && typeof o === 'object') ? o : {}; }
     function ownN(id){ return (getOwn()[id] || 0) + (STARTER[id] || 0); }
-    function placedN(r, id){ return r.items.filter(function(it){ return it.k === id; }).length; }
+    function placedN(r, id){
+      var n = r.items.filter(function(it){ return it.k === id; }).length;
+      for(var i = 0; i < roomN(); i++) if(i !== RI) n += getRoom(i).items.filter(function(it){ return it.k === id; }).length;
+      return n;
+    }
     function addOwn(id){ var o = getOwn(); o[id] = (o[id] || 0) + 1; safeSet(OWN, o); }
 
     /* ---- 絵 ---- */
@@ -9593,7 +9617,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     /* ステージを つくる(card のときは さわれない 小さい 見本) */
     function build(stage, mini){
-      var r = getRoom();
+      var r = getRoom(mini ? 0 : RI);
       if(!mini && pv){
         if(pv.it) r.items.push(pv.it);
         else if(pv.d.id.charAt(0) === 'w') r.wall = pv.d.id; else r.floor = pv.d.id;
@@ -9627,7 +9651,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* あそぶ 画面の はいけい: W×H(px)の 中に かべ(上)と ゆか(下 FL px)を しき、家具を 同じ ならびで おく。
        家具の 大きさは おへやと 同じ「相棒との くらべっこ」に なるよう、手前の 相棒の はば PW(px) から きめる */
     function backdrop(box, W, H, FL, PW){
-      var r = getRoom(), WL = H - FL, RW = PW / PET_W * 100, X0 = 0;
+      var r = getRoom(toyIdx()), WL = H - FL, RW = PW / PET_W * 100, X0 = 0;
       box.innerHTML = '';
       function add(cls, css, html){ var e = document.createElement('div'); e.className = cls; e.style.cssText = css; e.innerHTML = html; box.appendChild(e); return e; }
       add('rm-wall', 'height:' + WL + 'px', surfSvg(BY[r.wall]));
@@ -9650,11 +9674,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function live(){ return S && !views.room.hidden; }
     function say(t){ $('rmSay').textContent = t; }
 
-    function petsHere(){
+    function ownedList(){
       var p = getPets() || {}, act = activePet(), list = [act.sp];
-      PARTNERS.concat(['whale']).forEach(function(sp){ if(sp !== act.sp && p.owned && p.owned[sp] != null && list.length < 5) list.push(sp); });
-      return list.map(function(sp){ return { sp:sp, lv:(p.owned && p.owned[sp]) || 0 }; });
+      PARTNERS.concat(['whale']).forEach(function(sp){ if(sp !== act.sp && p.owned && p.owned[sp] != null) list.push(sp); });
+      return list;
     }
+    function hereOf(i){
+      var q = selGet().pets, all = ownedList(), list = all.filter(function(sp){ return q[sp] === i; });
+      if(i === 0) all.forEach(function(sp){ if(q[sp] === undefined) list.push(sp); });
+      return list.slice(0, 5);
+    }
+    function locOf(sp){ for(var i = 0; i < roomN(); i++) if(hereOf(i).indexOf(sp) >= 0) return i; return -1; }
+    function petsHere(){
+      var p = getPets() || {};
+      return hereOf(RI).map(function(sp){ return { sp:sp, lv:(p.owned && p.owned[sp]) || 0 }; });
+    }
+    function lead(){ return S.pets[0] || { sp:activePet().sp, el:document.createElement('div'), x:50, y:86, t:0 }; }
     function setPet(P, x, y, s, z, ms){
       P.x = x; P.y = y;
       var el = P.el;
@@ -9809,7 +9844,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(!live()) return clearInterval(clockT);
         S.r.items.forEach(function(it, i){ var d = BY[it.k]; if(d.clock || d.sky){ S.els[i].el.innerHTML = itemSvg(d); } });
       }, 30000);
-      renderTools(); renderShop();
+      renderTools(); renderShop(); renderRooms();
     }
 
     /* ---- もようがえ(ドラッグで うごかす) ---- */
@@ -9854,8 +9889,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var d = BY[S.r.items[i].k];
         if(d.tap === 'light'){ lampOn[i] = !lampOn[i]; S.els[i].el.classList.toggle('on', !!lampOn[i]); }
         if(d.tap === 'piano'){ chime(TUNE[(Math.random() * TUNE.length) | 0]); }
-        if(d.act){ var P = S.pets[0]; clearTimeout(P.t); if(P.seat === i) return; useItem(P, i, true); }
-        else if(d.photo){ Pet.cheer(S.pets[0].el); bubble(S.pets[0], '♥'); say(petName(S.pets[0].sp) + '「わたしの しゃしん!」'); }
+        if(d.act){ if(!S.pets[0]) return; var P = lead(); clearTimeout(P.t); if(P.seat === i) return; useItem(P, i, true); }
+        else if(d.photo){ Pet.cheer(lead().el); bubble(lead(), '♥'); say(petName(lead().sp) + '「わたしの しゃしん!」'); }
         return;
       }
       if(i < 0){ selectIt(-1); return; }
@@ -9971,8 +10006,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(!it){ if(d.id.charAt(0) === 'w') S.r.wall = d.id; else S.r.floor = d.id; }
       saveRoom(S.r); render(); renderPv();
       if(it) selectIt(S.r.items.indexOf(it));
-      Pet.cheer(S.pets[0].el);
-      say(petName(S.pets[0].sp) + '「わあ、' + d.name + (it ? 'が きた!' : 'に なった!') + '」');
+      Pet.cheer(lead().el);
+      say(petName(lead().sp) + '「わあ、' + d.name + (it ? 'が きた!' : 'に なった!') + '」');
     }
     $('rmPvBuy').addEventListener('click', buyPreview);
     $('rmPvNo').addEventListener('click', endPreview);
@@ -9984,8 +10019,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(surf){
         if(!ownN(d.id)){ startPreview(d); return; }
         if(d.id.charAt(0) === 'w') r.wall = d.id; else r.floor = d.id;
-        saveRoom(r); render(); Pet.cheer(S.pets[0].el);
-        say(petName(S.pets[0].sp) + '「わあ、' + d.name + 'に なった!」');
+        saveRoom(r); render(); Pet.cheer(lead().el);
+        say(petName(lead().sp) + '「わあ、' + d.name + 'に なった!」');
         return;
       }
       if(ownN(d.id) - placedN(r, d.id) <= 0){ startPreview(d); return; }
@@ -9996,11 +10031,62 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       say(d.name + 'を おいたよ!ゆびで すきな ところに うごかしてね');
       $('rmStage').scrollIntoView({ block:'nearest', behavior:'smooth' });
     }
+    function renderRooms(){
+      var n = roomN(), h = '';
+      for(var i = 0; i < n; i++) h += '<button class="rm-tab'+(i === RI ? ' sel' : '')+'" data-r="'+i+'">へや '+(i + 1)+'</button>';
+      if(n < 5) h += '<button class="rm-tab add" data-r="add">＋ ふやす <span class="coin"></span>'+ROOM_PRICE[n]+'</button>';
+      $('rmRooms').innerHTML = h;
+      $('rmToy').textContent = toyIdx() === RI ? '🎮 あそぶ画面の へや ✓' : '🎮 あそぶ画面の へやに する';
+      if(!$('rmMatesBox').hidden) renderMates();
+    }
+    function goRoom(i){
+      if(i === RI) return;
+      if(edit) setEdit(false);
+      if(pv){ pv = null; renderPv(); }
+      stopPets(); S = null; RI = i; sel = -1; lampOn = {};
+      var q = selGet(); q.cur = i; selSave(q);
+      render(); say('へや ' + (i + 1) + ' に きたよ');
+    }
+    function buyRoom(){
+      var n = roomN(); if(n >= 5) return;
+      if(!buyGate(ROOM_PRICE[n], 'へやを ふやす?', null, 'ふやす', buyRoom)) return;
+      safeSet(NK, n + 1); goRoom(n); renderRooms();
+      say('あたらしい へやが できたよ! かぐを 買って かざろう');
+    }
+    $('rmRooms').addEventListener('click', function(e){
+      var b = e.target.closest('[data-r]'); if(!b) return;
+      var v = b.getAttribute('data-r');
+      if(v === 'add') buyRoom(); else goRoom(+v);
+    });
+    function renderMates(){
+      var all = ownedList(), here = hereOf(RI), h = '<p>タップで この へやに いれたり、でて もらったり できるよ(1つの へやに 5ひきまで)</p><div class="rm-mgrid">';
+      var pp = getPets() || {};
+      all.forEach(function(sp){
+        var loc = locOf(sp), cls = loc === RI ? ' here' : loc >= 0 ? ' else' : '';
+        h += '<button class="rm-mate'+cls+'" data-sp="'+sp+'">'+Pet.svg(sp, (pp.owned && pp.owned[sp]) || 0)+'<span>'+petName(sp)+'</span><small>'+(loc === RI ? 'ここ' : loc >= 0 ? 'へや '+(loc + 1) : '—')+'</small></button>';
+      });
+      $('rmMatesBox').innerHTML = h + '</div>';
+    }
+    $('rmMates').addEventListener('click', function(){
+      var b = $('rmMatesBox'); b.hidden = !b.hidden; if(!b.hidden) renderMates();
+    });
+    $('rmMatesBox').addEventListener('click', function(e){
+      var b = e.target.closest('[data-sp]'); if(!b) return;
+      var sp = b.getAttribute('data-sp'), q = selGet(), here = hereOf(RI);
+      if(here.indexOf(sp) >= 0) q.pets[sp] = -1;
+      else if(here.length >= 5){ toast('この へやは いっぱい(5ひきまで)'); return; }
+      else q.pets[sp] = RI;
+      selSave(q); render(); renderMates();
+    });
+    $('rmToy').addEventListener('click', function(){
+      var q = selGet(); q.toy = RI; selSave(q); renderRooms(); toast('あそぶ画面の うしろを この へやに したよ');
+    });
     $('rmTabs').addEventListener('click', function(e){ var b = e.target.closest('.rm-tab'); if(!b) return; tab = b.getAttribute('data-t'); renderShop(); });
 
     function open(){
       setLive('add');
       edit = false; sel = -1; lampOn = {}; pv = null; renderPv();
+      RI = Math.min(selGet().cur | 0, roomN() - 1); S = null; $('rmMatesBox').hidden = true;
       $('rmEdit').textContent = '🔨 もようがえ'; $('rmEdit').classList.remove('on');
       showView('room');
       render();
