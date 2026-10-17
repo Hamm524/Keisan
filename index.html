@@ -373,7 +373,9 @@
   .rm-house.edit .rm-hc{ font-size:15px; padding:9px 14px 9px 10px; gap:6px; }
   .rm-house.edit .rm-hc i{ width:24px; height:24px; }
   .rm-house.edit .rm-hc small{ font-size:13px; } .rm-house.edit .rm-hc .coin{ width:14px; height:14px; }
-  .rm-hc rt{ font-size:9px; }
+  .rm-house ruby, .rm-tab ruby{ position:relative; display:inline-block; }
+  .rm-house rt, .rm-tab rt{ position:absolute; left:50%; bottom:100%; transform:translateX(-50%); font-size:9px; line-height:1; white-space:nowrap; letter-spacing:0; font-weight:700; margin-bottom:1px; }
+  .rm-house.edit .rm-hc{ padding-top:12px; }
   /* タブレット横: 左に いえ、右に えらぶ ところ */
   @media (min-width:900px) and (orientation:landscape){
     .rm-house.edit{ display:grid; grid-template-columns:minmax(0, 1.4fr) minmax(320px, 1fr); grid-template-rows:auto 1fr; overflow:hidden; }
@@ -392,7 +394,7 @@
   .rm-sb.n::after{ display:none; }
   .rm-sb.bye{ opacity:0; transition:opacity .3s; }
   @keyframes rm-sb{ 0%{ opacity:0; scale:.8; } 100%{ opacity:1; scale:1; } }
-  .rm-hpop{ position:absolute; left:50%; bottom:14px; transform:translateX(-50%); white-space:nowrap; background:rgba(255,255,255,.95); color:#2E2A3D; border-radius:100px; padding:7px 16px; font-size:14px; font-weight:900; box-shadow:0 6px 16px -8px rgba(46,42,61,.5); pointer-events:none; animation:rm-hpop 2.6s ease both; }
+  .rm-hpop{ position:absolute; left:50%; top:46%; transform:translateX(-50%); white-space:nowrap; background:rgba(255,255,255,.95); color:#2E2A3D; border-radius:100px; padding:7px 16px; font-size:14px; font-weight:900; box-shadow:0 6px 16px -8px rgba(46,42,61,.5); pointer-events:none; animation:rm-hpop 2.6s ease both; }
   @keyframes rm-hpop{ 0%{ opacity:0; transform:translate(-50%, 10px) scale(.9); } 12%{ opacity:1; transform:translate(-50%, 0) scale(1); } 80%{ opacity:1; } 100%{ opacity:0; transform:translate(-50%, -6px); } }
   .rm-hedit{ background:var(--surface); padding:8px 10px 10px; display:grid; gap:8px; }
   .rm-hrow{ display:flex; align-items:flex-start; gap:8px; }
@@ -2213,11 +2215,11 @@
       <div class="rm-trow" id="rmPhotoRow"><span>しゃしん</span><div class="rm-phs" id="rmPhotos"></div></div>
     </div>
     <p class="food-say rm-say" id="rmSay"></p>
-    <div class="rm-rtools"><button class="rm-tb" id="rmMates">🐾 この へやの なかま</button><button class="rm-tb" id="rmToy">🎮 あそぶ画面の へやに する</button><button class="rm-tb" id="rmSize">📐 へやの ひろさ</button></div>
+    <div class="rm-rtools"><button class="rm-tb" id="rmMates">🐾 この 部屋の 仲間</button><button class="rm-tb" id="rmToy">🎮 遊ぶ画面の 部屋に する</button><button class="rm-tb" id="rmSize">📐 部屋の 広さ</button></div>
     <div class="rm-mates" id="rmSizeBox" hidden></div>
     <div class="rm-mates" id="rmMatesBox" hidden></div>
     <h2 class="sec-title">おへやの ショップ</h2>
-    <p class="sec-sub">コインで かぐや かべがみを 買って、すきな ところに おこう。1回 買えば ずっと つかえるよ。</p>
+    <p class="sec-sub">コインで 家具や <ruby>壁<rt>かべ</rt></ruby>紙を 買って、好きな 所に 置こう。1回 買えば ずっと 使えるよ。</p>
     <div class="rm-tabs" id="rmTabs"></div>
     <div class="rm-grid" id="rmGrid"></div>
   </main>
@@ -10040,8 +10042,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var b = build(stage, false);
       S = { r:b.r, els:b.els, used:{}, pets:[] };
       stage.classList.toggle('editing', edit);
-      if(roomN() > 1){ var pl = document.createElement('div'); pl.className = 'rm-plate'; pl.textContent = 'へや ' + (RI + 1); stage.appendChild(pl); }
-      if(!b.r.items.length && !pv){ var em = document.createElement('div'); em.className = 'rm-empty'; em.innerHTML = 'まだ からっぽの へやだよ<small>下の ショップで かぐを 買って おこう</small>'; stage.appendChild(em); }
+      if(roomN() > 1){ var pl = document.createElement('div'); pl.className = 'rm-plate'; pl.textContent = '部屋 ' + (RI + 1); stage.appendChild(pl); }
+      if(!b.r.items.length && !pv){ var em = document.createElement('div'); em.className = 'rm-empty'; em.innerHTML = 'まだ からっぽの 部屋だよ<small>下の ショップで 家具を 買って おこう</small>'; stage.appendChild(em); }
       petsHere().forEach(function(p, k){
         var el = document.createElement('div');
         el.className = 'rm-pet'; el.innerHTML = Pet.svg(p.sp, p.lv);
@@ -10202,7 +10204,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('rmEdit').addEventListener('click', function(){ setEdit(!edit); });
 
     /* ---- おへやの ショップ ---- */
-    var TABS = [ { id:'item', name:'かぐ' }, { id:'wall', name:'かべの かざり' }, { id:'wp', name:'かべがみ' }, { id:'fl', name:'ゆか' } ];
+    var TABS = [ { id:'item', name:'家具' }, { id:'wall', name:'<ruby>壁<rt>かべ</rt></ruby>の <ruby>飾<rt>かざ</rt></ruby>り' }, { id:'wp', name:'<ruby>壁<rt>かべ</rt></ruby>紙' }, { id:'fl', name:'<ruby>床<rt>ゆか</rt></ruby>' } ];
     function listFor(t){
       if(t === 'wp') return WALLS;
       if(t === 'fl') return FLOORS;
@@ -10315,8 +10317,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('rmStage').scrollIntoView({ block:'nearest', behavior:'smooth' });
     }
     /* ---- おうちの そと見(へやの 数で そだつ) ---- */
-    var HOUSE = ['', 'ちいさな おうち', 'はなれの ある おうち', '2かいだての おうち', 'となりの へやも ある おうち', 'とうの ある おやしき'];
-    var GROW = ['', '', 'はなれ', '2かい', 'となりの へや', 'とう'];
+    var HOUSE = ['', '小さな 家', 'はなれの ある 家', '2階建ての 家', 'となりの 部屋も ある 家', 'とうの ある 大きな 家'];
+    var GROW = ['', '', 'はなれ', '2階', 'となりの 部屋', 'とう'];
     /* 月ごとの 花 [なまえ, 7つの [色, 花A, 花B]](いまの きせつの 花ばたけ) */
     var MONF = [
       ['スイセン・つばき', [['#FFFFFF', 11, 11], ['#E5484D', 2, 2], ['#FFF3C4', 11, 11], ['#FF8FB1', 2, 2], ['#FFFFFF', 11, 11], ['#E5484D', 2, 2], ['#FFFFFF', 11, 2]]],
@@ -10464,7 +10466,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       function win(i, x, y, w, h, round){
         var here = hereOf(i), sp = here[0], id = 'rmhw' + (uid++), lit = here.length ? '#FFE7A3' : '#BFE6FF';
         var shape = round ? '<circle cx="'+(x+w/2)+'" cy="'+(y+h/2)+'" r="'+(w/2)+'"' : '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="3"';
-        var g = '<g class="hw' + (i === RI ? ' cur' : '') + '" data-r="' + i + '"><title>へや ' + (i + 1) + '</title><clipPath id="'+id+'">' + shape + '/></clipPath>' + shape + ' fill="'+lit+'"/>';
+        var g = '<g class="hw' + (i === RI ? ' cur' : '') + '" data-r="' + i + '"><title>部屋 ' + (i + 1) + '</title><clipPath id="'+id+'">' + shape + '/></clipPath>' + shape + ' fill="'+lit+'"/>';
         if(sp) g += '<g clip-path="url(#'+id+')">' + Pet.svg(sp, petLv(sp) || 0).replace('<svg ', '<svg x="'+(x - w*.1)+'" y="'+(y + 2)+'" width="'+(w*1.2)+'" height="'+(h*1.5)+'" style="width:'+(w*1.2)+'px;height:'+(h*1.5)+'px" preserveAspectRatio="xMidYMin meet" ') + '</g>';
         g += shape + ' class="hwf" fill="none" stroke="#fff" stroke-width="3"/>';
         if(i === RI && !mini && roomN() > 1) pin = '<g class="hpin"><rect x="'+(x + w/2 - 14)+'" y="'+(y - 25)+'" width="28" height="15" rx="7.5" fill="#E5484D"/><path d="M'+(x + w/2 - 5)+','+(y - 11)+' L'+(x + w/2 + 5)+','+(y - 11)+' L'+(x + w/2)+','+(y - 5)+' Z" fill="#E5484D"/><text x="'+(x + w/2)+'" y="'+(y - 14)+'" text-anchor="middle">いま</text></g>';
@@ -10540,7 +10542,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(n < 5 && !mini){
         var gh = { 2:'<rect x="208" y="120" width="56" height="60"/><path d="M206,100 L272,126 L272,132 L206,108 Z"/>', 3:'<rect x="116" y="70" width="88" height="40"/><path d="M160,26 L222,78 L98,78 Z"/>', 4:'<rect x="52" y="124" width="60" height="56"/><path d="M114,104 L44,130 L44,136 L114,112 Z"/>', 5:'<rect x="262" y="74" width="40" height="106"/><path d="M282,20 L308,78 L256,78 Z"/>' }[n + 1];
         var tx = { 2:236, 3:160, 4:82, 5:282 }[n + 1], ty = { 2:150, 3:56, 4:154, 5:130 }[n + 1];
-        o += '<g class="hg" data-r="add"><title>へやを ふやす</title>' + gh + '<text x="'+tx+'" y="'+ty+'" text-anchor="middle">＋' + ROOM_PRICE[n] + '</text></g>';
+        o += '<g class="hg" data-r="add"><title>部屋を 増やす</title>' + gh + '<text x="'+tx+'" y="'+ty+'" text-anchor="middle">＋' + ROOM_PRICE[n] + '</text></g>';
       }
       if(!mini) o = o.replace('viewBox="0 0 340 200"', 'viewBox="-40 0 420 200"');   /* にわの ぶん ひろく */
       if(mini) o = o.replace('viewBox="0 0 340 200"', 'viewBox="' + ['', '76 46 168 120', '76 46 204 136', '70 10 220 180', '30 10 260 180', '20 0 300 200'][n] + '"');
@@ -10548,11 +10550,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     /* おうちの リフォーム: keisan_house = { t, roof, wall, door, deco:{id:1}, own:{id:1} } */
     var HK = 'keisan_house', HPARTS = [
-      { k:'roof', name:'やね', list:[ ['h_rred','あか','#E98B6D',0], ['h_rblue','あお','#6FA8DC',30], ['h_rgreen','みどり','#6DBB6B',30], ['h_rpurple','むらさき','#A98BE8',30], ['h_rpink','ピンク','#F38FAE',30], ['h_rchoco','チョコ','#8A5A44',30], ['h_rgold','きんいろ','#E8B83A',60] ] },
-      { k:'wall', name:'かべ', list:[ ['h_wcream','クリーム','#FFF6E8',0], ['h_wpink','ピンク','#FFE1EA',30], ['h_wmint','ミント','#DCF3E6',30], ['h_wsky','そらいろ','#E0EEFF',30], ['h_wlemon','レモン','#FFF3B8',30], ['h_wlav','ラベンダー','#EEE4FF',30], ['h_wwood','き','#E7C9A0',40] ] },
-      { k:'door', name:'ドア', list:[ ['h_dwood','き','#C99A62',0], ['h_dred','あか','#E5484D',20], ['h_dblue','あお','#5B7CFA',20], ['h_dgreen','みどり','#2FAE66',20], ['h_dpink','ピンク','#FF8FB1',20] ] },
-      { k:'yard', name:'にわ', list:[ ['h_ylawn','しばふ','#7CC77A',0], ['h_ybrick','レンガ','#D98B6A',40], ['h_ystone','いしだたみ','#C9C4BC',40], ['h_ysand','すな','#F2DDB0',30], ['h_yflower','にじいろの 花ばたけ','linear-gradient(90deg,#E5484D,#FFD24C,#5B7CF0,#FF8FB1)',60], ['h_yflowerY','きいろの 花ばたけ','#FFD24C',60], ['h_yflowerP','ピンクの 花ばたけ','#FF8FB1',60], ['h_yflowerB','あお・むらさきの 花ばたけ','linear-gradient(90deg,#5B7CF0,#9B6BE0)',60], ['h_yflowerW','しろい 花ばたけ','#FFFFFF',60], ['h_yflowerNow','いまの きせつの 花ばたけ','conic-gradient(#FF8FB1 0 25%,#FFD24C 0 50%,#FF9E6B 0 75%,#EEF1F7 0)',60], ['h_yflowerSp','春の 花ばたけ','#FFB8CF',60], ['h_yflowerSu','夏の 花ばたけ (ひまわり)','#FFD24C',60], ['h_yflowerAu','秋の 花ばたけ (コスモス)','#FF9E6B',60], ['h_yflowerWi','冬の 花ばたけ (ゆき)','#E5484D',60], ['h_yflowerR','バラの 花ばたけ','#E5484D',60], ['h_yflowerV','すみれの 花ばたけ','#7B4FC9',60], ['h_yflowerM','のはらの 花ばたけ','linear-gradient(90deg,#FFFFFF,#9B6BE0,#5DAA5B)',60] ] },
-      { k:'deco', name:'かざり', list:[ ['dog','いぬごや','',50], ['laundry','ものほし','',40], ['bench','ベンチ','',40], ['lamp','がいとう','',50],  ['flower','<ruby>花壇<rt>かだん</rt></ruby>','',0], ['fountain','ふんすい','',80], ['gazebo','ガゼボ','',120], ['gazeboW','しろい ガゼボ','',120], ['ajisai','あじさい','',40], ['bike','じてんしゃ','',60], ['mill','ふうしゃ','',100], ['lantern','いしの ランタン','',50], ['well','いど','',70], ['bunny','うさぎの おきもの','',40], ['sakura','さくらの 木','',90], ['picnic','ピクニック','',60], ['stump','きりかぶの いす','',30], ['post','ポスト','',30], ['tree','木','',40], ['fence','さく','',40], ['garland','ガーランド','',40], ['smoke','えんとつの けむり','',30], ['rainbow','にじ','',80] ] }
+      { k:'roof', name:'屋根', list:[ ['h_rred','赤','#E98B6D',0], ['h_rblue','青','#6FA8DC',30], ['h_rgreen','緑','#6DBB6B',30], ['h_rpurple','<ruby>紫<rt>むらさき</rt></ruby>','#A98BE8',30], ['h_rpink','ピンク','#F38FAE',30], ['h_rchoco','チョコ','#8A5A44',30], ['h_rgold','金色','#E8B83A',60] ] },
+      { k:'wall', name:'<ruby>壁<rt>かべ</rt></ruby>', list:[ ['h_wcream','クリーム','#FFF6E8',0], ['h_wpink','ピンク','#FFE1EA',30], ['h_wmint','ミント','#DCF3E6',30], ['h_wsky','空色','#E0EEFF',30], ['h_wlemon','レモン','#FFF3B8',30], ['h_wlav','ラベンダー','#EEE4FF',30], ['h_wwood','木','#E7C9A0',40] ] },
+      { k:'door', name:'ドア', list:[ ['h_dwood','木','#C99A62',0], ['h_dred','赤','#E5484D',20], ['h_dblue','青','#5B7CFA',20], ['h_dgreen','緑','#2FAE66',20], ['h_dpink','ピンク','#FF8FB1',20] ] },
+      { k:'yard', name:'庭', list:[ ['h_ylawn','<ruby>芝生<rt>しばふ</rt></ruby>','#7CC77A',0], ['h_ybrick','レンガ','#D98B6A',40], ['h_ystone','石だたみ','#C9C4BC',40], ['h_ysand','砂','#F2DDB0',30], ['h_yflower','<ruby>虹<rt>にじ</rt></ruby>色の 花畑','linear-gradient(90deg,#E5484D,#FFD24C,#5B7CF0,#FF8FB1)',60], ['h_yflowerY','黄色の 花畑','#FFD24C',60], ['h_yflowerP','ピンクの 花畑','#FF8FB1',60], ['h_yflowerB','青・<ruby>紫<rt>むらさき</rt></ruby>の 花畑','linear-gradient(90deg,#5B7CF0,#9B6BE0)',60], ['h_yflowerW','白い 花畑','#FFFFFF',60], ['h_yflowerNow','今の 季節の 花畑','conic-gradient(#FF8FB1 0 25%,#FFD24C 0 50%,#FF9E6B 0 75%,#EEF1F7 0)',60], ['h_yflowerSp','春の 花畑','#FFB8CF',60], ['h_yflowerSu','夏の 花畑 (ひまわり)','#FFD24C',60], ['h_yflowerAu','秋の 花畑 (コスモス)','#FF9E6B',60], ['h_yflowerWi','冬の 花畑 (雪)','#E5484D',60], ['h_yflowerR','バラの 花畑','#E5484D',60], ['h_yflowerV','すみれの 花畑','#7B4FC9',60], ['h_yflowerM','野原の 花畑','linear-gradient(90deg,#FFFFFF,#9B6BE0,#5DAA5B)',60] ] },
+      { k:'deco', name:'<ruby>飾<rt>かざ</rt></ruby>り', list:[ ['dog','犬小屋','',50], ['laundry','物ほし','',40], ['bench','ベンチ','',40], ['lamp','街灯','',50],  ['flower','花<ruby>壇<rt>だん</rt></ruby>','',0], ['fountain','<ruby>噴<rt>ふん</rt></ruby>水','',80], ['gazebo','ガゼボ','',120], ['gazeboW','白い ガゼボ','',120], ['ajisai','あじさい','',40], ['bike','自転車','',60], ['mill','風車','',100], ['lantern','石の ランタン','',50], ['well','井戸','',70], ['bunny','うさぎの 置物','',40], ['sakura','桜の 木','',90], ['picnic','ピクニック','',60], ['stump','切りかぶの いす','',30], ['post','ポスト','',30], ['tree','木','',40], ['fence','<ruby>柵<rt>さく</rt></ruby>','',40], ['garland','ガーランド','',40], ['smoke','<ruby>煙突<rt>えんとつ</rt></ruby>の <ruby>煙<rt>けむり</rt></ruby>','',30], ['rainbow','<ruby>虹<rt>にじ</rt></ruby>','',80] ] }
     ], BYH = {};
     HPARTS.forEach(function(p){ p.list.forEach(function(x){ BYH[x[0]] = { id:x[0], name:x[1], c:x[2], price:x[3], part:p }; }); });
     function getHS(){
@@ -10596,15 +10598,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var m = new Date().getMonth(), now = ['Wi', 'Wi', 'Sp', 'Sp', 'Sp', 'Su', 'Su', 'Su', 'Au', 'Au', 'Au', 'Wi'][m];
       var k = yd === 'h_yflowerNow' ? now : SEASON[(yd || '').slice(9)] ? yd.slice(9) : null; if(!k) return '';
       var z = SEASON[k];
-      if(yd === 'h_yflowerNow') return '<em class="rm-hsea">' + z[0] + ' いまは ' + z[1] + 'の ' + (m + 1) + 'がつ。' + MONF[m][0] + 'が さく ころだよ</em>';
+      if(yd === 'h_yflowerNow') return '<em class="rm-hsea">' + z[0] + ' 今は ' + z[1] + 'の ' + (m + 1) + '月。' + MONF[m][0] + 'が さく ころだよ</em>';
       return '<em class="rm-hsea">' + z[0] + ' ' + z[1] + 'の 花: ' + z[2] + '</em>';
     }
     function renderHouse(grow){
       var n = roomN(), b = $('rmHouse'), h = getHS();
       var x = hEdit ?
-        '<div class="rm-rfh"><b>🎨 おうちの リフォーム</b><button class="rm-hbtn" data-h="edit">✓ できた</button></div>' +
-        '<div class="rm-rfv">' + houseSvg(n, h) + '<p class="rm-rfhint">' + (hMsg || 'えらぶと すぐ かわるよ。にわの かざりは ゆびで うごかせるよ') + '</p></div>' :
-        '<span class="rm-hlab">' + HOUSE[n] + (n < 5 ? '<small>つぎは ' + GROW[n + 1] + '</small>' : '') + '</span>' +
+        '<div class="rm-rfh"><b>🎨 家の リフォーム</b><button class="rm-hbtn" data-h="edit">✓ できた</button></div>' +
+        '<div class="rm-rfv">' + houseSvg(n, h) + '<p class="rm-rfhint">' + (hMsg || '選ぶと すぐ 変わるよ。庭の <ruby>飾<rt>かざ</rt></ruby>りは 指で 動かせるよ') + '</p></div>' :
+        '<span class="rm-hlab">' + HOUSE[n] + (n < 5 ? '<small>次は ' + GROW[n + 1] + '</small>' : '') + '</span>' +
         '<button class="rm-hbtn" data-h="edit">🎨 リフォーム</button>' + houseSvg(n, h) + seasonLab(h.yard);
       hMsg = '';
       if(hEdit){
@@ -10613,7 +10615,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           x += '<div class="rm-hrow"><span>' + p.name + '</span><div>';
           p.list.forEach(function(it){
             var id = it[0], on = p.k === 'deco' ? !!h.deco[id] : h[p.k] === id, own = hOwn(h, id);
-            x += '<button class="rm-hc' + (on ? ' on' : '') + '" data-h="' + id + '">' + (it[2] ? '<i style="background:' + it[2] + '"></i>' : '') + it[1] +
+            x += '<button class="rm-hc' + (on ? ' on' : '') + '" data-h="' + id + '">' + (it[2] ? '<i style="background:' + it[2] + '"></i>' : '') + '<span>' + it[1] + '</span>' +
               (own ? '' : '<small><span class="coin"></span>' + it[3] + '</small>') + '</button>';
           });
           x += '</div></div>';
@@ -10638,11 +10640,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(d.part.k === 'deco'){ if(h.deco[id]) delete h.deco[id]; else h.deco[id] = 1; }
       else h[d.part.k] = id;
       h.t = Date.now(); safeSet(HK, h);
-      renderHouse(); hMsg = 'おうちを リフォーム したよ!';
+      renderHouse(); hMsg = '家を リフォーム したよ!';
     }
     $('rmHouse').addEventListener('click', function(e){
       var hb = e.target.closest('[data-h]');
-      if(hb){ var hv = hb.getAttribute('data-h'); if(hv === 'edit'){ hEdit = !hEdit; renderHouse(); if(!hEdit) hPop('✨ すてきな おうちに なったね!'); } else pickH(hv); return; }
+      if(hb){ var hv = hb.getAttribute('data-h'); if(hv === 'edit'){ hEdit = !hEdit; renderHouse(); if(!hEdit) hPop('✨ すてきな 家に なったね!'); } else pickH(hv); return; }
       var g = e.target.closest('[data-r]'); if(!g) return;
       var v = g.getAttribute('data-r');
       if(v === 'add') buyRoom(); else goRoom(+v);
@@ -10650,10 +10652,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function renderRooms(){
       renderHouse();
       var n = roomN(), h = '';
-      for(var i = 0; i < n; i++) h += '<button class="rm-tab'+(i === RI ? ' sel' : '')+'" data-r="'+i+'">'+(i === RI ? '📍 ' : '')+'へや '+(i + 1)+'</button>';
-      if(n < 5) h += '<button class="rm-tab add" data-r="add">＋ ふやす <span class="coin"></span>'+ROOM_PRICE[n]+'</button>';
+      for(var i = 0; i < n; i++) h += '<button class="rm-tab'+(i === RI ? ' sel' : '')+'" data-r="'+i+'">'+(i === RI ? '📍 ' : '')+'部屋 '+(i + 1)+'</button>';
+      if(n < 5) h += '<button class="rm-tab add" data-r="add">＋ 部屋を 増やす <span class="coin"></span>'+ROOM_PRICE[n]+'</button>';
       $('rmRooms').innerHTML = h;
-      $('rmToy').textContent = toyIdx() === RI ? '🎮 あそぶ画面の へや ✓' : '🎮 あそぶ画面の へやに する';
+      $('rmToy').textContent = toyIdx() === RI ? '🎮 遊ぶ画面の 部屋 ✓' : '🎮 遊ぶ画面の 部屋に する';
       if(!$('rmMatesBox').hidden) renderMates();
     }
     function goRoom(i){
@@ -10662,14 +10664,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(pv){ pv = null; renderPv(); }
       stopPets(); S = null; var from = RI; RI = i; sel = -1; lampOn = {};
       var q = selGet(); q.cur = i; selSave(q);
-      render(); say('へや ' + (i + 1) + ' に きたよ');
+      render(); say('部屋 ' + (i + 1) + 'に 来たよ');
       var st = $('rmStage'); st.classList.remove('swR', 'swL'); void st.offsetWidth; st.classList.add(i > from ? 'swR' : 'swL');
     }
     function buyRoom(){
       var n = roomN(); if(n >= 5) return;
       if(!buyGate(ROOM_PRICE[n], 'へやを ふやす?', null, 'ふやす', buyRoom)) return;
       safeSet(NK, n + 1); goRoom(n); renderRooms(); renderHouse(true);
-      hPop('🎉 おうちに ' + GROW[n + 1] + 'が できたよ!');
+      hPop('🎉 家に ' + GROW[n + 1] + 'が できたよ!');
     }
     $('rmRooms').addEventListener('click', function(e){
       var b = e.target.closest('[data-r]'); if(!b) return;
@@ -10725,7 +10727,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('rmEdit').textContent = '🔨 もようがえ'; $('rmEdit').classList.remove('on');
       showView('room');
       render();
-      say(petName(activePet().sp) + '「ここが みんなの おへやだよ!」');
+      say(petName(activePet().sp) + '「ここが みんなの 部屋だよ!」');
     }
     function close(){ stopPets(); if(pv){ pv = null; renderPv(); } if(edit) setEdit(false); goHome(); }
     $('rmBack').addEventListener('click', close);
