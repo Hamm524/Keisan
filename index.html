@@ -1747,6 +1747,11 @@
   .cp100 li b{ white-space:nowrap; color:var(--gold-deep); }
   .cp100 li small{ display:block; font-size:11px; color:var(--ink-soft); font-weight:700; }
   .cp100-note{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin-top:6px; line-height:1.55; }
+  .sheets{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:4px; }
+  .sheets-t{ font-weight:900; font-size:14px; }
+  .sheets-d{ display:flex; gap:6px; }
+  .sheets-d i{ width:22px; height:28px; border-radius:5px; border:2.5px solid #D9C7A8; background:#fff; }
+  .sheets-d i.on{ background:var(--op-mul); border-color:var(--op-mul); }
   .rec-rule{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin:8px 0 10px; line-height:1.6; }
   .rec-go{ width:100%; border:none; border-radius:18px; padding:15px; font:inherit; font-size:18px; font-weight:900; color:#fff; background:var(--gold-deep); box-shadow:0 5px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); cursor:pointer; }
   .rec-go:active{ transform:translateY(3px); box-shadow:0 2px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); }
@@ -3388,6 +3393,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   var TARGET_SEC = [60, 90, 120, 150]; // 10問の目標タイム(レベルごと)
   /* 今日のプリント(公文式): 毎日決まった枚数、合格=正解90%以上かつ めあてタイム以内 */
   var PRINT_SIZES = [10, 20, 50];
+  var SHEET_N = 20, DAILY_SHEETS = 5;   /* 公文: 1日5まい。1まい20問 */
   var SIZE_UP_PASSES = 5;    // この回数 合格すると 問題数が ふえる
   var PASS_ACC = 90;
   var WEEKEND_N = 100, WEEKEND_BONUS = 5, WEEKEND_ACC = 80, BEST100_BONUS = 10, ALLCLEAR_BONUS = 20;
@@ -4317,7 +4323,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   /* ---------- today's print ---------- */
   function printSizeIdx(){ return Math.min(PRINT_SIZES.length-1, safeGet('keisan_print_size') || 0); }
   function printPickIdx(){ var p = safeGet('keisan_print_pick'); return Math.min(printSizeIdx(), p == null ? 0 : p); }
-  function printSize(){ return PRINT_SIZES[printPickIdx()]; }
+  function printSize(){ return SHEET_N; }
+  function sheetsToday(){
+    var t = todayKey();
+    return printLog().filter(function(e){ return e.d === t && (e.k === 'daily' || e.k === 'review'); }).length;
+  }
   function printTarget(op, n, rv){
     var lv = op==='mix' ? 2 : (rv!=null ? rv : currentLevelIndex(op));
     return Math.round(TARGET_SEC[Math.min(lv, TARGET_SEC.length-1)] * n / 10);
@@ -4503,7 +4513,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   });
   function dayState(){
     var t = todayKey();
-    var p = printLog().some(function(e){ return e.d === t && (e.k ? (e.k === 'daily' || e.k === 'review') : e.n !== WEEKEND_N); });
+    var p = sheetsToday() >= DAILY_SHEETS;
     return { p:p, c:challengeDone(), w:weekendDone() };
   }
   function allDoneToday(){ var d = dayState(); return d.p && d.c && d.w; }
@@ -4610,7 +4620,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     var wait = cur === 0 ? 'プリントの あとで' : '挑戦の あとで';
     var name = (state.homeOp && state.homeOp !== 'mix') ? OP_META[state.homeOp].label : '混ぜて';
-    $('row1').innerHTML = done[0] ? '<span class="sr-t"><b>プリント できた!</b>今日の 練習は 何枚でも OK</span><button class="sr-btn" id="row1Btn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button>' : '';
+    $('row1').innerHTML = done[0] ? '<span class="sr-t"><b>プリント '+DAILY_SHEETS+'まい できた!</b>今日の 練習は 何枚でも OK</span><button class="sr-btn" id="row1Btn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button>' : '';
     if($('row1Btn')) $('row1Btn').onclick = function(){ state.printOpen = !state.printOpen; renderRoad(); };
     $('row2').innerHTML = done[1]
       ? '<span class="sr-boss">'+bossSVG(bossOp(), true)+'</span><span class="sr-t"><b>'+BOSS[bossOp()].name+'を たおした!</b>スタンプ '+n+'こ</span><button class="sr-btn" id="row2Btn">カード</button>'
@@ -4619,13 +4629,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var w100Btn = function(){ state.w100Open = !state.w100Open; renderRoad(); };
     $('row3').innerHTML = done[2]
       ? '<span class="sr-t"><b>100問 <ruby>記録<rt>きろく</rt></ruby> できた!</b>もう1回で さいだい '+coinPlan100(state.homeOp || 'add').max+'コイン(メダルで もらえるよ)</span><button class="sr-btn" id="row3Btn">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button>'
-      : '<span class="sr-t"><b>100問 <ruby>記録<rt>きろく</rt></ruby></b>'+(cur === 0 ? '🔒 プリントを 1枚 やると 開く' : name+'を 100問')+'</span><span class="sr-r">自己ベスト<strong class="num">'+(best ? fmtClock(best.ms) : '－')+'</strong></span>';
+      : '<span class="sr-t"><b>100問 <ruby>記録<rt>きろく</rt></ruby></b>'+(cur === 0 ? '🔒 プリントを '+DAILY_SHEETS+'まい やると 開く' : name+'を 100問')+'</span><span class="sr-r">自己ベスト<strong class="num">'+(best ? fmtClock(best.ms) : '－')+'</strong></span>';
     if($('row3Btn')) $('row3Btn').onclick = w100Btn;
     // the partner stands at the step to do now
     var a2 = activePet(), rp = $('roadPet'), rbb = $('roadBubble'), cs = $('st'+(cur+1));
     if(!rp.firstChild) Pet.mount(rp, a2.sp, a2.lv);
     if(rp.parentNode !== cs){ cs.insertBefore(rbb, cs.firstChild); cs.insertBefore(rp, cs.firstChild); }
-    rbb.textContent = ['まずは プリント!', 'ボスに 挑もう!', '100問に 挑戦!'][cur];
+    rbb.textContent = ['まずは プリント '+Math.min(sheetsToday(), DAILY_SHEETS)+'/'+DAILY_SHEETS+'まい!', 'ボスに 挑もう!', '100問に 挑戦!'][cur];
     $('goalText').textContent = '全部 おわると 今日の 花丸!(＋'+ALLCLEAR_BONUS+'コイン)';
   }
   function rb(t){ return String(t).replace(/桁/g, '<ruby>桁<rt>けた</rt></ruby>'); }
@@ -4651,16 +4661,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var meta = OP_META[rec];
     $('todayBtn').innerHTML = (rec==='mix' ? '混ぜて' : meta.label+'の') + 'プリントを始める';
     renderPrintInfo(rec);
-    var si = printSizeIdx(), pk = printPickIdx();
-    var sh = '<span class="sz-label">問題の数</span>';
-    PRINT_SIZES.forEach(function(n, i){
-      if(i <= si) sh += '<button data-size="'+i+'" aria-pressed="'+(i===pk)+'"><span class="sz-n"><span class="num">'+n+'</span>問</span>'+(i>0 ? '<small>コイン'+(n/10)+'倍</small>' : '')+'</button>';
-      else sh += '<span class="sz-lock"><span class="num">'+n+'</span>問 🔒</span>';
-    });
-    var left = SIZE_UP_PASSES - (safeGet('keisan_print_passes')||0);
-    $('sizeNote').innerHTML = '<div class="size-pick">'+sh+'</div>' + (si < PRINT_SIZES.length-1
-      ? '<span class="sz-next">合格した プリント あと <b>'+left+'まい</b>で <b>'+PRINT_SIZES[si+1]+'問チャレンジ</b>が ひらくよ!(コイン'+(PRINT_SIZES[si+1]/10)+'倍)</span>'
-      : '<span class="sz-next">'+PRINT_SIZES[si]+'問チャレンジまで 全部 ひらいたよ!好きな 数を 選んでね</span>');
+    var sn = sheetsToday(), sd = '';
+    for(var k = 0; k < DAILY_SHEETS; k++) sd += '<i class="'+(k < sn ? 'on' : '')+'"></i>';
+    $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">きょうの プリント <b class="num">'+Math.min(sn, DAILY_SHEETS)+'/'+DAILY_SHEETS+'</b>まい</span><span class="sheets-d">'+sd+'</span></div>' +
+      '<span class="sz-next">1まい '+SHEET_N+'問。'+(sn >= DAILY_SHEETS ? '5まい できたよ!もっと やっても OK' : 'あと <b>'+(DAILY_SHEETS - sn)+'まい</b>で 今日の プリントが クリア!')+'</span>';
     renderWeekend(rec);
     if(rec === 'mix'){
       $('todayMain').innerHTML = '<span class="sym num" style="font-size:15px">MIX</span><span><span class="t1">混ぜて練習</span><br><span class="t2">＋－×÷が混ざって出るよ</span></span>';
@@ -4687,7 +4691,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         $('todayHint').textContent = '';
       }else{
       $('todayGoal').innerHTML = info.isMax ? '最高レベル! 自分の記録にチャレンジしよう'
-        : 'あと <b class="num">'+info.remain+'</b>回合格で「'+info.next.name+'」にレベルアップ!';
+        : 'あと <b class="num">'+info.remain+'</b>回合格で「'+info.next.name+'」にレベルアップ!(合格は 1日に 1回 かぞえるよ)';
       $('todayAlt').hidden = false;
       $('todayHint').textContent = (info.isMax ? '' : '正解'+PASS_ACC+'%以上で、めあてタイムより早いと合格。合格で1マス進むよ。') +
         '';
@@ -7232,7 +7236,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var def = LEVELS[state.op][lv];
       var isMax = lv === LEVELS[state.op].length-1;
       var stepped = false;
-      if(!isMax && passed && !isReview){
+      var clearDayKey = 'keisan_clearday_' + state.op, firstClearToday = safeGet(clearDayKey) !== todayKey();
+      if(!isMax && passed && !isReview && firstClearToday){
+        safeSet(clearDayKey, todayKey());
         var clears = clearsAtLevel(state.op, lv) + 1;
         safeSet('keisan_clears_'+state.op+'_'+lv, clears);
         stepped = true;
@@ -7290,6 +7296,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
                    : (accuracy===100 ? 'パーフェクト!' : (accuracy>=70 ? 'よくできました!' : (accuracy>=40 ? 'がんばったね!' : '次は もっと とけるよ!')));
     var sub = (pr ? (pr.kind==='weekend' ? '100問チャレンジ' : (isReview ? '復習プリント ' : '今日のプリント ')+N+'問') + (passed ? '、合格だよ!' : '、おつかれさま!') : '全部で ' + (N+totalMistakes) + '問 答えて、'+N+'問すべて 正解したよ。');
     if(compare) sub += '\n' + compare;
+    if(pr && pr.kind === 'daily'){ var shn = sheetsToday(); sub += '\nきょうの プリント ' + Math.min(shn, DAILY_SHEETS) + '/' + DAILY_SHEETS + 'まい' + (shn === DAILY_SHEETS ? ' クリア!' : ''); }
     if(!fast && accuracy>=PASS_ACC) sub += '\nめあての '+fmtSec(target)+' より 早いと 合格だよ。';
     if(isCh){
       title = passed ? BOSS[bossOp()].name+'を たおした!' : 'おしい!';
