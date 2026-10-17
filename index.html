@@ -8077,6 +8077,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function gradeOk(m, l){ return true; }   /* 学年では ロックしない。★で すすむ */
     window.__deciAhead = function(){ var b = getD().best, g = grade(), mx = 0; Object.keys(NEED).forEach(function(m){ [0,1,2].forEach(function(l){ if((+b[m+l] || 0) >= 1 && NEED[m][l] > mx) mx = NEED[m][l]; }); }); return Math.max(0, mx - g); };
     function isOpen(m, l){ return gradeOk(m, l) && (l === 0 || best(m, l-1) >= 1); }
+    var STEPS = [['dec',0],['frac',0],['dec',1],['red',0],['frac',1],['dec',2],['red',1],['red',2],['frac',2]];
+    function curStep(){ for(var i=0;i<STEPS.length;i++) if(best(STEPS[i][0], STEPS[i][1]) < 2) return i; return -1; }
+    function stepOf(m, l){ for(var i=0;i<STEPS.length;i++) if(STEPS[i][0] === m && STEPS[i][1] === l) return i; return -1; }
+    function stepName(i){ var m = STEPS[i][0], l = STEPS[i][1]; return modeOf(m).name+'・'+LV[l]; }
     function noRed(){ return grade() < 5; }   /* 約分は 5年: それまでは 約分 しなくても 正解 */
     function modeOf(id){ for(var i=0;i<MODES.length;i++) if(MODES[i].id === id) return MODES[i]; }
 
@@ -8216,19 +8220,26 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     function renderCard(){
       var c = $('deciCard'); if(!c) return;
-      var s = getD(), segs = '', ls = 0;
-      MODES.forEach(function(m){ for(var l=0;l<3;l++) segs += '<i class="'+((s.best[m.id+l] || 0) >= 1 ? 'on' : '')+'"></i>'; });
-      LESSONS.forEach(function(L){ if(s.lessons[L.id]) ls++; });
-      c.innerHTML = '<span class="fc-ico"></span><span class="fc-text"><b>小数・分数</b>レッスン '+ls+'/4・★ '+totalStars()+'/27<span class="fc-segs">'+segs+'</span></span>' +
-        '<button class="fc-go" id="dcGo">れんしゅう</button>';
+      var s = getD(), segs = '', cs = curStep(), doneToday = s.day === dayKeyOf(new Date());
+      STEPS.forEach(function(st){ segs += '<i class="'+(best(st[0], st[1]) >= 2 ? 'on' : '')+'"></i>'; });
+      c.innerHTML = '<span class="fc-ico"></span><span class="fc-text"><b>小数・分数</b>' +
+        (cs >= 0 ? 'ステップ '+(cs+1)+'/'+STEPS.length+': '+stepName(cs)+'(小'+NEED[STEPS[cs][0]][STEPS[cs][1]]+')' : 'ぜんぶの ステップを クリア!') +
+        (doneToday ? ' ✓ きょうは できた!' : '')+'<span class="fc-segs">'+segs+'</span><u id="dcAll" style="cursor:pointer">ぜんぶ みる</u></span>' +
+        '<button class="fc-go" id="dcGo">'+(cs >= 0 ? 'きょうの 10問' : 'れんしゅう')+'</button>';
       c.hidden = false;
     }
-    $('deciCard').addEventListener('click', function(e){ if(e.target.closest('#dcGo')) openMenu(); });
+    $('deciCard').addEventListener('click', function(e){
+      if(e.target.closest('#dcAll')){ openMenu(); return; }
+      if(!e.target.closest('#dcGo')) return;
+      var cs = curStep(); if(cs >= 0) start(STEPS[cs][0], STEPS[cs][1]); else openMenu();
+    });
     function openMenu(){
       R++; P = null; LS = null;
       setLive('div');
       var s = getD();
-      $('dcTotal').innerHTML = starSVG(true)+'<span>あつめた 星 <b class="num">'+totalStars()+'</b> / 27</span>';
+      var cs0 = curStep();
+      $('dcTotal').innerHTML = starSVG(true)+'<span>あつめた 星 <b class="num">'+totalStars()+'</b> / 27</span>' +
+        (cs0 >= 0 ? '<button class="dc-small sel" id="dcToday" style="margin-left:auto">きょうの 10問</button>' : '');
       $('dcGrade').innerHTML = '<span class="dc-gl">いまの 学年<small>★を とると 先の ないようにも すすめるよ</small></span><span class="dc-gb">' +
         [3,4,5,6].map(function(g){ return '<button class="dc-small'+(s.grade === g ? ' sel' : '')+'" data-g="'+g+'">'+g+'年</button>'; }).join('')+'</span>';
       $('dcLessons').innerHTML = LESSONS.map(function(L, i){
@@ -8237,13 +8248,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('dcCourses').innerHTML = MODES.map(function(m){
         return '<section class="dc-course" style="--mc:var('+m.color+')"><h3>'+m.name+'</h3><p>'+(m.id === 'frac' && s.grade < 5 ? 'まずは 分母が 同じ 分数から。' : m.desc)+'</p><div class="dc-levels">' +
           [0,1,2].map(function(l){
-            var open = isOpen(m.id, l), need = NEED[m.id][l];
-            return '<button class="dc-lvl'+(open ? '' : ' locked')+'" data-m="'+m.id+'" data-l="'+l+'"><span class="ln">'+LV[l]+'</span><span class="ld">'+m.levels[l]+'</span>' +
-              (open ? '<span class="st">'+starsHTML(best(m.id, l))+'</span><span class="lock" style="color:var(--ink-soft)">小'+need+(need > s.grade ? ' ・ 先どり!' : '')+'</span>' : '<span class="lock">🔒 まえの レベルで ★1こ</span>')+'</button>';
+            var open = isOpen(m.id, l), need = NEED[m.id][l], isNow = stepOf(m.id, l) === cs0;
+            return '<button class="dc-lvl'+(open ? '' : ' locked')+(isNow ? ' sel' : '')+'" data-m="'+m.id+'" data-l="'+l+'"><span class="ln">'+LV[l]+'</span><span class="ld">'+m.levels[l]+'</span>' +
+              (open ? '<span class="st">'+starsHTML(best(m.id, l))+'</span><span class="lock" style="color:var(--ink-soft)">'+(isNow ? '★ いま ここ ・ ' : '')+'小'+need+(need > s.grade ? ' ・ 先どり!' : '')+'</span>' : '<span class="lock">🔒 まえの レベルで ★1こ</span>')+'</button>';
           }).join('')+'</div></section>';
       }).join('');
       show('menu');
     }
+    $('dcTotal').addEventListener('click', function(e){
+      if(!e.target.closest('#dcToday')) return;
+      var cs = curStep(); if(cs >= 0) start(STEPS[cs][0], STEPS[cs][1]);
+    });
     $('dcBack').addEventListener('click', goHome);
     $('dcLessons').addEventListener('click', function(e){
       var b = e.target.closest('.dc-lesson'); if(!b) return;
@@ -8542,7 +8557,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var stars = F.first >= 10 ? 3 : F.first >= 8 ? 2 : F.first >= 6 ? 1 : 0;
       R++; P = null;
       var s = getD(), key = F.mode+l, prev = s.best[key] || 0, gain = Math.max(0, stars-prev);
-      if(gain > 0){ s.best[key] = stars; safeSet(KEY, s); }
+      s.day = dayKeyOf(new Date());
+      if(gain > 0) s.best[key] = stars;
+      safeSet(KEY, s);
+      var stepClear = stars >= 2 && prev < 2 && stepOf(F.mode, l) >= 0;
       var lastOp = safeGet('keisan_last_op');
       state.op = LIVE[F.mode]; state.mode = 'deci'; state.print = null; state.chGot = null; state.lowLv = false;
       state.questions = []; state.sessionCoins = 0; state.baseCoins = 0;
@@ -8553,10 +8571,18 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         bonuses.push({ label:'つぎの レベル', n:LEVELUP_BONUS });
         banners.push({ type:'level', title:'レベルアップ! 「'+LV[l+1]+'」が ひらいたよ', text:m.levels[l+1]+' に チャレンジ。' });
       }
+      var ns = curStep();
+      if(stepClear){
+        var fast = elapsed <= (F.mode === 'red' ? 150000 : 120000);
+        bonuses.push({ label:'ステップ クリア!', n:5 });
+        if(fast) bonuses.push({ label:'はやい!', n:3 });
+        banners.push({ type:'level', title:'ステップ クリア!', text:ns >= 0 ? 'つぎは 「'+stepName(ns)+'」(小'+NEED[STEPS[ns][0]][STEPS[ns][1]]+')' : '小数・分数の ステップを ぜんぶ クリア!' });
+      }
       addMission(bonuses);
       if(lastOp != null) safeSet('keisan_last_op', lastOp);
       giveBonuses(bonuses);
       if(state.sessionCoins > 0) banners.push(coinBanner(bonuses));
+      var gotoStep = stars >= 2 && ns >= 0 && (STEPS[ns][0] !== F.mode || STEPS[ns][1] !== l);
       var next = l < 2 && (stars >= 1 || prev >= 1) && gradeOk(F.mode, l+1);
       renderResult({
         stars:stars,
@@ -8569,8 +8595,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         ],
         banners:banners,
         levelNoteHtml:null,
-        retryLabel:next ? 'つぎの レベルへ' : 'もう一回',
-        retry:function(){ start(F.mode, next ? l+1 : l); }
+        retryLabel:gotoStep ? 'つぎの ステップへ' : next ? 'つぎの レベルへ' : 'もう一回',
+        retry:function(){ if(gotoStep) start(STEPS[ns][0], STEPS[ns][1]); else start(F.mode, next ? l+1 : l); }
       });
       var card = $('rewardCard');
       if(F.missed.length){
