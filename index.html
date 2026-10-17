@@ -394,6 +394,9 @@
   @media (prefers-reduced-motion: reduce){ .md-svg.pop{ animation:none; } }
   #allClear .weekend{ border:3px solid var(--gold-deep); }
   #allClear .weekend .cur-tag{ display:none; }
+  .md-grp{ font-size:14px; font-weight:900; margin:4px 2px 8px; color:var(--ink); }
+  .md-grp-sub{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin:-4px 2px 10px; line-height:1.5; }
+  .md-shelf{ margin-bottom:12px; }
 </style></head><body>
 <title>けいさんチャレンジ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2077,7 +2080,7 @@
     </div>
     <h2 class="sec-title">トロフィーだな</h2>
     <p class="sec-sub">100問で メダルを あつめると トロフィーが もらえるよ。下に いくほど むずかしい!</p>
-    <div class="md-shelf" id="mdShelf"></div>
+    <div id="mdShelf"></div>
     <h2 class="sec-title">あつめた メダル</h2>
     <p class="sec-sub">100問は 何回でも 挑戦 できるよ。1回ごとに メダルが 1こ。</p>
     <div class="md-box" id="mdCount"></div>
@@ -7046,6 +7049,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       state.printOpen = false;
     }
     addMission(bonuses);
+    if(pr) medalGot = Medal.tick(state.op, N, pr.kind, passed, bonuses, medalGot);
     giveBonuses(bonuses);
     if(state.sessionCoins>0) banners.push(coinBanner(bonuses));
 
@@ -10039,6 +10043,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       m.c = m.c || {}; m.top = m.top || {}; m.tro = m.tro || {};
       return m;
     }
+    /* れんしゅうの かず(プリント・100問・ちょうせん)。はじめては 今ある 記録(最大200件)から かぞえはじめる */
+    function seedCnt(m){
+      var lg = printLog(), c = { p:0, q:0, b:0, o:{} };
+      lg.forEach(function(e){ c.p++; c.q += e.n || 0; if(e.k === 'challenge' && e.pass) c.b++; if(e.op && e.op !== 'mix') c.o[e.op] = 1; });
+      m.cnt = c; return c;
+    }
+    function cn(m){ return m.cnt || { p:0, q:0, b:0, o:{} }; }
+    function ops4done(m){ var o = cn(m).o; return OPS4.every(function(x){ return o[x]; });
+    }
     function cnt(m, op, r){ return (m.c[op] && m.c[op][r]) || 0; }
     function total(m, minR){ var s = 0; OPS.forEach(function(o){ for(var r = minR || 1; r <= 4; r++) s += cnt(m, o, r); }); return s; }
     function top(m, op){ return m.top[op] || 0; }
@@ -10063,7 +10076,20 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { id:'t_4g',    tier:3, name:'4しゅるい ゴールド',  cond:'＋ － × ÷ ぜんぶで ゴールド いじょう', coin:40,  ok:function(m){ return all4(m, 3); } },
       { id:'t_m100',  tier:3, name:'メダル 100こ',        cond:'メダルを 100こ あつめる',              coin:50,  ok:function(m){ return total(m) >= 100; } },
       { id:'t_d1',    tier:4, name:'はじめての ダイヤ',   cond:'ダイヤメダルを 1こ もらう',            coin:30,  ok:function(m){ return total(m, 4) >= 1; } },
-      { id:'t_4d',    tier:4, name:'100問 マスター',      cond:'＋ － × ÷ ぜんぶで ダイヤ',            coin:100, ok:function(m){ return all4(m, 4); } }
+      { id:'t_4d',    tier:4, name:'100問 マスター',      cond:'＋ － × ÷ ぜんぶで ダイヤ',            coin:100, ok:function(m){ return all4(m, 4); } },
+      /* れんしゅうの トロフィー(プリント・ちょうせん・つづけた日) */
+      { id:'t_p5',    g:'p', tier:1, name:'えんぴつ',            cond:'れんしゅうを 5回 やる',                coin:10, ok:function(m){ return cn(m).p >= 5; } },
+      { id:'t_d3',    g:'p', tier:1, name:'きょうは 3まい',      cond:'1日に プリントを 3まい やる',          coin:15, ok:function(m){ return m.dp && m.dp.d === todayKey() && m.dp.n >= 3; } },
+      { id:'t_s3',    g:'p', tier:1, name:'ほのお',              cond:'3日 れんぞくで やる',                  coin:15, ok:function(){ return streakCount() >= 3; } },
+      { id:'t_q500',  g:'p', tier:1, name:'そろばん',            cond:'ぜんぶで 500問 とく',                  coin:15, ok:function(m){ return cn(m).q >= 500; } },
+      { id:'t_p20',   g:'p', tier:2, name:'ドリルの ほん',       cond:'れんしゅうを 20回 やる',               coin:20, ok:function(m){ return cn(m).p >= 20; } },
+      { id:'t_ops4',  g:'p', tier:2, name:'よつばの クローバー', cond:'＋ － × ÷ ぜんぶの プリントを やる',   coin:30, ok:function(m){ return ops4done(m); } },
+      { id:'t_b5',    g:'p', tier:2, name:'ボスたおしの けん',   cond:'ボスを 5回 たおす',                    coin:25, ok:function(m){ return cn(m).b >= 5; } },
+      { id:'t_s7',    g:'p', tier:2, name:'7日の カレンダー',    cond:'7日 れんぞくで やる',                  coin:40, ok:function(){ return streakCount() >= 7; } },
+      { id:'t_p50',   g:'p', tier:3, name:'しあわせの ベル',     cond:'れんしゅうを 50回 やる',               coin:30, ok:function(m){ return cn(m).p >= 50; } },
+      { id:'t_q3000', g:'p', tier:3, name:'けいさんの やま',     cond:'ぜんぶで 3000問 とく',                 coin:60, ok:function(m){ return cn(m).q >= 3000; } },
+      { id:'t_b20',   g:'p', tier:3, name:'ボスたおしの しろ',   cond:'ボスを 20回 たおす',                   coin:60, ok:function(m){ return cn(m).b >= 20; } },
+      { id:'t_p100',  g:'p', tier:4, name:'けいさんの たいよう', cond:'れんしゅうを 100回 やる',              coin:80, ok:function(m){ return cn(m).p >= 100; } }
     ];
 
     /* ---- 絵 ---- */
@@ -10122,6 +10148,35 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         b = '<path d="M20 24c-14 0-15 24 8 25M60 24c14 0 15 24-8 25" fill="none" stroke="'+D+'" stroke-width="4" stroke-linecap="round"/><path d="M17 20h46v4c0 17-9 27-23 27S17 41 17 24z"'+f(B)+'/><path d="M40 20h23v4c0 17-9 27-23 27z"'+f(D)+' opacity=".25"/><path d="M26 20c0-9 5-13 14-13s14 4 14 13z"'+f(B)+'/><circle cx="40" cy="5" r="3.6"'+f(D)+'/>'+shine('M22 24h5v9c0 6 3 10 6 13-7-3-11-9-11-16z')+stem(51)+plinth()+(got ? txt(40, 41, 17, '100', H) : mark(40, 34, 9)); break;
       case 't_d1':      /* ダイヤの トロフィー */
         b = '<polygon points="24,6 56,6 70,26 10,26"'+f(H)+'/><polygon points="10,26 70,26 40,60"'+f(B)+'/><polygon points="40,26 70,26 40,60"'+f(D)+' opacity=".3"/><path d="M24 6l8 20 8 34 8-34 8-20M10 26h60" stroke="#fff" stroke-width="1.8" fill="none" opacity=".85"/><rect x="37" y="58" width="6" height="6"'+f(D)+'/><path d="M29 69c0-6 4-8 11-8s11 2 11 8z"'+f(D)+'/>'+plinth()+(got ? '' : mark(40, 24, 9)); break;
+      case 't_p5':      /* えんぴつ */
+        b = '<rect x="32" y="4" width="16" height="8" rx="2.5"'+f(A1)+'/><rect x="32" y="11" width="16" height="4"'+f(D)+'/><rect x="32" y="15" width="16" height="38"'+f(B)+'/><rect x="32" y="15" width="6" height="38"'+f(H)+' opacity=".6"/><path d="M32 53h16l-8 13z"'+f('#F6DDB8')+'/><path d="M37 62h6l-3 4z"'+f(D)+'/>'+plinth()+(got ? '' : mark(40, 32, 8)); break;
+      case 't_p20':     /* ドリルの ほん */
+        b = '<path d="M8 18c11-5 24-4 32 3v42c-8-6-21-7-32-2z"'+f(B)+'/><path d="M72 18c-11-5-24-4-32 3v42c8-6 21-7 32-2z"'+f(H)+'/><path d="M40 21v42" stroke="'+D+'" stroke-width="2.5"/><path d="M14 28c7-2 14-2 20 1M14 37c7-2 14-2 20 1M46 29c6-3 13-3 20-1M46 38c6-3 13-3 20-1" stroke="'+D+'" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>'+(got ? star(58, 52, 6, A1) : mark(58, 52, 6))+plinth(); break;
+      case 't_p50':     /* ベル */
+        b = '<circle cx="40" cy="7" r="4"'+f(D)+'/><path d="M40 9c-15 0-21 11-21 25 0 8-4 13-9 17h60c-5-4-9-9-9-17 0-14-6-25-21-25z"'+f(B)+'/><path d="M40 9c15 0 21 11 21 25 0 8 4 13 9 17H40z"'+f(D)+' opacity=".25"/>'+shine('M26 22c2-6 6-9 11-10-6 3-9 9-9 16z')+'<rect x="8" y="50" width="64" height="6" rx="3"'+f(D)+'/><circle cx="40" cy="62" r="5.5"'+f(D)+'/>'+plinth()+(got ? '' : mark(40, 34, 9)); break;
+      case 't_p100':    /* たいよう */
+        var ry = ''; for(var r = 0; r < 12; r++){ var ra = r * 30 * Math.PI / 180; ry += '<path d="M'+(40 + Math.sin(ra) * 22).toFixed(1)+' '+(30 - Math.cos(ra) * 22).toFixed(1)+'L'+(40 + Math.sin(ra) * 29).toFixed(1)+' '+(30 - Math.cos(ra) * 29).toFixed(1)+'" stroke="'+D+'" stroke-width="4.5" stroke-linecap="round"/>'; }
+        b = ry+'<circle cx="40" cy="30" r="19"'+f(B)+'/><path d="M40 11a19 19 0 0 1 0 38z"'+f(D)+' opacity=".25"/>'+shine('M28 22a14 14 0 0 1 9-8c-5 3-8 8-9 8z')+(got ? '<circle cx="33" cy="29" r="2.3"'+f('#7A4B12')+'/><circle cx="47" cy="29" r="2.3"'+f('#7A4B12')+'/><path d="M33 36q7 6 14 0" fill="none" stroke="#7A4B12" stroke-width="2.4" stroke-linecap="round"/>' : mark(40, 30, 9))+stem(60)+plinth(); break;
+      case 't_q500':    /* そろばん */
+        b = '<rect x="9" y="8" width="62" height="56" rx="5" fill="none" stroke="'+D+'" stroke-width="5"/><path d="M14 22h52M14 36h52M14 50h52" stroke="'+D+'" stroke-width="2.5"/>';
+        [[22,22,A1],[34,22,A1],[50,22,B],[22,36,B],[44,36,A1],[56,36,B],[28,50,A1],[40,50,B],[58,50,B]].forEach(function(c){ b += '<ellipse cx="'+c[0]+'" cy="'+c[1]+'" rx="6" ry="5"'+f(c[2])+'/>'; });
+        b += plinth().replace('y="70"', 'y="68"').replace('y="73.5"', 'y="71.5"')+(got ? '' : ''); break;
+      case 't_q3000':   /* けいさんの やま(はた つき) */
+        b = '<path d="M2 66L32 18l16 22 9-12 21 38z"'+f(B)+'/><path d="M32 18l16 22 9-12 21 38H48z"'+f(D)+' opacity=".22"/><path d="M32 18l8 12-6-3-5 5z"'+f('#fff')+'/><rect x="31" y="3" width="2.5" height="17"'+f(D)+'/><path d="M33.5 3l13 5-13 5z"'+f(A1)+'/><rect x="2" y="66" width="76" height="5" rx="2"'+f(PL)+'/>'+(got ? '' : mark(40, 50, 8)); break;
+      case 't_s3':      /* ほのお */
+        b = '<path d="M40 3c5 13 19 19 19 37 0 14-8 23-19 23S21 54 21 40c0-8 4-13 8-17 0 6 3 9 6 9-2-11 0-21 5-29z"'+f(got ? '#FF8A3D' : B)+'/><path d="M40 34c3 8 10 12 10 21 0 7-4 11-10 11s-10-4-10-11c0-5 3-9 5-11 0 3 2 5 4 5-1-6 0-10 1-15z"'+f(got ? '#FFD25A' : H)+'/>'+plinth().replace('y="70"', 'y="68"').replace('y="73.5"', 'y="71.5"')+(got ? '' : mark(40, 44, 8)); break;
+      case 't_s7':      /* カレンダー */
+        b = '<rect x="10" y="8" width="60" height="56" rx="6"'+f(H)+'/><path d="M10 14a6 6 0 0 1 6-6h48a6 6 0 0 1 6 6v12H10z"'+f(A1)+'/><circle cx="26" cy="8" r="3.5"'+f(D)+'/><circle cx="54" cy="8" r="3.5"'+f(D)+'/><rect x="10" y="26" width="60" height="38" rx="0"'+f(B)+' opacity=".35"/>'+(got ? txt(40, 56, 28, '7', D) : mark(40, 44, 9))+plinth().replace('y="70"', 'y="68"').replace('y="73.5"', 'y="71.5"'); break;
+      case 't_b5':      /* けん */
+        b = '<path d="M40 2l8 6v38H32V8z"'+f(H)+'/><path d="M40 2l8 6v38H40z"'+f(B)+'/><rect x="20" y="46" width="40" height="7" rx="3.5"'+f(D)+'/><rect x="36" y="53" width="8" height="12"'+f(A1)+'/><circle cx="40" cy="66" r="4.5"'+f(D)+'/>'+plinth().replace('y="70"', 'y="72"').replace('y="73.5"', 'y="75.5"').replace('height="11"', 'height="9"')+(got ? star(40, 26, 6, A1) : mark(40, 26, 6)); break;
+      case 't_b20':     /* おしろ */
+        b = '<rect x="22" y="28" width="36" height="38"'+f(B)+'/><rect x="8" y="18" width="18" height="48"'+f(D)+'/><rect x="54" y="18" width="18" height="48"'+f(D)+'/>';
+        [[8,12],[15,12],[21,12],[54,12],[61,12],[67,12],[24,23],[33,23],[43,23],[51,23]].forEach(function(c){ b += '<rect x="'+c[0]+'" y="'+c[1]+'" width="5" height="6"'+f(c[1] === 12 ? D : B)+'/>'; });
+        b += '<path d="M33 66V50a7 7 0 0 1 14 0v16z"'+f(PL)+'/><rect x="39" y="2" width="2" height="14"'+f(D)+'/><path d="M41 2l12 4-12 4z"'+f(A1)+'/><rect x="38" y="14" width="4" height="14"'+f(D)+' opacity=".0"/>'+plinth().replace('y="70"', 'y="68"').replace('y="73.5"', 'y="71.5"')+(got ? '' : mark(40, 36, 7)); break;
+      case 't_ops4':    /* よつばの クローバー */
+        b = '<path d="M40 50c0 8 2 12 6 16" fill="none" stroke="'+D+'" stroke-width="4" stroke-linecap="round"/><circle cx="29" cy="24" r="13"'+f(B)+'/><circle cx="51" cy="24" r="13"'+f(B)+'/><circle cx="29" cy="46" r="13"'+f(B)+'/><circle cx="51" cy="46" r="13"'+f(B)+'/><circle cx="40" cy="35" r="7"'+f(D)+'/>'+(got ? txt(29, 29, 14, '＋', '#fff')+txt(51, 29, 14, '－', '#fff')+txt(29, 51, 14, '×', '#fff')+txt(51, 51, 14, '÷', '#fff') : mark(40, 35, 6))+plinth().replace('y="70"', 'y="72"').replace('y="73.5"', 'y="75.5"').replace('height="11"', 'height="9"'); break;
+      case 't_d3':      /* 表彰台 */
+        b = '<rect x="27" y="30" width="26" height="40"'+f(B)+'/><rect x="4" y="42" width="23" height="28"'+f(D)+'/><rect x="53" y="50" width="23" height="20"'+f(H)+'/>'+(got ? star(40, 18, 10, A1)+txt(40, 54, 22, '1', '#fff')+txt(15, 62, 17, '2', '#fff')+txt(64, 65, 15, '3', D) : mark(40, 20, 9))+'<rect x="2" y="70" width="76" height="6" rx="2"'+f(PL)+'/>'; break;
       default:          /* t_4d 100問マスター: はねの ついた たまと ダイヤ */
         var wing = '<path d="M33 40C20 42 8 34 3 20c8 3 14 3 21 7-4-3-9-7-11-12 9 2 17 6 22 12z"'+f(B)+'/><path d="M33 40C24 38 16 34 12 27"'+' fill="none" stroke="'+H+'" stroke-width="2" opacity=".8"/>';
         b = wing+'<g transform="translate(80 0) scale(-1 1)">'+wing+'</g><circle cx="40" cy="38" r="14"'+f(D)+'/><circle cx="40" cy="38" r="10"'+f(B)+'/>'+mark(40, 38, 6.5, '#fff')+'<polygon points="40,6 47,15 40,25 33,15"'+f(got ? '#8BE8F7' : '#D8D1C3')+'/><path d="M33 15h14" stroke="#fff" stroke-width="1.4" opacity=".8"/>'+stem(52)+plinth(); break;
@@ -10158,10 +10213,27 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }
       return info;
     }
+    /* プリント・復習・ちょうせん・100問 どれが おわっても よぶ(れんしゅうの かずと トロフィー) */
+    function tick(op, N, kind, passed, bonuses, info){
+      var m = data(), t = todayKey();
+      if(!m.cnt) seedCnt(m);
+      else{
+        m.cnt.p++; m.cnt.q += N;
+        if(kind === 'challenge' && passed) m.cnt.b++;
+        if(op !== 'mix') m.cnt.o[op] = 1;
+      }
+      m.dp = (m.dp && m.dp.d === t) ? { d:t, n:m.dp.n + 1 } : { d:t, n:1 };
+      info = info || { op:op, rank:0, tro:[], noMedal:true };
+      TROPHIES.forEach(function(T){
+        if(!m.tro[T.id] && T.ok(m)){ m.tro[T.id] = t; info.tro.push(T); bonuses.push({ label:'トロフィー「'+T.name+'」', n:T.coin }); }
+      });
+      safeSet(KEY, m);
+      return info;
+    }
     function result(info){
       var box = $('mdResult');
       if(!box) return;
-      if(!info){ box.hidden = true; box.innerHTML = ''; return; }
+      if(!info || info.noMedal){ box.hidden = true; box.innerHTML = ''; if(info) modal(info); return; }
       var h = '';
       if(info.rank){
         var R = RANKS[info.rank];
@@ -10176,6 +10248,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }else h += '<small>いちばん 上の ダイヤ!すごい!</small>';
       h += '</div>';
       box.innerHTML = h; box.hidden = false;
+      modal(info);
+    }
+    function modal(info){
       if(info.tro.length){
         var T = info.tro[0], more = info.tro.slice(1).map(function(x){ return '「'+x.name+'」'; }).join('');
         setTimeout(function(){
@@ -10209,11 +10284,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     function open(){
       var m = data(), h = '';
-      TROPHIES.forEach(function(T){
+      TROPHIES.forEach(function(T, ix){
         var g = m.tro[T.id];
+        if(T.g === 'p' && !TROPHIES[ix - 1].g) h += '</div><h3 class="md-grp">れんしゅうの トロフィー</h3><p class="md-grp-sub">プリントも ちょうせんも 100問も、やった ぶんだけ あつまるよ。</p><div class="md-shelf">';
         h += '<div class="tr-cell'+(g ? ' got' : '')+'">'+trophySVG(T.id, !!g)+'<b>'+(g ? T.name : '？？？')+'</b><span>'+T.cond+'</span>'+(g ? '<small>'+g.replace(/^\d+-/, '').replace('-', '/')+'</small>' : '<small>＋'+T.coin+'コイン</small>')+'</div>';
       });
-      $('mdShelf').innerHTML = h;
+      $('mdShelf').innerHTML = '<h3 class="md-grp">100問の トロフィー</h3><div class="md-shelf">' + h + '</div>';
       var t = '<table class="md-table"><thead><tr><th></th>';
       for(var r = 1; r <= 4; r++) t += '<th>'+medalSVG(r)+'</th>';
       t += '</tr></thead><tbody>';
@@ -10233,7 +10309,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('medalCard').addEventListener('click', open);
     $('mdBack').addEventListener('click', function(){ goHome(); });
 
-    return { award:award, result:result, ladder:ladder, card:card, open:open, rankOf:rankOf, RANKS:RANKS, TROPHIES:TROPHIES };
+    return { tick:tick, award:award, result:result, ladder:ladder, card:card, open:open, rankOf:rankOf, RANKS:RANKS, TROPHIES:TROPHIES, OPS4:OPS4 };
   })();
 
   /* ---------- backup / restore ---------- */
