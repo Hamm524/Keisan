@@ -353,6 +353,9 @@
   .rm-hlab{ position:absolute; left:10px; top:8px; background:rgba(255,255,255,.85); color:#2E2A3D; border-radius:100px; padding:4px 10px; font-size:12px; font-weight:900; }
   .rm-hlab{ max-width:calc(100% - 120px); line-height:1.35; }
   .rm-hlab small{ font-weight:700; color:#6B6478; display:block; font-size:11px; }
+  .rm-house.edit svg{ touch-action:none; }
+  .rm-house.edit .hy{ cursor:grab; filter:drop-shadow(0 0 1.5px #FFC53D) drop-shadow(0 0 3px #FFC53D); }
+  .rm-house.edit .hy.drag{ cursor:grabbing; filter:drop-shadow(0 0 3px #E39B12) drop-shadow(0 0 6px #FFC53D); }
   .rm-hbtn{ position:absolute; right:10px; top:8px; border:none; background:rgba(255,255,255,.9); color:#2E2A3D; border-radius:100px; padding:6px 12px; font:inherit; font-size:12.5px; font-weight:900; cursor:pointer; }
   .rm-hedit{ background:var(--surface); padding:8px 10px 10px; display:grid; gap:8px; }
   .rm-hrow{ display:flex; align-items:flex-start; gap:8px; }
@@ -10239,17 +10242,19 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       o += main + win(0, 120, 128, 22, 22);
       if(n >= 3) o += P[3] + win(2, 148, 80, 24, 24);
       if(n >= 5) o += P[5] + win(4, 270, 96, 24, 24, true);
-      if(hs.deco.flower) o += '<rect x="180" y="166" width="22" height="8" rx="3" fill="#7CC77A"/><circle cx="186" cy="165" r="3" fill="#FF8FB1"/><circle cx="196" cy="165" r="3" fill="#FFD24C"/><circle cx="126" cy="172" r="4" fill="#FF8FB1"/><circle cx="134" cy="174" r="3.5" fill="#B79CF0"/>';
+      var pos = hs.pos || {};
+      function mv(id, g){ var p = pos[id] || [0, 0]; return '<g class="hy" data-y="' + id + '" transform="translate(' + (+p[0] || 0) + ' ' + (+p[1] || 0) + ')">' + g + '</g>'; }
+      if(hs.deco.flower) o += mv('flower', '<rect x="180" y="166" width="22" height="8" rx="3" fill="#7CC77A"/><circle cx="186" cy="165" r="3" fill="#FF8FB1"/><circle cx="196" cy="165" r="3" fill="#FFD24C"/><circle cx="126" cy="172" r="4" fill="#FF8FB1"/><circle cx="134" cy="174" r="3.5" fill="#B79CF0"/>');
       if(hs.deco.garland) o += '<path d="M112,116 Q160,132 208,116" stroke="#C9B79C" stroke-width="1.5" fill="none"/>' + [0,1,2,3,4,5].map(function(k){ var x = 118 + k * 17, y = 117 + 12 * Math.sin(Math.PI * (k + .5) / 6); return '<path d="M'+(x-5)+','+y+' L'+(x+5)+','+y+' L'+x+','+(y+10)+' Z" fill="'+['#FF8FB1','#FFD24C','#7FB8F0','#9BD66B','#B79CF0','#FF9E6B'][k]+'"/>'; }).join('');
-      if(hs.deco.tree) o += '<rect x="16" y="140" width="8" height="40" rx="3" fill="#A77A45"/><circle cx="20" cy="128" r="20" fill="#6DBB6B"/><circle cx="10" cy="140" r="12" fill="#7CC77A"/><circle cx="30" cy="138" r="13" fill="#7CC77A"/><circle cx="14" cy="124" r="3" fill="#FF6F91"/><circle cx="28" cy="130" r="3" fill="#FF6F91"/>';
-      if(hs.deco.post) o += '<rect x="128" y="168" width="3" height="16" fill="#8A6A45"/><rect x="121" y="156" width="17" height="13" rx="5" fill="#E5484D"/><rect x="124" y="160" width="10" height="2" fill="#fff"/>';
+      if(hs.deco.tree) o += mv('tree', '<rect x="16" y="140" width="8" height="40" rx="3" fill="#A77A45"/><circle cx="20" cy="128" r="20" fill="#6DBB6B"/><circle cx="10" cy="140" r="12" fill="#7CC77A"/><circle cx="30" cy="138" r="13" fill="#7CC77A"/><circle cx="14" cy="124" r="3" fill="#FF6F91"/><circle cx="28" cy="130" r="3" fill="#FF6F91"/>');
+      if(hs.deco.post) o += mv('post', '<rect x="128" y="168" width="3" height="16" fill="#8A6A45"/><rect x="121" y="156" width="17" height="13" rx="5" fill="#E5484D"/><rect x="124" y="160" width="10" height="2" fill="#fff"/>');
       if(hs.deco.fence){ var f = ''; for(var k = 0; k < 15; k++){ var x = 6 + k * 10 + (k > 6 ? 168 : 0); if(x > 330) break; f += '<path d="M'+x+',192 V178 l3,-4 l3,4 V192 Z" fill="#fff" stroke="#D9CBB4" stroke-width=".8"/>'; } o += '<rect x="4" y="182" width="140" height="3" fill="#fff"/><rect x="176" y="182" width="160" height="3" fill="#fff"/>' + f; }
       if(hs.deco.smoke && n >= 3) o += '<g fill="#fff" opacity=".8" class="rm-smoke"><circle cx="192" cy="24" r="5"/><circle cx="198" cy="14" r="6"/><circle cx="206" cy="6" r="7"/></g>';
-      if(hs.deco.dog) o += '<g><path d="M-36,168 L-21,152 L-6,168 Z" fill="' + C.roof + '"/><rect x="-33" y="166" width="24" height="20" fill="#E3C08F"/><path d="M-26,186 V178 A5,5 0 0 1 -16,178 V186 Z" fill="#6B4A32"/><rect x="-28" y="160" width="14" height="5" rx="2" fill="#fff"/><circle cx="-4" cy="186" r="4" fill="#E5484D"/><ellipse cx="-4" cy="187" rx="5" ry="2" fill="#C9C2D6"/></g>';
-      if(hs.deco.laundry) o += '<g><rect x="312" y="140" width="3" height="46" fill="#A77A45"/><rect x="364" y="140" width="3" height="46" fill="#A77A45"/><path d="M313,143 Q340,150 366,143" stroke="#8A8296" stroke-width="1.2" fill="none"/>' +
-        '<path d="M320,145 h12 l2,6 h-3 v12 h-10 v-12 h-3 Z" fill="#FF8FB1"/><path d="M338,147 h10 v14 h-10 Z" fill="#7FB8F0"/><path d="M352,146 h9 l-1,10 h-7 Z" fill="#FFD24C"/></g>';
-      if(hs.deco.bench) o += '<g><rect x="232" y="172" width="34" height="4" rx="2" fill="#C99A62"/><rect x="232" y="164" width="34" height="3.5" rx="1.75" fill="#C99A62"/><rect x="235" y="167" width="2.5" height="17" fill="#8A6A45"/><rect x="261" y="167" width="2.5" height="17" fill="#8A6A45"/></g>';
-      if(hs.deco.lamp) o += '<g><rect x="374" y="136" width="3" height="50" fill="#5A5468"/><path d="M369,136 h13 l-2,-10 h-9 Z" fill="#5A5468"/><circle cx="375.5" cy="131" r="4.5" fill="#FFE58A"/><circle cx="375.5" cy="131" r="10" fill="#FFE58A" opacity=".25"/><rect x="371" y="184" width="11" height="3" rx="1.5" fill="#5A5468"/></g>';
+      if(hs.deco.dog) o += mv('dog', '<g><path d="M-36,168 L-21,152 L-6,168 Z" fill="' + C.roof + '"/><rect x="-33" y="166" width="24" height="20" fill="#E3C08F"/><path d="M-26,186 V178 A5,5 0 0 1 -16,178 V186 Z" fill="#6B4A32"/><rect x="-28" y="160" width="14" height="5" rx="2" fill="#fff"/><circle cx="-4" cy="186" r="4" fill="#E5484D"/><ellipse cx="-4" cy="187" rx="5" ry="2" fill="#C9C2D6"/></g>');
+      if(hs.deco.laundry) o += mv('laundry', '<g><rect x="312" y="140" width="3" height="46" fill="#A77A45"/><rect x="364" y="140" width="3" height="46" fill="#A77A45"/><path d="M313,143 Q340,150 366,143" stroke="#8A8296" stroke-width="1.2" fill="none"/>' +
+        '<path d="M320,145 h12 l2,6 h-3 v12 h-10 v-12 h-3 Z" fill="#FF8FB1"/><path d="M338,147 h10 v14 h-10 Z" fill="#7FB8F0"/><path d="M352,146 h9 l-1,10 h-7 Z" fill="#FFD24C"/></g>');
+      if(hs.deco.bench) o += mv('bench', '<g><rect x="232" y="172" width="34" height="4" rx="2" fill="#C99A62"/><rect x="232" y="164" width="34" height="3.5" rx="1.75" fill="#C99A62"/><rect x="235" y="167" width="2.5" height="17" fill="#8A6A45"/><rect x="261" y="167" width="2.5" height="17" fill="#8A6A45"/></g>');
+      if(hs.deco.lamp) o += mv('lamp', '<g><rect x="374" y="136" width="3" height="50" fill="#5A5468"/><path d="M369,136 h13 l-2,-10 h-9 Z" fill="#5A5468"/><circle cx="375.5" cy="131" r="4.5" fill="#FFE58A"/><circle cx="375.5" cy="131" r="10" fill="#FFE58A" opacity=".25"/><rect x="371" y="184" width="11" height="3" rx="1.5" fill="#5A5468"/></g>');
       /* つぎに できる ところ(点線) */
       if(n < 5 && !mini){
         var gh = { 2:'<rect x="208" y="120" width="56" height="60"/><path d="M206,100 L272,126 L272,132 L206,108 Z"/>', 3:'<rect x="116" y="70" width="88" height="40"/><path d="M160,26 L222,78 L98,78 Z"/>', 4:'<rect x="52" y="124" width="60" height="56"/><path d="M114,104 L44,130 L44,136 L114,112 Z"/>', 5:'<rect x="262" y="74" width="40" height="106"/><path d="M282,20 L308,78 L256,78 Z"/>' }[n + 1];
@@ -10277,7 +10282,34 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       return h;
     }
     function hOwn(h, id){ return !BYH[id].price || h.own[id]; }
-    var hEdit = false;
+    var hEdit = false, hDrag = null, YLIM = { x:[-300, 300], y:[-14, 12] };
+    function svgPt(svg, e){ var p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); }
+    $('rmHouse').addEventListener('pointerdown', function(e){
+      if(!hEdit) return;
+      var g = e.target.closest('.hy'); if(!g) return;
+      var svg = g.ownerSVGElement, id = g.getAttribute('data-y'), h = getHS(), p = (h.pos && h.pos[id]) || [0, 0], bb = g.getBBox();
+      e.preventDefault();
+      hDrag = { g:g, svg:svg, id:id, p0:svgPt(svg, e), d0:[+p[0] || 0, +p[1] || 0], d:[+p[0] || 0, +p[1] || 0], bx:[bb.x, bb.x + bb.width], pid:e.pointerId };
+      g.classList.add('drag');
+      try{ $('rmHouse').setPointerCapture(e.pointerId); }catch(_){}
+    });
+    $('rmHouse').addEventListener('pointermove', function(e){
+      if(!hDrag || e.pointerId !== hDrag.pid) return;
+      var q = svgPt(hDrag.svg, e), dx = hDrag.d0[0] + q.x - hDrag.p0.x, dy = hDrag.d0[1] + q.y - hDrag.p0.y;
+      dx = Math.max(-40 - hDrag.bx[0], Math.min(380 - hDrag.bx[1], dx));   /* にわの はしから でない */
+      dy = Math.max(YLIM.y[0], Math.min(YLIM.y[1], dy));
+      hDrag.d = [Math.round(dx), Math.round(dy)];
+      hDrag.g.setAttribute('transform', 'translate(' + hDrag.d[0] + ' ' + hDrag.d[1] + ')');
+    });
+    function hEnd(e){
+      if(!hDrag || e.pointerId !== hDrag.pid) return;
+      var d = hDrag, h = getHS(); hDrag = null;
+      if(!h.pos || typeof h.pos !== 'object') h.pos = {};
+      h.pos[d.id] = d.d; h.t = Date.now(); safeSet(HK, h);
+      renderHouse();
+    }
+    $('rmHouse').addEventListener('pointerup', hEnd);
+    $('rmHouse').addEventListener('pointercancel', hEnd);
     function renderHouse(grow){
       var n = roomN(), b = $('rmHouse'), h = getHS();
       var x = '<span class="rm-hlab">' + HOUSE[n] + (n < 5 ? '<small>つぎは ' + GROW[n + 1] + '</small>' : '') + '</span>' +
@@ -10296,6 +10328,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         x += '</div>';
       }
       b.innerHTML = x;
+      b.classList.toggle('edit', hEdit);
+      if(hEdit) say('にわの かざりは ゆびで うごかせるよ');
       if(grow){ b.classList.remove('grow'); void b.offsetWidth; b.classList.add('grow'); }
     }
     function pickH(id){
