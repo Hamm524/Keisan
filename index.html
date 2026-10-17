@@ -1761,6 +1761,8 @@
   .chip.on{ background:var(--c); border-color:var(--c); color:#fff; }
   .chip.on .cs{ color:#fff; }
   .chip.now{ border-color:var(--c); box-shadow:0 0 0 3px color-mix(in srgb, var(--c) 25%, #fff); color:var(--ink); }
+  .g3btn{ display:block; width:100%; margin-top:8px; padding:8px 12px; border-radius:14px; border:2.5px solid var(--op-mul); background:#fff; color:var(--ink); font-weight:900; font-size:14px; text-align:center; }
+  .g3btn small{ display:block; font-size:11px; font-weight:800; color:var(--ink-soft); margin-top:2px; }
   .rec-rule{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin:8px 0 10px; line-height:1.6; }
   .rec-go{ width:100%; border:none; border-radius:18px; padding:15px; font:inherit; font-size:18px; font-weight:900; color:#fff; background:var(--gold-deep); box-shadow:0 5px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); cursor:pointer; }
   .rec-go:active{ transform:translateY(3px); box-shadow:0 2px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); }
@@ -3399,7 +3401,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   var BONUS_PERFECT = 2;   // 一発正解率100%
   var BONUS_GREAT = 1;     // 一発正解率90%以上
   var BONUS_FAST = 1;      // 目標タイムいない(一発正解率80%以上のときだけ)
-  var TARGET_SEC = [60, 90, 120, 150]; // 10問の目標タイム(レベルごと)
+  var TARGET_SEC = [60, 90, 120, 150, 180]; // 10問の目標タイム(レベルごと)
   /* 今日のプリント(公文式): 毎日決まった枚数、合格=正解90%以上かつ めあてタイム以内 */
   var PRINT_SIZES = [10, 20, 50];
   var SHEET_N = 20, DAILY_SHEETS = 5;   /* 公文: 1日5まい。1まい20問 */
@@ -4098,23 +4100,27 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { name:'簡単',       desc:'2桁 ＋ 1桁',  need:3, gen:function(){ var a=pick(10,99),b=pick(1,9); return {a:a,b:b,answer:a+b}; } },
       { name:'ふつう',         desc:'2桁 ＋ 2桁',  need:3, gen:function(){ var a=pick(10,99),b=pick(10,99); return {a:a,b:b,answer:a+b}; } },
       { name:'少し難しい', desc:'3桁 ＋ 2桁',  need:3, gen:function(){ var a=pick(100,999),b=pick(10,99); return {a:a,b:b,answer:a+b}; } },
-      { name:'難しい',     desc:'3桁 ＋ 3桁',  need:0, gen:function(){ var a=pick(100,999),b=pick(100,999); return {a:a,b:b,answer:a+b}; } }
+      { name:'難しい',     desc:'3桁 ＋ 3桁',  need:3, gen:function(){ var a=pick(100,999),b=pick(100,999); return {a:a,b:b,answer:a+b}; } },
+      { name:'とても難しい', desc:'4桁 ＋ 3〜4桁', need:0, gen:function(){ var a=pick(1000,9999),b=pick(100,9999); return {a:a,b:b,answer:a+b}; } }
     ],
     sub:[
       { name:'簡単',       desc:'2桁 － 1桁',  need:3, gen:function(){ var a=pick(10,99),b=pick(1,9); return {a:a,b:b,answer:a-b}; } },
       { name:'ふつう',         desc:'2桁 － 2桁',  need:3, gen:function(){ var a=pick(10,99),b=pick(10,99); if(b>a){var t=a;a=b;b=t;} return {a:a,b:b,answer:a-b}; } },
       { name:'少し難しい', desc:'3桁 － 2桁',  need:3, gen:function(){ var a=pick(100,999),b=pick(10,99); return {a:a,b:b,answer:a-b}; } },
-      { name:'難しい',     desc:'3桁 － 3桁',  need:0, gen:function(){ var a=pick(100,999),b=pick(100,999); if(b>a){var t=a;a=b;b=t;} return {a:a,b:b,answer:a-b}; } }
+      { name:'難しい',     desc:'3桁 － 3桁',  need:3, gen:function(){ var a=pick(100,999),b=pick(100,999); if(b>a){var t=a;a=b;b=t;} return {a:a,b:b,answer:a-b}; } },
+      { name:'とても難しい', desc:'4桁 － 3〜4桁', need:0, gen:function(){ var a=pick(1000,9999),b=pick(100,9999); if(b>a){var t=a;a=b;b=t;} return {a:a,b:b,answer:a-b}; } }
     ],
     mul:[
       { name:'簡単',   desc:'2〜5のだん',        need:3, gen:function(){ var a=pick(2,9),b=pick(2,5); return {a:a,b:b,answer:a*b}; } },
       { name:'ふつう',     desc:'2〜9のだん(九九全部)', need:3, gen:function(){ var a=pick(2,9),b=pick(2,9); return {a:a,b:b,answer:a*b}; } },
-      { name:'難しい', desc:'2桁 × 1桁',         need:0, gen:function(){ var a=pick(11,99),b=pick(2,9); return {a:a,b:b,answer:a*b}; } }
+      { name:'難しい', desc:'2桁 × 1桁',         need:3, gen:function(){ var a=pick(11,99),b=pick(2,9); return {a:a,b:b,answer:a*b}; } },
+      { name:'とても難しい', desc:'3桁 × 1桁',       need:0, gen:function(){ var a=pick(101,999),b=pick(2,9); return {a:a,b:b,answer:a*b}; } }
     ],
     div:[
       { name:'簡単',   desc:'2〜5でわる',            need:3, gen:function(){ var b=pick(2,5),q=pick(2,5); return {a:b*q,b:b,answer:q}; } },
       { name:'ふつう',     desc:'2〜9でわる(九九のはんたい)', need:3, gen:function(){ var b=pick(2,9),q=pick(2,9); return {a:b*q,b:b,answer:q}; } },
-      { name:'難しい', desc:'答えが2桁になることも',    need:0, gen:function(){ var b=pick(2,9),q=pick(2,12); return {a:b*q,b:b,answer:q}; } }
+      { name:'難しい', desc:'答えが2桁になることも',    need:3, gen:function(){ var b=pick(2,9),q=pick(2,12); return {a:b*q,b:b,answer:q}; } },
+      { name:'とても難しい', desc:'2桁 ÷ 1桁(答えが2桁)', need:0, gen:function(){ var b=pick(2,9),q=pick(10,Math.floor(99/b)); return {a:b*q,b:b,answer:q}; } }
     ]
   };
 
@@ -4400,6 +4406,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     safeSet('keisan_plan', { d:t, ops:ops });
     return ops;
   }
+  var G3_START = { add:3, sub:3, mul:2, div:2 };
+  function grade3Open(){
+    if(safeGet('keisan_grade3')) return false;
+    return SINGLE_OPS.some(function(o){ return currentLevelIndex(o) < G3_START[o]; });
+  }
+  function applyGrade3(){
+    SINGLE_OPS.forEach(function(o){
+      if(currentLevelIndex(o) < G3_START[o]){ safeSet('keisan_level_' + o, G3_START[o]); safeSet('keisan_clears_' + o + '_' + G3_START[o], 0); }
+    });
+    safeSet('keisan_grade3', 1);
+    safeSet('keisan_plan', null);
+    refreshHome();
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest && e.target.closest('#g3Btn')) applyGrade3();
+  });
   function assignedMode(){ return sheetsToday() < DAILY_SHEETS; }
   function nextSheetOp(){ return sheetPlan()[Math.min(sheetsToday(), DAILY_SHEETS - 1)]; }
   function printTarget(op, n, rv){
@@ -4757,7 +4779,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }else sd += '<i class="on"></i>';
     }
     $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">きょうの プリント <b class="num">'+Math.min(sn, DAILY_SHEETS)+'/'+DAILY_SHEETS+'</b>まい</span><span class="sheets-d'+(sn < DAILY_SHEETS ? ' wide' : '')+'">'+sd+'</span></div>' +
-      '<span class="sz-next">1まい '+SHEET_N+'問。'+(sn >= DAILY_SHEETS ? '5まい できたよ!もっと やっても OK' : 'あと <b>'+(DAILY_SHEETS - sn)+'まい</b>で 今日の プリントが クリア!')+'</span>';
+      '<span class="sz-next">1まい '+SHEET_N+'問。'+(sn >= DAILY_SHEETS ? '5まい できたよ!もっと やっても OK' : 'あと <b>'+(DAILY_SHEETS - sn)+'まい</b>で 今日の プリントが クリア!')+'</span>' +
+      (grade3Open() ? '<button type="button" class="btn g3btn" id="g3Btn">小3の しんどから はじめる<small>＋－は 3桁・×は 2桁×1桁・÷は 答えが2桁 から。いまより 下のときだけ すすむよ</small></button>' : '');
     renderWeekend(rec);
     if(rec === 'mix'){
       $('todayMain').innerHTML = '<span class="sym num" style="font-size:15px">MIX</span><span><span class="t1">混ぜて練習</span><br><span class="t2">＋－×÷が混ざって出るよ</span></span>';
