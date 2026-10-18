@@ -1768,6 +1768,7 @@
   .chip.on{ background:var(--c); border-color:var(--c); }
   .today .g3btn{ background:var(--surface-2, #fff); color:var(--ink); }
   .today.asg .today-label, .today.asg .today-main, .today.asg .sheets-d{ display:none; }
+  .gset{ display:block; margin:6px auto 0; padding:2px 8px; border:none; background:none; color:var(--ink-soft); font:inherit; font-size:11px; font-weight:800; text-decoration:underline; cursor:pointer; }
   .g3btn{ display:block; width:100%; margin-top:8px; padding:8px 12px; border-radius:14px; border:2.5px solid var(--op-mul); background:#fff; color:var(--ink); font-weight:900; font-size:14px; text-align:center; }
   .g3btn small{ display:block; font-size:11px; font-weight:800; color:var(--ink-soft); margin-top:2px; }
   .rec-rule{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin:8px 0 10px; line-height:1.6; }
@@ -4414,6 +4415,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return ops;
   }
   var G3_START = { add:3, sub:3, mul:2, div:2 };
+  var GRADE_START = { 1:{ add:0, sub:0, mul:0, div:0 }, 2:{ add:1, sub:1, mul:1, div:0 }, 3:G3_START, 4:{ add:4, sub:4, mul:3, div:3 } };
+  function pgrade(){ return safeGet('keisan_pgrade') || 3; }
+  function setGrade(g){
+    var st = GRADE_START[g];
+    SINGLE_OPS.forEach(function(o){ safeSet('keisan_level_' + o, st[o]); safeSet('keisan_clears_' + o + '_' + st[o], 0); });
+    safeSet('keisan_pgrade', g);
+    safeSet('keisan_grade3', 1);
+    safeSet('keisan_plan', null);
+    closeBk();
+    refreshHome();
+  }
+  function openGradeSet(){
+    var btns = [1, 2, 3, 4].map(function(g){ return { label:'小' + g, primary:g === pgrade(), onClick:function(){ setGrade(g); } }; });
+    btns.push({ label:'✕', onClick:closeBk });
+    openBk('<div class="bk-title">プリントを 始める 学年</div><div class="bk-body">学年に 合わせて、足し算・引き算・かけ算・割り算の スタートの 位置が 変わるよ。<br>小3: ＋－は 3桁、×は 2桁×1桁、÷は 答えが2桁 から。<br>(今の 学年は 色が ついているよ。✕ で 閉じる。コインや 記録は そのまま。今の レベルは 選んだ 学年に 戻るよ)</div>', btns);
+  }
   function grade3Open(){
     if(safeGet('keisan_grade3')) return false;
     return SINGLE_OPS.some(function(o){ return currentLevelIndex(o) < G3_START[o]; });
@@ -4427,7 +4444,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(!silent) refreshHome();
   }
   document.addEventListener('click', function(e){
-    if(e.target.closest && e.target.closest('#g3Btn')) applyGrade3();
+    if(e.target.closest && e.target.closest('#gSet')) openGradeSet();
   });
   function assignedMode(){ return sheetsToday() < DAILY_SHEETS; }
   function nextSheetOp(){ return sheetPlan()[Math.min(sheetsToday(), DAILY_SHEETS - 1)]; }
@@ -4789,7 +4806,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">今日の プリント <b class="num">'+Math.min(sn, DAILY_SHEETS)+'/'+DAILY_SHEETS+'</b>枚</span><span class="sheets-d'+(sn < DAILY_SHEETS ? ' wide' : '')+'">'+sd+'</span></div>' +
       '<span class="sz-next">1枚 '+SHEET_N+'問。'+(sn >= DAILY_SHEETS ? '5枚 できたよ!もっと やっても OK' : 'あと <b>'+(DAILY_SHEETS - sn)+'枚</b>で 今日の プリントが クリア!')+'</span>' +
-      '';
+      '<button type="button" class="gset" id="gSet">学年: 小' + pgrade() + '(おうちの人が 変える)</button>';
     renderWeekend(rec);
     if(rec === 'mix'){
       $('todayMain').innerHTML = '<span class="sym num" style="font-size:15px">MIX</span><span><span class="t1">混ぜて練習</span><br><span class="t2">＋－×÷が混ざって出るよ</span></span>';
