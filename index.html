@@ -1771,6 +1771,8 @@
   .gset{ display:block; margin:6px auto 0; padding:2px 8px; border:none; background:none; color:var(--ink-soft); font:inherit; font-size:11px; font-weight:800; text-decoration:underline; cursor:pointer; }
   .g3btn{ display:block; width:100%; margin-top:8px; padding:8px 12px; border-radius:14px; border:2.5px solid var(--op-mul); background:#fff; color:var(--ink); font-weight:900; font-size:14px; text-align:center; }
   .g3btn small{ display:block; font-size:11px; font-weight:800; color:var(--ink-soft); margin-top:2px; }
+  .equation:has(.wp){ white-space:normal; width:100%; }
+  .wp{ font-size:20px; line-height:1.8; font-weight:800; text-align:left; padding:6px 10px; white-space:normal; }
   .rec-rule{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin:8px 0 10px; line-height:1.6; }
   .rec-go{ width:100%; border:none; border-radius:18px; padding:15px; font:inherit; font-size:18px; font-weight:900; color:#fff; background:var(--gold-deep); box-shadow:0 5px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); cursor:pointer; }
   .rec-go:active{ transform:translateY(3px); box-shadow:0 2px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); }
@@ -4497,14 +4499,52 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var rest = SINGLE_OPS.filter(function(o){ return o !== boss; });
     return [boss, rest[day % rest.length]];
   }
+  /* ---------- 文章題 ---------- */
+  var WP_NAMES = ['はるか', 'そうた', 'みお', 'ゆうと', 'あおい', 'けんた', 'ひなた', 'りく'];
+  var WP_T = {
+    add: ['{n}さんは 朝に {a}こ、夕方に {b}こ どんぐりを ひろいました。全部で 何こ ですか。',
+          '公園に {a}人 いました。そこへ {b}人 来ました。みんなで 何人 ですか。',
+          '{a}円の ノートと {b}円の えんぴつを 買います。合わせて 何円 ですか。'],
+    sub: ['{n}さんは {a}円 持っています。{b}円の おかしを 買うと、のこりは 何円 ですか。',
+          '{a}ページの 本を {b}ページ 読みました。のこりは 何ページ ですか。',
+          'バスに {a}人 のっていました。{b}人 おりると、何人に なりますか。'],
+    mul: ['1箱に {a}こ 入った クッキーが {b}箱 あります。全部で 何こ ですか。',
+          '1人に {a}まいずつ、{b}人に 色紙を くばります。全部で 何まい いりますか。',
+          '1本 {a}円の ジュースを {b}本 買います。何円 ですか。'],
+    div: ['{a}この あめを {b}人で 同じ数ずつ 分けます。1人 何こ ですか。',
+          '{a}円で 1こ {b}円の ガムを 買います。何こ 買えますか。',
+          '{a}まいの 紙を {b}まいずつ たばにします。何たば できますか。']
+  };
+  function wpPick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+  function wpFill(t, o){ return t.replace('{n}', wpPick(WP_NAMES)).replace('{a}', o.a).replace('{b}', o.b); }
+  function wordProblem(op, hard){
+    var q;
+    if(hard){
+      if(Math.random() < .5){
+        var pr = pick(3, 9) * 10, k = pick(2, 5), cost = pr * k, paid = Math.ceil(cost / 100) * 100; if(paid === cost) paid += 100;
+        q = { a:pr, b:k, answer:paid - cost, text:wpFill('1こ ' + pr + '円の ガムを ' + k + 'こ 買って、' + paid + '円 出しました。おつりは 何円 ですか。', {}) };
+        q.op = 'mul';
+      }else{
+        var per = pick(3, 9), bx = pick(2, 6), ex = pick(2, 9);
+        q = { a:per, b:bx, answer:per * bx + ex, text:'1箱に ' + per + 'こ 入った クッキーが ' + bx + '箱と、ばらが ' + ex + 'こ あります。全部で 何こ ですか。' };
+        q.op = 'mul';
+      }
+    }else{
+      var g = LEVELS[op][currentLevelIndex(op)].gen();
+      q = { a:g.a, b:g.b, answer:g.answer, op:op, text:wpFill(wpPick(WP_T[op]), g) };
+    }
+    q.word = true; q.hs = false; q.lv = currentLevelIndex(q.op);
+    return q;
+  }
   function startChallenge(){
     var ops = challengeOps(), qs = [];
     state.op = 'mix';
     state.print = { n:CH_N, kind:'challenge', boss:ops[0] };
     setLive(ops[0]);
+    var seq = ops.concat(SINGLE_OPS.filter(function(o){ return ops.indexOf(o) < 0; }));
     for(var i=0;i<CH_N;i++){
-      var op = ops[i % 2], lv = currentLevelIndex(op), hard = (i === 4 || i === 9) && lv < LEVELS[op].length-1;
-      var q = genForOp(op, hard ? lv+1 : lv); q.hard = hard; q.id = i; q.solved = false; q.mistakes = 0; qs.push(q);
+      var hard = (i === 4 || i === 9), q = wordProblem(seq[i % 4], hard);
+      q.hard = hard; q.id = i; q.solved = false; q.mistakes = 0; qs.push(q);
     }
     beginRound('accuracy', qs);
   }
@@ -4542,9 +4582,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var opsTxt = OP_META[ops[0]].label + 'と ' + OP_META[ops[1]].label;
     var hardN = ops.filter(function(o){ return currentLevelIndex(o) < LEVELS[o].length-1; }).length;
     var bo = bossOp(), bn = BOSS[bo].name;
-    var h = '<div class="ch-top"><span class="ch-coin ch-boss">'+bossSVG(bo, done)+'</span><span class="ch-text"><b>今日の <ruby>挑戦<rt>ちょうせん</rt></ruby>・ボス戦</b>' +
+    var h = '<div class="ch-top"><span class="ch-coin ch-boss">'+bossSVG(bo, done)+'</span><span class="ch-text"><b>今日の <ruby>挑戦<rt>ちょうせん</rt></ruby>・文章題ボス戦</b>' +
       (done ? bn+'を たおした!また 明日 新しい ボスが 来るよ。'
-            : bn+'が あらわれた!'+opsTxt+'の まぜまぜ '+CH_N+'問。'+(hardN ? '1つ上の レベルの 問題も '+hardN+'問 入ってるよ。' : '')+'正解'+CH_ACC+'%以上で クリア!') + '</span></div>';
+            : bn+'が あらわれた!文章題 '+CH_N+'問。2回 計算する 問題も 2問 入ってるよ。正解'+CH_ACC+'%以上で クリア!') + '</span></div>';
     if(!done) h += '<div class="ch-reward">クリアで <span class="ch-mini">'+SPECIAL_SVG+'</span><b>スペシャルコイン</b>(5コイン分)と <span class="ch-mini">'+STAMP_SVG+'</span><b>スタンプ</b></div>';
     h += '<div class="ch-stamps"><div class="ch-stamp-head"><b>スタンプカード</b><span class="num">'+n+'こ'+(n>=STAMP_PER_CARD ? '・うまった カード '+Math.floor(n/STAMP_PER_CARD)+'まい' : '')+'</span><button class="ch-link" id="stampInfo">ごほうびを 見る ›</button></div>' + stampCardHTML(n) +
       '<div class="ch-next">'+(nx ? 'あと <b class="num">'+(nx.at-n)+'</b>こで <b>'+nx.name+'</b>(スタンプだけの ごほうび)' : '限定の ごほうびは 全部 もらったよ!10こ ごとに ＋'+CARD_BONUS+'コイン')+'</div></div>';
@@ -6967,7 +7007,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   function updateLevelTag(){
     var tag = $('levelTag');
-    if(state.print && state.print.kind==='challenge'){ tag.hidden = false; var cq = state.current; tag.innerHTML = '<b>きょうの ちょうせん</b>' + (cq && cq.hard ? '　むずかしい問題だよ!' : ''); return; }
+    if(state.print && state.print.kind==='challenge'){ tag.hidden = false; var cq = state.current; tag.innerHTML = '<b>今日の 挑戦</b>' + (cq && cq.hard ? '　2回 計算する 問題だよ!' : ''); return; }
     if(state.op==='mix'){ tag.hidden = true; return; }
     tag.hidden = false;
     if(state.mode==='jump'){
@@ -7123,12 +7163,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         state.hsCSel = state.hsCSel === i ? -1 : i; updateAnswerBox();
       });
     }else{
-      $('equation').innerHTML = q.a + ' <span class="op-sym">'+meta.symbol+'</span> ' + q.b + ' =';
+      $('equation').innerHTML = q.word ? '<div class="wp">' + q.text + '</div>' : q.a + ' <span class="op-sym">'+meta.symbol+'</span> ' + q.b + ' =';
     }
     $('answerBox').hidden = state.hissan;
     $('hsTip').hidden = !state.hissan;
     var sw = $('hsSwitch');
-    sw.hidden = !canHissan(q);
+    sw.hidden = q.word || !canHissan(q);
     sw.textContent = state.hissan ? '暗算でとく' : '筆算でとく';
     var csw = $('hsCarrySw');
     csw.hidden = !(state.hissan && hasCarry(q));
