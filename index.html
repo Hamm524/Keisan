@@ -296,6 +296,22 @@
   .rm-food svg{ display:block; width:100%; height:auto; overflow:visible; }
   .rm-food.bye{ transition:opacity .4s; opacity:0; }
   .rm-note{ white-space:nowrap; }
+  .rm-hcover{ position:absolute; inset:0; z-index:9600; background:rgba(46,42,61,.86); color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; text-align:center; padding:0 16px; transition:opacity .5s; }
+  .rm-hcover b{ font-size:max(20px, 5cqw); font-weight:900; }
+  .rm-hcover i{ font-style:normal; font-family:'Fredoka',ui-rounded,sans-serif; font-size:max(56px, 15cqw); font-weight:600; line-height:1; animation:rm-cnt .6s ease-out; }
+  .rm-hcover small{ font-size:max(13px, 2.8cqw); font-weight:800; opacity:.9; }
+  .rm-hcover.bye, .rm-hud.bye{ opacity:0; }
+  @keyframes rm-cnt{ 0%{ transform:scale(1.7); opacity:0; } 100%{ transform:none; opacity:1; } }
+  .rm-hud{ position:absolute; left:8px; top:8px; z-index:9550; display:flex; align-items:center; gap:6px; flex-wrap:wrap; max-width:calc(100% - 16px); transition:opacity .5s; }
+  .rm-hud span, .rm-hud em{ background:rgba(255,255,255,.94); color:#2E2A3D; border-radius:100px; padding:5px 12px; font-size:max(13px, 2.8cqw); font-weight:900; font-style:normal; box-shadow:0 3px 10px -6px rgba(0,0,0,.45); }
+  .rm-hud em{ font-size:max(12px, 2.4cqw); font-weight:800; }
+  .rm-hud b{ color:#E5484D; }
+  .rm-hud button{ border:none; background:#2E2A3D; color:#fff; border-radius:100px; padding:7px 12px; font:inherit; font-size:12px; font-weight:900; cursor:pointer; }
+  .rm-it.rm-shake{ animation:rm-shake .45s; }
+  @keyframes rm-shake{ 20%{ translate:-3px 0; } 50%{ translate:3px 0; } 80%{ translate:-2px 0; } }
+  .rm-it.rm-rustle{ transform-origin:50% 100%; animation:rm-rustle .5s ease-in-out 3; }
+  @keyframes rm-rustle{ 25%{ rotate:-2.5deg; } 75%{ rotate:2.5deg; } }
+  .rm-hint{ position:absolute; z-index:9500; pointer-events:none; color:#7B83EB; font-weight:900; font-size:max(14px, 3cqw); white-space:nowrap; text-shadow:0 0 4px #fff, 0 0 8px #fff; animation:rm-up 2s ease-out forwards; }
   .rm-play{ max-width:720px; margin:0 auto 10px; display:flex; gap:8px; flex-wrap:wrap; }
   .rm-pb{ flex:1 1 150px; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; border:none; border-radius:16px; padding:12px 14px; background:linear-gradient(#FFB36B, #FF8F4C); color:#fff; font:inherit; font-size:16px; font-weight:900; cursor:pointer; box-shadow:0 4px 0 #D9692A; }
   .rm-pb:active{ transform:translateY(3px); box-shadow:0 1px 0 #D9692A; }
@@ -10225,23 +10241,139 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       });
       later(12400, function(){ S0.meal.foods.forEach(function(f){ f.remove(); }); S0.meal = null; });
     }
-    var GROUP = { meal:meal };
+    var GROUP = { meal:meal, hide:function(){ hideGame(); } };
+    /* ---- かくれんぼ ---- */
+    var HIDE_OK = { sofa:1, bed:1, shelf:1, toybox:1, tent:1, castle:1, partition:1, partwin:1, counter:1, counterh:1, fridge:1, washer:1, sink:1, stove:1, senmen:1, bath:1, tv:1, aquarium:1, piano:1, tree:1 };
+    function hideSpots(){
+      var a = [];
+      S.r.items.forEach(function(it, i){ var g = geo(it); if(HIDE_OK[it.k] && !(pv && pv.it === it) && g.h >= 12 && g.vw >= 9) a.push(i); });
+      return a;
+    }
+    function hideGame(){
+      if(!S || !S.pets.length || S.hide || S.meal) return;
+      var S0 = S, stage = $('rmStage'), spots = hideSpots(), sr = stage.getBoundingClientRect();
+      for(var a = spots.length - 1; a > 0; a--){ var b = (Math.random() * (a + 1)) | 0, t = spots[a]; spots[a] = spots[b]; spots[b] = t; }
+      var who = S.pets.slice(0, Math.min(S.pets.length, spots.length)), T = [], H = { list:[], found:0, on:false, last:0 };
+      S.hide = H;
+      if(sayB){ sayB.remove(); sayB = null; } cancelAnimationFrame(sayRaf); clearTimeout(sayT);   /* ふきだしで かくれた 場所が わからない ように */
+      function later(ms, fn){ T.push(setTimeout(function(){ if(S === S0 && S0.hide === H && live()) fn(); }, ms)); }
+      who.forEach(function(P, k){
+        leave(P); clearTimeout(P.t); P.el.classList.remove('walk');
+        var i = spots[k], it = S.r.items[i], g = geo(it), r = P.el.getBoundingClientRect(), ar = r.width ? r.height / r.width : 1;
+        var fitH = (g.h * .9 / 100 * sr.height) / (ar * PET_W * SK / 100 * sr.width), fitW = g.vw * .8 / (PET_W * SK);
+        var sc = Math.max(.3, Math.min(g.s * .85, fitH, fitW)), hp = PET_W * sc * SK / 100 * sr.width * ar / sr.height * 100;
+        H.list.push({ P:P, i:i, x:it.x, y:it.y - g.lift - hp * .1, s:sc, z:g.z - 1, side:Math.random() < .5 ? -1 : 1, edge:g.vw / 2, fy:it.y, top:it.y - g.lift - g.h, found:false });
+      });
+      var cover = document.createElement('div'); cover.className = 'rm-hcover';
+      cover.innerHTML = '<b>もういいかい?</b><i>5</i><small>目を つぶって かぞえてね</small>';
+      stage.appendChild(cover);
+      var hud = document.createElement('div'); hud.className = 'rm-hud'; stage.appendChild(hud);
+      hud.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+      function hudSet(msg){
+        hud.innerHTML = '<span>🙈 見つけた <b>' + H.found + '</b> / ' + H.list.length + '</span><button type="button">やめる</button>' + (msg ? '<em>' + msg + '</em>' : '');
+        hud.querySelector('button').onclick = function(e){ e.stopPropagation(); stop(1); };
+      }
+      hudSet('');
+      function bye(el){ if(!el) return; el.classList.add('bye'); setTimeout(function(){ el.remove(); }, 500); }
+      function front(h){ var y = Math.min(112, h.fy + 3); setPet(h.P, Math.max(5, Math.min(95, h.x + h.side * (h.edge + 4))), y, depth(y), null, 380); }
+      /* mode 0: 部屋を かきなおす とき(なにも しない) 1: やめる 2: ぜんぶ 見つけた */
+      function stop(mode){
+        T.forEach(clearTimeout); T = [];
+        if(S0.hide === H) S0.hide = null;
+        bye(cover); bye(hud);
+        stage.querySelectorAll('.rm-hint').forEach(function(n){ n.remove(); });
+        if(!mode) return;
+        H.list.forEach(function(h){ if(!h.found) front(h); });
+        S0.pets.forEach(function(P, k){ next(P, 900 + k * 500); });
+        if(mode === 1) say(petName(lead().sp) + '「また かくれんぼ しようね!」');
+        renderPlay();
+      }
+      H.stop = function(){ stop(0); };
+      function found(h){
+        if(h.found || !H.on) return;
+        h.found = true; H.found++; H.last = Date.now();
+        var P = h.P; P.el.classList.remove('peek');
+        front(h);
+        setTimeout(function(){ Pet.cheer(P.el); bubble(P, '♥'); }, 380);
+        chime(880); setTimeout(function(){ chime(1175); }, 140);
+        say(petName(P.sp) + '「' + any(['見つかっちゃった!', 'あ〜、見つかった!', 'よく わかったね!', 'えへへ、ここだよ!']) + '」');
+        hudSet(H.found < H.list.length ? 'あと ' + (H.list.length - H.found) + 'ひき' : '');
+        if(H.found >= H.list.length) later(1300, win);
+      }
+      H.tapItem = function(i){
+        if(!H.on) return;
+        var h = H.list.filter(function(q){ return q.i === i && !q.found; })[0];
+        if(h) return found(h);
+        var el = S0.els[i] && S0.els[i].el;
+        if(el){ el.classList.remove('rm-shake'); void el.offsetWidth; el.classList.add('rm-shake'); setTimeout(function(){ el.classList.remove('rm-shake'); }, 500); }
+        hudSet('ここには いないみたい');
+      };
+      H.tapPet = function(P){
+        var h = H.list.filter(function(q){ return q.P === P; })[0];
+        if(!h) return false;
+        if(!h.found) found(h); else{ Pet.tap(P.el); bubble(P, '♥'); }
+        return true;
+      };
+      function peek(h){
+        if(h.found) return;
+        h.P.el.classList.add('peek');
+        h.P.el.classList.toggle('left', h.side < 0);
+        setPet(h.P, h.x + h.side * h.edge * .7, h.y, h.s, h.z, 450);
+        later(1500, function(){ if(h.found) return; setPet(h.P, h.x, h.y, h.s, h.z, 450); h.P.el.classList.remove('peek'); });
+        later(4500 + Math.random() * 4000, function(){ peek(h); });
+      }
+      function hint(){
+        var left = H.list.filter(function(q){ return !q.found; });
+        if(left.length && Date.now() - H.last > 11000){
+          var h = left[(Math.random() * left.length) | 0], el = S0.els[h.i] && S0.els[h.i].el;
+          if(el){ el.classList.add('rm-rustle'); setTimeout(function(){ el.classList.remove('rm-rustle'); }, 1600); }
+          var n = document.createElement('div'); n.className = 'rm-hint'; n.textContent = 'くすくす…';
+          n.style.left = h.x + '%'; n.style.top = Math.max(2, h.top - 4) + '%'; stage.appendChild(n);
+          setTimeout(function(){ n.remove(); }, 2100);
+          H.last = Date.now() - 4000;
+        }
+        later(3000, hint);
+      }
+      function win(){
+        hudSet('ぜんぶ 見つけた!');
+        S0.pets.forEach(function(P, k){
+          clearTimeout(P.t); leave(P);
+          var n = S0.pets.length, x = 50 + (k - (n - 1) / 2) * Math.min(16, 70 / Math.max(1, n));
+          walkTo(P, x, 100, null, null, function(){ Pet.cheer(P.el); bubble(P, '♥'); });
+        });
+        [784, 988, 1175, 1568].forEach(function(f, k){ setTimeout(function(){ chime(f); }, 300 + k * 150); });
+        later(1400, function(){ say(S0.pets.length > 1 ? 'みんな「楽しかった! もう 1回 やろうね!」' : petName(lead().sp) + '「楽しかった! もう 1回 やろうね!」'); });
+        later(4200, function(){ stop(2); });
+      }
+      /* もういいかい → かくれる(画面が くらい あいだに うごく) */
+      later(450, function(){ H.list.forEach(function(h){ h.P.el.classList.remove('left', 'sit', 'sleep'); setPet(h.P, h.x, h.y, h.s, h.z, 0); }); });
+      [4, 3, 2, 1].forEach(function(n, k){ later(700 * (k + 1), function(){ var i = cover.querySelector('i'); i.textContent = n; i.style.animation = 'none'; void i.offsetWidth; i.style.animation = ''; if(n === 3) cover.querySelector('small').textContent = '「まあだだよ〜」'; }); });
+      later(3500, function(){ cover.innerHTML = '<b>もういいよ!</b><small>家具の 後ろに かくれているよ。タップして 見つけてね</small>'; chime(659); });
+      later(4600, function(){
+        bye(cover); H.on = true; H.last = Date.now();
+        H.list.forEach(function(h, k){ later(2500 + k * 1600 + Math.random() * 1500, function(){ peek(h); }); });
+        later(3000, hint);
+      });
+    }
     /* ---- みんなで あそぶ ボタン ---- */
-    var PLAYS = [ { g:'meal', k:'dining', icon:'🍚', name:'みんなで ごはん', need:'ダイニングテーブル' } ];
+    function firstOf(k){ var i = -1; S.r.items.forEach(function(it, n){ if(i < 0 && it.k === k && !(pv && pv.it === it)) i = n; }); return i; }
+    var PLAYS = [ { g:'meal', icon:'🍚', name:'みんなで ごはん', need:'ダイニングテーブルが いるよ', needSay:'ダイニングテーブルを 置くと、みんなで ごはんが できるよ。下の ショップの 家具に あるよ', find:function(){ return firstOf('dining'); } },
+      { g:'hide', icon:'🙈', name:'かくれんぼ', need:'ソファや 本だなが いるよ', needSay:'ソファ・ベッド・本だな・れいぞう庫 みたいな 大きな 家具が あると、後ろに かくれて かくれんぼが できるよ', find:function(){ return hideSpots().length ? 0 : -1; } } ];
     function renderPlay(){
       var box = $('rmPlay'); if(!box || !S) return;
       box.innerHTML = PLAYS.map(function(p){
-        var has = S.r.items.some(function(it){ return it.k === p.k && !(pv && pv.it === it); });
-        return '<button class="rm-pb' + (has ? '' : ' need') + '" data-g="' + p.g + '"><span>' + p.icon + '</span><b>' + p.name + '</b>' + (has ? '' : '<small>' + p.need + 'が いるよ</small>') + '</button>';
+        var has = p.find() >= 0;
+        return '<button class="rm-pb' + (has ? '' : ' need') + '" data-g="' + p.g + '"><span>' + p.icon + '</span><b>' + p.name + '</b>' + (has ? '' : '<small>' + p.need + '</small>') + '</button>';
       }).join('');
     }
     $('rmPlay').addEventListener('click', function(e){
       var b = e.target.closest('.rm-pb'); if(!b || !S) return;
       var p = PLAYS.filter(function(x){ return x.g === b.getAttribute('data-g'); })[0];
-      var i = -1; S.r.items.forEach(function(it, k){ if(i < 0 && it.k === p.k && !(pv && pv.it === it)) i = k; });
+      if(S.meal || S.hide){ say(petName(lead().sp) + '「いまは ' + (S.meal ? 'ごはん' : 'かくれんぼ') + ' 中だよ〜」'); return; }
+      var i = p.find();
       if(i < 0){
         tab = 'item'; renderShop();
-        say(p.need + 'を 置くと、' + p.name + 'が できるよ。下の ショップの 家具に あるよ');
+        say(p.needSay);
         var g = $('rmGrid'); if(g) g.scrollIntoView({ block:'center', behavior:'smooth' });
         return;
       }
@@ -10250,7 +10382,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(!S.pets.length){ say('お部屋に 仲間が いないよ'); return; }
       GROUP[p.g](i);
     });
-    function stopPets(){ if(S){ S.pets.forEach(function(P){ clearTimeout(P.t); }); if(S.meal && S.meal.stop) S.meal.stop(); } clearInterval(clockT); }
+    function stopPets(){ if(S){ S.pets.forEach(function(P){ clearTimeout(P.t); }); if(S.meal && S.meal.stop) S.meal.stop(); if(S.hide && S.hide.stop) S.hide.stop(); } clearInterval(clockT); }
 
     function render(){
       var stage = $('rmStage'), keep = S ? S.pets : null;
@@ -10272,6 +10404,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         el.addEventListener('click', function(e){
           e.stopPropagation();
           if(edit) return;
+          if(S.hide && S.hide.tapPet && S.hide.tapPet(P)) return;
           var wasSleep = P.el.classList.contains('sleep');
           if(P.seat != null){ getUp(P); }
           Pet.spin(el); bubble(P, '♥');
@@ -10290,6 +10423,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     /* ---- もようがえ(ドラッグで うごかす) ---- */
     function setEdit(on){
+      if(on && S && S.hide && S.hide.stop){ S.hide.stop(); S.pets.forEach(function(P){ P.el.classList.remove('peek'); }); }
       edit = on; sel = -1;
       $('rmStage').classList.toggle('editing', on);
       $('rmEdit').textContent = on ? '✓ できた' : '🔨 模様がえ';
@@ -10368,6 +10502,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var i = itemAt(e.target);
       if(!edit){
         if(i < 0 || !S) return;
+        if(S.hide){ if(S.hide.tapItem) S.hide.tapItem(i); return; }
         var d = BY[S.r.items[i].k];
         if(d.tap === 'light'){ lampOn[i] = !lampOn[i]; S.els[i].el.classList.toggle('on', !!lampOn[i]); if(d.fx) d.fx(i, !!lampOn[i]); }
         if(d.tap === 'piano'){ chime(TUNE[(Math.random() * TUNE.length) | 0]); }
