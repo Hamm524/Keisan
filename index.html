@@ -370,6 +370,18 @@
   .rm-dock .rm-pv, .rm-dock .rm-tools{ margin:0; max-width:none; width:100%; box-sizing:border-box; flex:none; }
   .rm-dock .rm-tools{ padding:6px 8px; gap:5px; }
   .rm-dock .rm-trow{ padding-top:5px; gap:5px; } .rm-dock .rm-trow .rm-tb{ padding:7px 9px; }
+  .rm-dock .rm-tb{ border:2px solid var(--line); background:var(--surface-2); color:var(--ink); box-shadow:0 3px 0 rgba(0,0,0,.18); }
+  .rm-dock .rm-tb:active{ transform:translateY(2px); box-shadow:0 1px 0 rgba(0,0,0,.18); }
+  .rm-dock .rm-tb.on{ background:var(--ink); border-color:var(--ink); color:var(--surface); }
+  .rm-dock .rm-tb:disabled{ box-shadow:none; }
+  /* お試しの 青い パネルは ダークモードでも 明るい ので、ボタンの 色を 固定(白い ぼたんに 白い 字で 消えて いた) */
+  .rm-dock .rm-pv .rm-tb{ background:#fff; color:#2E2A3D; border-color:#B9CCE3; box-shadow:0 3px 0 #C9DAEE; }
+  .rm-dock .rm-pv .rm-tb.buy{ background:var(--good); color:#fff; border-color:#25905A; box-shadow:0 3px 0 #1B6E43; }
+  .rm-dock #rmPvNo{ color:#C8323A; border-color:#F0A3A7; box-shadow:0 3px 0 #F8D3D5; padding:9px 14px; }
+  .rm-dock #rmStore{ color:#E5484D; border-color:rgba(229,72,77,.55); padding:9px 14px; }
+  /* 遊びの「やめる」: 暗い 画面でも 押せる ボタンに 見える ように、赤くて 白ぶち */
+  .rm-hud button{ background:#E5484D; color:#fff; border:2px solid #fff; padding:6px 14px; font-size:13px; box-shadow:0 3px 0 #A92E33, 0 4px 10px -4px rgba(0,0,0,.5); }
+  .rm-hud button:active{ transform:translateY(2px); box-shadow:0 1px 0 #A92E33; }
   .rm-ebar{ display:none; align-items:center; gap:10px; flex:none; }
   #view-room.ed .rm-ebar{ display:flex; }
   .rm-ebar span{ flex:1; font-size:12px; font-weight:800; color:var(--ink-soft); line-height:1.4; } .rm-ebar span b{ display:block; font-size:14px; color:var(--ink); }
