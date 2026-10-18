@@ -357,6 +357,29 @@
   .rm-pc small{ font-size:11.5px; font-weight:800; color:var(--ink-soft); }
   .rm-pc.need{ border:2px dashed var(--line); box-shadow:none; }
   .rm-pc.need span{ opacity:.55; }
+  .rm-act{ width:100%; box-sizing:border-box; max-width:720px; margin:0 auto 10px; display:flex; flex-wrap:wrap; gap:8px; align-items:stretch; }
+  .rm-act .rm-play{ display:contents; }
+  .rm-act .rm-edit{ flex:0 0 auto; border:2px solid #FFC58F; background:var(--surface); border-radius:16px; padding:12px 14px; font-size:16px; box-shadow:0 4px 0 #FFD9B5; }
+  .rm-act .rm-edit:active{ transform:translateY(3px); box-shadow:0 1px 0 #FFD9B5; }
+  .rm-act .rm-pb.main{ flex:1 1 0; min-width:0; }
+  .rm-pb.main i{ display:none; }
+  .rm-rtools .rm-tb{ flex:1 1 auto; font-size:12.5px; padding:9px 8px; }
+  #view-room.ed .rm-act{ display:none; }
+  .rm-dock{ display:none; position:fixed; left:50%; bottom:0; transform:translateX(-50%); width:min(100%, 460px); box-sizing:border-box; z-index:15; flex-direction:column; gap:8px; max-height:56vh; overflow-y:auto; padding:10px 12px calc(10px + env(safe-area-inset-bottom)); background:var(--surface); border-radius:20px 20px 0 0; border-top:2px solid var(--gold); box-shadow:0 -8px 24px -10px rgba(46,42,61,.4); }
+  #view-room.ed .rm-dock, #view-room.pvon .rm-dock{ display:flex; }
+  .rm-dock .rm-pv, .rm-dock .rm-tools{ margin:0; max-width:none; width:100%; box-sizing:border-box; flex:none; }
+  .rm-dock .rm-tools{ padding:6px 8px; gap:5px; }
+  .rm-dock .rm-trow{ padding-top:5px; gap:5px; } .rm-dock .rm-trow .rm-tb{ padding:7px 9px; }
+  .rm-ebar{ display:none; align-items:center; gap:10px; flex:none; }
+  #view-room.ed .rm-ebar{ display:flex; }
+  .rm-ebar span{ flex:1; font-size:12px; font-weight:800; color:var(--ink-soft); line-height:1.4; } .rm-ebar span b{ display:block; font-size:14px; color:var(--ink); }
+  .rm-ebar button{ flex:none; border:none; border-radius:16px; padding:13px 20px; background:var(--good); color:#fff; font:inherit; font-size:17px; font-weight:900; box-shadow:0 4px 0 rgba(0,0,0,.18); cursor:pointer; }
+  .rm-ebar button:active{ transform:translateY(3px); box-shadow:none; }
+  #view-room.ed .rm-stage::after, #view-room.pvon .rm-stage::after{ content:'🔨 模様がえ中'; position:absolute; left:10px; top:10px; z-index:9700; background:rgba(255,255,255,.93); border-radius:100px; padding:5px 12px; font-size:12px; font-weight:900; color:#2E2A3D; pointer-events:none; box-shadow:0 2px 6px rgba(0,0,0,.18); }
+  #view-room.pvon .rm-stage::after{ content:'👀 お試し中(まだ 買って ないよ)'; background:#EAF4FF; border:2px solid #7FB8F0; padding:3px 10px; }
+  @media (max-width:640px){
+    #view-room.ed .rm-stage, #view-room.pvon .rm-stage{ position:sticky; top:8px; z-index:12; box-shadow:0 10px 22px -10px rgba(46,42,61,.5); }
+  }
   @keyframes rm-fpop{ 0%{ opacity:0; transform:translate(-50%, -30%) scale(.4); } 100%{ opacity:1; transform:translateX(-50%) scale(1); } }
   .rm-tv{ animation:rm-tv 9s ease-in-out infinite; }
   @keyframes rm-tv{ 0%,100%{ fill:#9AD7F5; } 33%{ fill:#FFD3A8; } 66%{ fill:#C9B8F2; } }
@@ -2274,12 +2297,12 @@
     <div class="shop-head">
       <button class="icon-btn" id="rmBack" aria-label="もどる">←</button>
       <h1>お部屋</h1>
-      <button class="rm-edit" id="rmEdit">🔨 模様がえ</button>
     </div>
     <div class="rm-house" id="rmHouse"></div>
     <div class="rm-tabs" id="rmRooms"></div>
     <section class="rm-stage" id="rmStage"></section>
-    <div class="rm-play" id="rmPlay"></div>
+    <div class="rm-act" id="rmAct"><button class="rm-edit" id="rmEdit">🔨 模様がえ</button><div class="rm-play" id="rmPlay"></div></div>
+    <div class="rm-dock" id="rmDock">
     <div class="rm-pv" id="rmPv" hidden>
       <b id="rmPvName"></b>
       <button class="rm-tb buy" id="rmPvBuy"></button>
@@ -2293,8 +2316,10 @@
       <div class="rm-trow" id="rmLiftRow"><span>高さ</span><button class="rm-tb" id="rmDown">⬇ 下げる</button><i id="rmLiftVal"></i><button class="rm-tb" id="rmUp">⬆ 上げる</button></div>
       <div class="rm-trow" id="rmPhotoRow"><span>写真</span><div class="rm-phs" id="rmPhotos"></div></div>
     </div>
+    <div class="rm-ebar"><span><b>🔨 模様がえ中</b>家具は 指で 動かせるよ。下に 引っぱると 手前に 来るよ</span><button type="button" id="rmDone">✓ できた</button></div>
+    </div>
     <p class="food-say rm-say" id="rmSay"></p>
-    <div class="rm-rtools"><button class="rm-tb" id="rmMates">🐾 この 部屋の 仲間</button><button class="rm-tb" id="rmToy">🎮 遊ぶ画面の 部屋に する</button><button class="rm-tb" id="rmSize">📐 部屋の 広さ</button></div>
+    <div class="rm-rtools"><button class="rm-tb" id="rmMates">🐾 仲間</button><button class="rm-tb" id="rmToy">🎮 遊ぶ画面に する</button><button class="rm-tb" id="rmSize">📐 広さ</button></div>
     <div class="rm-mates" id="rmSizeBox" hidden></div>
     <div class="rm-mates" id="rmMatesBox" hidden></div>
     <h2 class="sec-title">お部屋の ショップ</h2>
@@ -9957,7 +9982,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       SK = SZK[szOf(r)];
       if(!mini && pv){
         if(pv.it) r.items.push(pv.it);
-        else setSurf(r, pv.d.id);
+        else if(pv.d.bg) setSurf(r, pv.d.id);
       }
       stage.innerHTML = '';
       var wall = document.createElement('div'); wall.className = 'rm-wall'; wall.innerHTML = surfSvg(BY[r.wall]); wall.style.height = WALL + '%';
@@ -10026,7 +10051,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function say(t){
       var st = $('rmStage'); $('rmSay').textContent = t;
       if(sayB){ sayB.remove(); sayB = null; } cancelAnimationFrame(sayRaf); clearTimeout(sayT);
-      if(!st || !S || $('view-room').hidden) return;
+      if(!t || !st || !S || $('view-room').hidden) return;
       var m = /^(.+?)「([\s\S]*)」$/.exec(t), sp = null, txt = t;
       if(m){ var q = S.pets.filter(function(p){ return petName(p.sp) === m[1]; })[0]; if(q){ sp = q.sp; txt = m[2]; } }
       else if(S.pets.length) sp = S.pets[0].sp;
@@ -10781,9 +10806,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('rmStage').classList.toggle('editing', on);
       $('rmEdit').textContent = on ? '✓ できた' : '🔨 模様がえ';
       $('rmEdit').classList.toggle('on', on);
+      $('view-room').classList.toggle('ed', on); dockFit();
       if(on && S) S.pets.forEach(function(P){ clearTimeout(P.t); leave(P); P.el.classList.remove('walk'); });
       if(!on && S) S.pets.forEach(function(P, k){ next(P, 400 + k * 500); });
-      say(on ? '家具を 指で 動かしてね。タップで 選ぶと 向き・大きさ・高さを 変えられるよ。下の 方へ 引っぱると 手前に 来るよ' : '');
+      say('');
       renderTools(); renderPlay();
     }
     function selectIt(i){
@@ -10908,6 +10934,19 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       render(); say(nm + 'を しまったよ。下の 「持ってる」から また 置けるよ');
     });
     $('rmEdit').addEventListener('click', function(){ setEdit(!edit); });
+    /* ---- 画面の 下の ドック ---- */
+    function dockFit(){
+      var v = $('view-room'), d = $('rmDock'), on = v.classList.contains('ed') || v.classList.contains('pvon');
+      v.style.paddingBottom = on ? (d.offsetHeight + 18) + 'px' : '';
+    }
+    if(window.ResizeObserver) new ResizeObserver(dockFit).observe($('rmDock'));
+    $('rmDone').addEventListener('click', function(){
+      var d = pv && pv.d;
+      if(pv) endPreview();
+      setEdit(false);
+      if(d) say(d.name + 'は 買わずに もどしたよ。気に入ったら また ショップで 「お試し」して 買ってね');
+      var sr = $('rmStage').getBoundingClientRect(); if(sr.top < 0 || sr.bottom > window.innerHeight) $('rmStage').scrollIntoView({ block:'center', behavior:'smooth' });   /* できあがりの 部屋を 見せる */
+    });
 
     /* ふりがなを span に(Safari は rt を 自由に おけない) */
     function rbFix(h){ return h.replace(/<ruby>([^<]*)<rt>([^<]*)<\/rt><\/ruby>/g, '<span class="rb">$1<span class="rk">$2</span></span>'); }
@@ -10946,7 +10985,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     /* あいている ところを さがして おく */
     function emptySpot(r, d){
-      var best = null, bs = -1, same = r.items.filter(function(o){ var z = BY[o.k].z; return d.z === 'wall' ? z === 'wall' : z !== 'wall'; });
+      var best = null, bs = -Infinity, same = r.items.filter(function(o){ var z = BY[o.k].z; return d.z === 'wall' ? z === 'wall' : z !== 'wall'; });
       for(var gx = 0; gx < 9; gx++) for(var gy = 0; gy < 4; gy++){
         var it = { k:d.id, x:12 + gx * 9.5, y:d.z === 'wall' ? 12 + gy * 10 : WALL + 12 + gy * 10, f:0 };
         clampIt(it, d);
@@ -10960,10 +10999,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     /* ---- 買う 前に おいて みる(おためし) ---- */
     function renderPv(){
-      $('rmPv').hidden = !pv;
+      $('rmPv').hidden = !pv; $('view-room').classList.toggle('pvon', !!pv); dockFit();
       if(!pv) return;
       var d = pv.d, c = getCoins();
-      $('rmPvName').innerHTML = 'お試し中: ' + d.name + '<small>' + (pv.it ? '指で 動かして みてね。' : '') + (c < d.price ? 'あと ' + (d.price - c) + 'コイン 集めると 買えるよ' : '気に入ったら 買おう') + '</small>';
+      $('rmPvName').innerHTML = '👀 お試し中: ' + d.name + '<small>まだ 買って ないよ。' + (pv.it ? '指で 動かして みてね。' : '') + (c < d.price ? 'あと ' + (d.price - c) + 'コイン 集めると 買えるよ' : '気に入ったら 「買う」を おしてね') + '</small>';
       $('rmPvBuy').innerHTML = '買う <span class="coin"></span>' + d.price;
     }
     function startPreview(d){
@@ -10975,8 +11014,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       render();
       if(pv.it) selectIt(S.r.items.indexOf(pv.it));
       renderPv();
-      say(surf ? '試しに ' + d.name + 'に して みたよ。どうかな?' : '試しに ' + d.name + 'を 置いて みたよ。指で 動かして みてね');
-      $('rmStage').scrollIntoView({ block:'nearest', behavior:'smooth' });
+      say('');
+      if(window.innerWidth > 640) $('rmStage').scrollIntoView({ block:'nearest', behavior:'smooth' });   /* スマホは 部屋を 上に ピン止め するので うごかさない */
     }
     function endPreview(){
       var d = pv && pv.d; pv = null; sel = -1;
@@ -11364,7 +11403,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       for(var i = 0; i < n; i++) h += '<button class="rm-tab'+(i === RI ? ' sel' : '')+'" data-r="'+i+'">'+(i === RI ? '📍 ' : '')+'部屋 '+(i + 1)+'</button>';
       if(n < 5) h += '<button class="rm-tab add" data-r="add">＋ 部屋を 増やす <span class="coin"></span>'+ROOM_PRICE[n]+'</button>';
       $('rmRooms').innerHTML = h;
-      $('rmToy').textContent = toyIdx() === RI ? '🎮 遊ぶ画面の 部屋 ✓' : '🎮 遊ぶ画面の 部屋に する';
+      $('rmToy').textContent = toyIdx() === RI ? '🎮 遊ぶ画面の 部屋 ✓' : '🎮 遊ぶ画面に する';
       if(!$('rmMatesBox').hidden) renderMates();
     }
     function goRoom(i){
@@ -11431,7 +11470,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     function open(){
       setLive('add');
-      edit = false; sel = -1; lampOn = {}; pv = null; renderPv();
+      edit = false; sel = -1; lampOn = {}; pv = null; $('view-room').classList.remove('ed'); renderPv();
       stopPets(); RI = Math.min(selGet().cur | 0, roomN() - 1); S = null; $('rmMatesBox').hidden = true;
       $('rmEdit').textContent = '🔨 模様がえ'; $('rmEdit').classList.remove('on');
       showView('room');
