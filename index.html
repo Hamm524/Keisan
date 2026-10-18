@@ -296,6 +296,13 @@
   .rm-food svg{ display:block; width:100%; height:auto; overflow:visible; }
   .rm-food.bye{ transition:opacity .4s; opacity:0; }
   .rm-note{ white-space:nowrap; }
+  .rm-play{ max-width:720px; margin:0 auto 10px; display:flex; gap:8px; flex-wrap:wrap; }
+  .rm-pb{ flex:1 1 150px; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; border:none; border-radius:16px; padding:12px 14px; background:linear-gradient(#FFB36B, #FF8F4C); color:#fff; font:inherit; font-size:16px; font-weight:900; cursor:pointer; box-shadow:0 4px 0 #D9692A; }
+  .rm-pb:active{ transform:translateY(3px); box-shadow:0 1px 0 #D9692A; }
+  .rm-pb span{ font-size:22px; line-height:1; }
+  .rm-pb small{ flex-basis:100%; text-align:center; font-size:11.5px; font-weight:800; opacity:.95; }
+  .rm-pb.need{ background:var(--surface); color:var(--ink); border:2px dashed var(--line); box-shadow:none; padding:9px 14px; }
+  .rm-pb.need small{ color:var(--ink-soft); }
   @keyframes rm-fpop{ 0%{ opacity:0; transform:translate(-50%, -30%) scale(.4); } 100%{ opacity:1; transform:translateX(-50%) scale(1); } }
   .rm-tv{ animation:rm-tv 9s ease-in-out infinite; }
   @keyframes rm-tv{ 0%,100%{ fill:#9AD7F5; } 33%{ fill:#FFD3A8; } 66%{ fill:#C9B8F2; } }
@@ -2218,6 +2225,7 @@
     <div class="rm-house" id="rmHouse"></div>
     <div class="rm-tabs" id="rmRooms"></div>
     <section class="rm-stage" id="rmStage"></section>
+    <div class="rm-play" id="rmPlay"></div>
     <div class="rm-pv" id="rmPv" hidden>
       <b id="rmPvName"></b>
       <button class="rm-tb buy" id="rmPvBuy"></button>
@@ -10218,6 +10226,30 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       later(12400, function(){ S0.meal.foods.forEach(function(f){ f.remove(); }); S0.meal = null; });
     }
     var GROUP = { meal:meal };
+    /* ---- みんなで あそぶ ボタン ---- */
+    var PLAYS = [ { g:'meal', k:'dining', icon:'🍚', name:'みんなで ごはん', need:'ダイニングテーブル' } ];
+    function renderPlay(){
+      var box = $('rmPlay'); if(!box || !S) return;
+      box.innerHTML = PLAYS.map(function(p){
+        var has = S.r.items.some(function(it){ return it.k === p.k && !(pv && pv.it === it); });
+        return '<button class="rm-pb' + (has ? '' : ' need') + '" data-g="' + p.g + '"><span>' + p.icon + '</span><b>' + p.name + '</b>' + (has ? '' : '<small>' + p.need + 'が いるよ</small>') + '</button>';
+      }).join('');
+    }
+    $('rmPlay').addEventListener('click', function(e){
+      var b = e.target.closest('.rm-pb'); if(!b || !S) return;
+      var p = PLAYS.filter(function(x){ return x.g === b.getAttribute('data-g'); })[0];
+      var i = -1; S.r.items.forEach(function(it, k){ if(i < 0 && it.k === p.k && !(pv && pv.it === it)) i = k; });
+      if(i < 0){
+        tab = 'item'; renderShop();
+        say(p.need + 'を 置くと、' + p.name + 'が できるよ。下の ショップの 家具に あるよ');
+        var g = $('rmGrid'); if(g) g.scrollIntoView({ block:'center', behavior:'smooth' });
+        return;
+      }
+      if(pv) endPreview();
+      if(edit) setEdit(false);
+      if(!S.pets.length){ say('お部屋に 仲間が いないよ'); return; }
+      GROUP[p.g](i);
+    });
     function stopPets(){ if(S){ S.pets.forEach(function(P){ clearTimeout(P.t); }); if(S.meal && S.meal.stop) S.meal.stop(); } clearInterval(clockT); }
 
     function render(){
@@ -10253,7 +10285,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(!live()) return clearInterval(clockT);
         S.r.items.forEach(function(it, i){ var d = BY[it.k]; if(d.clock || d.sky){ S.els[i].el.innerHTML = itemSvg(d, null, it); } });
       }, 30000);
-      renderTools(); renderShop(); renderRooms();
+      renderTools(); renderShop(); renderRooms(); renderPlay();
     }
 
     /* ---- もようがえ(ドラッグで うごかす) ---- */
@@ -10265,7 +10297,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(on && S) S.pets.forEach(function(P){ clearTimeout(P.t); leave(P); P.el.classList.remove('walk'); });
       if(!on && S) S.pets.forEach(function(P, k){ next(P, 400 + k * 500); });
       say(on ? '家具を 指で 動かしてね。タップで 選ぶと 向き・大きさ・高さを 変えられるよ。下の 方へ 引っぱると 手前に 来るよ' : '');
-      renderTools();
+      renderTools(); renderPlay();
     }
     function selectIt(i){
       sel = i;
