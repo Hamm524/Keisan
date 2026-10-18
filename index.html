@@ -326,6 +326,13 @@
   .rm-pet.dance > .pet{ animation:rm-dance .84s ease-in-out infinite; }
   @keyframes rm-dance{ 0%,100%{ transform:rotate(-4deg); } 50%{ transform:rotate(4deg) translateY(-3%); } }
   .rm-pet.bow > .pet{ transform:rotate(0) translateY(6%) scaleY(.9); transition:transform .3s; }
+  .rm-ball{ position:absolute; transform:translate(-50%, 0); transition-property:left,bottom,width; transition-timing-function:cubic-bezier(.3,.6,.4,1); cursor:pointer; animation:rm-cin .4s ease-out; }
+  .rm-ball.bye{ opacity:0; transition:opacity .5s; }
+  .rm-bimg svg{ display:block; width:100%; height:auto; filter:drop-shadow(0 3px 2px rgba(0,0,0,.22)); }
+  .rm-bimg.hop{ animation:rm-bhop linear both; }
+  .rm-bimg.roll svg{ animation:rm-broll linear both; animation-duration:inherit; }
+  @keyframes rm-bhop{ 0%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-160%) rotate(200deg); } 82%{ transform:translateY(0) rotate(330deg); } 91%{ transform:translateY(-25%) rotate(350deg); } 100%{ transform:translateY(0) rotate(360deg); } }
+  @keyframes rm-broll{ to{ transform:rotate(720deg); } }
   .rm-hint{ position:absolute; z-index:9500; pointer-events:none; color:#7B83EB; font-weight:900; font-size:max(14px, 3cqw); white-space:nowrap; text-shadow:0 0 4px #fff, 0 0 8px #fff; animation:rm-up 2s ease-out forwards; }
   .rm-play{ max-width:720px; margin:0 auto 10px; display:flex; gap:8px; flex-wrap:wrap; }
   .rm-pb{ flex:1 1 150px; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; border:none; border-radius:16px; padding:12px 14px; background:linear-gradient(#FFB36B, #FF8F4C); color:#fff; font:inherit; font-size:16px; font-weight:900; cursor:pointer; box-shadow:0 4px 0 #D9692A; }
@@ -10256,7 +10263,168 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       });
       later(12400, function(){ S0.meal.foods.forEach(function(f){ f.remove(); }); S0.meal = null; });
     }
-    var GROUP = { meal:meal, hide:function(){ hideGame(); }, music:function(){ concertGame(); } };
+    var GROUP = { meal:meal, hide:function(){ hideGame(); }, music:function(){ concertGame(); }, ball:function(){ ballGame(); } };
+    /* ---- ボール遊び ---- */
+    function kickSnd(){
+      try{ var a = aud(), t = a.currentTime, o = a.createOscillator(), g = a.createGain();
+        o.type = 'triangle'; o.frequency.setValueAtTime(300, t); o.frequency.exponentialRampToValueAtTime(90, t + .12);
+        g.gain.setValueAtTime(.4, t); g.gain.exponentialRampToValueAtTime(.001, t + .16);
+        o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + .18); }catch(_){}
+    }
+    var BALL_SVG = '<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#fff" stroke="#3A3550" stroke-width="2"/>' +
+      '<path d="M20,11 L28.6,17.2 L25.3,27.3 H14.7 L11.4,17.2 Z" fill="#3A3550"/>' +
+      '<path d="M20,11 V3 M28.6,17.2 L36,14.5 M25.3,27.3 L30,34 M14.7,27.3 L10,34 M11.4,17.2 L4,14.5" stroke="#3A3550" stroke-width="2" fill="none"/>' +
+      '<circle cx="13" cy="10" r="3" fill="#fff" opacity=".7"/></svg>';
+    function ballGame(){
+      if(!S || !S.pets.length || S.hide || S.meal || S.concert || S.ball) return;
+      var S0 = S, stage = $('rmStage'), T = [], B = {}, n = S.pets.length, cnt = 0, want = null, hold = null, busy = true;
+      S.ball = B;
+      function later(ms, fn){ T.push(setTimeout(function(){ if(S === S0 && S0.ball === B && live()) fn(); }, ms)); }
+      if(sayB){ sayB.remove(); sayB = null; } cancelAnimationFrame(sayRaf); clearTimeout(sayT);
+      var hud = document.createElement('div'); hud.className = 'rm-hud'; stage.appendChild(hud);
+      hud.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+      function hudSet(msg){
+        hud.innerHTML = '<span>⚽ ' + (n > 1 ? 'パス ' : 'けった ') + cnt + '回</span><button type="button">やめる</button>' + (msg ? '<em>' + msg + '</em>' : '');
+        hud.querySelector('button').onclick = function(e){ e.stopPropagation(); stop(1); };
+      }
+      hudSet('');
+      /* ボール */
+      var bl = document.createElement('div'); bl.className = 'rm-ball'; bl.innerHTML = '<div class="rm-bimg">' + BALL_SVG + '</div>';
+      stage.appendChild(bl);
+      var bx = 50, by = 84;
+      function ballAt(x, y, ms, kind){
+        bx = Math.max(6, Math.min(94, x)); by = Math.max(WALL + 10, Math.min(98, y));
+        bl.style.transitionDuration = (ms || 0) + 'ms';
+        bl.style.left = bx + '%'; bl.style.bottom = (100 - by) + '%'; bl.style.width = (8 * depth(by) * SK) + '%';
+        bl.style.zIndex = 100 + Math.round(by * 10) + 8;
+        var im = bl.firstChild;
+        im.classList.remove('hop', 'roll'); void im.offsetWidth;
+        if(kind){ im.style.animationDuration = (ms || 400) + 'ms'; im.classList.add(kind); }
+      }
+      ballAt(50, 84, 0);
+      bl.addEventListener('pointerdown', function(e){ e.stopPropagation(); if(!busy) userKick(); });
+      /* 輪の 場所 */
+      var ring = S.pets.map(function(P, k){
+        clearTimeout(P.t); leave(P);
+        /* よこに ならべて、前・後ろを ジグザグに(輪だと 前の 子に 後ろの 子が かくれる) */
+        var gap = n === 2 ? 44 : Math.min(25, 76 / Math.max(1, n - 1));
+        return { P:P, x:50 + (k - (n - 1) / 2) * gap, y:n === 2 ? 85 : (k % 2 ? 76 : 90) };
+      });
+      if(n === 1) ring[0].x = 30;
+      B.ring = ring;
+      function face(m, x){ m.P.el.classList.toggle('left', x < m.P.x - 1); }
+      function feet(m){ return { x:m.P.x + (bx < m.P.x ? -4 : 4) * depth(m.P.y), y:m.P.y + 1.5 }; }
+      var ready = 0;
+      ring.forEach(function(m){
+        walkTo(m.P, m.x, m.y, null, null, function(){
+          if(S !== S0 || S0.ball !== B) return;
+          face(m, 50);
+          if(++ready === n) later(400, start);
+        });
+      });
+      function start(){
+        say(n > 1 ? petName(lead().sp) + '「みんなで パス しよう!」' : petName(lead().sp) + '「ドリブル するよ〜!」');
+        hudSet(n > 1 ? '仲間を タップすると パスが 行くよ' : 'ボールを タップすると けれるよ');
+        var m = ring[0];
+        walkTo(m.P, bx + (m.P.x < bx ? -5 : 5), by - 1, null, null, function(){ take(m); });
+      }
+      function take(m){
+        hold = m; busy = false;
+        var f = feet(m); ballAt(f.x, f.y, 260);
+        later(700 + Math.random() * 500, function(){ if(hold === m) pass(m); });
+      }
+      function pass(m){
+        if(n === 1){ dribble(m); return; }
+        var others = ring.filter(function(q){ return q !== m; });
+        var to = want && want !== m ? want : others[(Math.random() * others.length) | 0];
+        want = null; hold = null; busy = true;
+        face(m, to.P.x); Pet.tap(m.P.el); kickSnd();
+        if(Math.random() < .15){ miss(to); return; }
+        var f = { x:to.P.x + (m.P.x < to.P.x ? -4 : 4) * depth(to.P.y), y:to.P.y + 1.5 }, d = Math.hypot(f.x - bx, (f.y - by) * 1.6), ms = Math.max(500, d * 22);
+        ballAt(f.x, f.y, ms, 'hop');
+        later(ms, function(){
+          cnt++; hudSet(cnt % 5 === 0 ? cnt + '回 つづいた!' : '');
+          kickSnd(); face(to, m.P.x); bubble(to.P, cnt % 5 === 0 ? '⭐' : '♥');
+          if(cnt % 5 === 0){ [659, 784, 1047].forEach(function(fr, k){ setTimeout(function(){ chime(fr); }, k * 110); }); }
+          if(cnt >= 20){ win(); return; }
+          take(to);
+        });
+      }
+      function miss(to){
+        /* それて ころころ → いちばん 近い 子が ひろいに 行く */
+        var x = to.P.x + (Math.random() < .5 ? -1 : 1) * (14 + Math.random() * 10), y = to.P.y + (Math.random() * 10 - 5);
+        var d = Math.hypot(x - bx, (y - by) * 1.6), ms = Math.max(700, d * 30);
+        ballAt(x, y, ms, 'roll');
+        later(ms - 200, function(){ say(petName(to.P.sp) + '「あっ、それちゃった〜」'); chase([to]); });
+      }
+      function chase(who){
+        var won = false;
+        who.forEach(function(m){
+          walkTo(m.P, bx + (m.P.x < bx ? -4 : 4), by - 1, null, null, function(){
+            if(won || S !== S0 || S0.ball !== B) return;
+            won = true;
+            if(who.length > 1){ say(petName(m.P.sp) + '「いちばん!」'); bubble(m.P, '⭐'); }
+            Pet.tap(m.P.el); var f = feet(m); ballAt(f.x, f.y, 200);
+            who.forEach(function(q){ if(q !== m) later(300 + Math.random() * 300, function(){ walkTo(q.P, q.x, q.y, null, null, function(){ face(q, 50); }); }); });
+            /* ボールを 持って 自分の 場所へ */
+            later(500, function(){
+              walkTo(m.P, m.x, m.y, null, null, function(){ face(m, 50); later(300, function(){ take(m); }); });
+              var tx = m.x + (m.P.x > m.x ? -4 : 4) * depth(m.y);
+              ballAt(tx, m.y + 1.5, Math.max(350, Math.hypot(m.x - m.P.x, (m.y - m.P.y) * .75) * 55), 'roll');
+            });
+          });
+        });
+      }
+      function dribble(m){
+        hold = null; busy = true; Pet.tap(m.P.el); kickSnd();
+        var x = 12 + Math.random() * 76, y = WALL + 14 + Math.random() * 26, d = Math.hypot(x - bx, (y - by) * 1.6), ms = Math.max(600, d * 26);
+        face(m, x); ballAt(x, y, ms, 'roll');
+        later(Math.min(ms * .6, 900), function(){
+          walkTo(m.P, x + (m.P.x < x ? -4 : 4), y - 1, null, null, function(){
+            cnt++; hudSet(cnt % 5 === 0 ? cnt + '回 つづいた!' : '');
+            if(cnt % 5 === 0) bubble(m.P, '⭐');
+            if(cnt >= 20){ win(); return; }
+            m.x = m.P.x; m.y = m.P.y; take(m);
+          });
+        });
+      }
+      function userKick(){
+        /* ボールを タップ → ころころ 遠くへ、みんなで おいかけっこ */
+        hold = null; busy = true; want = null; kickSnd();
+        var x = bx < 50 ? 60 + Math.random() * 30 : 10 + Math.random() * 30, y = WALL + 14 + Math.random() * 26;
+        var d = Math.hypot(x - bx, (y - by) * 1.6), ms = Math.max(700, d * 24);
+        ballAt(x, y, ms, 'roll');
+        if(n === 1){ say(petName(lead().sp) + '「まてまて〜!」'); later(300, function(){ var m = ring[0]; walkTo(m.P, x + (m.P.x < x ? -4 : 4), y - 1, null, null, function(){ Pet.tap(m.P.el); m.x = m.P.x; m.y = m.P.y; take(m); }); }); return; }
+        say('みんな「まてまて〜!」');
+        later(250, function(){ chase(ring); });
+      }
+      B.tapPet = function(P){
+        var m = ring.filter(function(q){ return q.P === P; })[0];
+        if(!m) return true;
+        if(n > 1 && m !== hold){ want = m; say(petName(P.sp) + '「こっち こっち!」'); Pet.tap(P.el); }
+        else if(m === hold && !busy) pass(m);
+        return true;
+      };
+      function win(){
+        hold = null; busy = true;
+        [523, 659, 784, 1047].forEach(function(f, k){ setTimeout(function(){ chime(f); }, k * 110); });
+        hudSet('やったね!');
+        say(n > 1 ? 'みんな「20回 つづいたよ! やったね!」' : petName(lead().sp) + '「20回 けったよ!」');
+        ring.forEach(function(m){ Pet.cheer(m.P.el); bubble(m.P, '🎉'); });
+        later(3200, function(){ stop(2); });
+      }
+      function stop(mode){
+        T.forEach(clearTimeout); T = [];
+        if(S0.ball === B) S0.ball = null;
+        bl.classList.add('bye'); hud.classList.add('bye');
+        setTimeout(function(){ bl.remove(); hud.remove(); }, 500);
+        if(!mode) return;
+        ring.forEach(function(m, k){ next(m.P, 600 + k * 500); });
+        if(mode === 1) say(petName(lead().sp) + '「また ボールで あそぼうね!」');
+        renderPlay();
+      }
+      B.stop = function(){ stop(0); };
+    }
     /* ---- 音楽会 ---- */
     function aud(){ actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if(actx.state === 'suspended') actx.resume(); return actx; }
     function drum(){
@@ -10496,7 +10664,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function firstOf(k){ var i = -1; S.r.items.forEach(function(it, n){ if(i < 0 && it.k === k && !(pv && pv.it === it)) i = n; }); return i; }
     var PLAYS = [ { g:'meal', icon:'🍚', name:'みんなで ごはん', need:'ダイニングテーブルが いるよ', needSay:'ダイニングテーブルを 置くと、みんなで ごはんが できるよ。下の ショップの 家具に あるよ', find:function(){ return firstOf('dining'); } },
       { g:'hide', icon:'🙈', name:'かくれんぼ', need:'ソファや 本だなが いるよ', needSay:'ソファ・ベッド・本だな・れいぞう庫 みたいな 大きな 家具が あると、後ろに かくれて かくれんぼが できるよ', find:function(){ return hideSpots().length ? 0 : -1; } },
-      { g:'music', icon:'🎵', name:'音楽会', need:'', needSay:'', find:function(){ return 0; } } ];
+      { g:'music', icon:'🎵', name:'音楽会', need:'', needSay:'', find:function(){ return 0; } },
+      { g:'ball', icon:'⚽', name:'ボール遊び', need:'', needSay:'', find:function(){ return 0; } } ];
     function renderPlay(){
       var box = $('rmPlay'); if(!box || !S) return;
       box.innerHTML = PLAYS.map(function(p){
@@ -10507,7 +10676,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('rmPlay').addEventListener('click', function(e){
       var b = e.target.closest('.rm-pb'); if(!b || !S) return;
       var p = PLAYS.filter(function(x){ return x.g === b.getAttribute('data-g'); })[0];
-      if(S.meal || S.hide || S.concert){ say(petName(lead().sp) + '「いまは ' + (S.meal ? 'ごはん' : S.hide ? 'かくれんぼ' : '音楽会') + ' 中だよ〜」'); return; }
+      if(S.meal || S.hide || S.concert || S.ball){ say(petName(lead().sp) + '「いまは ' + (S.meal ? 'ごはん' : S.hide ? 'かくれんぼ' : S.concert ? '音楽会' : 'ボール遊び') + ' 中だよ〜」'); return; }
       var i = p.find();
       if(i < 0){
         tab = 'item'; renderShop();
@@ -10520,7 +10689,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(!S.pets.length){ say('お部屋に 仲間が いないよ'); return; }
       GROUP[p.g](i);
     });
-    function stopPets(){ if(S){ S.pets.forEach(function(P){ clearTimeout(P.t); }); if(S.meal && S.meal.stop) S.meal.stop(); if(S.hide && S.hide.stop) S.hide.stop(); if(S.concert && S.concert.stop) S.concert.stop(); } clearInterval(clockT); }
+    function stopPets(){ if(S){ S.pets.forEach(function(P){ clearTimeout(P.t); }); if(S.meal && S.meal.stop) S.meal.stop(); if(S.hide && S.hide.stop) S.hide.stop(); if(S.concert && S.concert.stop) S.concert.stop(); if(S.ball && S.ball.stop) S.ball.stop(); } clearInterval(clockT); }
 
     function render(){
       var stage = $('rmStage'), keep = S ? S.pets : null;
@@ -10544,6 +10713,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           if(edit) return;
           if(S.hide && S.hide.tapPet && S.hide.tapPet(P)) return;
           if(S.concert && S.concert.tapPet && S.concert.tapPet(P)) return;
+          if(S.ball && S.ball.tapPet && S.ball.tapPet(P)) return;
           var wasSleep = P.el.classList.contains('sleep');
           if(P.seat != null){ getUp(P); }
           Pet.spin(el); bubble(P, '♥');
@@ -10563,6 +10733,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---- もようがえ(ドラッグで うごかす) ---- */
     function setEdit(on){
       if(on && S && S.concert && S.concert.stop) S.concert.stop();
+      if(on && S && S.ball && S.ball.stop) S.ball.stop();
       if(on && S && S.hide && S.hide.stop){ S.hide.stop(); S.pets.forEach(function(P){ P.el.classList.remove('peek'); }); }
       edit = on; sel = -1;
       $('rmStage').classList.toggle('editing', on);
@@ -10643,7 +10814,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(!edit){
         if(i < 0 || !S) return;
         if(S.hide){ if(S.hide.tapItem) S.hide.tapItem(i); return; }
-        if(S.concert) return;
+        if(S.concert || S.ball) return;
         var d = BY[S.r.items[i].k];
         if(d.tap === 'light'){ lampOn[i] = !lampOn[i]; S.els[i].el.classList.toggle('on', !!lampOn[i]); if(d.fx) d.fx(i, !!lampOn[i]); }
         if(d.tap === 'piano'){ chime(TUNE[(Math.random() * TUNE.length) | 0]); }
