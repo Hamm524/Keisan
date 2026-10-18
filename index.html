@@ -4504,23 +4504,42 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   var WP_T = {
     add: ['{n}さんは 朝に {a}こ、夕方に {b}こ どんぐりを ひろいました。全部で 何こ ですか。',
           '公園に {a}人 いました。そこへ {b}人 来ました。みんなで 何人 ですか。',
-          '{a}円の ノートと {b}円の えんぴつを 買います。合わせて 何円 ですか。'],
+          '{a}円の ノートと {b}円の えんぴつを 買います。合わせて 何円 ですか。',
+          '図書室で {n}さんは 先週 {a}ページ、今週 {b}ページ 本を 読みました。合わせて 何ページ ですか。',
+          '遠足で 行きは {a}m、帰りは {b}m 歩きました。全部で 何m ですか。',
+          '{n}さんの 学校の 1年生は {a}人、2年生は {b}人 です。合わせて 何人 ですか。'],
     sub: ['{n}さんは {a}円 持っています。{b}円の おかしを 買うと、のこりは 何円 ですか。',
           '{a}ページの 本を {b}ページ 読みました。のこりは 何ページ ですか。',
-          'バスに {a}人 のっていました。{b}人 おりると、何人に なりますか。'],
+          'バスに {a}人 のっていました。{b}人 おりると、何人に なりますか。',
+          '{a}まいの 色紙の うち、{b}まい つかいました。のこりは 何まい ですか。',
+          '{n}さんは シールを {a}まい 持っていました。ともだちに {b}まい あげました。のこりは 何まい ですか。',
+          '{a}mの リボンから {b}m 切り取りました。のこりは 何m ですか。'],
     mul: ['1箱に {a}こ 入った クッキーが {b}箱 あります。全部で 何こ ですか。',
           '1人に {a}まいずつ、{b}人に 色紙を くばります。全部で 何まい いりますか。',
-          '1本 {a}円の ジュースを {b}本 買います。何円 ですか。'],
+          '1本 {a}円の ジュースを {b}本 買います。何円 ですか。',
+          '1つの テーブルに {a}人 すわれます。テーブルが {b}つ あると、全部で 何人 すわれますか。',
+          '1日に {a}ページずつ、{b}日間 ドリルを やります。全部で 何ページ ですか。',
+          '1ふくろに みかんが {a}こ 入っています。{b}ふくろでは、みかんは 全部で 何こ ですか。'],
     div: ['{a}この あめを {b}人で 同じ数ずつ 分けます。1人 何こ ですか。',
           '{a}円で 1こ {b}円の ガムを 買います。何こ 買えますか。',
-          '{a}まいの 紙を {b}まいずつ たばにします。何たば できますか。']
+          '{a}まいの 紙を {b}まいずつ たばにします。何たば できますか。',
+          '{a}人の 子どもが、{b}人ずつ 1つの 車に のります。車は 何台 いりますか。',
+          '{a}この りんごを {b}つの かごに 同じ数ずつ 入れます。1つの かごに 何こ ですか。',
+          '{a}ページの ドリルを 1日 {b}ページずつ やります。何日で 終わりますか。']
   };
+  var WP_USED = {};
   function wpPick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+  function wpTemplate(op){
+    var list = WP_T[op], used = WP_USED[op] || (WP_USED[op] = []);
+    var left = list.filter(function(t){ return used.indexOf(t) < 0; });
+    if(!left.length){ used.length = 0; left = list; }
+    var t = wpPick(left); used.push(t); return t;
+  }
   function wpFill(t, o){ return t.replace('{n}', wpPick(WP_NAMES)).replace('{a}', o.a).replace('{b}', o.b); }
-  function wordProblem(op, hard){
+  function wordProblem(op, hard, kind){
     var q;
     if(hard){
-      if(Math.random() < .5){
+      if(kind === 0){
         var pr = pick(3, 9) * 10, k = pick(2, 5), cost = pr * k, paid = Math.ceil(cost / 100) * 100; if(paid === cost) paid += 100;
         q = { a:pr, b:k, answer:paid - cost, text:wpFill('1こ ' + pr + '円の ガムを ' + k + 'こ 買って、' + paid + '円 出しました。おつりは 何円 ですか。', {}) };
         q.op = 'mul';
@@ -4531,7 +4550,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }
     }else{
       var g = LEVELS[op][currentLevelIndex(op)].gen();
-      q = { a:g.a, b:g.b, answer:g.answer, op:op, text:wpFill(wpPick(WP_T[op]), g) };
+      q = { a:g.a, b:g.b, answer:g.answer, op:op, text:wpFill(wpTemplate(op), g) };
     }
     q.word = true; q.hs = false; q.lv = currentLevelIndex(q.op);
     return q;
@@ -4541,9 +4560,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     state.op = 'mix';
     state.print = { n:CH_N, kind:'challenge', boss:ops[0] };
     setLive(ops[0]);
+    WP_USED = {};
+    var hk = Math.random() < .5 ? 0 : 1;
     var seq = ops.concat(SINGLE_OPS.filter(function(o){ return ops.indexOf(o) < 0; }));
     for(var i=0;i<CH_N;i++){
-      var hard = (i === 4 || i === 9), q = wordProblem(seq[i % 4], hard);
+      var hard = (i === 4 || i === 9), q = wordProblem(seq[i % 4], hard, i === 4 ? hk : 1 - hk);
       q.hard = hard; q.id = i; q.solved = false; q.mistakes = 0; qs.push(q);
     }
     beginRound('accuracy', qs);
