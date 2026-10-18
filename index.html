@@ -678,6 +678,10 @@
   .gk-res .gk-big{ font-size:44px; font-weight:900; }
   .gk-pass{text-align:left; font-size:17px; line-height:2; background:var(--surface-2,var(--bg)); border-radius:14px; padding:12px 14px; margin:8px 0; font-weight:600; }
   .gk-mark{ background:color-mix(in srgb, #FFC53D 55%, transparent); color:inherit; border-radius:4px; padding:0 2px; }
+  .gk-step1{ background:var(--op-div); color:#fff; border-radius:14px; padding:12px 14px; margin:8px 0; font-size:15px; font-weight:800; line-height:1.6; }
+  .gk-step1 b{ display:block; font-size:24px; font-weight:900; margin-top:4px; line-height:1.4; }
+  .gk-qbox{ border:3px solid var(--op-div); border-radius:14px; padding:12px 14px; margin:8px 0; font-size:22px; font-weight:900; line-height:1.6; background:var(--surface); }
+  .gk-pass.dim{ font-size:12px; opacity:.6; line-height:1.7; font-weight:500; }
 </style></head><body>
 <title>けいさんチャレンジ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11984,11 +11988,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         ch = shuffle([q.ty].concat(others));
       }
       $('gkProg').innerHTML = S.qs.map(function(_, i){ return '<i class="'+(S.res[i] === 1 ? 'ok' : S.res[i] === 0 ? 'ng' : '')+'"></i>'; }).join('');
-      if(q.ty){
-        $('gkQ').innerHTML = '<div class="gk-tag">'+(S.i+1)+' / '+S.qs.length+' ・ '+q.tag+(typeStep ? ' ・ ① 聞かれて いる ことは?' : ' ・ ② 答えよう')+'</div>' + passHTML(q, false) +
-          '<div class="gk-text">'+esc(q.qtext)+'</div>';
+      if(q.ty && typeStep){
+        $('gkQ').innerHTML = '<div class="gk-tag">'+(S.i+1)+' / '+S.qs.length+' ・ '+q.tag+'</div>' +
+          '<div class="gk-step1">ストップ! まだ 答えは えらばないよ<b>この もんだいは、何を 聞いて いる?</b></div>' +
+          '<div class="gk-qbox">'+esc(q.qtext)+'</div>' +
+          '<div class="gk-pass dim">'+esc(PASS[q.p])+'</div>';
+      }else if(q.ty){
+        $('gkQ').innerHTML = '<div class="gk-tag">'+(S.i+1)+' / '+S.qs.length+' ・ '+q.tag+' ・ ② 答えを えらぼう</div>' + passHTML(q, false) +
+          '<div class="gk-qbox">'+esc(q.qtext)+'</div>';
       }else $('gkQ').innerHTML = '<div class="gk-tag">'+(S.i+1)+' / '+S.qs.length+' ・ '+q.tag+'</div>'+q.html;
-      $('gkCh').className = (typeStep ? 'gk-ch' : 'gk-ch one');
+      $('gkCh').className = 'gk-ch one';
       $('gkCh').innerHTML = ch.map(function(c){ return '<button data-c="'+c.replace(/"/g, '&quot;')+'">'+c+'</button>'; }).join('');
       $('gkFb').textContent = ''; $('gkFb').className = 'gk-fb'; $('gkNextBox').innerHTML = '';
       S.lock = false;
