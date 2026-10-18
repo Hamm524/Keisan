@@ -311,6 +311,21 @@
   @keyframes rm-shake{ 20%{ translate:-3px 0; } 50%{ translate:3px 0; } 80%{ translate:-2px 0; } }
   .rm-it.rm-rustle{ transform-origin:50% 100%; animation:rm-rustle .5s ease-in-out 3; }
   @keyframes rm-rustle{ 25%{ rotate:-2.5deg; } 75%{ rotate:2.5deg; } }
+  .rm-concert{ position:absolute; inset:0; z-index:1400; pointer-events:none; background:radial-gradient(ellipse at 50% 92%, rgba(46,42,61,.25), rgba(46,42,61,.78) 70%); animation:rm-cin .7s ease-out; transition:opacity .6s; }
+  .rm-concert.bye{ opacity:0; }
+  @keyframes rm-cin{ from{ opacity:0; } }
+  .rm-concert svg{ position:absolute; left:0; width:100%; display:block; }
+  .rm-spots{ top:0; height:100%; }
+  .rm-maku{ top:0; height:13%; filter:drop-shadow(0 3px 3px rgba(0,0,0,.3)); }
+  .rm-spot{ transform-box:fill-box; transform-origin:50% 0; animation:rm-sway 3.2s ease-in-out infinite; } .rm-spot.b2{ animation-delay:-1.6s; }
+  @keyframes rm-sway{ 0%,100%{ transform:rotate(-7deg); } 50%{ transform:rotate(7deg); } }
+  .rm-inst{ position:absolute; left:50%; bottom:6%; width:46%; transform:translateX(-50%); pointer-events:none; z-index:2; }
+  .rm-inst svg{ display:block; width:100%; height:auto; overflow:visible; filter:drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
+  .rm-inst.hit{ animation:rm-ihit .3s ease-out; }
+  @keyframes rm-ihit{ 0%{ transform:translateX(-50%) rotate(0) scale(1); } 40%{ transform:translateX(-50%) rotate(-12deg) scale(1.15); } 100%{ transform:translateX(-50%) rotate(0) scale(1); } }
+  .rm-pet.dance > .pet{ animation:rm-dance .84s ease-in-out infinite; }
+  @keyframes rm-dance{ 0%,100%{ transform:rotate(-4deg); } 50%{ transform:rotate(4deg) translateY(-3%); } }
+  .rm-pet.bow > .pet{ transform:rotate(0) translateY(6%) scaleY(.9); transition:transform .3s; }
   .rm-hint{ position:absolute; z-index:9500; pointer-events:none; color:#7B83EB; font-weight:900; font-size:max(14px, 3cqw); white-space:nowrap; text-shadow:0 0 4px #fff, 0 0 8px #fff; animation:rm-up 2s ease-out forwards; }
   .rm-play{ max-width:720px; margin:0 auto 10px; display:flex; gap:8px; flex-wrap:wrap; }
   .rm-pb{ flex:1 1 150px; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; border:none; border-radius:16px; padding:12px 14px; background:linear-gradient(#FFB36B, #FF8F4C); color:#fff; font:inherit; font-size:16px; font-weight:900; cursor:pointer; box-shadow:0 4px 0 #D9692A; }
@@ -10241,7 +10256,129 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       });
       later(12400, function(){ S0.meal.foods.forEach(function(f){ f.remove(); }); S0.meal = null; });
     }
-    var GROUP = { meal:meal, hide:function(){ hideGame(); } };
+    var GROUP = { meal:meal, hide:function(){ hideGame(); }, music:function(){ concertGame(); } };
+    /* ---- 音楽会 ---- */
+    function aud(){ actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if(actx.state === 'suspended') actx.resume(); return actx; }
+    function drum(){
+      try{ var a = aud(), t = a.currentTime, o = a.createOscillator(), g = a.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(170, t); o.frequency.exponentialRampToValueAtTime(48, t + .2);
+        g.gain.setValueAtTime(.55, t); g.gain.exponentialRampToValueAtTime(.001, t + .28);
+        o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + .3); }catch(_){}
+    }
+    function shake(len, hp){
+      try{ var a = aud(), t = a.currentTime, n = (a.sampleRate * len) | 0, buf = a.createBuffer(1, n, a.sampleRate), d = buf.getChannelData(0);
+        for(var k = 0; k < n; k++) d[k] = (Math.random() * 2 - 1) * Math.pow(1 - k / n, 2);
+        var src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
+        src.buffer = buf; f.type = 'highpass'; f.frequency.value = hp; g.gain.value = .3;
+        src.connect(f); f.connect(g); g.connect(a.destination); src.start(t); }catch(_){}
+    }
+    function horn(fr){
+      try{ var a = aud(), t = a.currentTime, o = a.createOscillator(), f = a.createBiquadFilter(), g = a.createGain();
+        o.type = 'sawtooth'; o.frequency.value = fr; f.type = 'lowpass'; f.frequency.value = 1600;
+        g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.12, t + .04); g.gain.exponentialRampToValueAtTime(.0001, t + .34);
+        o.connect(f); f.connect(g); g.connect(a.destination); o.start(t); o.stop(t + .36); }catch(_){}
+    }
+    var INST = [
+      { n:'タンバリン', svg:'<circle cx="20" cy="20" r="14" fill="#FFE9C2" stroke="#E8A33D" stroke-width="5"/><g fill="#FFD24C" stroke="#C9973A" stroke-width="1"><circle cx="20" cy="4" r="3.4"/><circle cx="36" cy="20" r="3.4"/><circle cx="20" cy="36" r="3.4"/><circle cx="4" cy="20" r="3.4"/></g>', play:function(){ shake(.16, 5000); setTimeout(function(){ chime(2093); }, 10); } },
+      { n:'たいこ', svg:'<path d="M8,4 L17,13 M32,4 L23,13" stroke="#A77A45" stroke-width="3" stroke-linecap="round"/><rect x="5" y="15" width="30" height="21" rx="5" fill="#E5484D"/><path d="M5,22 L35,32 M5,32 L35,22" stroke="#FFD24C" stroke-width="2.4"/><ellipse cx="20" cy="15" rx="15" ry="5" fill="#FFF6E8" stroke="#C9973A" stroke-width="1.5"/>', play:drum },
+      { n:'ラッパ', svg:'<path d="M3,17 H22 L37,8 V32 L22,23 H3 Z" fill="#FFD24C" stroke="#C9973A" stroke-width="1.5" stroke-linejoin="round"/><g fill="#C9973A"><rect x="9" y="11" width="3" height="6" rx="1"/><rect x="14" y="11" width="3" height="6" rx="1"/></g><ellipse cx="37" cy="20" rx="2.5" ry="12" fill="#FFE58A"/>', play:function(f){ horn((f || 523) / 2); } },
+      { n:'マラカス', svg:'<rect x="9" y="19" width="4" height="18" rx="2" fill="#A77A45"/><ellipse cx="11" cy="13" rx="8" ry="9.5" fill="#FF8FB1"/><circle cx="8.5" cy="9.5" r="2.2" fill="#fff" opacity=".8"/><rect x="26" y="21" width="4" height="17" rx="2" fill="#A77A45"/><ellipse cx="28" cy="15" rx="8" ry="9.5" fill="#9BD66B"/><circle cx="25.5" cy="11.5" r="2.2" fill="#fff" opacity=".8"/>', play:function(){ shake(.1, 2500); } },
+      { n:'トライアングル', svg:'<path d="M20,4 L36,33 H5 L18,8" fill="none" stroke="#B9C6D2" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M27,12 L39,31" stroke="#A77A45" stroke-width="2.2" stroke-linecap="round"/>', play:function(){ chime(2637); } },
+      { n:'もっきん', svg:'<rect x="2" y="27" width="36" height="4" rx="2" fill="#A77A45"/><rect x="3" y="10" width="5" height="20" rx="1.5" fill="#E5484D"/><rect x="10" y="12" width="5" height="17" rx="1.5" fill="#FF9E6B"/><rect x="17" y="14" width="5" height="14" rx="1.5" fill="#FFD24C"/><rect x="24" y="16" width="5" height="11" rx="1.5" fill="#9BD66B"/><rect x="31" y="18" width="5" height="8" rx="1.5" fill="#7FB8F0"/><path d="M30,2 L22,13" stroke="#C99A62" stroke-width="2" stroke-linecap="round"/><circle cx="22" cy="13" r="2.4" fill="#FF8FB1"/>', play:function(f){ chime((f || 784) * 2); } }
+    ];
+    var SONGS = [
+      ['きらきら星', [523,523,784,784,880,880,784,0, 698,698,659,659,587,587,523,0]],
+      ['かえるの うた', [523,587,659,698,659,587,523,0, 659,698,784,880,784,698,659,0]],
+      ['チューリップ', [523,587,659,0,523,587,659,0, 784,659,587,523,587,659,587,0]]
+    ];
+    var BEAT = 420;
+    function concertGame(){
+      if(!S || !S.pets.length || S.hide || S.meal || S.concert) return;
+      var S0 = S, stage = $('rmStage'), T = [], C = {}, song = SONGS[(Math.random() * SONGS.length) | 0], n = S.pets.length;
+      S.concert = C;
+      function later(ms, fn){ T.push(setTimeout(function(){ if(S === S0 && S0.concert === C && live()) fn(); }, ms)); }
+      var cv = document.createElement('div'); cv.className = 'rm-concert';
+      var sc = '';
+      for(var k = 0; k < 12; k++) sc += 'M' + (k * 100 / 12).toFixed(2) + ',0 V8 Q' + ((k + .5) * 100 / 12).toFixed(2) + ',15 ' + ((k + 1) * 100 / 12).toFixed(2) + ',8 V0 ';
+      cv.innerHTML = '<svg class="rm-spots" viewBox="0 0 100 75" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="rmSpotG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF6C8" stop-opacity=".75"/><stop offset="1" stop-color="#FFF6C8" stop-opacity=".12"/></linearGradient></defs>' +
+        '<polygon class="rm-spot" points="18,0 24,0 46,75 4,75" fill="url(#rmSpotG)"/><polygon class="rm-spot b2" points="76,0 82,0 96,75 54,75" fill="url(#rmSpotG)"/><ellipse cx="50" cy="69" rx="44" ry="7" fill="#FFF6C8" opacity=".22"/></svg>' +
+        '<svg class="rm-maku" viewBox="0 0 100 16" preserveAspectRatio="none" aria-hidden="true"><path d="' + sc + 'Z" fill="#D9364A"/><rect width="100" height="3" fill="#FFD24C"/></svg>';
+      stage.appendChild(cv);
+      var hud = document.createElement('div'); hud.className = 'rm-hud'; stage.appendChild(hud);
+      hud.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+      function hudSet(msg){
+        hud.innerHTML = '<span>🎵 「' + song[0] + '」</span><button type="button">やめる</button>' + (msg ? '<em>' + msg + '</em>' : '');
+        hud.querySelector('button').onclick = function(e){ e.stopPropagation(); stop(1); };
+      }
+      hudSet('');
+      var order = INST.map(function(_, k){ return k; });
+      for(var a = order.length - 1; a > 0; a--){ var b = (Math.random() * (a + 1)) | 0, t = order[a]; order[a] = order[b]; order[b] = t; }
+      var band = S.pets.map(function(P, k){
+        clearTimeout(P.t); leave(P);
+        var gap = Math.min(17, 80 / Math.max(1, n)), x = 50 + (k - (n - 1) / 2) * gap, y = 90;
+        return { P:P, x:x, y:y, ins:INST[order[k % order.length]], el:null };
+      });
+      C.band = band;
+      band.forEach(function(m, k){
+        walkTo(m.P, m.x, m.y, null, 1500 + k, function(){
+          if(S !== S0 || S0.concert !== C) return;
+          setPet(m.P, m.x, m.y, depth(m.y), 1500 + k, 0);
+          var e = document.createElement('div'); e.className = 'rm-inst'; e.innerHTML = '<svg viewBox="0 0 40 40" aria-hidden="true">' + m.ins.svg + '</svg>';
+          m.P.el.appendChild(e); m.el = e;
+        });
+      });
+      function hit(m, f){
+        if(!m.el) return;
+        m.ins.play(f);
+        m.el.classList.remove('hit'); void m.el.offsetWidth; m.el.classList.add('hit');
+        Pet.tap(m.P.el);
+        var note = document.createElement('span'); note.className = 'rm-note'; note.textContent = Math.random() < .5 ? '♪' : '♫';
+        note.style.left = (25 + Math.random() * 50) + '%'; m.P.el.appendChild(note);
+        setTimeout(function(){ note.remove(); }, 1400);
+      }
+      C.tapPet = function(P){
+        var m = band.filter(function(q){ return q.P === P; })[0];
+        if(m) hit(m, song[1][(Math.random() * 7) | 0] || 659);
+        return true;
+      };
+      function stop(mode){
+        T.forEach(clearTimeout); T = [];
+        if(S0.concert === C) S0.concert = null;
+        cv.classList.add('bye'); hud.classList.add('bye');
+        setTimeout(function(){ cv.remove(); hud.remove(); }, 600);
+        band.forEach(function(m){ if(m.el) m.el.remove(); m.P.el.classList.remove('dance'); });
+        if(!mode) return;
+        band.forEach(function(m, k){ setPet(m.P, m.x, m.y, depth(m.y), null, 0); next(m.P, 900 + k * 500); });
+        if(mode === 1) say(petName(lead().sp) + '「また 音楽会 しようね!」');
+        renderPlay();
+      }
+      C.stop = function(){ stop(0); };
+      if(sayB){ sayB.remove(); sayB = null; } cancelAnimationFrame(sayRaf); clearTimeout(sayT);
+      later(1900, function(){
+        say(n > 1 ? petName(lead().sp) + '「みんなの 音楽会、はじまり はじまり〜!」' : petName(lead().sp) + '「ひとりで 音楽会、はじまり〜!」');
+        hudSet('仲間を タップすると 音が 出るよ');
+      });
+      var notes = song[1].concat(song[1]), t0 = 3400;
+      later(t0 - 200, function(){ band.forEach(function(m){ m.P.el.classList.add('dance'); }); });
+      notes.forEach(function(f, k){
+        later(t0 + k * BEAT, function(){
+          if(f) chime(f);
+          var m = band[k % band.length];
+          if(k % 2 === 0 || band.length === 1) hit(m, f);
+          if(k % 4 === 0 && band.length > 1){ var d = band.filter(function(q){ return q.ins.play === drum; })[0]; if(d && d !== m) hit(d, f); }
+        });
+      });
+      var tEnd = t0 + notes.length * BEAT + 300;
+      later(tEnd, function(){
+        band.forEach(function(m){ m.P.el.classList.remove('dance'); Pet.cheer(m.P.el); bubble(m.P, '👏'); });
+        [523, 659, 784, 1047].forEach(function(f, k){ setTimeout(function(){ chime(f); }, k * 110); });
+        say(n > 1 ? 'みんな「聞いてくれて ありがとう!」' : petName(lead().sp) + '「聞いてくれて ありがとう!」');
+        hudSet('パチパチ 👏');
+      });
+      later(tEnd + 900, function(){ band.forEach(function(m){ m.P.el.classList.add('bow'); }); });
+      later(tEnd + 1900, function(){ band.forEach(function(m){ m.P.el.classList.remove('bow'); bubble(m.P, '♥'); }); });
+      later(tEnd + 3300, function(){ stop(2); });
+    }
     /* ---- かくれんぼ ---- */
     var HIDE_OK = { sofa:1, bed:1, shelf:1, toybox:1, tent:1, castle:1, partition:1, partwin:1, counter:1, counterh:1, fridge:1, washer:1, sink:1, stove:1, senmen:1, bath:1, tv:1, aquarium:1, piano:1, tree:1 };
     function hideSpots(){
@@ -10358,7 +10495,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---- みんなで あそぶ ボタン ---- */
     function firstOf(k){ var i = -1; S.r.items.forEach(function(it, n){ if(i < 0 && it.k === k && !(pv && pv.it === it)) i = n; }); return i; }
     var PLAYS = [ { g:'meal', icon:'🍚', name:'みんなで ごはん', need:'ダイニングテーブルが いるよ', needSay:'ダイニングテーブルを 置くと、みんなで ごはんが できるよ。下の ショップの 家具に あるよ', find:function(){ return firstOf('dining'); } },
-      { g:'hide', icon:'🙈', name:'かくれんぼ', need:'ソファや 本だなが いるよ', needSay:'ソファ・ベッド・本だな・れいぞう庫 みたいな 大きな 家具が あると、後ろに かくれて かくれんぼが できるよ', find:function(){ return hideSpots().length ? 0 : -1; } } ];
+      { g:'hide', icon:'🙈', name:'かくれんぼ', need:'ソファや 本だなが いるよ', needSay:'ソファ・ベッド・本だな・れいぞう庫 みたいな 大きな 家具が あると、後ろに かくれて かくれんぼが できるよ', find:function(){ return hideSpots().length ? 0 : -1; } },
+      { g:'music', icon:'🎵', name:'音楽会', need:'', needSay:'', find:function(){ return 0; } } ];
     function renderPlay(){
       var box = $('rmPlay'); if(!box || !S) return;
       box.innerHTML = PLAYS.map(function(p){
@@ -10369,7 +10507,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('rmPlay').addEventListener('click', function(e){
       var b = e.target.closest('.rm-pb'); if(!b || !S) return;
       var p = PLAYS.filter(function(x){ return x.g === b.getAttribute('data-g'); })[0];
-      if(S.meal || S.hide){ say(petName(lead().sp) + '「いまは ' + (S.meal ? 'ごはん' : 'かくれんぼ') + ' 中だよ〜」'); return; }
+      if(S.meal || S.hide || S.concert){ say(petName(lead().sp) + '「いまは ' + (S.meal ? 'ごはん' : S.hide ? 'かくれんぼ' : '音楽会') + ' 中だよ〜」'); return; }
       var i = p.find();
       if(i < 0){
         tab = 'item'; renderShop();
@@ -10382,7 +10520,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(!S.pets.length){ say('お部屋に 仲間が いないよ'); return; }
       GROUP[p.g](i);
     });
-    function stopPets(){ if(S){ S.pets.forEach(function(P){ clearTimeout(P.t); }); if(S.meal && S.meal.stop) S.meal.stop(); if(S.hide && S.hide.stop) S.hide.stop(); } clearInterval(clockT); }
+    function stopPets(){ if(S){ S.pets.forEach(function(P){ clearTimeout(P.t); }); if(S.meal && S.meal.stop) S.meal.stop(); if(S.hide && S.hide.stop) S.hide.stop(); if(S.concert && S.concert.stop) S.concert.stop(); } clearInterval(clockT); }
 
     function render(){
       var stage = $('rmStage'), keep = S ? S.pets : null;
@@ -10405,6 +10543,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           e.stopPropagation();
           if(edit) return;
           if(S.hide && S.hide.tapPet && S.hide.tapPet(P)) return;
+          if(S.concert && S.concert.tapPet && S.concert.tapPet(P)) return;
           var wasSleep = P.el.classList.contains('sleep');
           if(P.seat != null){ getUp(P); }
           Pet.spin(el); bubble(P, '♥');
@@ -10423,6 +10562,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     /* ---- もようがえ(ドラッグで うごかす) ---- */
     function setEdit(on){
+      if(on && S && S.concert && S.concert.stop) S.concert.stop();
       if(on && S && S.hide && S.hide.stop){ S.hide.stop(); S.pets.forEach(function(P){ P.el.classList.remove('peek'); }); }
       edit = on; sel = -1;
       $('rmStage').classList.toggle('editing', on);
@@ -10503,6 +10643,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(!edit){
         if(i < 0 || !S) return;
         if(S.hide){ if(S.hide.tapItem) S.hide.tapItem(i); return; }
+        if(S.concert) return;
         var d = BY[S.r.items[i].k];
         if(d.tap === 'light'){ lampOn[i] = !lampOn[i]; S.els[i].el.classList.toggle('on', !!lampOn[i]); if(d.fx) d.fx(i, !!lampOn[i]); }
         if(d.tap === 'piano'){ chime(TUNE[(Math.random() * TUNE.length) | 0]); }
