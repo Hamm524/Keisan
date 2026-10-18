@@ -676,6 +676,8 @@
   .gk-prog i.ok{ background:var(--good); } .gk-prog i.ng{ background:var(--bad); }
   .gk-res{ text-align:center; padding:18px 8px; }
   .gk-res .gk-big{ font-size:44px; font-weight:900; }
+  .gk-pass{text-align:left; font-size:17px; line-height:2; background:var(--surface-2,var(--bg)); border-radius:14px; padding:12px 14px; margin:8px 0; font-weight:600; }
+  .gk-mark{ background:color-mix(in srgb, #FFC53D 55%, transparent); color:inherit; border-radius:4px; padding:0 2px; }
 </style></head><body>
 <title>けいさんチャレンジ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11893,29 +11895,67 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return { tick:tick, award:award, result:result, ladder:ladder, card:card, open:open, rankOf:rankOf, RANKS:RANKS, TROPHIES:TROPHIES, OPS4:OPS4 };
   })();
 
-  /* ---------- まなぶ(漢字・理科 / 共通コイン) ---------- */
+  /* ---------- まなぶ(漢字ドリルへのリンク・理科・国語読解 / 共通コイン) ---------- */
   var Gaku = (function(){
     var KEY = 'keisan_gaku', KANJI_URL = 'https://hamm524.github.io/Kanji/', KC_KEY = 'kanji-drill-coins-v1', KC_CRED = 'keisan_kcredit', ROUND = 10, DAY_CAP = 20, RUBY_OK = /[一-龥]/;
     var SCI_RAW = "たねを まくと、さいしょに 出てくる 葉を 何と いう?|子葉(しよう)|本葉|根|くき|植物\nホウセンカの たねは 土の 中で、さいしょに 何が 出る?|根|花|実|本葉|植物\nこん虫の 体は 頭・むね・何の 3つに 分かれている?|はら|あし|はね|しょっ角|こん虫\nこん虫の あしは 何本?|6本|4本|8本|10本|こん虫\nこん虫の あしは 体の どこに ついている?|むね|頭|はら|はね|こん虫\nチョウの 育ち方は たまご→よう虫→さなぎ→何?|せい虫|こん虫|たまご|ふ化|こん虫\nさなぎに ならない 育ち方を する 虫は どれ?|バッタ|チョウ|カブトムシ|ハチ|こん虫\nクモは こん虫?|こん虫では ない(あしが 8本)|こん虫(あしが 6本)|こん虫(はねが ある)|こん虫(むねが ない)|こん虫\n花が さいた あと、できる ものは?|実と たね|根|くき|つぼみ|植物\nヒマワリの 花は 太陽の どちらを 向く?|太陽の ほう|北|下|こたえは ない|植物\nくきが のびる 向きは?|上(光の ほう)|下|よこ だけ|のびない|植物\n葉に 日光が 当たると、つくられる ものは?|養分(でんぷん)|水|ほこり|たね|植物\nかげが できるのは どうして?|光が さえぎられる から|光が 曲がる から|かげは 光|風が ふく から|光\nかげの 向きは 太陽と どちら?|はんたい がわ|同じ がわ|真下|ない|光\n朝から 夕方にかけて、かげは どう うごく?|西→北→東 へ うごく|東→南→西|うごかない|ぐるぐる 回る|光\n太陽は どの 向きに うごいて 見える?|東から 西へ|西から 東へ|北から 南へ|南から 北へ|光\n日なたと 日かげで、地面が あたたかいのは?|日なた|日かげ|同じ|わからない|光\nかがみで はね返した 光は どう すすむ?|まっすぐ|曲がる|止まる|きえる|光\n虫めがねで 光を 小さく あつめると、あつく なる?|なる(あつく なる)|ならない|つめたく なる|かわらない|光\nじしゃくが ひきつけるのは?|鉄|紙|ゴム|ガラス|じしゃく\nじしゃくの 同じ 極どうしを 近づけると?|しりぞけ合う|ひきつけ合う|くっつく|何も 起きない|じしゃく\nじしゃくの 力が いちばん 強いのは?|極(両はし)|まん中|どこも 同じ|ない|じしゃく\nじしゃくに つく ものは どれ?|くぎ|消しゴム|えんぴつの 木|ガラスの コップ|じしゃく\n方位じしんの はりの 色の ついた 方は、何の 方位を さす?|北|南|東|西|じしゃく\n豆電球に あかりが つくのは?|どう線が ひとつの わに つながった とき|どう線が はなれている とき|スイッチを 切った とき|電池が ない とき|電気\n電気を 通す ものは どれ?|どう(10円玉)|ゴム|紙|プラスチック|電気\n電気を 通さない ものは どれ?|ゴム|てつ|どう|アルミニウム|電気\nものの 重さは、かたちを かえると どうなる?|かわらない|かるく なる|重く なる|なくなる|もの\n同じ 体積(かさ)で 重さが ちがうのは?|ものの しゅるい が ちがう から|ふくろ が ちがう から|かたち が ちがう から|いつも 同じ|もの\n音が 出ている ものは、どうなっている?|ふるえている|止まっている|あつい|つめたい|音\n音が 大きいとき、ふるえは?|大きい|小さい|ない|止まる|音\n音は 何を 通って つたわる?|空気など|光|影|つたわらない|音\n空気は 何で できて いる?|ちっ素・さんそ など|水だけ|さんそ だけ|何も ない|もの\n氷が とけると 何に なる?|水|水じょう気|空気|石|もの\n水を 100℃ ちかくまで あたためると、あわ(水じょう気)が 出て 何に なる?|ふっとう する|こおる|ちぢむ|かわらない|もの\n水が 水じょう気に なる ことを 何と いう?|じょう発|ぎょう結|ゆうかい|ぎょう固|もの\n空気を とじこめて おすと、体積は?|小さく なる|大きく なる|かわらない|なくなる|もの\n月は 毎日 かたちが どうなる?|かわる(満ち欠け)|かわらない|ずっと 丸い|ずっと 三日月|地球\n太陽の かがやきは、月と くらべて?|太陽は 自分で 光る|月も 自分で 光る|どちらも 光らない|月だけ 光る|地球\n地球が 回って 1日で かわるのは?|朝・昼・夜|春・夏・秋・冬|月の かたち|ない|地球";
+    var KOKU = {
+"types": ["だれが", "何を・何が", "いつ", "なぜ(わけ)", "どうなった", "じゅんばん"],
+"passages": [
+ {"id":"p1","text":"みさきさんは、日曜日に おばあちゃんの 家へ 行きました。おばあちゃんは、うらの はたけで とれた トマトを 出して くれました。みさきさんは、あまくて おいしかったので、おかわりを しました。帰る とき、おばあちゃんは「また きてね」と 言って、トマトを ふくろに 入れて くれました。"},
+ {"id":"p2","text":"ゆうたくんは、雨の 日に 学校へ 行く とちゅうで、くつを ぬらして しまいました。教室に 入ると、友だちの そうたくんが「これを つかって」と タオルを かして くれました。ゆうたくんは「ありがとう」と 言って、くつを ふきました。"},
+ {"id":"p3","text":"ひろしくんの 学校では、毎朝 8時15分に 朝の 会が 始まります。ひろしくんは、いつも 8時に 学校に つくように 家を 出ます。けさは めずらしく ねぼうを したので、8時10分に 家を 出ました。走って 行ったので、朝の 会に まに合いました。"},
+ {"id":"p4","text":"あやかさんは、ピアノの 発表会で 大きな まちがいを して しまいました。ざんねんで、なみだが 出そうでした。そのとき、先生が「さいごまで ひけて えらかったね」と 言って くれました。あやかさんは、少し 元気が 出ました。"},
+ {"id":"p5","text":"ありは、食べ物を 見つけると、地面に においを つけながら すに もどります。ほかの ありは、その においを たよりに 歩いて、同じ 食べ物の ところへ たどりつきます。このように、ありは においで なかまに 食べ物の 場所を 教えて いるのです。"},
+ {"id":"p6","text":"カレーを つくる じゅんじょは こうです。はじめに、やさいを 切ります。つぎに、やさいと にくを なべで いためます。それから、水を 入れて にこみます。さいごに、ルーを 入れて、とろとろに なるまで まぜます。"}
+],
+"qs": [
+ {"p":"p1","t":"なぜ(わけ)","q":"みさきさんが おかわりを したのは、なぜですか。","a":"トマトが あまくて おいしかったから","bad":["おなかが ぺこぺこだったから","おばあちゃんに おこられたから","トマトが たくさん あまって いたから"],"ev":"あまくて おいしかったので","why":"「〜ので」の ところに、わけが 書いて あるよ。"},
+ {"p":"p1","t":"何を・何が","q":"おばあちゃんは、帰る ときに 何を して くれましたか。","a":"トマトを ふくろに 入れて くれた","bad":["うらの はたけに 連れて 行って くれた","おかわりを 出して くれた","駅まで 送って くれた"],"ev":"トマトを ふくろに 入れて くれました","why":"「帰る とき」の あとの 文を 見よう。"},
+ {"p":"p2","t":"だれが","q":"タオルを かして くれたのは だれですか。","a":"そうたくん","bad":["ゆうたくん","先生","お母さん"],"ev":"友だちの そうたくんが","why":"「かして くれた」人は、「〜が」の ところに 出て くるよ。"},
+ {"p":"p2","t":"なぜ(わけ)","q":"ゆうたくんが くつを ふいたのは、なぜですか。","a":"雨で くつを ぬらして しまったから","bad":["教室が よごれて いたから","先生に 言われたから","タオルが ほしかったから"],"ev":"くつを ぬらして しまいました","why":"くつが ぬれた ことが 前の 文に 書いて あるよ。"},
+ {"p":"p3","t":"いつ","q":"朝の 会は 何時に 始まりますか。","a":"8時15分","bad":["8時","8時10分","9時"],"ev":"8時15分に 朝の 会が 始まります","why":"「始まります」と 書いて ある 時こくを 見よう。"},
+ {"p":"p3","t":"なぜ(わけ)","q":"ひろしくんが 走って 行ったのは、なぜですか。","a":"ねぼうを して、家を 出るのが おそく なったから","bad":["走るのが すきだから","友だちと 約束して いたから","先生に 呼ばれたから"],"ev":"けさは めずらしく ねぼうを した","why":"走る 前に 何が あったか、前の 文に 書いて あるよ。"},
+ {"p":"p4","t":"何を・何が","q":"先生は あやかさんに 何と 言いましたか。","a":"さいごまで ひけて えらかったね","bad":["まちがえては だめだよ","もう 一回 ひきなさい","また 来週 ね"],"ev":"さいごまで ひけて えらかったね","why":"先生の ことばは「 」の 中に 書いて あるよ。"},
+ {"p":"p4","t":"どうなった","q":"あやかさんの 気もちは、どう かわりましたか。","a":"ざんねんな 気もちから、少し 元気に なった","bad":["たのしい 気もちから、かなしく なった","はずかしい 気もちから、おこった","元気な 気もちから、ざんねんに なった"],"ev":"少し 元気が 出ました","why":"文の さいごに、気もちが どう なったか 書いて あるよ。"},
+ {"p":"p5","t":"何を・何が","q":"ありは 何を つかって、なかまに 食べ物の 場所を 教えて いますか。","a":"におい","bad":["声","音","色"],"ev":"においで なかまに 食べ物の 場所を 教えて いる","why":"さいごの 文が、まとめに なって いるよ。"},
+ {"p":"p5","t":"何を・何が","q":"食べ物を 見つけた ありは、地面に においを つけながら どこへ もどりますか。","a":"すに","bad":["食べ物の ところへ","水たまりへ","木の 上へ"],"ev":"すに もどります","why":"はじめの 文に「〜に もどります」と 書いて あるよ。"},
+ {"p":"p6","t":"じゅんばん","q":"やさいを いためるのは、何の あとですか。","a":"やさいを 切った あと","bad":["水を 入れた あと","ルーを 入れた あと","にこんだ あと"],"ev":"はじめに、やさいを 切ります。つぎに、やさいと にくを なべで いためます","why":"「はじめに」「つぎに」と いう ことばが じゅんばんの ヒントだよ。"},
+ {"p":"p6","t":"じゅんばん","q":"ルーを 入れるのは、いつですか。","a":"さいごに","bad":["はじめに","やさいを いためる 前に","水を 入れる 前に"],"ev":"さいごに、ルーを 入れて","why":"「さいごに」と いう ことばを さがそう。"}
+]
+};
+    var ROUNDS = { s:10, j:5 }, NAMES = { s:'理科', j:'国語(読解)' };
     var SCI = SCI_RAW.split('\n').map(function(l, i){ var p = l.split('|'); return { id:'s'+i, q:p[0], a:p[1], bad:[p[2], p[3], p[4]], cat:p[5] }; });
-    function get(){ var s = safeGet(KEY) || {}; s.s = s.s || {}; s.rounds = s.rounds || 0; if(!s.day || s.day.d !== todayKey()) s.day = { d:todayKey(), n:0 }; return s; }
+    function get(){ var s = safeGet(KEY) || {}; s.s = s.s || {}; s.j = s.j || {}; s.rounds = s.rounds || 0; if(!s.day || s.day.d !== todayKey()) s.day = { d:todayKey(), n:0 }; return s; }
     function put(s){ safeSet(KEY, s); }
     function rnd(n){ return Math.floor(Math.random()*n); }
     function shuffle(a){ for(var i = a.length-1; i > 0; i--){ var j = rnd(i+1), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
     function seen(map, id){ return map[id] || { ok:0, ng:0 }; }
-    function pickSet(list, map, idf){
+    function pickSet(list, map, idf, n){
       var sc = list.map(function(x){ var r = seen(map, idf(x)); return { x:x, v:r.ok - r.ng*2 + Math.random()*2.5 }; });
       sc.sort(function(a, b){ return a.v - b.v; });
-      return sc.slice(0, ROUND).map(function(o){ return o.x; });
+      return sc.slice(0, n || ROUND).map(function(o){ return o.x; });
     }
     function sciQ(e){ return { id:e.id, map:'s', tag:'理科 ('+e.cat+')', html:'<div class="gk-text">'+e.q+'</div>', a:e.a, bad:e.bad, say:'答えは「'+e.a+'」' }; }
+    var PASS = {}; KOKU.passages.forEach(function(p){ PASS[p.id] = p.text; });
+    function esc(t){ return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+    function passHTML(q, mark){
+      var t = esc(PASS[q.p]), ev = esc(q.ev);
+      if(mark && t.indexOf(ev) >= 0) t = t.replace(ev, '<mark class="gk-mark">'+ev+'</mark>');
+      return '<div class="gk-pass">'+t+'</div>';
+    }
+    function kokuQ(e, i){
+      return { id:'j'+i, map:'j', p:e.p, ev:e.ev, ty:e.t, tag:'国語(読解)', a:e.a, bad:e.bad, why:e.why, qtext:e.q, say:'答えは「'+e.a+'」。'+e.why };
+    }
     var S = null;
     function show(part){ $('gkMenu').hidden = part !== 'menu'; $('gkPlay').hidden = part !== 'play'; $('gkResult').hidden = part !== 'result'; showView('gaku'); }
     function card(){
       var c = $('gakuCards'); if(!c) return;
       var s = get(), sn = Object.keys(s.s).filter(function(x){ return s.s[x].ok > 0; }).length;
+      var jn = Object.keys(s.j).filter(function(x){ return s.j[x].ok > 0; }).length;
       c.innerHTML = '<section class="gk-card"><span class="gk-ico k">漢</span><span class="fc-text"><b>漢字ドリル</b>書き順と 宝探し・お散歩の 宝物が コインに</span><a class="fc-go" href="'+KANJI_URL+'" target="_blank" rel="noopener" style="text-decoration:none">ひらく</a></section>' +
-        '<section class="gk-card" data-sub="s"><span class="gk-ico s">理</span><span class="fc-text"><b>理科（小3）</b>もんだい '+sn+'/'+SCI.length+' こ せいかい</span><button class="fc-go" data-sub="s" style="background:var(--op-sub)">れんしゅう</button></section>';
+        '<section class="gk-card" data-sub="s"><span class="gk-ico s">理</span><span class="fc-text"><b>理科（小3）</b>もんだい '+sn+'/'+SCI.length+' こ せいかい</span><button class="fc-go" data-sub="s" style="background:var(--op-sub)">れんしゅう</button></section>' +
+        '<section class="gk-card" data-sub="j"><span class="gk-ico" style="background:var(--op-div)">国</span><span class="fc-text"><b>国語・読解（小3）</b>もんだい '+jn+'/'+KOKU.qs.length+' こ せいかい</span><button class="fc-go" data-sub="j" style="background:var(--op-div)">れんしゅう</button></section>';
     }
     function menu(){
       var s = get(), left = Math.max(0, DAY_CAP - s.day.n);
@@ -11923,43 +11963,65 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('gkWallet').innerHTML = '<span class="coin"></span><span>いまの コイン <b class="num">'+getCoins()+'</b></span><span class="gk-bar"><i style="width:'+Math.round(s.day.n/DAY_CAP*100)+'%"></i></span><span>今日 '+s.day.n+'/'+DAY_CAP+'</span>';
       $('gkSubs').innerHTML = '<a class="gk-sub" href="'+KANJI_URL+'" target="_blank" rel="noopener" style="text-decoration:none"><span class="gk-ico" style="font-size:30px">漢</span><span><b>漢字ドリル</b><small>書き順・宝探し(お散歩の 宝物が コインに なるよ)</small></span></a>' +
         '<button class="gk-sub" data-sub="s"><span class="gk-ico" style="font-size:30px">理</span><span><b>理科（小3）</b><small>もんだい 40こ・植物 こん虫 光 じしゃく など</small></span></button>' +
+        '<button class="gk-sub" data-sub="j"><span class="gk-ico" style="font-size:30px">国</span><span><b>国語・読解（小3）</b><small>短い 文を 読んで、聞かれている ことを つかまえよう</small></span></button>' +
         '<div class="gk-sub soon"><span style="font-size:28px">🗺️</span><span><b>社会</b><small>もうすぐ（おうちの人と 決めるよ）</small></span></div>';
       show('menu');
     }
     function start(sub){
-      var s = get(), qs = pickSet(SCI, s.s, function(e){ return e.id; }).map(sciQ);
-      S = { sub:sub, qs:shuffle(qs), i:0, ok:0, res:[] };
-      $('gkTitle').textContent = '理科（小3）';
+      var s = get(), qs;
+      if(sub === 'j'){
+        var all = KOKU.qs.map(function(e, i){ return kokuQ(e, i); });
+        qs = pickSet(all, s.j, function(e){ return e.id; }, ROUNDS.j);
+      }else qs = pickSet(SCI, s.s, function(e){ return e.id; }, ROUNDS.s).map(sciQ);
+      S = { sub:sub, qs:shuffle(qs), i:0, ok:0, res:[], step:0 };
+      $('gkTitle').textContent = sub === 'j' ? '国語・読解（小3）' : '理科（小3）';
       show('play'); ask();
     }
     function ask(){
-      var q = S.qs[S.i], ch = shuffle([q.a].concat(q.bad));
+      var q = S.qs[S.i], ch = shuffle([q.a].concat(q.bad)), typeStep = !!q.ty && S.step === 0;
+      if(typeStep){
+        var others = shuffle(KOKU.types.filter(function(t){ return t !== q.ty; })).slice(0, 3);
+        ch = shuffle([q.ty].concat(others));
+      }
       $('gkProg').innerHTML = S.qs.map(function(_, i){ return '<i class="'+(S.res[i] === 1 ? 'ok' : S.res[i] === 0 ? 'ng' : '')+'"></i>'; }).join('');
-      $('gkQ').innerHTML = '<div class="gk-tag">'+(S.i+1)+' / '+S.qs.length+' ・ '+q.tag+'</div>'+q.html;
-      $('gkCh').className = 'gk-ch one';
+      if(q.ty){
+        $('gkQ').innerHTML = '<div class="gk-tag">'+(S.i+1)+' / '+S.qs.length+' ・ '+q.tag+(typeStep ? ' ・ ① 聞かれて いる ことは?' : ' ・ ② 答えよう')+'</div>' + passHTML(q, false) +
+          '<div class="gk-text">'+esc(q.qtext)+'</div>';
+      }else $('gkQ').innerHTML = '<div class="gk-tag">'+(S.i+1)+' / '+S.qs.length+' ・ '+q.tag+'</div>'+q.html;
+      $('gkCh').className = (typeStep ? 'gk-ch' : 'gk-ch one');
       $('gkCh').innerHTML = ch.map(function(c){ return '<button data-c="'+c.replace(/"/g, '&quot;')+'">'+c+'</button>'; }).join('');
       $('gkFb').textContent = ''; $('gkFb').className = 'gk-fb'; $('gkNextBox').innerHTML = '';
       S.lock = false;
     }
     function answer(btn){
       if(S.lock) return; S.lock = true;
-      var q = S.qs[S.i], c = btn.getAttribute('data-c'), ok = c === q.a, s = get(), m = s[q.map], r = m[q.id] = m[q.id] || { ok:0, ng:0 };
+      var q = S.qs[S.i], c = btn.getAttribute('data-c');
+      if(q.ty && S.step === 0){
+        var tok = c === q.ty;
+        Array.prototype.forEach.call($('gkCh').children, function(b){ var v = b.getAttribute('data-c'); if(v === q.ty) b.classList.add('ok'); else if(b === btn) b.classList.add('ng'); });
+        $('gkFb').className = 'gk-fb ' + (tok ? 'ok' : 'ng');
+        $('gkFb').textContent = tok ? 'そのとおり! 「'+q.ty+'」を さがすよ' : 'この もんだいは「'+q.ty+'」を 聞いて いるよ';
+        $('gkNextBox').innerHTML = '<button class="btn btn-primary" id="gkStep2">答えを えらぶ</button>';
+        return;
+      }
+      var ok = c === q.a, s = get(), m = s[q.map], r = m[q.id] = m[q.id] || { ok:0, ng:0 };
       if(ok) r.ok++; else r.ng++;
       put(s);
       S.res[S.i] = ok ? 1 : 0; if(ok) S.ok++;
       Array.prototype.forEach.call($('gkCh').children, function(b){ var v = b.getAttribute('data-c'); if(v === q.a) b.classList.add('ok'); else if(b === btn) b.classList.add('ng'); });
       $('gkFb').className = 'gk-fb ' + (ok ? 'ok' : 'ng');
       $('gkFb').textContent = ok ? 'せいかい!' : 'ざんねん… '+q.say;
+      if(q.ty && !ok) $('gkQ').querySelector('.gk-pass').outerHTML = passHTML(q, true);
       $('gkNextBox').innerHTML = '<button class="btn btn-primary" id="gkNext">'+(S.i+1 >= S.qs.length ? 'けっかを 見る' : 'つぎへ')+'</button>';
     }
     function finish(){
-      var s = get(), want = S.ok + (S.ok >= 8 ? 3 : 0), room = Math.max(0, DAY_CAP - s.day.n), got = Math.min(want, room);
+      var s = get(), want = S.ok + (S.ok >= Math.ceil(S.qs.length*0.8) ? 3 : 0), room = Math.max(0, DAY_CAP - s.day.n), got = Math.min(want, room);
       s.day.n += got; s.rounds++; put(s);
       if(got > 0) earn(got);
-      var name = '理科';
+      var name = NAMES[S.sub];
       $('gkResult').innerHTML = '<div class="gk-res"><div class="gk-big">'+S.ok+' / '+S.qs.length+'</div><p>'+name+'の れんしゅう おわり!</p>' +
-        '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン' + (got < want ? '（今日の 上限）' : '') + (S.ok >= 8 ? '（8問以上 +3）' : '') + '</div>' +
-        '<div class="gk-fb">1問 せいかいで 1コイン・今日 '+s.day.n+'/'+DAY_CAP+'</div>' +
+        '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン' + (got < want ? '（今日の 上限）' : '') + (S.ok >= Math.ceil(S.qs.length*0.8) ? '（8割 せいかい +3）' : '') + '</div>' +
+        '<div class="gk-fb">1問 せいかいで 1コイン(読解は ②の 答えだけ)・今日 '+s.day.n+'/'+DAY_CAP+'</div>' +
         '<button class="btn btn-primary" id="gkAgain">もう1回</button> <button class="btn btn-ghost" id="gkMenuBtn">まなぶ メニュー</button></div>';
       show('result');
     }
@@ -11968,7 +12030,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var t = e.target;
       var sub = t.closest('[data-sub]'); if(sub && !sub.classList.contains('soon') && !$('gkMenu').hidden){ start(sub.getAttribute('data-sub')); return; }
       var cb = t.closest('#gkCh button'); if(cb){ answer(cb); return; }
-      if(t.closest('#gkNext')){ S.i++; if(S.i >= S.qs.length) finish(); else ask(); return; }
+      if(t.closest('#gkStep2')){ S.step = 1; S.lock = false; ask(); return; }
+      if(t.closest('#gkNext')){ S.i++; S.step = 0; if(S.i >= S.qs.length) finish(); else ask(); return; }
       if(t.closest('#gkAgain')){ start(S.sub); return; }
       if(t.closest('#gkMenuBtn')){ menu(); }
     });
