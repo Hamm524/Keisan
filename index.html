@@ -326,6 +326,9 @@
   .rm-pet.dance > .pet{ animation:rm-dance .84s ease-in-out infinite; }
   @keyframes rm-dance{ 0%,100%{ transform:rotate(-4deg); } 50%{ transform:rotate(4deg) translateY(-3%); } }
   .rm-pet.bow > .pet{ transform:rotate(0) translateY(6%) scaleY(.9); transition:transform .3s; }
+  .rm-out{ position:absolute; inset:0; z-index:1400; pointer-events:none; animation:rm-cin .6s ease-out; transition:opacity .5s; }
+  .rm-out.bye{ opacity:0; }
+  .rm-out svg{ display:block; width:100%; height:100%; }
   .rm-ball{ position:absolute; transform:translate(-50%, 0); transition-property:left,bottom,width; transition-timing-function:cubic-bezier(.3,.6,.4,1); cursor:pointer; animation:rm-cin .4s ease-out; }
   .rm-ball.bye{ opacity:0; transition:opacity .5s; }
   .rm-bimg svg{ display:block; width:100%; height:auto; filter:drop-shadow(0 3px 2px rgba(0,0,0,.22)); }
@@ -10288,6 +10291,24 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       '<path d="M20,11 L28.6,17.2 L25.3,27.3 H14.7 L11.4,17.2 Z" fill="#3A3550"/>' +
       '<path d="M20,11 V3 M28.6,17.2 L36,14.5 M25.3,27.3 L30,34 M14.7,27.3 L10,34 M11.4,17.2 L4,14.5" stroke="#3A3550" stroke-width="2" fill="none"/>' +
       '<circle cx="13" cy="10" r="3" fill="#fff" opacity=".7"/></svg>';
+    var OUT_SVG = '<svg viewBox="0 0 100 75" preserveAspectRatio="none" aria-hidden="true"><defs>' +
+      '<linearGradient id="rmSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9ED8FF"/><stop offset="1" stop-color="#E4F5FF"/></linearGradient>' +
+      '<linearGradient id="rmLawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9BD66B"/><stop offset="1" stop-color="#6FBF4A"/></linearGradient></defs>' +
+      '<rect width="100" height="44" fill="url(#rmSky)"/>' +
+      '<g fill="#fff" opacity=".9"><ellipse cx="62" cy="10" rx="7" ry="2.6"/><ellipse cx="67" cy="8.6" rx="4.6" ry="2.6"/><ellipse cx="86" cy="16" rx="5.5" ry="2"/><ellipse cx="89.5" cy="14.8" rx="3.4" ry="2"/></g>' +
+      '<circle cx="92" cy="6" r="3.6" fill="#FFE27A"/>' +
+      '<path d="M0,40 Q20,31 42,38 T82,35 T100,37 V46 H0 Z" fill="#B8E39A"/>' +
+      '<g><rect x="70.6" y="30" width="1.6" height="9" fill="#A77A45"/><circle cx="71.4" cy="28" r="5" fill="#5FB35A"/><circle cx="68.6" cy="30.5" r="3.4" fill="#6CC064"/>' +
+      '<rect x="86.6" y="31.5" width="1.4" height="8" fill="#A77A45"/><circle cx="87.3" cy="30" r="4" fill="#5FB35A"/></g>' +
+      '<rect y="42" width="100" height="33" fill="url(#rmLawn)"/>' +
+      '<g fill="#fff" opacity=".1"><rect x="0" y="42" width="12.5" height="33"/><rect x="25" y="42" width="12.5" height="33"/><rect x="50" y="42" width="12.5" height="33"/><rect x="75" y="42" width="12.5" height="33"/></g>' +
+      '<g fill="#FFFDF5" stroke="#E2D6BE" stroke-width=".25">' + (function(){ var f = ''; for(var x = 21; x < 100; x += 4) f += '<path d="M' + x + ',43 V37.6 L' + (x + 1) + ',36.4 L' + (x + 2) + ',37.6 V43 Z"/>'; return f; })() +
+      '<rect x="20" y="38.6" width="80" height="1.1"/><rect x="20" y="41.2" width="80" height="1.1"/></g>' +
+      '<path d="M0,6 H20 V43 H0 Z" fill="#FFF3DF"/><path d="M-2,7 L22,1 V5 L-2,11 Z" fill="#E98B6D"/>' +
+      '<rect x="4" y="24" width="9" height="19" rx="1" fill="#C98F55"/><circle cx="11" cy="34" r=".8" fill="#FFD24C"/>' +
+      '<rect x="5.5" y="12" width="7" height="7" rx=".8" fill="#BFE6FF" stroke="#fff" stroke-width=".8"/><rect x="0" y="42.4" width="22" height="1.4" fill="#D9C4A0"/>' +
+      '<g><circle cx="30" cy="47" r=".9" fill="#FF8FB1"/><circle cx="58" cy="50" r=".9" fill="#FFE27A"/><circle cx="83" cy="46.5" r=".9" fill="#fff"/><circle cx="12" cy="60" r="1" fill="#FFE27A"/><circle cx="92" cy="66" r="1" fill="#FF8FB1"/><circle cx="44" cy="70" r="1" fill="#fff"/></g>' +
+      '</svg>';
     function ballGame(){
       if(!S || !S.pets.length || S.hide || S.meal || S.concert || S.ball) return;
       var S0 = S, stage = $('rmStage'), T = [], B = {}, n = S.pets.length, cnt = 0, want = null, hold = null, busy = true;
@@ -10301,6 +10322,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         hud.querySelector('button').onclick = function(e){ e.stopPropagation(); stop(1); };
       }
       hudSet('');
+      /* お庭の けしき(家具の 上に かぶせる。仲間と ボールは その 上 z 2000〜) */
+      var out = document.createElement('div'); out.className = 'rm-out'; out.innerHTML = OUT_SVG; stage.appendChild(out);
       /* ボール */
       var bl = document.createElement('div'); bl.className = 'rm-ball'; bl.innerHTML = '<div class="rm-bimg">' + BALL_SVG + '</div>';
       stage.appendChild(bl);
@@ -10309,7 +10332,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         bx = Math.max(6, Math.min(94, x)); by = Math.max(WALL + 10, Math.min(98, y));
         bl.style.transitionDuration = (ms || 0) + 'ms';
         bl.style.left = bx + '%'; bl.style.bottom = (100 - by) + '%'; bl.style.width = (8 * depth(by) * SK) + '%';
-        bl.style.zIndex = 100 + Math.round(by * 10) + 8;
+        bl.style.zIndex = 2000 + Math.round(by * 10) + 8;
         var im = bl.firstChild;
         im.classList.remove('hop', 'roll'); void im.offsetWidth;
         if(kind){ im.style.animationDuration = (ms || 400) + 'ms'; im.classList.add(kind); }
@@ -10325,21 +10348,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       });
       if(n === 1) ring[0].x = 30;
       B.ring = ring;
+      function go(P, x, y, done){ walkTo(P, x, y, null, 2000 + Math.round(y * 10) + 5, done); }
       function face(m, x){ m.P.el.classList.toggle('left', x < m.P.x - 1); }
       function feet(m){ return { x:m.P.x + (bx < m.P.x ? -4 : 4) * depth(m.P.y), y:m.P.y + 1.5 }; }
       var ready = 0;
       ring.forEach(function(m){
-        walkTo(m.P, m.x, m.y, null, null, function(){
+        go(m.P, m.x, m.y, function(){
           if(S !== S0 || S0.ball !== B) return;
           face(m, 50);
           if(++ready === n) later(400, start);
         });
       });
       function start(){
-        say(n > 1 ? petName(lead().sp) + '「みんなで パス しよう!」' : petName(lead().sp) + '「ドリブル するよ〜!」');
+        say(n > 1 ? petName(lead().sp) + '「お庭で パス しよう!」' : petName(lead().sp) + '「ドリブル するよ〜!」');
         hudSet(n > 1 ? '仲間を タップすると パスが 行くよ' : 'ボールを タップすると けれるよ');
         var m = ring[0];
-        walkTo(m.P, bx + (m.P.x < bx ? -5 : 5), by - 1, null, null, function(){ take(m); });
+        go(m.P, bx + (m.P.x < bx ? -5 : 5), by - 1, function(){ take(m); });
       }
       function take(m){
         hold = m; busy = false;
@@ -10373,15 +10397,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       function chase(who){
         var won = false;
         who.forEach(function(m){
-          walkTo(m.P, bx + (m.P.x < bx ? -4 : 4), by - 1, null, null, function(){
+          go(m.P, bx + (m.P.x < bx ? -4 : 4), by - 1, function(){
             if(won || S !== S0 || S0.ball !== B) return;
             won = true;
             if(who.length > 1){ say(petName(m.P.sp) + '「いちばん!」'); bubble(m.P, '⭐'); }
             Pet.tap(m.P.el); var f = feet(m); ballAt(f.x, f.y, 200);
-            who.forEach(function(q){ if(q !== m) later(300 + Math.random() * 300, function(){ walkTo(q.P, q.x, q.y, null, null, function(){ face(q, 50); }); }); });
+            who.forEach(function(q){ if(q !== m) later(300 + Math.random() * 300, function(){ go(q.P, q.x, q.y, function(){ face(q, 50); }); }); });
             /* ボールを 持って 自分の 場所へ */
             later(500, function(){
-              walkTo(m.P, m.x, m.y, null, null, function(){ face(m, 50); later(300, function(){ take(m); }); });
+              go(m.P, m.x, m.y, function(){ face(m, 50); later(300, function(){ take(m); }); });
               var tx = m.x + (m.P.x > m.x ? -4 : 4) * depth(m.y);
               ballAt(tx, m.y + 1.5, Math.max(350, Math.hypot(m.x - m.P.x, (m.y - m.P.y) * .75) * 55), 'roll');
             });
@@ -10393,7 +10417,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var x = 12 + Math.random() * 76, y = WALL + 14 + Math.random() * 26, d = Math.hypot(x - bx, (y - by) * 1.6), ms = Math.max(600, d * 26);
         face(m, x); ballAt(x, y, ms, 'roll');
         later(Math.min(ms * .6, 900), function(){
-          walkTo(m.P, x + (m.P.x < x ? -4 : 4), y - 1, null, null, function(){
+          go(m.P, x + (m.P.x < x ? -4 : 4), y - 1, function(){
             cnt++; hudSet(cnt % 5 === 0 ? cnt + '回 つづいた!' : '');
             if(cnt % 5 === 0) bubble(m.P, '⭐');
             if(cnt >= 20){ win(); return; }
@@ -10407,7 +10431,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var x = bx < 50 ? 60 + Math.random() * 30 : 10 + Math.random() * 30, y = WALL + 14 + Math.random() * 26;
         var d = Math.hypot(x - bx, (y - by) * 1.6), ms = Math.max(700, d * 24);
         ballAt(x, y, ms, 'roll');
-        if(n === 1){ say(petName(lead().sp) + '「まてまて〜!」'); later(300, function(){ var m = ring[0]; walkTo(m.P, x + (m.P.x < x ? -4 : 4), y - 1, null, null, function(){ Pet.tap(m.P.el); m.x = m.P.x; m.y = m.P.y; take(m); }); }); return; }
+        if(n === 1){ say(petName(lead().sp) + '「まてまて〜!」'); later(300, function(){ var m = ring[0]; go(m.P, x + (m.P.x < x ? -4 : 4), y - 1, function(){ Pet.tap(m.P.el); m.x = m.P.x; m.y = m.P.y; take(m); }); }); return; }
         say('みんな「まてまて〜!」');
         later(250, function(){ chase(ring); });
       }
@@ -10429,8 +10453,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       function stop(mode){
         T.forEach(clearTimeout); T = [];
         if(S0.ball === B) S0.ball = null;
-        bl.classList.add('bye'); hud.classList.add('bye');
-        setTimeout(function(){ bl.remove(); hud.remove(); }, 500);
+        bl.classList.add('bye'); hud.classList.add('bye'); out.classList.add('bye');
+        setTimeout(function(){ bl.remove(); hud.remove(); out.remove(); }, 500);
+        ring.forEach(function(m){ clearTimeout(m.P.t); m.P.el.classList.remove('walk'); setPet(m.P, m.P.x, m.P.y, depth(m.P.y), null, 0); });
         if(!mode) return;
         ring.forEach(function(m, k){ next(m.P, 600 + k * 500); });
         if(mode === 1) say(petName(lead().sp) + '「また ボールで あそぼうね!」');
