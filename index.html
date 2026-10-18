@@ -4915,6 +4915,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     Deci.card();
     Hsl.card();
     Gaku.card();
+    Gaku.pull();
     Room.card();
     Medal.card();
     renderCollection();
@@ -11894,15 +11895,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   /* ---------- まなぶ(漢字・理科 / 共通コイン) ---------- */
   var Gaku = (function(){
-    var KEY = 'keisan_gaku', ROUND = 10, DAY_CAP = 20, RUBY_OK = /[一-龥]/;
-    var KANJI_RAW = "悪:悪(わる)い|悪(あく)人\n安:安(あん)心|安(やす)い\n暗:暗(くら)い|暗(あん)記\n医:医(い)者(しゃ)\n委:委(い)員(いん)\n意:意(い)見|用意(い)\n育:育(そだ)てる|体育(いく)\n員:店員(いん)|全(ぜん)員(いん)\n院:病(びょう)院(いん)|入院(いん)\n飲:飲(の)む|飲(いん)食\n運:運(はこ)ぶ|運(うん)動(どう)\n泳:泳(およ)ぐ|水泳(えい)\n駅:駅(えき)前\n央:中央(おう)\n横:横(よこ)顔|横(おう)だん\n屋:屋(おく)上|本屋(や)\n温:温(あたた)かい|温(おん)度(ど)\n化:化(か)石|化(ば)ける\n荷:荷(に)物(もつ)|荷(に)台\n界:世(せ)界(かい)\n開:開(ひら)く|開(かい)会\n階:二階(かい)|階(かい)だん\n寒:寒(さむ)い|寒(かん)気\n感:感(かん)心|感(かん)じる\n漢:漢(かん)字\n館:図書館(かん)|館(かん)内\n岸:岸(きし)べ|海岸(がん)\n起:起(お)きる|起(き)立\n期:学期(き)|期(き)間\n客:お客(きゃく)さん|客(きゃく)船\n究:研(けん)究(きゅう)\n急:急(いそ)ぐ|急(きゅう)行\n級:学級(きゅう)|上級(きゅう)\n宮:お宮(みや)|王宮(きゅう)\n球:地球(きゅう)|野球(きゅう)\n去:去(さ)る|去(きょ)年\n橋:橋(はし)|鉄(てっ)橋(きょう)\n業:作業(ぎょう)|工業(ぎょう)\n曲:曲(ま)がる|名曲(きょく)\n局:薬(やっ)局(きょく)|局(きょく)長\n銀:銀(ぎん)色\n区:区(く)切る|地区(く)\n苦:苦(くる)しい|苦(にが)い\n具:道具(ぐ)|家具(ぐ)\n君:君(きみ)|田中君(くん)\n係:係(かかり)\n軽:軽(かる)い|軽(けい)食\n血:血(ち)|出血(けつ)\n決:決(き)める|決(けっ)心\n研:研(けん)究(きゅう)\n県:県(けん)名\n庫:金庫(こ)|車庫(こ)\n湖:湖(みずうみ)|湖(こ)水\n向:向(む)かう|方向(こう)\n幸:幸(しあわ)せ|幸(こう)運(うん)\n港:港(みなと)|空港(こう)\n号:番号(ごう)\n根:屋(や)根(ね)|大根(こん)\n祭:祭(まつ)り|文化(か)祭(さい)\n皿:お皿(さら)\n仕:仕(し)事(ごと)|仕(し)上げる\n死:死(し)ぬ\n使:使(つか)う|大使(し)\n始:始(はじ)まる|開(かい)始(し)\n指:指(ゆび)|指(さ)す\n歯:歯(は)|歯(し)科\n詩:詩(し)\n次:次(つぎ)|目次(じ)\n事:用事(じ)|事(こと)\n持:持(も)つ|気持(も)ち\n式:入学式(しき)\n実:実(み)|実(じつ)は\n写:写(うつ)す|写(しゃ)真(しん)\n者:作者(しゃ)|学者(しゃ)\n主:主(しゅ)人|主(おも)な\n守:守(まも)る|守(しゅ)び\n取:取(と)る\n酒:お酒(さけ)|日本酒(しゅ)\n受:受(う)ける\n州:九州(しゅう)|本州(しゅう)\n拾:拾(ひろ)う\n終:終(お)わる|終(しゅう)点\n習:習(なら)う|学習(しゅう)\n集:集(あつ)まる|集(しゅう)合\n住:住(す)む|住(じゅう)所(しょ)\n重:重(おも)い|体重(じゅう)\n宿:宿(しゅく)題(だい)|宿(やど)\n所:場所(しょ)|台所(どころ)\n暑:暑(あつ)い\n助:助(たす)ける|助(じょ)手\n昭:昭(しょう)和(わ)\n消:消(け)す|消(き)える\n商:商(しょう)店|商(しょう)売\n章:文章(しょう)\n勝:勝(か)つ|勝(しょう)負(ぶ)\n乗:乗(の)る|乗(じょう)車\n植:植(う)える|植(しょく)物(ぶつ)\n申:申(もう)す\n身:身(しん)長|全(ぜん)身(しん)\n神:神(かみ)さま|神(じん)社\n真:真(ま)ん中|写(しゃ)真(しん)\n深:深(ふか)い\n進:進(すす)む|前進(しん)\n世:世(せ)界(かい)|世(よ)の中\n整:整(せい)理|整(ととの)える\n昔:昔(むかし)|昔(むかし)話\n全:全(ぜん)部(ぶ)|全(まった)く\n相:相(あい)手|相(そう)談(だん)\n送:送(おく)る|放(ほう)送(そう)\n想:感(かん)想(そう)\n息:息(いき)|休息(そく)\n速:速(はや)い|時速(そく)\n族:家族(ぞく)\n他:他(ほか)|他(た)人\n打:打(う)つ|打(だ)者(しゃ)\n対:反(はん)対(たい)\n待:待(ま)つ|期(き)待(たい)\n代:代(か)わる|時代(だい)\n第:第(だい)一\n題:問(もん)題(だい)|話題(だい)\n炭:炭(すみ)|石炭(たん)\n短:短(みじか)い|短(たん)気\n談:相(そう)談(だん)\n着:着(き)る|着(つ)く\n注:注(ちゅう)文|注(そそ)ぐ\n柱:柱(はしら)|電柱(ちゅう)\n丁:一丁(ちょう)目|丁(てい)ねい\n帳:手帳(ちょう)|日記帳(ちょう)\n調:調(しら)べる|調(ちょう)子\n追:追(お)う|追(お)いかける\n定:予(よ)定(てい)|定(てい)休日\n庭:庭(にわ)|校庭(てい)\n笛:笛(ふえ)|汽笛(てき)\n鉄:鉄(てつ)ぼう|地下鉄(てつ)\n転:転(ころ)ぶ|運(うん)転(てん)\n都:都(と)会|京都(と)\n度:今度(ど)|温(おん)度(ど)\n投:投(な)げる|投(とう)手\n豆:豆(まめ)|大豆(ず)\n島:島(しま)|半島(とう)\n湯:お湯(ゆ)|湯(ゆ)気\n登:登(のぼ)る|登(と)山\n等:一等(とう)|等(ひと)しい\n動:動(うご)く|運(うん)動(どう)\n童:童(どう)話|学童(どう)\n農:農(のう)家\n波:波(なみ)|電波(ぱ)\n配:配(くば)る|心配(ぱい)\n倍:二倍(ばい)\n箱:箱(はこ)|本箱(ばこ)\n畑:畑(はたけ)|花畑(ばたけ)\n発:発(はっ)見|出発(ぱつ)\n反:反(はん)対(たい)|反(そ)る\n坂:坂(さか)道|上り坂(ざか)\n板:黒板(ばん)|板(いた)\n皮:皮(かわ)|皮(ひ)ふ\n悲:悲(かな)しい|悲(ひ)鳴\n美:美(うつく)しい|美(び)人\n鼻:鼻(はな)水|耳鼻(び)科\n筆:筆(ふで)|筆(ひっ)記\n氷:氷(こおり)|氷(ひょう)山\n表:表(おもて)|発(はっ)表(ぴょう)\n秒:十秒(びょう)\n病:病(びょう)気|病(やまい)\n品:品(しな)物(もの)|作品(ひん)\n負:負(ま)ける|勝(しょう)負(ぶ)\n部:全(ぜん)部(ぶ)|部(ぶ)分\n服:洋(よう)服(ふく)\n福:幸(こう)福(ふく)\n物:物(もの)語|動(どう)物(ぶつ)\n平:平(たい)ら|平(へい)気\n返:返(かえ)す|返(へん)事(じ)\n勉:勉(べん)強\n放:放(はな)す|放(ほう)送(そう)\n味:味(あじ)|意(い)味(み)\n命:命(いのち)|生命(めい)\n面:地面(めん)|面(おも)白い\n問:問(もん)題(だい)|問(と)う\n役:役(やく)に立つ|主(しゅ)役(やく)\n薬:薬(くすり)|薬(やっ)局(きょく)\n由:自由(ゆう)|理由(ゆう)\n油:油(あぶら)|石油(ゆ)\n有:有(ゆう)名|有(あ)る\n遊:遊(あそ)ぶ|遊(ゆう)園地\n予:予(よ)定(てい)\n羊:羊(ひつじ)|羊(よう)毛\n洋:洋(よう)服(ふく)|西洋(よう)\n葉:葉(は)|言葉(ば)\n陽:太陽(よう)\n様:様(よう)子|王様(さま)\n落:落(お)ちる|落(らく)下\n流:流(なが)れる|電流(りゅう)\n旅:旅(たび)|旅(りょ)行\n両:両(りょう)手\n緑:緑(みどり)|緑(りょく)茶\n礼:お礼(れい)\n列:列(れつ)|行列(れつ)\n練:練(れん)習(しゅう)|練(ね)る\n路:道路(ろ)|線路(ろ)\n和:和(わ)食|平(へい)和(わ)";
+    var KEY = 'keisan_gaku', KANJI_URL = 'https://hamm524.github.io/Kanji/', KC_KEY = 'kanji-drill-coins-v1', KC_CRED = 'keisan_kcredit', ROUND = 10, DAY_CAP = 20, RUBY_OK = /[一-龥]/;
     var SCI_RAW = "たねを まくと、さいしょに 出てくる 葉を 何と いう?|子葉(しよう)|本葉|根|くき|植物\nホウセンカの たねは 土の 中で、さいしょに 何が 出る?|根|花|実|本葉|植物\nこん虫の 体は 頭・むね・何の 3つに 分かれている?|はら|あし|はね|しょっ角|こん虫\nこん虫の あしは 何本?|6本|4本|8本|10本|こん虫\nこん虫の あしは 体の どこに ついている?|むね|頭|はら|はね|こん虫\nチョウの 育ち方は たまご→よう虫→さなぎ→何?|せい虫|こん虫|たまご|ふ化|こん虫\nさなぎに ならない 育ち方を する 虫は どれ?|バッタ|チョウ|カブトムシ|ハチ|こん虫\nクモは こん虫?|こん虫では ない(あしが 8本)|こん虫(あしが 6本)|こん虫(はねが ある)|こん虫(むねが ない)|こん虫\n花が さいた あと、できる ものは?|実と たね|根|くき|つぼみ|植物\nヒマワリの 花は 太陽の どちらを 向く?|太陽の ほう|北|下|こたえは ない|植物\nくきが のびる 向きは?|上(光の ほう)|下|よこ だけ|のびない|植物\n葉に 日光が 当たると、つくられる ものは?|養分(でんぷん)|水|ほこり|たね|植物\nかげが できるのは どうして?|光が さえぎられる から|光が 曲がる から|かげは 光|風が ふく から|光\nかげの 向きは 太陽と どちら?|はんたい がわ|同じ がわ|真下|ない|光\n朝から 夕方にかけて、かげは どう うごく?|西→北→東 へ うごく|東→南→西|うごかない|ぐるぐる 回る|光\n太陽は どの 向きに うごいて 見える?|東から 西へ|西から 東へ|北から 南へ|南から 北へ|光\n日なたと 日かげで、地面が あたたかいのは?|日なた|日かげ|同じ|わからない|光\nかがみで はね返した 光は どう すすむ?|まっすぐ|曲がる|止まる|きえる|光\n虫めがねで 光を 小さく あつめると、あつく なる?|なる(あつく なる)|ならない|つめたく なる|かわらない|光\nじしゃくが ひきつけるのは?|鉄|紙|ゴム|ガラス|じしゃく\nじしゃくの 同じ 極どうしを 近づけると?|しりぞけ合う|ひきつけ合う|くっつく|何も 起きない|じしゃく\nじしゃくの 力が いちばん 強いのは?|極(両はし)|まん中|どこも 同じ|ない|じしゃく\nじしゃくに つく ものは どれ?|くぎ|消しゴム|えんぴつの 木|ガラスの コップ|じしゃく\n方位じしんの はりの 色の ついた 方は、何の 方位を さす?|北|南|東|西|じしゃく\n豆電球に あかりが つくのは?|どう線が ひとつの わに つながった とき|どう線が はなれている とき|スイッチを 切った とき|電池が ない とき|電気\n電気を 通す ものは どれ?|どう(10円玉)|ゴム|紙|プラスチック|電気\n電気を 通さない ものは どれ?|ゴム|てつ|どう|アルミニウム|電気\nものの 重さは、かたちを かえると どうなる?|かわらない|かるく なる|重く なる|なくなる|もの\n同じ 体積(かさ)で 重さが ちがうのは?|ものの しゅるい が ちがう から|ふくろ が ちがう から|かたち が ちがう から|いつも 同じ|もの\n音が 出ている ものは、どうなっている?|ふるえている|止まっている|あつい|つめたい|音\n音が 大きいとき、ふるえは?|大きい|小さい|ない|止まる|音\n音は 何を 通って つたわる?|空気など|光|影|つたわらない|音\n空気は 何で できて いる?|ちっ素・さんそ など|水だけ|さんそ だけ|何も ない|もの\n氷が とけると 何に なる?|水|水じょう気|空気|石|もの\n水を 100℃ ちかくまで あたためると、あわ(水じょう気)が 出て 何に なる?|ふっとう する|こおる|ちぢむ|かわらない|もの\n水が 水じょう気に なる ことを 何と いう?|じょう発|ぎょう結|ゆうかい|ぎょう固|もの\n空気を とじこめて おすと、体積は?|小さく なる|大きく なる|かわらない|なくなる|もの\n月は 毎日 かたちが どうなる?|かわる(満ち欠け)|かわらない|ずっと 丸い|ずっと 三日月|地球\n太陽の かがやきは、月と くらべて?|太陽は 自分で 光る|月も 自分で 光る|どちらも 光らない|月だけ 光る|地球\n地球が 回って 1日で かわるのは?|朝・昼・夜|春・夏・秋・冬|月の かたち|ない|地球";
-    function parseWord(w){ var t = [], re = /(.)\(([^)]+)\)|(.)/g, m; while((m = re.exec(w))){ if(m[3] !== undefined) t.push({ c:m[3] }); else t.push({ c:m[1], r:m[2] }); } return t; }
-    var KANJI = KANJI_RAW.split('\n').map(function(l){ var i = l.indexOf(':'), k = l.slice(0, i); return { k:k, words:l.slice(i+1).split('|').map(parseWord) }; });
-    var POOL = [];
-    KANJI.forEach(function(e){ e.words.forEach(function(w){ w.forEach(function(t){ if(t.r && t.c === e.k) POOL.push({ k:e.k, r:t.r }); }); }); });
     var SCI = SCI_RAW.split('\n').map(function(l, i){ var p = l.split('|'); return { id:'s'+i, q:p[0], a:p[1], bad:[p[2], p[3], p[4]], cat:p[5] }; });
-    function get(){ var s = safeGet(KEY) || {}; s.k = s.k || {}; s.s = s.s || {}; s.rounds = s.rounds || 0; if(!s.day || s.day.d !== todayKey()) s.day = { d:todayKey(), n:0 }; return s; }
+    function get(){ var s = safeGet(KEY) || {}; s.s = s.s || {}; s.rounds = s.rounds || 0; if(!s.day || s.day.d !== todayKey()) s.day = { d:todayKey(), n:0 }; return s; }
     function put(s){ safeSet(KEY, s); }
     function rnd(n){ return Math.floor(Math.random()*n); }
     function shuffle(a){ for(var i = a.length-1; i > 0; i--){ var j = rnd(i+1), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
@@ -11912,46 +11908,35 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       sc.sort(function(a, b){ return a.v - b.v; });
       return sc.slice(0, ROUND).map(function(o){ return o.x; });
     }
-    function readingsOf(k){ return POOL.filter(function(p){ return p.k === k; }).map(function(p){ return p.r; }); }
-    function kanjiQ(e){
-      var w = e.words[rnd(e.words.length)], tgt = null;
-      w.forEach(function(t){ if(!tgt && t.c === e.k && t.r) tgt = t; });
-      var okSet = readingsOf(e.k), pool = shuffle(POOL.filter(function(p){ return okSet.indexOf(p.r) < 0; })), bad = [];
-      pool.sort(function(x, y){ return Math.abs(x.r.length - tgt.r.length) - Math.abs(y.r.length - tgt.r.length); });
-      pool.forEach(function(p){ if(bad.length < 3 && bad.indexOf(p.r) < 0) bad.push(p.r); });
-      var word = w.map(function(t){ return t === tgt ? '<b>'+t.c+'</b>' : t.c; }).join('');
-      return { id:e.k, map:'k', tag:'赤い 字の よみ方は?', html:'<div class="gk-word">'+word+'</div>', a:tgt.r, bad:bad,
-        say:'「'+e.k+'」は「'+tgt.r+'」と よむよ' };
-    }
     function sciQ(e){ return { id:e.id, map:'s', tag:'理科 ('+e.cat+')', html:'<div class="gk-text">'+e.q+'</div>', a:e.a, bad:e.bad, say:'答えは「'+e.a+'」' }; }
     var S = null;
     function show(part){ $('gkMenu').hidden = part !== 'menu'; $('gkPlay').hidden = part !== 'play'; $('gkResult').hidden = part !== 'result'; showView('gaku'); }
     function card(){
       var c = $('gakuCards'); if(!c) return;
-      var s = get(), kn = Object.keys(s.k).filter(function(x){ return s.k[x].ok > 0; }).length, sn = Object.keys(s.s).filter(function(x){ return s.s[x].ok > 0; }).length;
-      c.innerHTML = '<section class="gk-card" data-sub="k"><span class="gk-ico k">漢</span><span class="fc-text"><b>漢字（小3）</b>よみ方 '+kn+'/'+KANJI.length+' 字 せいかい</span><button class="fc-go" data-sub="k">れんしゅう</button></section>' +
+      var s = get(), sn = Object.keys(s.s).filter(function(x){ return s.s[x].ok > 0; }).length;
+      c.innerHTML = '<section class="gk-card"><span class="gk-ico k">漢</span><span class="fc-text"><b>漢字ドリル</b>書き順と 宝探し・お散歩の 宝物が コインに</span><a class="fc-go" href="'+KANJI_URL+'" target="_blank" rel="noopener" style="text-decoration:none">ひらく</a></section>' +
         '<section class="gk-card" data-sub="s"><span class="gk-ico s">理</span><span class="fc-text"><b>理科（小3）</b>もんだい '+sn+'/'+SCI.length+' こ せいかい</span><button class="fc-go" data-sub="s" style="background:var(--op-sub)">れんしゅう</button></section>';
     }
     function menu(){
       var s = get(), left = Math.max(0, DAY_CAP - s.day.n);
       $('gkTitle').textContent = 'まなぶ';
       $('gkWallet').innerHTML = '<span class="coin"></span><span>いまの コイン <b class="num">'+getCoins()+'</b></span><span class="gk-bar"><i style="width:'+Math.round(s.day.n/DAY_CAP*100)+'%"></i></span><span>今日 '+s.day.n+'/'+DAY_CAP+'</span>';
-      $('gkSubs').innerHTML = '<button class="gk-sub" data-sub="k"><span class="gk-ico" style="font-size:30px">漢</span><span><b>漢字（小3）</b><small>よみ方を 4つから えらぶ・200字</small></span></button>' +
+      $('gkSubs').innerHTML = '<a class="gk-sub" href="'+KANJI_URL+'" target="_blank" rel="noopener" style="text-decoration:none"><span class="gk-ico" style="font-size:30px">漢</span><span><b>漢字ドリル</b><small>書き順・宝探し(お散歩の 宝物が コインに なるよ)</small></span></a>' +
         '<button class="gk-sub" data-sub="s"><span class="gk-ico" style="font-size:30px">理</span><span><b>理科（小3）</b><small>もんだい 40こ・植物 こん虫 光 じしゃく など</small></span></button>' +
         '<div class="gk-sub soon"><span style="font-size:28px">🗺️</span><span><b>社会</b><small>もうすぐ（おうちの人と 決めるよ）</small></span></div>';
       show('menu');
     }
     function start(sub){
-      var s = get(), qs = sub === 'k' ? pickSet(KANJI, s.k, function(e){ return e.k; }).map(kanjiQ) : pickSet(SCI, s.s, function(e){ return e.id; }).map(sciQ);
+      var s = get(), qs = pickSet(SCI, s.s, function(e){ return e.id; }).map(sciQ);
       S = { sub:sub, qs:shuffle(qs), i:0, ok:0, res:[] };
-      $('gkTitle').textContent = sub === 'k' ? '漢字（小3）' : '理科（小3）';
+      $('gkTitle').textContent = '理科（小3）';
       show('play'); ask();
     }
     function ask(){
       var q = S.qs[S.i], ch = shuffle([q.a].concat(q.bad));
       $('gkProg').innerHTML = S.qs.map(function(_, i){ return '<i class="'+(S.res[i] === 1 ? 'ok' : S.res[i] === 0 ? 'ng' : '')+'"></i>'; }).join('');
       $('gkQ').innerHTML = '<div class="gk-tag">'+(S.i+1)+' / '+S.qs.length+' ・ '+q.tag+'</div>'+q.html;
-      $('gkCh').className = 'gk-ch' + (S.sub === 's' ? ' one' : '');
+      $('gkCh').className = 'gk-ch one';
       $('gkCh').innerHTML = ch.map(function(c){ return '<button data-c="'+c.replace(/"/g, '&quot;')+'">'+c+'</button>'; }).join('');
       $('gkFb').textContent = ''; $('gkFb').className = 'gk-fb'; $('gkNextBox').innerHTML = '';
       S.lock = false;
@@ -11971,7 +11956,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var s = get(), want = S.ok + (S.ok >= 8 ? 3 : 0), room = Math.max(0, DAY_CAP - s.day.n), got = Math.min(want, room);
       s.day.n += got; s.rounds++; put(s);
       if(got > 0) earn(got);
-      var name = S.sub === 'k' ? '漢字' : '理科';
+      var name = '理科';
       $('gkResult').innerHTML = '<div class="gk-res"><div class="gk-big">'+S.ok+' / '+S.qs.length+'</div><p>'+name+'の れんしゅう おわり!</p>' +
         '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン' + (got < want ? '（今日の 上限）' : '') + (S.ok >= 8 ? '（8問以上 +3）' : '') + '</div>' +
         '<div class="gk-fb">1問 せいかいで 1コイン・今日 '+s.day.n+'/'+DAY_CAP+'</div>' +
@@ -11991,7 +11976,27 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var b = e.target.closest('#gakuCards [data-sub]'); if(!b) return;
       start(b.getAttribute('data-sub'));
     });
-    return { card:card, open:menu, _kanji:KANJI, _sci:SCI, _kq:kanjiQ };
+    /* 漢字アプリの「お散歩の宝物」(1つ=1コイン)を、けいさんのコインに入れる。クラウドの数を読み、入れ終わった数は keisan_kcredit に覚える。
+       今日の まなぶ 上限(20)に ぶつかった ぶんは、あしたに もちこす */
+    var pulling = false;
+    async function pullKanji(){
+      if(pulling || typeof cloud === 'undefined' || !cloud || !cloud.uid || !cloud.db) return;
+      pulling = true;
+      try{
+        var d = await fsGetDoc(KC_KEY), n = 0;
+        if(d && d.v){ try{ n = Math.max(0, parseInt(JSON.parse(d.v).n, 10) || 0); }catch(e){} }
+        var cr = safeGet(KC_CRED);
+        if(!cr || typeof cr.n !== 'number'){ safeSet(KC_CRED, { n:n }); return; }
+        var delta = n - cr.n;
+        if(delta <= 0) return;
+        var s = get(), room = Math.max(0, DAY_CAP - s.day.n), got = Math.min(delta, room);
+        if(got <= 0) return;
+        s.day.n += got; put(s); safeSet(KC_CRED, { n:cr.n + got });
+        earn(got);
+        toast('漢字ドリルの たからで +' + got + 'コイン!');
+      }catch(e){}finally{ pulling = false; }
+    }
+    return { card:card, open:menu, pull:pullKanji, _sci:SCI };
   })();
 
   /* ---------- backup / restore ---------- */
