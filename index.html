@@ -732,7 +732,7 @@
   .tb-home1{ margin:0; font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px; }
   .tb-hedit{ border:1.5px solid var(--line); background:var(--surface); color:var(--ink-soft); border-radius:100px; padding:2px 10px; font:inherit; font-size:11.5px; font-weight:900; cursor:pointer; }
   .tb-range{ margin:0; font-size:13px; font-weight:700; line-height:1.6; border-radius:12px; padding:8px 10px; background:color-mix(in srgb, var(--gold) 14%, var(--surface)); }
-  .tb-range.r2{ background:color-mix(in srgb, var(--good) 12%, var(--surface)); }
+  .tb-range.r3{ background:color-mix(in srgb, var(--good) 12%, var(--surface)); }
 </style></head><body>
 <title>けいさんチャレンジ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12390,12 +12390,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function plain(s){ return String(s).replace(/《.+?》/g, ''); }
     function pname(p){ return PREFS[p - 1][1]; }
     function regOf(p){ for(var i = 0; i < REG.length; i++) if(p >= REG[i][1] && p <= REG[i][2]) return i; return 0; }
-    /* 行ける はんい: 小さい子は 近くまで。Lv が 上がると 遠くへ。とべる子・大きい子は どこでも */
-    var SMALL = { chick:1, hamster:1, squirrel:1, mouse:1, rabbit:1 }, BIG = { dragon:1, owl:1, unicorn:1, whale:1, dolphin:1, horse:1, cow:1, bear:1, tiger:1 };
-    var RANGE = [150, 360, Infinity], RNAME = ['近くの 県', 'となりの 地方くらい', '日本の どこでも'];
+    /* 行ける はんい: 育つ(レベル)ほど 遠くへ。ベビーは おうちの 県の 中だけ */
+    var RANGE = [0, 150, 360, Infinity], RNAME = ['おうちの 県の 中だけ', '近くの 県まで', 'となりの 地方くらいまで', '日本の どこでも'];
     var CEN = {}; PREFS.forEach(function(x){ CEN[x[0]] = [(x[3][0] + x[3][2]) / 2, (x[3][1] + x[3][3]) / 2]; });
     function dist(a, b){ if(a === b) return 0; if(a === 47 || b === 47) return 9999; return Math.hypot(CEN[a][0] - CEN[b][0], CEN[a][1] - CEN[b][1]); }
-    function step(sp){ return Math.min(2, (SMALL[sp] ? 0 : BIG[sp] ? 2 : 1) + lvOf(sp)); }
+    function step(sp){ return Math.max(0, Math.min(3, lvOf(sp))); }
     function canGo(sp, p){ var hm = tabiGet().home; return !hm || dist(hm, p) <= RANGE[step(sp)]; }
     function save(v){ v.t = Date.now(); safeSet(K, v); }
     function owned(){ var p = getPets() || {}; return Object.keys(p.owned || {}); }
@@ -12555,8 +12554,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var st = step(pick.sp);
       if(pick.p && !canGo(pick.sp, pick.p)) pick.p = null;
       h += '<p class="tb-home1">🏠 おうち: <b>' + pname(hm) + '</b><button class="tb-hedit" id="tbHomeEdit">かえる</button></p>';
-      h += '<p class="tb-range r' + st + '">' + petName(pick.sp) + 'が 行けるのは <b>' + RNAME[st] + '</b>' +
-        (st < 2 ? (SMALL[pick.sp] && lvOf(pick.sp) === 0 ? '。小さいから、まだ 遠くへは 行けないよ' : '') + '。レベルが 上がると もっと 遠くへ 行けるよ!' : '!') + '</p>';
+      h += '<p class="tb-range r' + st + '">' + petName(pick.sp) + 'は ' + Pet.LV_NAMES[st] + '。行けるのは <b>' + RNAME[st] + '</b>' +
+        (st < 3 ? '。まだ 子どもだから 1人で 遠くへは 行けないよ。' + Pet.LV_NAMES[st + 1] + 'に なると もっと 遠くへ 行けるよ!' : '!') + '</p>';
       h += '<h3 class="tb-q">② どこへ 行く?</h3><p class="tb-note">地図を タップするか、下から えらんでね。みどりは 行った ことの ある ところ、灰色は まだ 遠すぎる ところ。</p>' +
         '<div class="tb-pickmap" id="tbPickMap">' + map(pick.p ? [pick.p] : [], s, '', function(p){ return !canGo(pick.sp, p); }, hm) + '</div>' +
         '<div class="tb-regs">' + REG.map(function(r, i){ return '<button class="tb-reg' + (pick.reg === i ? ' sel' : '') + '" data-reg="' + i + '">' + r[0] + '</button>'; }).join('') + '</div><div class="tb-prefs">';
