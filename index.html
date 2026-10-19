@@ -4667,10 +4667,32 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<span class="wp-box" id="wp' + i + 'a">?</span><span class="wp-box wp-o" id="wp' + i + 'o">?</span><span class="wp-box" id="wp' + i + 'b">?</span>' +
         '<span class="wp-l">=</span><span class="wp-box" id="wp' + i + 'r">?</span></div>';
     }
-    return h + '<div class="wp-ops" id="wpOps">' + wpOpsHtml() + '</div><div class="wp-step" id="wpStep"></div><div class="wp-hint" id="wpHint">まちがえたら ⌫ か、直したい 所を タップ</div>';
+    return h + '<div class="wp-ops" id="wpOps">' + wpOpsHtml() + '</div><div class="wp-step" id="wpStep"></div><div class="wp-hint" id="wpHint">まちがえたら ⌫ か、直したい 所を タップ</div><div id="wpHs"></div>';
+  }
+  function wpHsOk(q){
+    var x = q.inp[Math.floor(q.stage / 4)];
+    return !!x && (x.o === 'add' || x.o === 'sub' || x.o === 'mul') && x.a != null && x.b != null && Math.max(x.a, x.b) >= 10 && (x.o !== 'sub' || x.a >= x.b);
+  }
+  function wpHsOpen(){
+    var q = state.current, x = q.inp[Math.floor(q.stage / 4)], a = String(x.a), b = String(x.b);
+    var ansW = x.o === 'sub' ? a.length : (x.o === 'add' ? Math.max(a.length, b.length) + 1 : a.length + b.length);
+    var w = Math.max(a.length + 1, b.length + 1, ansW);
+    state.hissan = true; state.hsCarry = null; state.hsCSel = -1; state.hsW = ansW; state.hsSel = ansW - 1;
+    state.hsCells = []; for(var i = 0; i < ansW; i++) state.hsCells.push('');
+    $('wpHs').innerHTML = '<div class="hissan"><div class="hs-row">' + hsCells(a, w) + '</div><div class="hs-row"><span class="hs-c hs-op">' + OP_META[x.o].symbol + '</span>' + hsCells(b, w - 1) + '</div><div class="hs-line"></div><div class="hs-row hs-ans" id="hsAns"></div></div>';
+    $('hsAns').addEventListener('click', function(e){
+      var c = e.target.closest ? e.target.closest('.hs-c') : null;
+      if(!c || c.dataset.i == null || busy) return;
+      state.hsSel = +c.dataset.i; updateAnswerBox();
+    });
+    state.inputBuf = ''; updateAnswerBox();
+  }
+  function wpHsClose(){
+    state.hissan = false; state.hsCells = null; state.inputBuf = ''; $('wpHs').innerHTML = ''; updateAnswerBox();
   }
   function wpGoto(q, idx){
     if(!wpNeedsOp(q) || idx < 0 || idx >= q.stage) return;
+    if(state.hissan) wpHsClose();
     var s = Math.floor(idx / 4), f = idx % 4;
     WP_FIELDS.forEach(function(k, fi){ if(fi >= f) delete q.inp[s][k]; });
     for(var i = s + 1; i < q.inp.length; i++) q.inp[i] = {};
@@ -4690,7 +4712,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         el.classList.toggle('act', i === cs && fi === f);
       });
     }
+    var sw = $('hsSwitch'); sw.hidden = !(f === 3 && wpHsOk(q)); sw.textContent = state.hissan ? '暗算でとく' : '筆算でとく';
+    $('hsTip').hidden = !state.hissan; $('hsCarrySw').hidden = true;
     $('wpHint').style.visibility = q.stage > 0 ? 'visible' : 'hidden';
+    $('wpOps').style.display = state.hissan ? 'none' : ''; $('wpHint').style.display = state.hissan ? 'none' : '';
     $('wpOps').style.visibility = f === 1 ? 'visible' : 'hidden';
     var pre = n > 1 ? '式' + WP_CIRC[cs + 1] + 'の ' : '';
     $('wpStep').textContent = [pre + '1つ目の 数を 入れて ✓', '計算の 記号を えらぼう', pre + '2つ目の 数を 入れて ✓', pre + '答えを 入れて ✓'][f];
@@ -7294,6 +7319,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   /* 2桁どうし・3桁の 足し算引き算、2桁×1桁の かけ算は 筆算で出す */
   $('hsSwitch').addEventListener('click', function(){
     if(busy || !state.current) return;
+    if(wpNeedsOp(state.current)){ if(state.hissan) wpHsClose(); else if(wpHsOk(state.current) && state.current.stage % 4 === 3) wpHsOpen(); return; }
     state.current.hs = !state.hissan;
     renderProblem();
   });
@@ -7387,6 +7413,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var okAns = first<w && cells.slice(first).every(function(x){ return x!==''; });
       state.inputBuf = okAns ? cells.slice(first).join('') : '';
       $('okKey').disabled = !okAns;
+      if(wpNeedsOp(state.current)) wpRefresh();
       return;
     }
     var box = $('answerBox');
@@ -7456,7 +7483,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var cs = Math.floor(correct.stage / 4), f = correct.stage % 4, ip = correct.inp[cs];
       if(f === 1) return;
       ip[WP_FIELDS[f]] = val; correct.stage++; state.inputBuf = '';
-      if(correct.stage < correct.eq.length * 4){ updateAnswerBox(); return; }
+      if(state.hissan) wpHsClose();
+      if(correct.stage < correct.eq.length * 4){
+        updateAnswerBox();
+        if(correct.stage % 4 === 3 && wpHsOk(correct)){ var xx = correct.inp[Math.floor(correct.stage / 4)]; if(useHissan({op:xx.o, a:xx.a, b:xx.b})) wpHsOpen(); }
+        return;
+      }
       correct.eq.forEach(function(e, i){
         var x = correct.inp[i], sw = (e.o === 'add' || e.o === 'mul') && x.a === e.b && x.b === e.a;
         if(!(x.o === e.o && ((x.a === e.a && x.b === e.b) || sw) && x.r === e.r)) okShiki = false;
