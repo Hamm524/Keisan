@@ -701,6 +701,10 @@
   .tb-about rt{ font-size:8px; }
   .tb-move{ position:relative; height:120px; border-radius:14px; background:linear-gradient(#bfe6ff, #e9f7ff); overflow:hidden; }
   .tb-veh{ position:absolute; top:24px; font-size:44px; animation:tbFly 5s linear infinite; }
+  .tb-veh.to-l{ animation-name:tbFlyL; }
+  .tb-veh i{ font-style:normal; display:inline-block; } .tb-veh i.fl{ transform:scaleX(-1); }
+  @keyframes tbFlyL{ from{ left:100%; } to{ left:-60px; } }
+  .tb-ride{ margin:0; font-size:13px; font-weight:900; }
   .tb-mp{ position:absolute; bottom:6px; left:50%; width:70px; transform:translateX(-50%); animation:tbHop 1.2s ease-in-out infinite; } .tb-mp svg{ width:100%; height:auto; display:block; }
   @keyframes tbFly{ from{ left:-60px; } to{ left:100%; } }
   @keyframes tbHop{ 50%{ transform:translateX(-50%) translateY(-6px); } }
@@ -733,6 +737,7 @@
   .tb-hedit{ border:1.5px solid var(--line); background:var(--surface); color:var(--ink-soft); border-radius:100px; padding:2px 10px; font:inherit; font-size:11.5px; font-weight:900; cursor:pointer; }
   .tb-range{ margin:0; font-size:13px; font-weight:700; line-height:1.6; border-radius:12px; padding:8px 10px; background:color-mix(in srgb, var(--gold) 14%, var(--surface)); }
   .tb-range.r3{ background:color-mix(in srgb, var(--good) 12%, var(--surface)); }
+  @media (prefers-reduced-motion: reduce){ .tb-veh{ animation:none; left:40%; } }
 </style></head><body>
 <title>けいさんチャレンジ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12466,7 +12471,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     function left(tr){ return Math.max(0, tr.t1 - Date.now()); }
     function fmtLeft(ms){ var m = Math.ceil(ms / 60000), h = Math.floor(m / 60); m = m % 60; return h ? h + '時間' + (m ? m + '分' : '') : m + '分'; }
-    function veh(p){ return p === 1 || p >= 42 ? '✈️' : '🚄'; }
+    /* 乗り物は おうちからの 距離で 自動。島へは さいごに 船。絵文字の 向き: ✈️ は 右むき、ほかは 左むき */
+    var BOAT = { 4:1, 15:1, 34:1 };
+    var VEH = { bus:['🚌', 'バス', 'L'], train:['🚃', '電車', 'L'], shin:['🚄', '新幹線', 'L'], air:['✈️', '飛行機', 'R'] };
+    function vehOf(tr){
+      var hm = tr.h || tabiGet().home || 13, d = dist(hm, tr.p);
+      return VEH[d === 0 ? 'bus' : d <= 150 ? 'train' : d <= 420 ? 'shin' : 'air'];
+    }
+    function veh(tr){ return vehOf(tr)[0]; }
+    /* 地図で 行き先が 右(東)なら 右へ、左(西)なら 左へ 進む。鼻先が 進む向きに なるよう 反転 */
+    function vehRight(tr){ var hm = tr.h || tabiGet().home || 13; return tr.p === 47 ? false : hm === 47 ? true : CEN[tr.p][0] >= CEN[hm][0]; }
     function phase(tr){ if(!tr) return ''; var n = Date.now(); return n >= tr.t1 ? 'back' : n >= tr.t0 + (tr.t1 - tr.t0) * CARD_AT ? 'card' : 'go'; }
 
     /* ---- ホーム: 留守の おしらせ+わたしの せかいの カード ---- */
@@ -12477,7 +12491,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var ph = phase(tr), nm = petName(tr.sp), pn = pname(tr.p), h;
       if(ph === 'back') h = '<span class="tb-bi">🎁</span><span class="tb-bt"><b>' + nm + 'が 帰ってきたよ!</b><small>' + pn + 'の おみやげを あけよう</small></span>';
       else if(ph === 'card') h = '<span class="tb-bi">📮</span><span class="tb-bt"><b>' + nm + 'は ' + pn + 'に 行っているよ!</b><small>絵はがきが とどいたよ・あと ' + fmtLeft(left(tr)) + 'で 帰ってくる</small></span>';
-      else h = '<span class="tb-bi">' + veh(tr.p) + '</span><span class="tb-bt"><b>' + nm + 'は ' + pn + 'に 行っているよ!</b><small>あと ' + fmtLeft(left(tr)) + 'で 帰ってくる</small></span>';
+      else h = '<span class="tb-bi">' + veh(tr) + '</span><span class="tb-bt"><b>' + nm + 'は ' + pn + 'に 行っているよ!</b><small>あと ' + fmtLeft(left(tr)) + 'で 帰ってくる</small></span>';
       el.className = 'tb-band ' + ph;
       el.innerHTML = '<span class="tb-bp">' + Pet.svg(tr.sp, lvOf(tr.sp)) + '</span>' + h + '<span class="care-go">›</span>';
       el.hidden = false;
@@ -12519,7 +12533,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(ph === 'card'){
           h += '<p class="tb-mail">📮 絵はがきが とどいたよ!</p>' + postcard(tr.sp, tr.p) + '<p class="tb-about">' + rb(d.about) + '</p>';
         }else{
-          h += '<div class="tb-move"><span class="tb-veh">' + veh(tr.p) + '</span><span class="tb-mp">' + Pet.svg(tr.sp, lvOf(tr.sp)) + '</span></div>' +
+          var vo = vehOf(tr), right = vehRight(tr), flip = (vo[2] === 'L') === right;
+          h += '<p class="tb-ride">' + vo[0] + ' ' + vo[1] + 'で 向かって いるよ' + (BOAT[tr.p] ? '。さいごは ⛴️ 船で わたるよ' : '') + '</p>';
+          h += '<div class="tb-move"><span class="tb-veh ' + (right ? 'to-r' : 'to-l') + '"><i' + (flip ? ' class="fl"' : '') + '>' + vo[0] + '</i></span><span class="tb-mp">' + Pet.svg(tr.sp, lvOf(tr.sp)) + '</span></div>' +
             '<p class="tb-about">いま 向かって いるところ。とちゅうで 絵はがきが とどくよ。</p>';
         }
         h += '<div class="tb-dest">' + map([tr.p], null, 'sm') + '<span><b>' + pn + '</b><small>' + REG[regOf(tr.p)][0] + '地方</small></span></div>';
@@ -12609,7 +12625,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(!buyGate(PRICE, petName(pick.sp) + 'を ' + pname(pick.p) + 'へ?', postcard(pick.sp, pick.p, { small:true }), 'いってらっしゃい', go)) return;
       var got = v.got || {}, i = got[pick.p + '-0'] && !got[pick.p + '-1'] ? 1 : got[pick.p + '-1'] && !got[pick.p + '-0'] ? 0 : Math.random() < .5 ? 0 : 1;
       var now = Date.now();
-      v.trip = { sp:pick.sp, sub:sub, p:pick.p, i:i, t0:now, t1:now + TRIP_MS };
+      v.trip = { sp:pick.sp, sub:sub, p:pick.p, i:i, t0:now, t1:now + TRIP_MS, h:tabiGet().home || null };
       v.got = got;
       save(v);
       toast(petName(pick.sp) + 'が ' + pname(pick.p) + 'へ 出発したよ!');
