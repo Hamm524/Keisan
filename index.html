@@ -488,6 +488,14 @@
   .rb{ position:relative; display:inline-block; }
   .rb > .rk{ position:absolute; left:50%; bottom:100%; transform:translateX(-50%); font-size:9px; line-height:1; white-space:nowrap; letter-spacing:0; font-weight:700; margin-bottom:1px; }
   .rm-house.edit .rm-hc{ padding-top:12px; }
+  .rm-hc.pv{ outline:2.5px dashed #3F7FD0; outline-offset:2px; }
+  .rm-hpv{ display:flex; align-items:center; gap:8px; padding:12px 12px 10px; background:#E8F1FF; border-top:2px dashed #3F7FD0; }
+  .rm-hpv > span{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; color:#2E2A3D; }
+  .rm-hpv b{ font-size:14px; font-weight:900; } .rm-hpv small{ font-size:12px; font-weight:700; color:#4A4458; }
+  .rm-house.edit .rm-hpv .rm-hbtn{ font-size:14px; padding:8px 14px; white-space:nowrap; display:inline-flex; align-items:center; gap:3px; }
+  .rm-house.edit .rm-hpv .rm-hbtn.buy{ background:#2FAE66; color:#fff; }
+  .rm-house.edit .rm-hpv .rm-hbtn.no{ background:#fff; color:#2E2A3D; box-shadow:inset 0 0 0 1.5px #D9D3E6; }
+  .rm-hpv .coin{ width:14px; height:14px; }
   .rm-rfhint{ padding-top:12px !important; }
   /* タブレット横: 左に いえ、右に えらぶ ところ */
   @media (min-width:900px) and (orientation:landscape){
@@ -11855,7 +11863,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       return h;
     }
     function hOwn(h, id){ return !BYH[id].price || h.own[id]; }
-    var hEdit = false, hMsg = '', hDrag = null, YLIM = { x:[-300, 300], y:[-14, 12] };
+    function hView(h){
+      if(!hPv) return h;
+      var v = JSON.parse(JSON.stringify(h)), d = BYH[hPv];
+      if(d.part.k === 'deco') v.deco[hPv] = 1; else v[d.part.k] = hPv;
+      return v;
+    }
+    var hEdit = false, hMsg = '', hPv = null, hDrag = null, YLIM = { x:[-300, 300], y:[-14, 12] };
     function svgPt(svg, e){ var p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); }
     $('rmHouse').addEventListener('pointerdown', function(e){
       if(!hEdit) return;
@@ -11895,7 +11909,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var n = roomN(), b = $('rmHouse'), h = getHS();
       var x = hEdit ?
         '<div class="rm-rfh"><b>🎨 家の リフォーム</b><button class="rm-hbtn" data-h="edit">✓ できた</button></div>' +
-        '<div class="rm-rfv">' + houseSvg(n, h) + '<p class="rm-rfhint">' + (hMsg || '選ぶと すぐ 変わるよ。庭の <ruby>飾<rt>かざ</rt></ruby>りは 指で 動かせるよ') + '</p></div>' :
+        '<div class="rm-rfv">' + houseSvg(n, hView(h)) + (hPv ? pvBar() : '<p class="rm-rfhint">' + (hMsg || '選ぶと すぐ 変わるよ。買う 前に お試し できるよ。庭の <ruby>飾<rt>かざ</rt></ruby>りは 指で 動かせるよ') + '</p>') + '</div>' :
         '<span class="rm-hlab">' + HOUSE[n] + (n < 5 ? '<small>次は ' + GROW[n + 1] + '</small>' : '') + '</span>' +
         '<button class="rm-hbtn" data-h="edit">🎨 リフォーム</button>' + houseSvg(n, h) + seasonLab(h.yard);
       hMsg = '';
@@ -11905,7 +11919,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           x += '<div class="rm-hrow"><span>' + p.name + '</span><div>';
           p.list.forEach(function(it){
             var id = it[0], on = p.k === 'deco' ? !!h.deco[id] : h[p.k] === id, own = hOwn(h, id);
-            x += '<button class="rm-hc' + (on ? ' on' : '') + '" data-h="' + id + '">' + (it[2] ? '<i style="background:' + it[2] + '"></i>' : '') + '<span>' + it[1] + '</span>' +
+            x += '<button class="rm-hc' + (on ? ' on' : '') + (id === hPv ? ' pv' : '') + '" data-h="' + id + '">' + (it[2] ? '<i style="background:' + it[2] + '"></i>' : '') + '<span>' + it[1] + '</span>' +
               (own ? '' : '<small><span class="coin"></span>' + it[3] + '</small>') + '</button>';
           });
           x += '</div></div>';
@@ -11921,12 +11935,24 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var p = document.createElement('span'); p.className = 'rm-hpop'; p.textContent = t;
       $('rmHouse').appendChild(p); setTimeout(function(){ p.remove(); }, 2600);
     }
+    function pvBar(){
+      var d = BYH[hPv], c = getCoins();
+      return '<div class="rm-hpv"><span><b>お試し中: ' + d.part.name + '「' + d.name + '」</b><small>' +
+        (c < d.price ? 'あと ' + (d.price - c) + 'コイン 集めると 買えるよ' : '気に入ったら 買おう') + '</small></span>' +
+        '<button class="rm-hbtn buy" data-h="pvbuy">買う <span class="coin"></span>' + d.price + '</button><button class="rm-hbtn no" data-h="pvno">やめる</button></div>';
+    }
+    function buyPv(){
+      var id = hPv, d = BYH[id], h = getHS(); if(!d) return;
+      if(!buyGate(d.price, d.part.name + 'を「' + d.name + '」に する?', null, '買う', buyPv)) return;
+      h.own[id] = 1; h.t = Date.now(); safeSet(HK, h); renderCoins();
+      hPv = null;
+      if(d.part.k === 'deco' && h.deco[id]) delete h.deco[id];   /* 下で オンに なる */
+      pickH(id);
+    }
     function pickH(id){
       var d = BYH[id], h = getHS();
-      if(!hOwn(h, id)){
-        if(!buyGate(d.price, d.part.name + 'を「' + d.name + '」に する?', null, '買う', function(){ pickH(id); })) return;
-        h.own[id] = 1; renderCoins();
-      }
+      if(!hOwn(h, id)){ hPv = hPv === id ? null : id; renderHouse(); return; }   /* 買う 前に お試し */
+      hPv = null;
       if(d.part.k === 'deco'){ if(h.deco[id]) delete h.deco[id]; else h.deco[id] = 1; }
       else h[d.part.k] = id;
       h.t = Date.now(); safeSet(HK, h);
@@ -11934,7 +11960,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     $('rmHouse').addEventListener('click', function(e){
       var hb = e.target.closest('[data-h]');
-      if(hb){ var hv = hb.getAttribute('data-h'); if(hv === 'edit'){ hEdit = !hEdit; renderHouse(); if(!hEdit) hPop('✨ すてきな 家に なったね!'); } else pickH(hv); return; }
+      if(hb){ var hv = hb.getAttribute('data-h'); if(hv === 'pvbuy'){ buyPv(); return; } if(hv === 'pvno'){ hPv = null; renderHouse(); return; } if(hv === 'edit'){ hEdit = !hEdit; hPv = null; renderHouse(); if(!hEdit) hPop('✨ すてきな 家に なったね!'); } else pickH(hv); return; }
       var g = e.target.closest('[data-r]'); if(!g) return;
       var v = g.getAttribute('data-r');
       if(v === 'add') buyRoom(); else goRoom(+v);
