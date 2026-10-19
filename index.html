@@ -1772,13 +1772,13 @@
   .g3btn{ display:block; width:100%; margin-top:8px; padding:8px 12px; border-radius:14px; border:2.5px solid var(--op-mul); background:#fff; color:var(--ink); font-weight:900; font-size:14px; text-align:center; }
   .g3btn small{ display:block; font-size:11px; font-weight:800; color:var(--ink-soft); margin-top:2px; }
   .equation:has(.wp){ white-space:normal; width:100%; }
-  .wp-eq{ display:flex; align-items:center; justify-content:center; gap:8px; margin:8px 0 2px; font-size:24px; font-weight:800; white-space:nowrap; }
+  .wp-eq{ display:flex; align-items:center; justify-content:center; gap:6px; margin:6px 0 2px; font-size:24px; font-weight:800; white-space:nowrap; }
   .wp-l{ font-size:15px; color:var(--ink-soft); }
-  .wp-ops{ display:inline-flex; gap:5px; }
-  .wp-op{ width:44px; height:44px; border-radius:12px; border:2.5px solid var(--line, #E3D6C0); background:var(--surface-2, #fff); color:var(--ink); font:inherit; font-size:22px; font-weight:900; cursor:pointer; }
-  .wp-box{ min-width:62px; height:46px; padding:0 8px; border-radius:12px; border:2.5px solid var(--line, #E3D6C0); background:var(--surface-2, #fff); display:inline-flex; align-items:center; justify-content:center; font-size:24px; font-weight:900; }
-  .wp-box.act, .wp-ops.act{ border-color:var(--live, #1FA98E); box-shadow:0 0 0 3px color-mix(in srgb, var(--live, #1FA98E) 22%, transparent); }
-  .wp-ops.act{ border-radius:14px; padding:2px; }
+  .wp-ops{ display:flex; justify-content:center; gap:8px; margin:6px 0 2px; }
+  .wp-o{ min-width:40px; }
+  .wp-op{ width:42px; height:38px; border-radius:12px; border:2.5px solid var(--line, #E3D6C0); background:var(--surface-2, #fff); color:var(--ink); font:inherit; font-size:20px; font-weight:900; cursor:pointer; }
+  .wp-box{ min-width:52px; height:42px; padding:0 6px; border-radius:12px; border:2.5px solid var(--line, #E3D6C0); background:var(--surface-2, #fff); display:inline-flex; align-items:center; justify-content:center; font-size:24px; font-weight:900; }
+  .wp-box.act{ border-color:var(--live, #1FA98E); box-shadow:0 0 0 3px color-mix(in srgb, var(--live, #1FA98E) 22%, transparent); }
   .wp-step{ text-align:center; font-size:13px; font-weight:800; color:var(--ink-soft); margin:2px 0 4px; }
   .wp-op.on{ background:var(--live, #1FA98E); border-color:var(--live, #1FA98E); color:#fff; }
   .wp{ font-size:20px; line-height:1.8; font-weight:800; text-align:left; padding:6px 10px; white-space:normal; }
@@ -4539,20 +4539,36 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   var WP_USED = {};
   var WP_RB = { '個':'こ', '枚':'まい', '袋':'ふくろ', '束':'たば', '残':'のこ', '菓':'か', '座':'すわ', '降':'お', '要':'よう' };
   function wpRuby(t){ return t.replace(/[個枚袋束残菓座降要]/g, function(c){ return '<ruby>' + c + '<rt>' + WP_RB[c] + '</rt></ruby>'; }); }
-  function wpOpsHtml(q){ return ['add','sub','mul','div'].map(function(o){ return '<button type="button" class="wp-op'+(q.opSel === o ? ' on' : '')+'" data-op="'+o+'">'+OP_META[o].symbol+'</button>'; }).join(''); }
-  function wpNeedsOp(q){ return !!(q && q.word && !q.hard); }
-  var WP_STEPS = ['①式の はじめの 数を 入れて ✓', '②計算の 記号を えらぼう', '③式の 2つ目の 数を 入れて ✓', '④答えを 入れて ✓'];
+  function wpOpsHtml(){ return ['add','sub','mul','div'].map(function(o){ return '<button type="button" class="wp-op" data-op="'+o+'">'+OP_META[o].symbol+'</button>'; }).join(''); }
+  function wpNeedsOp(q){ return !!(q && q.word && q.eq); }
+  var WP_CIRC = ['', '①', '②'];
+  var WP_FIELDS = ['a', 'o', 'b', 'r'];
+  function wpRowsHtml(q){
+    var n = q.eq.length, h = '';
+    for(var i = 0; i < n; i++){
+      h += '<div class="wp-eq"><span class="wp-l">式' + (n > 1 ? WP_CIRC[i + 1] : '') + '</span>' +
+        '<span class="wp-box" id="wp' + i + 'a">?</span><span class="wp-box wp-o" id="wp' + i + 'o">?</span><span class="wp-box" id="wp' + i + 'b">?</span>' +
+        '<span class="wp-l">=</span><span class="wp-box" id="wp' + i + 'r">?</span></div>';
+    }
+    return h + '<div class="wp-ops" id="wpOps">' + wpOpsHtml() + '</div><div class="wp-step" id="wpStep"></div>';
+  }
   function wpRefresh(){
-    var q = state.current; if(!wpNeedsOp(q) || !$('wpA')) return;
-    var st = q.stage || 0, buf = state.inputBuf || '';
-    $('wpA').textContent = st === 0 ? (buf || '?') : q.inA;
-    $('wpB').textContent = st < 2 ? '?' : (st === 2 ? (buf || '?') : q.inB);
-    $('wpA').classList.toggle('act', st === 0); $('wpB').classList.toggle('act', st === 2);
-    $('wpOps').classList.toggle('act', st === 1);
-    Array.prototype.forEach.call(document.querySelectorAll('.wp-op'), function(x){ x.classList.toggle('on', x.getAttribute('data-op') === q.opSel); });
-    $('wpStep').textContent = WP_STEPS[st];
-    $('answerBox').style.opacity = st === 3 ? 1 : .35;
-    if(st < 3){ $('answerBox').textContent = '?'; $('answerBox').classList.add('placeholder'); }
+    var q = state.current; if(!wpNeedsOp(q) || !$('wp0a')) return;
+    var cs = Math.floor(q.stage / 4), f = q.stage % 4, buf = state.inputBuf || '', n = q.eq.length;
+    for(var i = 0; i < n; i++){
+      var inp = q.inp[i] || {};
+      WP_FIELDS.forEach(function(k, fi){
+        var el = $('wp' + i + k), v;
+        if(i < cs || (i === cs && fi < f)) v = k === 'o' ? OP_META[inp.o].symbol : inp[k];
+        else if(i === cs && fi === f && k !== 'o') v = buf || '?';
+        else v = '?';
+        el.textContent = v;
+        el.classList.toggle('act', i === cs && fi === f);
+      });
+    }
+    $('wpOps').style.visibility = f === 1 ? 'visible' : 'hidden';
+    var pre = n > 1 ? '式' + WP_CIRC[cs + 1] + 'の ' : '';
+    $('wpStep').textContent = [pre + '1つ目の 数を 入れて ✓', '計算の 記号を えらぼう', pre + '2つ目の 数を 入れて ✓', pre + '答えを 入れて ✓'][f];
   }
   function wpPick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
   function wpTemplate(op){
@@ -4568,15 +4584,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(kind === 0){
         var pr = pick(3, 9) * 10, k = pick(2, 5), cost = pr * k, paid = Math.ceil(cost / 100) * 100; if(paid === cost) paid += 100;
         q = { a:pr, b:k, answer:paid - cost, text:'1個' + pr + '円のガムを' + k + '個買って、' + paid + '円出しました。おつりは何円ですか。' };
-        q.op = 'mul';
+        q.op = 'mul'; q.eq = [{a:pr, o:'mul', b:k, r:cost}, {a:paid, o:'sub', b:cost, r:paid - cost}];
       }else{
         var per = pick(3, 9), bx = pick(2, 6), ex = pick(2, 9);
         q = { a:per, b:bx, answer:per * bx + ex, text:'1箱に' + per + '個入ったクッキーが' + bx + '箱と、ばらが' + ex + '個あります。全部で何個ですか。' };
-        q.op = 'mul';
+        q.op = 'mul'; q.eq = [{a:per, o:'mul', b:bx, r:per * bx}, {a:per * bx, o:'add', b:ex, r:per * bx + ex}];
       }
     }else{
       var g = LEVELS[op][currentLevelIndex(op)].gen();
       q = { a:g.a, b:g.b, answer:g.answer, op:op, text:wpFill(wpTemplate(op), g) };
+      q.eq = [{a:g.a, o:op, b:g.b, r:g.answer}];
     }
     q.word = true; q.hs = false; q.lv = currentLevelIndex(q.op);
     return q;
@@ -7180,7 +7197,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function renderProblem(){
     if(state.print && state.print.kind==='challenge') updateLevelTag();
     state.inputBuf = ''; state.hsCells = null; state.hsSel = 0; state.hsCarry = null; state.hsCSel = -1;
-    var q = state.current; q.opSel = null; q.stage = 0; q.inA = q.inB = null;
+    var q = state.current; q.stage = 0; q.inp = [{}, {}];
     var meta = OP_META[q.op];
     if(q.hs == null) q.hs = useHissan(q);   /* 自動で決めて、ボタンで切りかえられる */
     state.hissan = q.hs;
@@ -7210,9 +7227,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         state.hsCSel = state.hsCSel === i ? -1 : i; updateAnswerBox();
       });
     }else{
-      $('equation').innerHTML = q.word ? '<div class="wp">' + wpRuby(q.text) + '</div>' + (wpNeedsOp(q) ? '<div class="wp-eq"><span class="wp-l">式</span><span class="wp-box" id="wpA">?</span><span class="wp-ops" id="wpOps">' + wpOpsHtml(q) + '</span><span class="wp-box" id="wpB">?</span><span class="wp-l">=</span></div><div class="wp-step" id="wpStep"></div>' : '<div class="wp-eq"><span class="wp-l">2回 計算して 答えを 出そう</span></div>') : q.a + ' <span class="op-sym">'+meta.symbol+'</span> ' + q.b + ' =';
+      $('equation').innerHTML = q.word ? '<div class="wp">' + wpRuby(q.text) + '</div>' + (wpNeedsOp(q) ? wpRowsHtml(q) : '') : q.a + ' <span class="op-sym">'+meta.symbol+'</span> ' + q.b + ' =';
     }
-    $('answerBox').hidden = state.hissan;
+    $('answerBox').hidden = state.hissan || wpNeedsOp(q);
     $('hsTip').hidden = !state.hissan;
     var sw = $('hsSwitch');
     sw.hidden = q.word || !canHissan(q);
@@ -7255,7 +7272,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       box.textContent = '?';
       box.classList.add('placeholder');
     }
-    $('okKey').disabled = state.inputBuf.length===0 || (wpNeedsOp(state.current) && state.current.stage === 1);
+    $('okKey').disabled = state.inputBuf.length===0 || (wpNeedsOp(state.current) && state.current.stage % 4 === 1);
     wpRefresh();
   }
 
@@ -7308,18 +7325,18 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(state.inputBuf.length===0 || busy) return;
     var val = parseInt(state.inputBuf,10);
     var correct = state.current;
-    if(wpNeedsOp(correct) && correct.stage < 3){
-      if(correct.stage === 0){ correct.inA = val; correct.stage = 1; }
-      else if(correct.stage === 2){ correct.inB = val; correct.stage = 3; }
-      state.inputBuf = ''; updateAnswerBox();
-      return;
-    }
     var okShiki = true;
     if(wpNeedsOp(correct)){
-      var same = correct.inA === correct.a && correct.inB === correct.b, swap = (correct.op === 'add' || correct.op === 'mul') && correct.inA === correct.b && correct.inB === correct.a;
-      okShiki = correct.opSel === correct.op && (same || swap);
+      var cs = Math.floor(correct.stage / 4), f = correct.stage % 4, ip = correct.inp[cs];
+      if(f === 1) return;
+      ip[WP_FIELDS[f]] = val; correct.stage++; state.inputBuf = '';
+      if(correct.stage < correct.eq.length * 4){ updateAnswerBox(); return; }
+      correct.eq.forEach(function(e, i){
+        var x = correct.inp[i], sw = (e.o === 'add' || e.o === 'mul') && x.a === e.b && x.b === e.a;
+        if(!(x.o === e.o && ((x.a === e.a && x.b === e.b) || sw) && x.r === e.r)) okShiki = false;
+      });
     }
-    var isGood = val === correct.answer && okShiki;
+    var isGood = (wpNeedsOp(correct) ? true : val === correct.answer) && okShiki;
     busy = true;
 
     if(state.mode==='accuracy' || state.mode==='jump'){
@@ -7823,8 +7840,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   document.addEventListener('click', function(e){
     var b = e.target.closest && e.target.closest('.wp-op');
     if(!b || busy || !wpNeedsOp(state.current)) return;
-    if(state.current.stage !== 1) return;
-    state.current.opSel = b.getAttribute('data-op'); state.current.stage = 2; state.inputBuf = '';
+    if(state.current.stage % 4 !== 1) return;
+    var cq = state.current; cq.inp[Math.floor(cq.stage / 4)].o = b.getAttribute('data-op'); cq.stage++; state.inputBuf = '';
     updateAnswerBox();
   });
   /* ---------- input wiring ---------- */
