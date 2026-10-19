@@ -11930,9 +11930,86 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
  {"p":"p6","t":"じゅんばん","q":"ルーを 入れるのは、いつですか。","a":"さいごに","bad":["はじめに","やさいを いためる 前に","水を 入れる 前に"],"ev":"さいごに、ルーを 入れて","why":"「さいごに」と いう ことばを さがそう。"}
 ]
 };
-    var ROUNDS = { s:10, j:5 }, NAMES = { s:'理科', j:'国語(読解)' };
+    var ROUNDS = { s:10, j:5, o:10 }, NAMES = { s:'理科', j:'国語(読解)', o:'社会' };
     var SCI = SCI_RAW.split('\n').map(function(l, i){ var p = l.split('|'); return { id:'s'+i, q:p[0], a:p[1], bad:[p[2], p[3], p[4]], cat:p[5], ill:p[6] || '' }; });
-    function get(){ var s = safeGet(KEY) || {}; s.s = s.s || {}; s.j = s.j || {}; s.rounds = s.rounds || 0; if(!s.day || s.day.d !== todayKey()) s.day = { d:todayKey(), n:0 }; return s; }
+    /* 社会(小3): 方位と地図・地図記号・店や農家/工場の仕事・くらしを守る・昔のくらし。
+       SOC_RAW は soc3.txt(問題|答え|ちがう1|ちがう2|ちがう3|分野|絵)。漢字《よみ》 は ルビに なる。絵の 先頭 ! は 答えたあとに 出す */
+    var SOC_RAW = "地図は ふつう、上が どの 方位《ほうい》?|北|南|東|西|方位と 地図|!compass\n北を 向いて 立つと、右手の 方は どの 方位《ほうい》?|東|西|南|北|方位と 地図|stand\n北の はんたいの 方位《ほうい》は?|南|東|西|北東|方位と 地図|!compass\n東の はんたいの 方位《ほうい》は?|西|北|南|東|方位と 地図|!compass\n学校から 見て、郵便局《ゆうびんきょく》は どの 方位《ほうい》?|北|南|東|西|方位と 地図|town\n学校から 見て、神社は どの 方位《ほうい》?|東|西|北|南|方位と 地図|town\n学校から 見て、病院は どの 方位《ほうい》?|南|北|東|西|方位と 地図|town\n学校から 見て、田が 広がって いるのは どの 方位《ほうい》?|西|東|北|南|方位と 地図|town\n学校から 見て、消防署《しょうぼうしょ》は どの 方位《ほうい》?|北東|北西|南東|南西|方位と 地図|town\n地図に 地図記号を つかう よい ところは?|せまい 地図にも、何が あるか わかりやすく かける|色が きれいに なる|字を おぼえなくて よい|地図が 大きく なる|方位と 地図|town\nこの 地図記号は 何?|小・中学校|郵便局《ゆうびんきょく》|病院|図書館|地図記号|sy:bun\nこの 地図記号は 何?|郵便局《ゆうびんきょく》|市役所|神社|交番|地図記号|sy:yubin\nこの 地図記号は 何?|病院|交番|寺|消防署《しょうぼうしょ》|地図記号|sy:byoin\nこの 地図記号は 何?|消防署《しょうぼうしょ》|病院|田|郵便局《ゆうびんきょく》|地図記号|sy:shobo\nこの 地図記号は 何?|警察署《けいさつしょ》|交番|市役所|病院|地図記号|sy:keisatsu\nこの 地図記号は 何?|交番|警察署《けいさつしょ》|寺|畑|地図記号|sy:koban\nこの 地図記号は 何?|神社|寺|学校|図書館|地図記号|sy:jinja\nこの 地図記号は 何?|寺|神社|交番|病院|地図記号|sy:tera\nこの 地図記号は 何?|図書館|学校|郵便局《ゆうびんきょく》|老人《ろうじん》ホーム|地図記号|sy:tosho\nこの 地図記号は 何?|老人《ろうじん》ホーム|神社|図書館|病院|地図記号|sy:rojin\nこの 地図記号は 何?|田|畑|茶畑|果樹園《かじゅえん》|地図記号|sy:ta\nこの 地図記号は 何?|畑|田|茶畑|針葉樹林《しんようじゅりん》|地図記号|sy:hatake\nこの 地図記号は 何?|果樹園《かじゅえん》|広葉樹林《こうようじゅりん》|畑|茶畑|地図記号|sy:kaju\nこの 地図記号は 何?|茶畑|果樹園《かじゅえん》|田|畑|地図記号|sy:cha\nこの 地図記号は 何?|針葉樹林《しんようじゅりん》|広葉樹林《こうようじゅりん》|畑|果樹園《かじゅえん》|地図記号|sy:shinyo\nこの 地図記号は 何?|市役所|町村役場|警察署《けいさつしょ》|郵便局《ゆうびんきょく》|地図記号|sy:shiyaku\nこの 地図記号は 何?|温泉《おんせん》|工場|神社|田|地図記号|sy:onsen\n消防署《しょうぼうしょ》の 地図記号は、何の 形から できた?|さすまた(昔の 火消しの 道具)|ホース|はしご|水の しずく|地図記号|!sy:shobo\n田の 地図記号は、何の 形から できた?|いねを かり取った あとの 形|田植えを する 人|水の 流れ|かかし|地図記号|!sy:ta\n野菜の ねふだに 書いて ある「産地《さんち》」とは?|その 野菜が とれた 場所|その 野菜を 売る 日|買った 人の 名前|野菜の 重さ|店ではたらく人|tag\nスーパーが 広告の ちらしを 出すのは なぜ?|安い 品物や おすすめを 知らせて、来て もらう ため|ごみを へらす ため|品物を へらす ため|店を 休む 日を かくす ため|店ではたらく人|flyer\nスーパーの 入り口などに ある、牛にゅうパックや トレーを 集める 回収《かいしゅう》ボックスは 何の ため?|リサイクル(しげんを もう一度 使う)|すてる ごみを ふやす|品物を ならべる|お金を 集める|店ではたらく人|recycle\n肉や 魚を、いろいろな 大きさや 量の パックに 分けて 売るのは なぜ?|家の 人数に 合わせて 買いやすい ように|重く する ため|早く くさらせる ため|店の 人が 食べる ため|店ではたらく人|pack\n日本で 売られて いる バナナが いちばん 多く 来る 国は?|フィリピン|アメリカ|フランス|ロシア|店ではたらく人|banana\n農家の 人が ビニールハウスを 使うのは なぜ?|寒い 時期でも 野菜を 育てられる ように|雨水を ためる ため|虫を ふやす ため|野菜を かくす ため|農家・工場の仕事|house\n食べ物を 作る 工場で はたらく 人が、白い ぼうしや 服を 着るのは なぜ?|かみの毛や ごみが 入らない ように|寒い から|目立つ ように|かっこいい から|農家・工場の仕事|factory\nとれた 野菜を、農家の 人が 自分で とどけて 売る 店を 何と いう?|直売所|コンビニ|郵便局《ゆうびんきょく》|図書館|農家・工場の仕事|stand2\n火事の とき、電話を かける 番号は?|119|110|117|177|くらしを守る|fire\n事件《じけん》や 事故《じこ》の とき、電話を かける 番号は?|110|119|117|177|くらしを守る|police\n119番の 電話を 受けて、消防車や 救急車《きゅうきゅうしゃ》に 出動を つたえる ところは?|通信指令《つうしんしれい》センター|交番|市役所|図書館|くらしを守る|fire\n道路の そばの「消火せん」は 何に 使う?|火を 消す 水を とる|手紙を 出す|ごみを すてる|雨を ためる|くらしを守る|hydrant\n消防士さんが 交代で 24時間 はたらいて いるのは なぜ?|火事や けがは いつ 起きるか わからない から|ねむく ならない から|消防署《しょうぼうしょ》に 家が ない から|夜だけ 火事が 起きる から|くらしを守る|fire\n「こども110番の 家」は、どんな 家?|こまった ときに 助けて もらえる 家|おかしを 売る 家|110円で 遊べる 家|警察官《けいさつかん》が 住む 家|くらしを守る|kodomo110\nこの 昔の 道具は、何に 使った?|せんたく|料理|そうじ|田植え|昔のくらし|washboard\nこの 昔の 道具「かまど」は、何に 使った?|ごはんを たく(料理)|せんたく|おふろ|手紙を 書く|昔のくらし|kamado\nこの 昔の 道具は、何?|電話|ラジオ|時計|テレビ|昔のくらし|phone\n昔の 道具を 見る ことが できる ところは?|博物館《はくぶつかん》や きょう土しりょう館|コンビニ|交番|プール|昔のくらし|museum\n昔と くらべて、今の 市で ふえた ものは?|道路や 大きな 建物|田や 畑|川の 魚|かやぶき屋根の 家|昔のくらし|then";
+    function ruby(t){ return String(t).replace(/([一-龥々]+)《([^》]+)》/g, '<ruby>$1<rt>$2</rt></ruby>'); }
+    function plain(t){ return String(t).replace(/([一-龥々]+)《[^》]+》/g, '$1'); }
+    var SOC = SOC_RAW.split('\n').map(function(l, i){ var p = l.split('|'); return { id:'o'+i, q:p[0], a:p[1], bad:[p[2], p[3], p[4]], cat:p[5], ill:p[6] || '' }; });
+    var SILL = (function(){
+      var K = 'stroke="#222" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"';
+      function W(b, h){ return '<svg class="gk-ill" viewBox="0 0 320 '+(h||150)+'" role="img" aria-hidden="true"><rect width="320" height="'+(h||150)+'" rx="14" fill="#f6f1e4"/>'+b+'</svg>'; }
+      function T(x, y, t, s, c){ return '<text x="'+x+'" y="'+y+'" font-size="'+(s||13)+'" font-weight="800" text-anchor="middle" fill="'+(c||'#35405a')+'">'+t+'</text>'; }
+      function E(x, y, e, s){ return '<text x="'+x+'" y="'+y+'" font-size="'+(s||40)+'" text-anchor="middle">'+e+'</text>'; }
+      /* 地図記号: まん中(0,0)・はば およそ 36 の 中に かく */
+      var S = {
+        bun:'<text x="0" y="13" font-size="36" font-weight="700" text-anchor="middle" fill="#222">文</text>',
+        yubin:'<circle r="17" '+K+'/><path d="M-9 -9H9M-9 -3H9M0 -3V12" '+K+'/>',
+        byoin:'<path d="M-15 -15H15V1Q15 13 0 17Q-15 13 -15 1Z" '+K+'/><path d="M0 -10V11M-10 0H10" '+K+' stroke-width="4"/>',
+        shobo:'<path d="M0 0V17M-12 -16V-8Q-12 0 0 0Q12 0 12 -8V-16" '+K+'/>',
+        keisatsu:'<circle r="17" '+K+'/><path d="M-9 -9L9 9M9 -9L-9 9" '+K+'/>',
+        koban:'<path d="M-13 -13L13 13M13 -13L-13 13" '+K+'/>',
+        jinja:'<path d="M-18 -12H18M-12 -4H12M-9 -12V16M9 -12V16" '+K+'/>',
+        tera:'<text x="0" y="13" font-size="36" font-weight="700" text-anchor="middle" fill="#222">卍</text>',
+        tosho:'<path d="M0 -8Q-8 -14 -16 -12V10Q-8 8 0 14Q8 8 16 10V-12Q8 -14 0 -8ZM0 -8V14" '+K+'/>',
+        rojin:'<path d="M-15 16V-3L0 -16L15 -3V16Z" '+K+'/><path d="M4 13V0Q4 -5 -1 -5" '+K+'/>',
+        ta:'<path d="M-12 -9V9M-6 -9V9M6 -9V9M12 -9V9" '+K+'/>',
+        hatake:'<path d="M-11 -9Q-8 5 0 10Q8 5 11 -9" '+K+'/>',
+        kaju:'<circle cx="0" cy="5" r="9" '+K+'/><path d="M0 -4V-14" '+K+'/>',
+        cha:'<circle cx="0" cy="-8" r="5" '+K+'/><circle cx="-9" cy="7" r="5" '+K+'/><circle cx="9" cy="7" r="5" '+K+'/>',
+        koyo:'<circle cx="0" cy="-4" r="10" '+K+'/><path d="M0 6V16" '+K+'/>',
+        shinyo:'<path d="M-10 6L0 -14L10 6M0 6V16" '+K+'/>',
+        shiyaku:'<circle r="17" '+K+'/><circle r="9" '+K+'/>',
+        onsen:'<text x="0" y="14" font-size="38" text-anchor="middle" fill="#222">♨</text>'
+      };
+      function sym(k, x, y, s){ return '<g transform="translate('+x+' '+y+') scale('+(s||1)+')">'+S[k]+'</g>'; }
+      function big(k){ return W('<rect x="110" y="25" width="100" height="100" rx="12" fill="#fff" stroke="#c9bfa6" stroke-width="2"/>' + sym(k, 160, 75, 2)); }
+      function compass(x, y){ return '<g transform="translate('+x+' '+y+')"><path d="M0 -20V22" stroke="#222" stroke-width="2.5"/><path d="M0 -20L-7 0H0Z" fill="#222"/><path d="M0 -20L7 0H0Z" fill="#fff" stroke="#222" stroke-width="1.5"/>'+T(0, -25, '北', 13, '#222')+'</g>'; }
+      var o = {};
+      o.compass = W(compass(160, 85) + T(160, 135, '方位記号(ほういきごう): 矢じるしの 先が 北', 13));
+      o.stand = W(T(160, 22, '北', 16, '#c0392b') + '<path d="M160 30V52" stroke="#c0392b" stroke-width="3"/><path d="M152 40L160 28L168 40" fill="none" stroke="#c0392b" stroke-width="3"/>' + E(160, 120, '🧍', 60) + T(110, 98, '左手', 13) + T(210, 98, '右手', 13) + T(160, 142, '(うしろから 見た ところ)', 11));
+      /* 町の 地図: 学校が まん中。北=郵便局、北東=消防署、東=神社、南=病院、西=田、北西=果樹園 */
+      var town = '<path d="M0 150H320" stroke="#e3dccb" stroke-width="12"/><path d="M215 0V210" stroke="#e3dccb" stroke-width="12"/>' +
+        '<path d="M0 190Q60 170 110 200" stroke="#7fbfe8" stroke-width="8" fill="none"/>' +
+        sym('bun', 160, 105, .85) + T(160, 132, '学校', 11) +
+        sym('yubin', 160, 35, .7) + sym('shobo', 262, 38, .7) + sym('jinja', 268, 105, .7) + sym('byoin', 160, 178, .7) +
+        sym('ta', 40, 92, .6) + sym('ta', 75, 108, .6) + sym('ta', 40, 124, .6) + sym('ta', 82, 78, .6) +
+        sym('kaju', 50, 35, .6) + sym('kaju', 80, 28, .6) + compass(298, 168);
+      o.town = W(town, 210);
+      o.tag = W('<rect x="70" y="30" width="180" height="90" rx="8" fill="#fff" stroke="#e0a400" stroke-width="3"/>' + T(160, 58, 'キャベツ  1玉', 16) + T(160, 82, '産地: 群馬県', 14, '#c0392b') + T(160, 108, '198円', 20));
+      o.flyer = W('<rect x="95" y="15" width="130" height="120" rx="6" fill="#fff8d0" stroke="#e0a400" stroke-width="2"/>' + T(160, 38, '本日の おすすめ!', 13, '#c0392b') + E(130, 82, '🥕', 30) + E(190, 82, '🍎', 30) + T(130, 112, '30円', 13) + T(190, 112, '80円', 13));
+      o.recycle = W(E(110, 100, '🥛', 46) + E(210, 100, '♻️', 50) + T(160, 135, '回収ボックス', 13));
+      o.pack = W(E(110, 95, '🥩', 34) + E(160, 95, '🥩🥩', 34) + T(110, 130, '1人分', 12) + T(175, 130, 'たっぷり', 12));
+      o.banana = W(E(160, 100, '🍌', 60) + T(160, 135, 'バナナは 外国から 船で 来る', 12));
+      o.house = W('<path d="M70 120V70Q160 10 250 70V120Z" fill="#e8f4ff" stroke="#9cb7cc" stroke-width="3"/>' + E(120, 112, '🍅', 28) + E(160, 112, '🥒', 28) + E(200, 112, '🍓', 28) + E(270, 50, '❄️', 24));
+      o.factory = W(E(160, 105, '🏭', 64) + E(250, 70, '🧑‍🍳', 34));
+      o.stand2 = W(E(160, 100, '🥬🥕🍆', 40) + T(160, 135, '〇〇さんの 畑で とれました', 12));
+      o.fire = W(E(110, 100, '🚒', 54) + E(210, 100, '🚑', 54));
+      o.police = W(E(160, 100, '🚓', 60));
+      o.hydrant = W('<rect x="140" y="60" width="40" height="60" rx="8" fill="#d63a2f"/><rect x="132" y="52" width="56" height="12" rx="5" fill="#b02a20"/><circle cx="160" cy="88" r="7" fill="#f2f2f2"/><rect x="120" y="120" width="80" height="8" fill="#888"/>' + T(160, 142, '消火せん', 12));
+      o.kodomo110 = W('<rect x="60" y="45" width="200" height="60" rx="10" fill="#fff36b" stroke="#e0a400" stroke-width="3"/>' + T(160, 72, 'こども110番の家', 18, '#c0392b') + T(160, 94, '🏠', 16));
+      o.washboard = W('<ellipse cx="160" cy="120" rx="80" ry="16" fill="#c49a6c"/><rect x="80" y="104" width="160" height="16" fill="#c49a6c"/><rect x="128" y="25" width="64" height="100" rx="5" fill="#e3c18e" stroke="#9b7140" stroke-width="2"/>' +
+        [40, 50, 60, 70, 80, 90, 100].map(function(y){ return '<path d="M134 '+y+'H186" stroke="#9b7140" stroke-width="3"/>'; }).join(''));
+      o.kamado = W('<path d="M90 130V80Q160 50 230 80V130Z" fill="#b5a28a" stroke="#7a6a55" stroke-width="3"/><ellipse cx="160" cy="70" rx="34" ry="10" fill="#333"/><path d="M130 70Q160 40 190 70" fill="#555"/><path d="M140 130V108Q160 92 180 108V130Z" fill="#2a1a10"/>' + E(160, 128, '🔥', 22));
+      o.phone = W('<path d="M100 125L115 75H205L220 125Z" fill="#222"/><rect x="95" y="52" width="130" height="18" rx="9" fill="#222"/><circle cx="160" cy="102" r="20" fill="#eee"/>' +
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(function(i){ var a = (i*30 - 60)*Math.PI/180; return '<circle cx="'+(160+13*Math.cos(a)).toFixed(1)+'" cy="'+(102+13*Math.sin(a)).toFixed(1)+'" r="3" fill="#222"/>'; }).join(''));
+      o.museum = W(E(160, 105, '🏛️', 64));
+      o.then = W(T(85, 25, 'むかし', 14) + T(235, 25, 'いま', 14) + E(85, 100, '🌾🛖', 38) + E(235, 100, '🏢🚃', 38) + '<path d="M150 85H170M164 79L170 85L164 91" stroke="#35405a" stroke-width="3" fill="none"/>');
+      return function(k){
+        if(!k) return '';
+        k = k.replace(/^!/, '');
+        if(k.indexOf('sy:') === 0) return big(k.slice(3));
+        return o[k] || '';
+      };
+    })();
+    function socQ(e){
+      var post = e.ill.charAt(0) === '!';
+      return { id:e.id, map:'o', tag:'社会 ('+e.cat+')', html:(post ? '' : SILL(e.ill)) + '<div class="gk-text">'+ruby(e.q)+'</div>', post:post ? SILL(e.ill) : '',
+        a:ruby(e.a), bad:e.bad.map(ruby), say:'答えは「'+plain(e.a)+'」' };
+    }
+    function get(){ var s = safeGet(KEY) || {}; s.s = s.s || {}; s.j = s.j || {}; s.o = s.o || {}; s.rounds = s.rounds || 0; if(!s.day || s.day.d !== todayKey()) s.day = { d:todayKey(), n:0 }; return s; }
     function put(s){ safeSet(KEY, s); }
     function rnd(n){ return Math.floor(Math.random()*n); }
     function shuffle(a){ for(var i = a.length-1; i > 0; i--){ var j = rnd(i+1), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
@@ -12017,7 +12094,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var jn = Object.keys(s.j).filter(function(x){ return s.j[x].ok > 0; }).length;
       c.innerHTML = '<section class="gk-card"><span class="gk-ico k">漢</span><span class="fc-text"><b>漢字ドリル</b>書き順と 宝探し・お散歩の 宝物が コインに</span><a class="fc-go" href="'+KANJI_URL+'" target="_blank" rel="noopener" style="text-decoration:none">ひらく</a></section>' +
         '<section class="gk-card" data-sub="s"><span class="gk-ico s">理</span><span class="fc-text"><b>理科（小3）</b>もんだい '+sn+'/'+SCI.length+' こ せいかい</span><button class="fc-go" data-sub="s" style="background:var(--op-sub)">れんしゅう</button></section>' +
-        '<section class="gk-card" data-sub="j"><span class="gk-ico" style="background:var(--op-div)">国</span><span class="fc-text"><b>国語・読解（小3）</b>もんだい '+jn+'/'+KOKU.qs.length+' こ せいかい</span><button class="fc-go" data-sub="j" style="background:var(--op-div)">れんしゅう</button></section>';
+        '<section class="gk-card" data-sub="j"><span class="gk-ico" style="background:var(--op-div)">国</span><span class="fc-text"><b>国語・読解（小3）</b>もんだい '+jn+'/'+KOKU.qs.length+' こ せいかい</span><button class="fc-go" data-sub="j" style="background:var(--op-div)">れんしゅう</button></section>' +
+        '<section class="gk-card" data-sub="o"><span class="gk-ico" style="background:var(--op-add)">社</span><span class="fc-text"><b>社会（小3）</b>もんだい '+Object.keys(s.o).filter(function(x){ return s.o[x].ok > 0; }).length+'/'+SOC.length+' こ せいかい</span><button class="fc-go" data-sub="o" style="background:var(--op-add)">れんしゅう</button></section>';
     }
     function menu(){
       var s = get(), left = Math.max(0, DAY_CAP - s.day.n);
@@ -12026,7 +12104,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('gkSubs').innerHTML = '<a class="gk-sub" href="'+KANJI_URL+'" target="_blank" rel="noopener" style="text-decoration:none"><span class="gk-ico" style="font-size:30px">漢</span><span><b>漢字ドリル</b><small>書き順・宝探し(お散歩の 宝物が コインに なるよ)</small></span></a>' +
         '<button class="gk-sub" data-sub="s"><span class="gk-ico" style="font-size:30px">理</span><span><b>理科（小3）</b><small>もんだい 40こ・植物 こん虫 光 じしゃく など</small></span></button>' +
         '<button class="gk-sub" data-sub="j"><span class="gk-ico" style="font-size:30px">国</span><span><b>国語・読解（小3）</b><small>短い 文を 読んで、聞かれている ことを つかまえよう</small></span></button>' +
-        '<div class="gk-sub soon"><span style="font-size:28px">🗺️</span><span><b>社会</b><small>もうすぐ（おうちの人と 決めるよ）</small></span></div>';
+        '<button class="gk-sub" data-sub="o"><span class="gk-ico" style="font-size:30px">社</span><span><b>社会（小3）</b><small>方位と 地図記号・お店や 農家の 仕事・火事や 事故から 守る・昔の くらし</small></span></button>' +
+        '<a class="gk-sub" href="'+'https://claude.ai/artifact/M6LgcV5hc49phZvMSAcuZB'+'" target="_blank" rel="noopener" style="text-decoration:none"><span style="font-size:30px">🗾</span><span><b>地図で 遊ぼう</b><small>47都道府県の パズル・どこクイズ(4年生の 先どり)・世界の 国</small></span></a>';
       show('menu');
     }
     function start(sub){
@@ -12034,9 +12113,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(sub === 'j'){
         var all = KOKU.qs.map(function(e, i){ return kokuQ(e, i); });
         qs = pickSet(all, s.j, function(e){ return e.id; }, ROUNDS.j);
-      }else qs = pickSet(SCI, s.s, function(e){ return e.id; }, ROUNDS.s).map(sciQ);
+      }else if(sub === 'o') qs = pickSet(SOC, s.o, function(e){ return e.id; }, ROUNDS.o).map(socQ);
+      else qs = pickSet(SCI, s.s, function(e){ return e.id; }, ROUNDS.s).map(sciQ);
       S = { sub:sub, qs:shuffle(qs), i:0, ok:0, res:[], step:0 };
-      $('gkTitle').textContent = sub === 'j' ? '国語・読解（小3）' : '理科（小3）';
+      $('gkTitle').textContent = sub === 'j' ? '国語・読解（小3）' : sub === 'o' ? '社会（小3）' : '理科（小3）';
       show('play'); ask();
     }
     function ask(){
