@@ -728,6 +728,11 @@
   .tb-item.tb-have{ cursor:pointer; background:color-mix(in srgb, var(--gold) 16%, var(--surface)); border-color:var(--gold-deep); }
   .tb-cg{ display:flex; gap:12px; justify-content:center; } .tb-cg span{ display:grid; justify-items:center; font-size:12px; }
   #bkBody .tb-pc{ margin:8px 0; }
+  .tb-pf.far{ opacity:.4; border-style:dashed; }
+  .tb-home1{ margin:0; font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px; }
+  .tb-hedit{ border:1.5px solid var(--line); background:var(--surface); color:var(--ink-soft); border-radius:100px; padding:2px 10px; font:inherit; font-size:11.5px; font-weight:900; cursor:pointer; }
+  .tb-range{ margin:0; font-size:13px; font-weight:700; line-height:1.6; border-radius:12px; padding:8px 10px; background:color-mix(in srgb, var(--gold) 14%, var(--surface)); }
+  .tb-range.r2{ background:color-mix(in srgb, var(--good) 12%, var(--surface)); }
 </style></head><body>
 <title>けいさんチャレンジ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12385,6 +12390,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function plain(s){ return String(s).replace(/《.+?》/g, ''); }
     function pname(p){ return PREFS[p - 1][1]; }
     function regOf(p){ for(var i = 0; i < REG.length; i++) if(p >= REG[i][1] && p <= REG[i][2]) return i; return 0; }
+    /* 行ける はんい: 小さい子は 近くまで。Lv が 上がると 遠くへ。とべる子・大きい子は どこでも */
+    var SMALL = { chick:1, hamster:1, squirrel:1, mouse:1, rabbit:1 }, BIG = { dragon:1, owl:1, unicorn:1, whale:1, dolphin:1, horse:1, cow:1, bear:1, tiger:1 };
+    var RANGE = [150, 360, Infinity], RNAME = ['近くの 県', 'となりの 地方くらい', '日本の どこでも'];
+    var CEN = {}; PREFS.forEach(function(x){ CEN[x[0]] = [(x[3][0] + x[3][2]) / 2, (x[3][1] + x[3][3]) / 2]; });
+    function dist(a, b){ if(a === b) return 0; if(a === 47 || b === 47) return 9999; return Math.hypot(CEN[a][0] - CEN[b][0], CEN[a][1] - CEN[b][1]); }
+    function step(sp){ return Math.min(2, (SMALL[sp] ? 0 : BIG[sp] ? 2 : 1) + lvOf(sp)); }
+    function canGo(sp, p){ var hm = tabiGet().home; return !hm || dist(hm, p) <= RANGE[step(sp)]; }
     function save(v){ v.t = Date.now(); safeSet(K, v); }
     function owned(){ var p = getPets() || {}; return Object.keys(p.owned || {}); }
     function lvOf(sp){ var o = (getPets() || {}).owned || {}; return o[sp] || 0; }
@@ -12442,10 +12454,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         (opt.small ? '' : '<span class="tb-cap">' + rb(d.spot) + '</span>') + '</div>';
     }
     /* 日本地図: hi=赤 / seen=行った(みどり) / pick 用に data-p */
-    function map(hi, seen, cls){
+    function map(hi, seen, cls, far, home){
       var g = PREFS.map(function(x){
-        var p = x[0], on = hi.indexOf(p) >= 0, v = seen && seen[p];
-        return '<path data-p="' + p + '" d="' + x[2] + '" fill="' + (on ? '#e8584a' : v ? '#8fd39a' : '#fbfaf3') + '" stroke="' + (on ? '#8a2318' : '#8796a2') + '" stroke-width="' + (on ? 4 : 1.5) + '" stroke-linejoin="round" fill-rule="evenodd"/>';
+        var p = x[0], on = hi.indexOf(p) >= 0, v = seen && seen[p], fr = far && far(p);
+        return '<path data-p="' + p + '"' + (fr ? ' data-far="1"' : '') + ' d="' + x[2] + '" fill="' + (on ? '#e8584a' : p === home ? '#ffd24c' : fr ? '#b9b4c2' : v ? '#8fd39a' : '#fbfaf3') + '" stroke="' + (on ? '#8a2318' : '#8796a2') + '" stroke-width="' + (on ? 4 : 1.5) + '" stroke-linejoin="round" fill-rule="evenodd"/>';
       }).join('');
       return '<svg class="tb-map ' + (cls || '') + '" viewBox="-280 0 1270 950" role="img" aria-label="日本地図"><rect x="-280" width="1270" height="950" rx="40" fill="#d9e9f1"/>' + g +
         '<rect x="-272" y="745" width="280" height="200" fill="none" stroke="#8796a2" stroke-width="3" stroke-dasharray="14 10"/></svg>';
@@ -12533,11 +12545,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           }).join('') + '</div>';
         }
       }
-      var s = seenMap();
-      h += '<h3 class="tb-q">② どこへ 行く?</h3><p class="tb-note">地図を タップするか、下から えらんでね。みどりは 行った ことの ある ところ。</p>' +
-        '<div class="tb-pickmap" id="tbPickMap">' + map(pick.p ? [pick.p] : [], s) + '</div>' +
+      var s = seenMap(), hm = tabiGet().home;
+      if(!hm || pick.homeEdit){
+        h += '<h3 class="tb-q">🏠 おうちは どこの 県?</h3><p class="tb-note">おうちから 近い ところ・遠い ところが わかるように、さいしょに えらんでね。</p>' +
+          '<div class="tb-regs">' + REG.map(function(r, i){ return '<button class="tb-reg' + ((pick.hreg || 0) === i ? ' sel' : '') + '" data-hreg="' + i + '">' + r[0] + '</button>'; }).join('') + '</div><div class="tb-prefs">';
+        for(var q = REG[pick.hreg || 0][1]; q <= REG[pick.hreg || 0][2]; q++) h += '<button class="tb-pf' + (hm === q ? ' sel' : '') + '" data-home="' + q + '">' + pname(q) + '</button>';
+        return h + '</div></div>';
+      }
+      var st = step(pick.sp);
+      if(pick.p && !canGo(pick.sp, pick.p)) pick.p = null;
+      h += '<p class="tb-home1">🏠 おうち: <b>' + pname(hm) + '</b><button class="tb-hedit" id="tbHomeEdit">かえる</button></p>';
+      h += '<p class="tb-range r' + st + '">' + petName(pick.sp) + 'が 行けるのは <b>' + RNAME[st] + '</b>' +
+        (st < 2 ? (SMALL[pick.sp] && lvOf(pick.sp) === 0 ? '。小さいから、まだ 遠くへは 行けないよ' : '') + '。レベルが 上がると もっと 遠くへ 行けるよ!' : '!') + '</p>';
+      h += '<h3 class="tb-q">② どこへ 行く?</h3><p class="tb-note">地図を タップするか、下から えらんでね。みどりは 行った ことの ある ところ、灰色は まだ 遠すぎる ところ。</p>' +
+        '<div class="tb-pickmap" id="tbPickMap">' + map(pick.p ? [pick.p] : [], s, '', function(p){ return !canGo(pick.sp, p); }, hm) + '</div>' +
         '<div class="tb-regs">' + REG.map(function(r, i){ return '<button class="tb-reg' + (pick.reg === i ? ' sel' : '') + '" data-reg="' + i + '">' + r[0] + '</button>'; }).join('') + '</div><div class="tb-prefs">';
-      for(var p = REG[pick.reg][1]; p <= REG[pick.reg][2]; p++) h += '<button class="tb-pf' + (pick.p === p ? ' sel' : '') + (s[p] ? ' seen' : '') + '" data-p="' + p + '">' + pname(p) + '</button>';
+      for(var p = REG[pick.reg][1]; p <= REG[pick.reg][2]; p++) h += '<button class="tb-pf' + (pick.p === p ? ' sel' : '') + (s[p] ? ' seen' : '') + (canGo(pick.sp, p) ? '' : ' far') + '" data-p="' + p + '">' + pname(p) + '</button>';
       h += '</div><button class="tb-rand" id="tbRand">🎲 おまかせ</button>';
       if(pick.p){
         h += '<div class="tb-sel">' + postcard(null, pick.p, { small:true }) + '<span><b>' + pname(pick.p) + 'へ 行くよ</b><small>' + rb(D[pick.p].spot) + 'に 行ってみたいな。おみやげは 帰ってからの おたのしみ!</small></span></div>';
@@ -12583,6 +12606,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(v.trip || !pick.p || !pick.sp) return;
       var sub = pick.sp === a.sp ? pick.sub : null;
       if(pick.sp === a.sp && !sub) return;
+      if(!canGo(pick.sp, pick.p)) return;
       if(!buyGate(PRICE, petName(pick.sp) + 'を ' + pname(pick.p) + 'へ?', postcard(pick.sp, pick.p, { small:true }), 'いってらっしゃい', go)) return;
       var got = v.got || {}, i = got[pick.p + '-0'] && !got[pick.p + '-1'] ? 1 : got[pick.p + '-1'] && !got[pick.p + '-0'] ? 0 : Math.random() < .5 ? 0 : 1;
       var now = Date.now();
@@ -12612,9 +12636,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var b;
       if((b = e.target.closest('[data-sp]'))){ pick.sp = b.getAttribute('data-sp'); render(); return; }
       if((b = e.target.closest('[data-sub]'))){ pick.sub = b.getAttribute('data-sub'); render(); return; }
+      if((b = e.target.closest('[data-hreg]'))){ pick.hreg = +b.getAttribute('data-hreg'); render(); return; }
+      if((b = e.target.closest('[data-home]'))){ var hv = tabiGet(); hv.home = +b.getAttribute('data-home'); save(hv); pick.homeEdit = false; pick.reg = regOf(hv.home); render(); return; }
+      if(e.target.closest('#tbHomeEdit')){ pick.homeEdit = true; pick.hreg = regOf(tabiGet().home); render(); return; }
       if((b = e.target.closest('[data-reg]'))){ pick.reg = +b.getAttribute('data-reg'); render(); return; }
-      if((b = e.target.closest('#tbPickMap [data-p], .tb-prefs [data-p]'))){ pick.p = +b.getAttribute('data-p'); pick.reg = regOf(pick.p); render(); return; }
-      if(e.target.closest('#tbRand')){ var s = seenMap(), c = []; for(var p = 1; p <= 47; p++) if(!s[p] && p !== pick.p) c.push(p); if(!c.length) for(p = 1; p <= 47; p++) if(p !== pick.p) c.push(p); pick.p = any(c); pick.reg = regOf(pick.p); render(); return; }
+      if((b = e.target.closest('#tbPickMap [data-p], .tb-prefs [data-p]'))){ if(!canGo(pick.sp, +b.getAttribute('data-p'))){ toast(pname(+b.getAttribute('data-p')) + 'は ' + petName(pick.sp) + 'には まだ 遠すぎるよ'); return; } pick.p = +b.getAttribute('data-p'); pick.reg = regOf(pick.p); render(); return; }
+      if(e.target.closest('#tbRand')){ var s = seenMap(), c = []; for(var p = 1; p <= 47; p++) if(!s[p] && p !== pick.p && canGo(pick.sp, p)) c.push(p); if(!c.length) for(p = 1; p <= 47; p++) if(canGo(pick.sp, p)) c.push(p); pick.p = any(c); pick.reg = regOf(pick.p); render(); return; }
       if(e.target.closest('#tbGo')){ go(); return; }
       if(e.target.closest('#tbOpen, #tbOpen2')){ openGift(); return; }
       if((b = e.target.closest('#tbBookMap [data-p]'))){ var q = +b.getAttribute('data-p'); if(seenMap()[q]) cardModal(q); else toast(pname(q) + 'は まだ 行って いないよ'); return; }
