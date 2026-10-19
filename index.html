@@ -1772,6 +1772,11 @@
   .g3btn{ display:block; width:100%; margin-top:8px; padding:8px 12px; border-radius:14px; border:2.5px solid var(--op-mul); background:#fff; color:var(--ink); font-weight:900; font-size:14px; text-align:center; }
   .g3btn small{ display:block; font-size:11px; font-weight:800; color:var(--ink-soft); margin-top:2px; }
   .equation:has(.wp){ white-space:normal; width:100%; }
+  .wp-eq{ display:flex; align-items:center; justify-content:center; gap:8px; margin:8px 0 2px; font-size:24px; font-weight:800; white-space:nowrap; }
+  .wp-l{ font-size:15px; color:var(--ink-soft); }
+  .wp-ops{ display:inline-flex; gap:5px; }
+  .wp-op{ width:44px; height:44px; border-radius:12px; border:2.5px solid var(--line, #E3D6C0); background:var(--surface-2, #fff); color:var(--ink); font:inherit; font-size:22px; font-weight:900; cursor:pointer; }
+  .wp-op.on{ background:var(--live, #1FA98E); border-color:var(--live, #1FA98E); color:#fff; }
   .wp{ font-size:20px; line-height:1.8; font-weight:800; text-align:left; padding:6px 10px; white-space:normal; }
   .rec-rule{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin:8px 0 10px; line-height:1.6; }
   .rec-go{ width:100%; border:none; border-radius:18px; padding:15px; font:inherit; font-size:18px; font-weight:900; color:#fff; background:var(--gold-deep); box-shadow:0 5px 0 color-mix(in srgb, var(--gold-deep) 60%, #000); cursor:pointer; }
@@ -4502,32 +4507,36 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   /* ---------- 文章題 ---------- */
   var WP_NAMES = ['はるか', 'そうた', 'みお', 'ゆうと', 'あおい', 'けんた', 'ひなた', 'りく'];
   var WP_T = {
-    add: ['{n}さんは 朝に {a}こ、夕方に {b}こ どんぐりを ひろいました。全部で 何こ ですか。',
-          '公園に {a}人 いました。そこへ {b}人 来ました。みんなで 何人 ですか。',
-          '{a}円の ノートと {b}円の えんぴつを 買います。合わせて 何円 ですか。',
-          '図書室で {n}さんは 先週 {a}ページ、今週 {b}ページ 本を 読みました。合わせて 何ページ ですか。',
-          '遠足で 行きは {a}m、帰りは {b}m 歩きました。全部で 何m ですか。',
-          '{n}さんの 学校の 1年生は {a}人、2年生は {b}人 です。合わせて 何人 ですか。'],
-    sub: ['{n}さんは {a}円 持っています。{b}円の おかしを 買うと、のこりは 何円 ですか。',
-          '{a}ページの 本を {b}ページ 読みました。のこりは 何ページ ですか。',
-          'バスに {a}人 のっていました。{b}人 おりると、何人に なりますか。',
-          '{a}まいの 色紙の うち、{b}まい つかいました。のこりは 何まい ですか。',
-          '{n}さんは シールを {a}まい 持っていました。ともだちに {b}まい あげました。のこりは 何まい ですか。',
-          '{a}mの リボンから {b}m 切り取りました。のこりは 何m ですか。'],
-    mul: ['1箱に {a}こ 入った クッキーが {b}箱 あります。全部で 何こ ですか。',
-          '1人に {a}まいずつ、{b}人に 色紙を くばります。全部で 何まい いりますか。',
-          '1本 {a}円の ジュースを {b}本 買います。何円 ですか。',
-          '1つの テーブルに {a}人 すわれます。テーブルが {b}つ あると、全部で 何人 すわれますか。',
-          '1日に {a}ページずつ、{b}日間 ドリルを やります。全部で 何ページ ですか。',
-          '1ふくろに みかんが {a}こ 入っています。{b}ふくろでは、みかんは 全部で 何こ ですか。'],
-    div: ['{a}この あめを {b}人で 同じ数ずつ 分けます。1人 何こ ですか。',
-          '{a}円で 1こ {b}円の ガムを 買います。何こ 買えますか。',
-          '{a}まいの 紙を {b}まいずつ たばにします。何たば できますか。',
-          '{a}人の 子どもが、{b}人ずつ 1つの 車に のります。車は 何台 いりますか。',
-          '{a}この りんごを {b}つの かごに 同じ数ずつ 入れます。1つの かごに 何こ ですか。',
-          '{a}ページの ドリルを 1日 {b}ページずつ やります。何日で 終わりますか。']
+    add: ['{n}さんは、朝に{a}個、夕方に{b}個、どんぐりを拾いました。全部で何個ですか。',
+          '公園に{a}人いました。そこへ{b}人来ました。みんなで何人ですか。',
+          '{a}円のノートと{b}円のえんぴつを買います。合わせて何円ですか。',
+          '{n}さんは、先週{a}ページ、今週{b}ページ、本を読みました。合わせて何ページですか。',
+          '遠足で、行きは{a}m、帰りは{b}m歩きました。全部で何m歩きましたか。',
+          '{n}さんの学校の1年生は{a}人、2年生は{b}人です。合わせて何人ですか。'],
+    sub: ['{n}さんは{a}円持っています。{b}円のお菓子を買うと、残りは何円ですか。',
+          '{a}ページの本を、{b}ページ読みました。残りは何ページですか。',
+          'バスに{a}人乗っていました。{b}人降りると、何人になりますか。',
+          '色紙が{a}枚ありました。そのうち{b}枚使いました。残りは何枚ですか。',
+          '{n}さんはシールを{a}枚持っていました。友達に{b}枚あげました。残りは何枚ですか。',
+          '{a}mのリボンから{b}m切り取りました。残りは何mですか。'],
+    mul: ['1箱に{a}個入ったクッキーが、{b}箱あります。全部で何個ですか。',
+          '1人に{a}枚ずつ、{b}人に色紙を配ります。全部で何枚いりますか。',
+          '1本{a}円のジュースを{b}本買います。何円ですか。',
+          '1つのテーブルに{a}人座れます。テーブルが{b}つあると、全部で何人座れますか。',
+          '1日に{a}ページずつ、{b}日間ドリルをやります。全部で何ページですか。',
+          '1袋にみかんが{a}個入っています。{b}袋では、みかんは全部で何個ですか。'],
+    div: ['{a}個のあめを、{b}人で同じ数ずつ分けます。1人何個ですか。',
+          '{a}円で、1個{b}円のガムを買います。何個買えますか。',
+          '{a}枚の紙を、{b}枚ずつ束にします。何束できますか。',
+          '{a}人の子どもが、{b}人ずつ1台の車に乗ります。車は何台いりますか。',
+          '{a}個のりんごを、{b}つのかごに同じ数ずつ入れます。1つのかごに何個ですか。',
+          '{a}ページのドリルを、1日{b}ページずつやります。何日で終わりますか。']
   };
   var WP_USED = {};
+  var WP_RB = { '個':'こ', '枚':'まい', '袋':'ふくろ', '束':'たば', '残':'のこ', '菓':'か', '座':'すわ', '降':'お', '要':'よう' };
+  function wpRuby(t){ return t.replace(/[個枚袋束残菓座降要]/g, function(c){ return '<ruby>' + c + '<rt>' + WP_RB[c] + '</rt></ruby>'; }); }
+  function wpOpsHtml(q){ return ['add','sub','mul','div'].map(function(o){ return '<button type="button" class="wp-op'+(q.opSel === o ? ' on' : '')+'" data-op="'+o+'">'+OP_META[o].symbol+'</button>'; }).join(''); }
+  function wpNeedsOp(q){ return !!(q && q.word && !q.hard); }
   function wpPick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
   function wpTemplate(op){
     var list = WP_T[op], used = WP_USED[op] || (WP_USED[op] = []);
@@ -4541,11 +4550,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(hard){
       if(kind === 0){
         var pr = pick(3, 9) * 10, k = pick(2, 5), cost = pr * k, paid = Math.ceil(cost / 100) * 100; if(paid === cost) paid += 100;
-        q = { a:pr, b:k, answer:paid - cost, text:wpFill('1こ ' + pr + '円の ガムを ' + k + 'こ 買って、' + paid + '円 出しました。おつりは 何円 ですか。', {}) };
+        q = { a:pr, b:k, answer:paid - cost, text:'1個' + pr + '円のガムを' + k + '個買って、' + paid + '円出しました。おつりは何円ですか。' };
         q.op = 'mul';
       }else{
         var per = pick(3, 9), bx = pick(2, 6), ex = pick(2, 9);
-        q = { a:per, b:bx, answer:per * bx + ex, text:'1箱に ' + per + 'こ 入った クッキーが ' + bx + '箱と、ばらが ' + ex + 'こ あります。全部で 何こ ですか。' };
+        q = { a:per, b:bx, answer:per * bx + ex, text:'1箱に' + per + '個入ったクッキーが' + bx + '箱と、ばらが' + ex + '個あります。全部で何個ですか。' };
         q.op = 'mul';
       }
     }else{
@@ -7154,7 +7163,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function renderProblem(){
     if(state.print && state.print.kind==='challenge') updateLevelTag();
     state.inputBuf = ''; state.hsCells = null; state.hsSel = 0; state.hsCarry = null; state.hsCSel = -1;
-    var q = state.current;
+    var q = state.current; q.opSel = null;
     var meta = OP_META[q.op];
     if(q.hs == null) q.hs = useHissan(q);   /* 自動で決めて、ボタンで切りかえられる */
     state.hissan = q.hs;
@@ -7184,7 +7193,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         state.hsCSel = state.hsCSel === i ? -1 : i; updateAnswerBox();
       });
     }else{
-      $('equation').innerHTML = q.word ? '<div class="wp">' + q.text + '</div>' : q.a + ' <span class="op-sym">'+meta.symbol+'</span> ' + q.b + ' =';
+      $('equation').innerHTML = q.word ? '<div class="wp">' + wpRuby(q.text) + '</div>' + (wpNeedsOp(q) ? '<div class="wp-eq"><span class="wp-l">式</span><span class="wp-n">' + q.a + '</span><span class="wp-ops">' + wpOpsHtml(q) + '</span><span class="wp-n">' + q.b + '</span><span class="wp-l">=</span></div>' : '<div class="wp-eq"><span class="wp-l">2回 計算して 答えを 出そう</span></div>') : q.a + ' <span class="op-sym">'+meta.symbol+'</span> ' + q.b + ' =';
     }
     $('answerBox').hidden = state.hissan;
     $('hsTip').hidden = !state.hissan;
@@ -7229,7 +7238,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       box.textContent = '?';
       box.classList.add('placeholder');
     }
-    $('okKey').disabled = state.inputBuf.length===0;
+    $('okKey').disabled = state.inputBuf.length===0 || (wpNeedsOp(state.current) && !state.current.opSel);
   }
 
   function pushDigit(d){
@@ -7281,7 +7290,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(state.inputBuf.length===0 || busy) return;
     var val = parseInt(state.inputBuf,10);
     var correct = state.current;
-    var isGood = val === correct.answer;
+    var isGood = val === correct.answer && (!wpNeedsOp(correct) || correct.opSel === correct.op);
     busy = true;
 
     if(state.mode==='accuracy' || state.mode==='jump'){
@@ -7782,6 +7791,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(e.key === 'Enter' && Date.now() - (state.resultAt||0) > 1200){ e.preventDefault(); $('retryBtn').click(); }
   });
 
+  document.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('.wp-op');
+    if(!b || busy || !wpNeedsOp(state.current)) return;
+    state.current.opSel = b.getAttribute('data-op');
+    Array.prototype.forEach.call(document.querySelectorAll('.wp-op'), function(x){ x.classList.toggle('on', x === b); });
+    updateAnswerBox();
+  });
   /* ---------- input wiring ---------- */
   $('numpad').addEventListener('click', function(e){
     var btn = e.target.closest('.key');
