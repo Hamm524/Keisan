@@ -1888,10 +1888,12 @@
   .wp-l{ font-size:15px; color:var(--ink-soft); }
   .wp-ops{ display:flex; justify-content:center; gap:8px; margin:6px 0 2px; }
   .wp-o{ min-width:40px; }
+  .wp-u{ min-width:36px; }
+  .wp-un{ width:auto; min-width:42px; padding:0 8px; font-size:17px; }
   .wp-box{ cursor:pointer; }
   .wp-hint{ text-align:center; font-size:12px; font-weight:700; color:var(--ink-soft); margin:0 0 2px; }
   .wp-op{ width:42px; height:38px; border-radius:12px; border:2.5px solid var(--line, #E3D6C0); background:var(--surface-2, #fff); color:var(--ink); font:inherit; font-size:20px; font-weight:900; cursor:pointer; }
-  .wp-box{ min-width:52px; height:42px; padding:0 6px; border-radius:12px; border:2.5px solid var(--line, #E3D6C0); background:var(--surface-2, #fff); display:inline-flex; align-items:center; justify-content:center; font-size:24px; font-weight:900; }
+  .wp-box{ min-width:46px; height:42px; padding:0 5px; border-radius:12px; border:2.5px solid var(--line, #E3D6C0); background:var(--surface-2, #fff); display:inline-flex; align-items:center; justify-content:center; font-size:24px; font-weight:900; }
   .wp-box.act{ border-color:var(--live, #1FA98E); box-shadow:0 0 0 3px color-mix(in srgb, var(--live, #1FA98E) 22%, transparent); }
   .wp-step{ text-align:center; font-size:13px; font-weight:800; color:var(--ink-soft); margin:2px 0 4px; }
   .wp-op.on{ background:var(--live, #1FA98E); border-color:var(--live, #1FA98E); color:#fff; }
@@ -4665,9 +4667,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     for(var i = 0; i < n; i++){
       h += '<div class="wp-eq"><span class="wp-l">式' + (n > 1 ? WP_CIRC[i + 1] : '') + '</span>' +
         '<span class="wp-box" id="wp' + i + 'a">?</span><span class="wp-box wp-o" id="wp' + i + 'o">?</span><span class="wp-box" id="wp' + i + 'b">?</span>' +
-        '<span class="wp-l">=</span><span class="wp-box" id="wp' + i + 'r">?</span></div>';
+        '<span class="wp-l">=</span><span class="wp-box" id="wp' + i + 'r">?</span>' + (i === n - 1 ? '<span class="wp-box wp-u" id="wpU">?</span>' : '') + '</div>';
     }
-    return h + '<div class="wp-ops" id="wpOps">' + wpOpsHtml() + '</div><div class="wp-step" id="wpStep"></div><div class="wp-hint" id="wpHint">まちがえたら ⌫ か、直したい 所を タップ</div><div id="wpHs"></div>';
+    return h + '<div class="wp-ops" id="wpOps">' + wpOpsHtml() + '</div><div class="wp-ops" id="wpUnits" style="display:none">' + q.unitOpts.map(function(u){ return '<button type="button" class="wp-op wp-un" data-u="' + u + '">' + u + '</button>'; }).join('') + '</div><div class="wp-step" id="wpStep"></div><div class="wp-hint" id="wpHint">まちがえたら ⌫ か、直したい 所を タップ</div><div id="wpHs"></div>';
   }
   function wpHsOk(q){
     var x = q.inp[Math.floor(q.stage / 4)];
@@ -4696,11 +4698,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var s = Math.floor(idx / 4), f = idx % 4;
     WP_FIELDS.forEach(function(k, fi){ if(fi >= f) delete q.inp[s][k]; });
     for(var i = s + 1; i < q.inp.length; i++) q.inp[i] = {};
-    q.stage = idx; state.inputBuf = ''; updateAnswerBox();
+    q.stage = idx; q.unitSel = null; state.inputBuf = ''; updateAnswerBox();
   }
   function wpRefresh(){
     var q = state.current; if(!wpNeedsOp(q) || !$('wp0a')) return;
-    var cs = Math.floor(q.stage / 4), f = q.stage % 4, buf = state.inputBuf || '', n = q.eq.length;
+    var cs = Math.floor(q.stage / 4), f = q.stage % 4, buf = state.inputBuf || '', n = q.eq.length, U = q.stage >= n * 4;
     for(var i = 0; i < n; i++){
       var inp = q.inp[i] || {};
       WP_FIELDS.forEach(function(k, fi){
@@ -4715,10 +4717,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var sw = $('hsSwitch'); sw.hidden = !(f === 3 && wpHsOk(q)); sw.textContent = state.hissan ? '暗算でとく' : '筆算でとく';
     $('hsTip').hidden = !state.hissan; $('hsCarrySw').hidden = true;
     $('wpHint').style.visibility = q.stage > 0 ? 'visible' : 'hidden';
-    $('wpOps').style.display = state.hissan ? 'none' : ''; $('wpHint').style.display = state.hissan ? 'none' : '';
+    $('wpU').textContent = q.unitSel || '?'; $('wpU').classList.toggle('act', q.stage === n * 4);
+    $('wpUnits').style.display = q.stage === n * 4 ? 'flex' : 'none';
+    $('wpOps').style.display = (state.hissan || q.stage === n * 4) ? 'none' : ''; $('wpHint').style.display = state.hissan ? 'none' : '';
     $('wpOps').style.visibility = f === 1 ? 'visible' : 'hidden';
     var pre = n > 1 ? '式' + WP_CIRC[cs + 1] + 'の ' : '';
-    $('wpStep').textContent = [pre + '1つ目の 数を 入れて ✓', '計算の 記号を えらぼう', pre + '2つ目の 数を 入れて ✓', pre + '答えを 入れて ✓'][f];
+    $('wpStep').textContent = (q.stage >= n * 4) ? '答えの 単位を えらぼう' : [pre + '1つ目の 数を 入れて ✓', '計算の 記号を えらぼう', pre + '2つ目の 数を 入れて ✓', pre + '答えを 入れて ✓'][f];
   }
   function wpPick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
   function wpTemplate(op){
@@ -4746,6 +4750,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       q.eq = [{a:g.a, o:op, b:g.b, r:g.answer}];
     }
     q.word = true; q.hs = false; q.lv = currentLevelIndex(q.op);
+    q.unit = (/何(個|人|円|ページ|m|枚|束|台|日)/.exec(q.text) || [])[1] || '個';
+    var us = ['個', '人', '円', 'ページ', 'm', '枚', '束', '台', '日'].filter(function(u){ return u !== q.unit; });
+    us.sort(function(){ return Math.random() - .5; });
+    q.unitOpts = ['個', '人', '円', 'ページ', 'm', '枚', '束', '台', '日'].filter(function(u){ return u === q.unit || us.slice(0, 4).indexOf(u) >= 0; });
     return q;
   }
   function startChallenge(){
@@ -7348,7 +7356,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function renderProblem(){
     if(state.print && state.print.kind==='challenge') updateLevelTag();
     state.inputBuf = ''; state.hsCells = null; state.hsSel = 0; state.hsCarry = null; state.hsCSel = -1;
-    var q = state.current; q.stage = 0; q.inp = [{}, {}];
+    var q = state.current; q.stage = 0; q.inp = [{}, {}]; q.unitSel = null;
     var meta = OP_META[q.op];
     if(q.hs == null) q.hs = useHissan(q);   /* 自動で決めて、ボタンで切りかえられる */
     state.hissan = q.hs;
@@ -7424,7 +7432,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       box.textContent = '?';
       box.classList.add('placeholder');
     }
-    $('okKey').disabled = state.inputBuf.length===0 || (wpNeedsOp(state.current) && state.current.stage % 4 === 1);
+    $('okKey').disabled = state.inputBuf.length===0 || (wpNeedsOp(state.current) && (state.current.stage % 4 === 1 || state.current.stage >= state.current.eq.length * 4));
     wpRefresh();
   }
 
@@ -7475,16 +7483,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   var busy = false;
   function submitAnswer(){
-    if(state.inputBuf.length===0 || busy) return;
-    var val = parseInt(state.inputBuf,10);
     var correct = state.current;
+    var wpDone = wpNeedsOp(correct) && correct.stage > correct.eq.length * 4;
+    if(busy || (state.inputBuf.length===0 && !wpDone)) return;
+    var val = wpDone ? correct.eq[correct.eq.length - 1].r : parseInt(state.inputBuf,10);
     var okShiki = true;
     if(wpNeedsOp(correct)){
-      var cs = Math.floor(correct.stage / 4), f = correct.stage % 4, ip = correct.inp[cs];
-      if(f === 1) return;
-      ip[WP_FIELDS[f]] = val; correct.stage++; state.inputBuf = '';
-      if(state.hissan) wpHsClose();
-      if(correct.stage < correct.eq.length * 4){
+      if(!wpDone){
+        var cs = Math.floor(correct.stage / 4), f = correct.stage % 4, ip = correct.inp[cs];
+        if(f === 1 || correct.stage >= correct.eq.length * 4){ state.inputBuf = ''; updateAnswerBox(); return; }
+        ip[WP_FIELDS[f]] = val; correct.stage++; state.inputBuf = '';
+        if(state.hissan) wpHsClose();
         updateAnswerBox();
         if(correct.stage % 4 === 3 && wpHsOk(correct)){ var xx = correct.inp[Math.floor(correct.stage / 4)]; if(useHissan({op:xx.o, a:xx.a, b:xx.b})) wpHsOpen(); }
         return;
@@ -7493,6 +7502,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var x = correct.inp[i], sw = (e.o === 'add' || e.o === 'mul') && x.a === e.b && x.b === e.a;
         if(!(x.o === e.o && ((x.a === e.a && x.b === e.b) || sw) && x.r === e.r)) okShiki = false;
       });
+      if(correct.unitSel !== correct.unit) okShiki = false;
     }
     var isGood = (wpNeedsOp(correct) ? true : val === correct.answer) && okShiki;
     busy = true;
@@ -8002,7 +8012,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(m) wpGoto(state.current, +m[1] * 4 + WP_FIELDS.indexOf(m[2]));
       return;
     }
-    var b = e.target.closest && e.target.closest('.wp-op');
+    var ub = e.target.closest && e.target.closest('.wp-un');
+    if(ub && !busy && wpNeedsOp(state.current) && state.current.stage === state.current.eq.length * 4){
+      state.current.unitSel = ub.getAttribute('data-u'); state.current.stage++; state.inputBuf = ''; wpRefresh(); submitAnswer(); return;
+    }
+    var b = e.target.closest && e.target.closest('.wp-op:not(.wp-un)');
     if(!b || busy || !wpNeedsOp(state.current)) return;
     if(state.current.stage % 4 !== 1) return;
     var cq = state.current; cq.inp[Math.floor(cq.stage / 4)].o = b.getAttribute('data-op'); cq.stage++; state.inputBuf = '';
