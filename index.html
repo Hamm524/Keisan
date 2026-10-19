@@ -12105,7 +12105,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<button class="gk-sub" data-sub="s"><span class="gk-ico" style="font-size:30px">理</span><span><b>理科（小3）</b><small>もんだい 40こ・植物 こん虫 光 じしゃく など</small></span></button>' +
         '<button class="gk-sub" data-sub="j"><span class="gk-ico" style="font-size:30px">国</span><span><b>国語・読解（小3）</b><small>短い 文を 読んで、聞かれている ことを つかまえよう</small></span></button>' +
         '<button class="gk-sub" data-sub="o"><span class="gk-ico" style="font-size:30px">社</span><span><b>社会（小3）</b><small>方位と 地図記号・お店や 農家の 仕事・火事や 事故から 守る・昔の くらし</small></span></button>' +
-        '<a class="gk-sub" href="'+'https://claude.ai/artifact/M6LgcV5hc49phZvMSAcuZB'+'" target="_blank" rel="noopener" style="text-decoration:none"><span style="font-size:30px">🗾</span><span><b>地図で 遊ぼう</b><small>47都道府県の パズル・どこクイズ(4年生の 先どり)・世界の 国</small></span></a>';
+        '<a class="gk-sub" href="'+'map/'+'" style="text-decoration:none"><span style="font-size:30px">🗾</span><span><b>地図で 遊ぼう</b><small>47都道府県の パズル・どこクイズ(4年生の 先どり)・世界の 国。覚えた 県や クリアで コイン</small></span></a>';
       show('menu');
     }
     function start(sub){
@@ -12207,7 +12207,18 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         toast('漢字ドリルの たからで +' + got + 'コイン!');
       }catch(e){}finally{ pulling = false; }
     }
-    return { card:card, open:menu, pull:pullKanji, _sci:SCI };
+    function pullMap(){
+      var d = safeGet('map-coins-v1'), n = d && typeof d.n === 'number' ? Math.max(0, d.n) : 0;
+      var cr = safeGet('map-coins-cred'), done = cr && typeof cr.n === 'number' ? cr.n : 0;
+      var delta = n - done; if(delta <= 0) return;
+      var s = get(), room = Math.max(0, DAY_CAP - s.day.n), got = Math.min(delta, room);
+      if(got <= 0) return;
+      s.day.n += got; put(s); safeSet('map-coins-cred', { n:done + got });
+      earn(got);
+      toast('地図で 遊ぼう で +' + got + 'コイン!');
+    }
+    document.addEventListener('visibilitychange', function(){ if(!document.hidden){ try{ pullMap(); card(); }catch(e){} } });
+    return { card:card, open:menu, pull:function(){ pullKanji(); pullMap(); }, _sci:SCI };
   })();
 
   /* ---------- backup / restore ---------- */
