@@ -685,6 +685,45 @@
 
   .gk-ill{ display:block; width:100%; max-width:420px; height:auto; margin:6px auto 10px; border-radius:14px; }
   .gk-note{ font-size:14px; font-weight:700; margin:8px 2px; opacity:.8; }
+  .pet .fan{transform-box:view-box;transform-origin:100px 40px;animation:fan-spin .9s linear infinite}
+  svg.pet{display:block;width:100%;height:auto;overflow:visible}
+  .pet .p-breathe{transform-box:view-box;transform-origin:100px 180px;animation:p-breathe 3.4s ease-in-out infinite}
+  @keyframes p-breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.03,1.05)}}
+  .pet .eyes{transform-box:fill-box;transform-origin:center;animation:p-blink 4.6s infinite}
+  @keyframes p-blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+  .pet .p-jump{transform-box:view-box;transform-origin:100px 180px}
+  .pet .p-shadow{transform-box:fill-box;transform-origin:center}
+  .pet.hop .p-jump{animation:p-hop .62s cubic-bezier(.3,.7,.4,1)}
+  .pet.hop .p-shadow{animation:p-shadow .62s ease}
+  @keyframes p-hop{0%{transform:translateY(0) scale(1,1)}14%{transform:translateY(0) scale(1.1,.88)}42%{transform:translateY(-34px) scale(.94,1.08)}66%{transform:translateY(0) scale(1.08,.92)}82%{transform:translateY(-6px) scale(1,1)}100%{transform:translateY(0) scale(1,1)}}
+  @keyframes p-shadow{0%,100%{transform:scale(1)}45%{transform:scale(.6);opacity:.03}}
+  .pet:not(.happy) .face-h{display:none}
+  .pet .face-s{display:none}
+  .pet.sad .face-s{display:inline}
+  .pet.sad .face-n,.pet.sad .face-h{display:none}
+  .pet.sad .p-jump{animation:p-no .55s ease}
+  @keyframes p-no{20%{transform:translateX(-7px) rotate(-5deg)}40%{transform:translateX(7px) rotate(5deg)}60%{transform:translateX(-5px)}80%{transform:translateX(4px)}}
+  .pet.happy .face-n{display:none}
+  .pet .sparkle{transform-box:fill-box;transform-origin:center;animation:p-twinkle 2.2s ease-in-out infinite}
+  @keyframes p-twinkle{0%,100%{transform:scale(.4);opacity:.35}50%{transform:scale(1);opacity:1}}
+  /* each character's own "work" move */
+  .pet .o2{transform-box:fill-box;transform-origin:center;animation:o2-bob 2.4s ease-in-out infinite}
+  @keyframes o2-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .pet.hop .o2{animation:o2-fly .62s ease-out}
+  @keyframes o2-fly{0%{transform:translate(0,0)}60%{transform:translate(18px,-30px) scale(1.15);opacity:.4}61%{transform:translate(0,10px) scale(.4);opacity:0}100%{transform:translate(0,0);opacity:1}}
+  .pet .wobble{transform-box:view-box;transform-origin:100px 120px;animation:wob 2.8s ease-in-out infinite}
+  @keyframes wob{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+  .pet .band{transform-box:fill-box;transform-origin:center;animation:band-sway 2s ease-in-out infinite}
+  @keyframes band-sway{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(-4deg)}}
+  .pet.hop .band{animation:band-stick .62s ease}
+  @keyframes band-stick{40%{transform:rotate(-30deg) scale(1.25)}100%{transform:rotate(-14deg)}}
+  .pet .drip{transform-box:fill-box;transform-origin:center top;animation:drip 3s ease-in infinite}
+  @keyframes drip{0%,60%{transform:translateY(0);opacity:0}70%{opacity:1}100%{transform:translateY(22px);opacity:0}}
+  .pet .sprout{transform-box:fill-box;transform-origin:50% 100%;animation:sprout 2.6s ease-in-out infinite}
+  @keyframes sprout{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}  .pet:not(.happy) .face-h{display:none}
+  .gk-chrow{ display:flex; justify-content:center; gap:6px; margin:6px 0 10px; }
+  .gk-chr{ margin:0; width:104px; text-align:center; }
+  .gk-chr figcaption{ font-size:12px; font-weight:800; opacity:.7; }
   .gk-pass{ white-space:pre-line; }
   .gk-q rt{ font-size:.5em; font-weight:700; }
   .kk-sent{ text-align:left; }
@@ -718,6 +757,9 @@
   .kk-chip.on{ border-color:var(--op-div); background:color-mix(in srgb, var(--op-div) 16%, var(--surface)); }
   .kk-chip.lock{ opacity:.5; }
   .kk-up{ margin:10px auto; padding:10px 12px; border-radius:14px; font-weight:900; background:color-mix(in srgb, #FFC53D 30%, var(--surface)); max-width:420px; }
+  .kk-chip.done{ border-color:var(--good); }
+  .kk-bar{ display:block; height:8px; border-radius:100px; background:var(--line); overflow:hidden; margin:6px 0; }
+  .kk-bar i{ display:block; height:100%; background:var(--good); }
 </style></head><body>
 <title>けいさんチャレンジ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1960,10 +2002,12 @@
   .wp-l{ font-size:15px; color:var(--ink-soft); }
   .wp-ops{ display:flex; justify-content:center; gap:8px; margin:6px 0 2px; }
   .wp-o{ min-width:40px; }
+  .wp-u{ min-width:36px; }
+  .wp-un{ width:auto; min-width:42px; padding:0 8px; font-size:17px; }
   .wp-box{ cursor:pointer; }
   .wp-hint{ text-align:center; font-size:12px; font-weight:700; color:var(--ink-soft); margin:0 0 2px; }
   .wp-op{ width:42px; height:38px; border-radius:12px; border:2.5px solid var(--line, #E3D6C0); background:var(--surface-2, #fff); color:var(--ink); font:inherit; font-size:20px; font-weight:900; cursor:pointer; }
-  .wp-box{ min-width:52px; height:42px; padding:0 6px; border-radius:12px; border:2.5px solid var(--line, #E3D6C0); background:var(--surface-2, #fff); display:inline-flex; align-items:center; justify-content:center; font-size:24px; font-weight:900; }
+  .wp-box{ min-width:46px; height:42px; padding:0 5px; border-radius:12px; border:2.5px solid var(--line, #E3D6C0); background:var(--surface-2, #fff); display:inline-flex; align-items:center; justify-content:center; font-size:24px; font-weight:900; }
   .wp-box.act{ border-color:var(--live, #1FA98E); box-shadow:0 0 0 3px color-mix(in srgb, var(--live, #1FA98E) 22%, transparent); }
   .wp-step{ text-align:center; font-size:13px; font-weight:800; color:var(--ink-soft); margin:2px 0 4px; }
   .wp-op.on{ background:var(--live, #1FA98E); border-color:var(--live, #1FA98E); color:#fff; }
@@ -4758,20 +4802,42 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     for(var i = 0; i < n; i++){
       h += '<div class="wp-eq"><span class="wp-l">式' + (n > 1 ? WP_CIRC[i + 1] : '') + '</span>' +
         '<span class="wp-box" id="wp' + i + 'a">?</span><span class="wp-box wp-o" id="wp' + i + 'o">?</span><span class="wp-box" id="wp' + i + 'b">?</span>' +
-        '<span class="wp-l">=</span><span class="wp-box" id="wp' + i + 'r">?</span></div>';
+        '<span class="wp-l">=</span><span class="wp-box" id="wp' + i + 'r">?</span>' + (i === n - 1 ? '<span class="wp-box wp-u" id="wpU">?</span>' : '') + '</div>';
     }
-    return h + '<div class="wp-ops" id="wpOps">' + wpOpsHtml() + '</div><div class="wp-step" id="wpStep"></div><div class="wp-hint" id="wpHint">まちがえたら ⌫ か、直したい 所を タップ</div>';
+    return h + '<div class="wp-ops" id="wpOps">' + wpOpsHtml() + '</div><div class="wp-ops" id="wpUnits" style="display:none">' + q.unitOpts.map(function(u){ return '<button type="button" class="wp-op wp-un" data-u="' + u + '">' + u + '</button>'; }).join('') + '</div><div class="wp-step" id="wpStep"></div><div class="wp-hint" id="wpHint">まちがえたら ⌫ か、直したい 所を タップ</div><div id="wpHs"></div>';
+  }
+  function wpHsOk(q){
+    var x = q.inp[Math.floor(q.stage / 4)];
+    return !!x && (x.o === 'add' || x.o === 'sub' || x.o === 'mul') && x.a != null && x.b != null && Math.max(x.a, x.b) >= 10 && (x.o !== 'sub' || x.a >= x.b);
+  }
+  function wpHsOpen(){
+    var q = state.current, x = q.inp[Math.floor(q.stage / 4)], a = String(x.a), b = String(x.b);
+    var ansW = x.o === 'sub' ? a.length : (x.o === 'add' ? Math.max(a.length, b.length) + 1 : a.length + b.length);
+    var w = Math.max(a.length + 1, b.length + 1, ansW);
+    state.hissan = true; state.hsCarry = null; state.hsCSel = -1; state.hsW = ansW; state.hsSel = ansW - 1;
+    state.hsCells = []; for(var i = 0; i < ansW; i++) state.hsCells.push('');
+    $('wpHs').innerHTML = '<div class="hissan"><div class="hs-row">' + hsCells(a, w) + '</div><div class="hs-row"><span class="hs-c hs-op">' + OP_META[x.o].symbol + '</span>' + hsCells(b, w - 1) + '</div><div class="hs-line"></div><div class="hs-row hs-ans" id="hsAns"></div></div>';
+    $('hsAns').addEventListener('click', function(e){
+      var c = e.target.closest ? e.target.closest('.hs-c') : null;
+      if(!c || c.dataset.i == null || busy) return;
+      state.hsSel = +c.dataset.i; updateAnswerBox();
+    });
+    state.inputBuf = ''; updateAnswerBox();
+  }
+  function wpHsClose(){
+    state.hissan = false; state.hsCells = null; state.inputBuf = ''; $('wpHs').innerHTML = ''; updateAnswerBox();
   }
   function wpGoto(q, idx){
     if(!wpNeedsOp(q) || idx < 0 || idx >= q.stage) return;
+    if(state.hissan) wpHsClose();
     var s = Math.floor(idx / 4), f = idx % 4;
     WP_FIELDS.forEach(function(k, fi){ if(fi >= f) delete q.inp[s][k]; });
     for(var i = s + 1; i < q.inp.length; i++) q.inp[i] = {};
-    q.stage = idx; state.inputBuf = ''; updateAnswerBox();
+    q.stage = idx; q.unitSel = null; state.inputBuf = ''; updateAnswerBox();
   }
   function wpRefresh(){
     var q = state.current; if(!wpNeedsOp(q) || !$('wp0a')) return;
-    var cs = Math.floor(q.stage / 4), f = q.stage % 4, buf = state.inputBuf || '', n = q.eq.length;
+    var cs = Math.floor(q.stage / 4), f = q.stage % 4, buf = state.inputBuf || '', n = q.eq.length, U = q.stage >= n * 4;
     for(var i = 0; i < n; i++){
       var inp = q.inp[i] || {};
       WP_FIELDS.forEach(function(k, fi){
@@ -4783,10 +4849,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         el.classList.toggle('act', i === cs && fi === f);
       });
     }
+    var sw = $('hsSwitch'); sw.hidden = !(f === 3 && wpHsOk(q)); sw.textContent = state.hissan ? '暗算でとく' : '筆算でとく';
+    $('hsTip').hidden = !state.hissan; $('hsCarrySw').hidden = true;
     $('wpHint').style.visibility = q.stage > 0 ? 'visible' : 'hidden';
+    $('wpU').textContent = q.unitSel || '?'; $('wpU').classList.toggle('act', q.stage === n * 4);
+    $('wpUnits').style.display = q.stage === n * 4 ? 'flex' : 'none';
+    $('wpOps').style.display = (state.hissan || q.stage === n * 4) ? 'none' : ''; $('wpHint').style.display = state.hissan ? 'none' : '';
     $('wpOps').style.visibility = f === 1 ? 'visible' : 'hidden';
     var pre = n > 1 ? '式' + WP_CIRC[cs + 1] + 'の ' : '';
-    $('wpStep').textContent = [pre + '1つ目の 数を 入れて ✓', '計算の 記号を えらぼう', pre + '2つ目の 数を 入れて ✓', pre + '答えを 入れて ✓'][f];
+    $('wpStep').textContent = (q.stage >= n * 4) ? '答えの 単位を えらぼう' : [pre + '1つ目の 数を 入れて ✓', '計算の 記号を えらぼう', pre + '2つ目の 数を 入れて ✓', pre + '答えを 入れて ✓'][f];
   }
   function wpPick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
   function wpTemplate(op){
@@ -4814,6 +4885,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       q.eq = [{a:g.a, o:op, b:g.b, r:g.answer}];
     }
     q.word = true; q.hs = false; q.lv = currentLevelIndex(q.op);
+    q.unit = (/何(個|人|円|ページ|m|枚|束|台|日)/.exec(q.text) || [])[1] || '個';
+    var us = ['個', '人', '円', 'ページ', 'm', '枚', '束', '台', '日'].filter(function(u){ return u !== q.unit; });
+    us.sort(function(){ return Math.random() - .5; });
+    q.unitOpts = ['個', '人', '円', 'ページ', 'm', '枚', '束', '台', '日'].filter(function(u){ return u === q.unit || us.slice(0, 4).indexOf(u) >= 0; });
     return q;
   }
   function startChallenge(){
@@ -7389,6 +7464,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   /* 2桁どうし・3桁の 足し算引き算、2桁×1桁の かけ算は 筆算で出す */
   $('hsSwitch').addEventListener('click', function(){
     if(busy || !state.current) return;
+    if(wpNeedsOp(state.current)){ if(state.hissan) wpHsClose(); else if(wpHsOk(state.current) && state.current.stage % 4 === 3) wpHsOpen(); return; }
     state.current.hs = !state.hissan;
     renderProblem();
   });
@@ -7417,7 +7493,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function renderProblem(){
     if(state.print && state.print.kind==='challenge') updateLevelTag();
     state.inputBuf = ''; state.hsCells = null; state.hsSel = 0; state.hsCarry = null; state.hsCSel = -1;
-    var q = state.current; q.stage = 0; q.inp = [{}, {}];
+    var q = state.current; q.stage = 0; q.inp = [{}, {}]; q.unitSel = null;
     var meta = OP_META[q.op];
     if(q.hs == null) q.hs = useHissan(q);   /* 自動で決めて、ボタンで切りかえられる */
     state.hissan = q.hs;
@@ -7482,6 +7558,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var okAns = first<w && cells.slice(first).every(function(x){ return x!==''; });
       state.inputBuf = okAns ? cells.slice(first).join('') : '';
       $('okKey').disabled = !okAns;
+      if(wpNeedsOp(state.current)) wpRefresh();
       return;
     }
     var box = $('answerBox');
@@ -7492,7 +7569,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       box.textContent = '?';
       box.classList.add('placeholder');
     }
-    $('okKey').disabled = state.inputBuf.length===0 || (wpNeedsOp(state.current) && state.current.stage % 4 === 1);
+    $('okKey').disabled = state.inputBuf.length===0 || (wpNeedsOp(state.current) && (state.current.stage % 4 === 1 || state.current.stage >= state.current.eq.length * 4));
     wpRefresh();
   }
 
@@ -7543,19 +7620,26 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   var busy = false;
   function submitAnswer(){
-    if(state.inputBuf.length===0 || busy) return;
-    var val = parseInt(state.inputBuf,10);
     var correct = state.current;
+    var wpDone = wpNeedsOp(correct) && correct.stage > correct.eq.length * 4;
+    if(busy || (state.inputBuf.length===0 && !wpDone)) return;
+    var val = wpDone ? correct.eq[correct.eq.length - 1].r : parseInt(state.inputBuf,10);
     var okShiki = true;
     if(wpNeedsOp(correct)){
-      var cs = Math.floor(correct.stage / 4), f = correct.stage % 4, ip = correct.inp[cs];
-      if(f === 1) return;
-      ip[WP_FIELDS[f]] = val; correct.stage++; state.inputBuf = '';
-      if(correct.stage < correct.eq.length * 4){ updateAnswerBox(); return; }
+      if(!wpDone){
+        var cs = Math.floor(correct.stage / 4), f = correct.stage % 4, ip = correct.inp[cs];
+        if(f === 1 || correct.stage >= correct.eq.length * 4){ state.inputBuf = ''; updateAnswerBox(); return; }
+        ip[WP_FIELDS[f]] = val; correct.stage++; state.inputBuf = '';
+        if(state.hissan) wpHsClose();
+        updateAnswerBox();
+        if(correct.stage % 4 === 3 && wpHsOk(correct)){ var xx = correct.inp[Math.floor(correct.stage / 4)]; if(useHissan({op:xx.o, a:xx.a, b:xx.b})) wpHsOpen(); }
+        return;
+      }
       correct.eq.forEach(function(e, i){
         var x = correct.inp[i], sw = (e.o === 'add' || e.o === 'mul') && x.a === e.b && x.b === e.a;
         if(!(x.o === e.o && ((x.a === e.a && x.b === e.b) || sw) && x.r === e.r)) okShiki = false;
       });
+      if(correct.unitSel !== correct.unit) okShiki = false;
     }
     var isGood = (wpNeedsOp(correct) ? true : val === correct.answer) && okShiki;
     busy = true;
@@ -8065,7 +8149,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(m) wpGoto(state.current, +m[1] * 4 + WP_FIELDS.indexOf(m[2]));
       return;
     }
-    var b = e.target.closest && e.target.closest('.wp-op');
+    var ub = e.target.closest && e.target.closest('.wp-un');
+    if(ub && !busy && wpNeedsOp(state.current) && state.current.stage === state.current.eq.length * 4){
+      state.current.unitSel = ub.getAttribute('data-u'); state.current.stage++; state.inputBuf = ''; wpRefresh(); submitAnswer(); return;
+    }
+    var b = e.target.closest && e.target.closest('.wp-op:not(.wp-un)');
     if(!b || busy || !wpNeedsOp(state.current)) return;
     if(state.current.stage % 4 !== 1) return;
     var cq = state.current; cq.inp[Math.floor(cq.stage / 4)].o = b.getAttribute('data-op'); cq.stage++; state.inputBuf = '';
@@ -12317,10 +12405,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   /* ---------- まなぶ(漢字ドリルへのリンク・理科・国語読解 / 共通コイン) ---------- */
   var Gaku = (function(){
     var KEY = 'keisan_gaku', KANJI_URL = 'https://hamm524.github.io/Kanji/', KC_KEY = 'kanji-drill-coins-v1', KC_CRED = 'keisan_kcredit', ROUND = 10, DAY_CAP = 20, RUBY_OK = /[一-龥]/;
-    var SCI_RAW = "たねを まくと、さいしょに 出てくる 葉を 何と いう?|子葉(しよう)|本葉|根|くき|植物|seed|1\nホウセンカの たねは 土の 中で、さいしょに 何が 出る?|根|花|実|本葉|植物|!root|1\nこん虫の 体は 頭・むね・何の 3つに 分かれている?|はら|あし|はね|しょっ角|こん虫|body|1\nこん虫の あしは 何本?|6本|4本|8本|10本|こん虫|legs|1\nこん虫の あしは 体の どこに ついている?|むね|頭|はら|はね|こん虫|!legs2|1\nチョウの 育ち方は たまご→よう虫→さなぎ→何?|せい虫|こん虫|たまご|ふ化|こん虫|cycle|1\nさなぎに ならない 育ち方を する 虫は どれ?|バッタ|チョウ|カブトムシ|ハチ|こん虫|bat|1\nクモは こん虫?|こん虫では ない(あしが 8本)|こん虫(あしが 6本)|こん虫(はねが ある)|こん虫(むねが ない)|こん虫|spider|1\n花が さいた あと、できる ものは?|実と たね|根|くき|つぼみ|植物|fruit|1\nヒマワリの つぼみ(花が さく 前)は、昼の あいだ 何の ほうを 向く?|太陽の ほう|ずっと 北|ずっと 下|かげの ほう|植物|sunflower|1\nくきが のびる 向きは?|上(光の ほう)|下|よこ だけ|のびない|植物|!stem|1\n葉に 日光が 当たると、つくられる ものは?|養分(でんぷん)|水|ほこり|たね|植物|!leaf|1\nかげが できるのは どうして?|光が さえぎられる から|光が 曲がる から|かげは 光|風が ふく から|光|shadow|1\nかげの 向きは 太陽と どちら?|はんたい がわ|同じ がわ|真下|ない|光|!shadow|1\n朝から 夕方にかけて、かげは どう うごく?|西→北→東 へ うごく|東→南→西|うごかない|ぐるぐる 回る|光|!shadow3|1\n太陽は どの 向きに うごいて 見える?|東から 西へ|西から 東へ|北から 南へ|南から 北へ|光|sunpath|1\n日なたと 日かげで、地面が あたたかいのは?|日なた|日かげ|同じ|わからない|光|shade|1\nかがみで はね返した 光は どう すすむ?|まっすぐ|曲がる|止まる|きえる|光|!mirror|1\n虫めがねで 光を 小さく あつめると、あつく なる?|なる(あつく なる)|ならない|つめたく なる|かわらない|光|lens|1\nじしゃくが ひきつけるのは?|鉄|紙|ゴム|ガラス|じしゃく|!magnet|1\nじしゃくの 同じ 極どうしを 近づけると?|しりぞけ合う|ひきつけ合う|くっつく|何も 起きない|じしゃく|!poles|1\nじしゃくの 力が いちばん 強いのは?|極(両はし)|まん中|どこも 同じ|ない|じしゃく|!clips|1\nじしゃくに つく ものは どれ?|くぎ|消しゴム|えんぴつの 木|ガラスの コップ|じしゃく|magitems|1\n方位じしんの はりの 色の ついた 方は、何の 方位を さす?|北|南|東|西|じしゃく|!compass|1\nものの 重さは、かたちを かえると どうなる?|かわらない|かるく なる|重く なる|なくなる|もの|clay|1\n同じ 体積(かさ)なのに 重さが ちがうのは なぜ?|ものの しゅるい が ちがう から|ふくろ が ちがう から|かたち が ちがう から|いつも 同じ|もの|balance|1\n音が 出ている ものは、どうなっている?|ふるえている|止まっている|あつい|つめたい|音|bell|1\n音が 大きいとき、ふるえは?|大きい|小さい|ない|止まる|音|!waves|1\n音は 何を 通って つたわる?|空気など|光|かげ|つたわらない|音|airsound|1\n空気は 何で できて いる?|ちっ素・さんそ など|水だけ|さんそ だけ|何も ない|もの|!airbar|1\n氷が とけると 何に なる?|水|水じょう気|空気|石|もの|ice|1\n水を 100℃ ちかくまで あたためると、中から あわ(水じょう気)が さかんに 出て くる。これを 何と いう?|ふっとう|こおる こと|とける こと|ひえる こと|もの|boil|1\n水が 水じょう気に なる ことを 何と いう?|じょう発|ぎょう結|ゆうかい|ぎょう固|もの|steam|1\n空気を とじこめて おすと、体積は?|小さく なる|大きく なる|かわらない|なくなる|もの|syringe|1\n月は 毎日 かたちが どうなる?|かわる(満ち欠け)|かわらない|ずっと 丸い|ずっと 三日月|地球|moon|1\n太陽の かがやきは、月と くらべて?|太陽は 自分で 光る|月も 自分で 光る|どちらも 光らない|月だけ 光る|地球|sunmoon|1\n地球が 回って 1日で かわるのは?|朝・昼・夜|春・夏・秋・冬|月の かたち|ない|地球|earth|1\n水を あたため つづけて ふっとう して いる とき、水の 温度は?|100℃ぐらいで ほぼ かわらない|どんどん 上がる|下がって いく|0℃に なる|もの||2\n水が こおって 氷に なると、体積は?|大きく なる|小さく なる|かわらない|なくなる|もの||2\n金ぞくを あたためると、体積は?|わずかに 大きく なる|小さく なる|かわらない|なくなる|もの||2\n金ぞくの ぼうの 一部を あたためると、熱は どう つたわる?|あたためた ところから じゅんに つたわる|ぜんぶ いっぺんに つたわる|つたわらない|あたためた ところと 反対がわから つたわる|もの||2\n月が 満ちたり 欠けたり して 見えるのは どうして?|太陽と 月と 地球の 位置が かわり、光って 見える 部分が かわる から|月の 大きさが かわる から|雲が 月を かくす から|毎日 地球の かげに 入る から|地球||2\n北の 空の 星は 1晩で どう うごいて 見える?|北極星の 近くを 中心に 回る|東から 西へ まっすぐ 進む|ぜんぜん うごかない|南へ おちて いく|地球||2\n植物が 日光を 受けて、養分を つくる はたらきを 何と いう?|光合成|こきゅう|じょう発|ぎょう結|植物||2\nメダカの たまごが 育つ ためには?|おすと めすの 精子と 卵が むすびつく(受精)|めすだけで 育つ|おすだけで 育つ|水だけで 育つ|こん虫||2\n川の 上流に ある 石は、下流の 石に くらべて?|大きくて 角ばって いる|小さくて まるい|ぜんぶ すな|どれも 同じ|地球||2\n流れる 水が 地面を けずる はたらきを 何と いう?|しん食|たい積|運ぱん|じょう発|地球||2\n食塩を 水に とかした とき、とかす 前と 後で 全体の 重さは?|かわらない|軽く なる|重く なる|なくなる|もの||2\n二酸化炭素を 石灰水に 通すと どうなる?|白く にごる|青く なる|赤く なる|かわらない|もの||2\n食べ物を 細かく して 養分を とり入れる はたらきを 何と いう?|消化|こきゅう|じゅんかん|はい出|体||2\n光が 空気から 水の 中へ 進む とき、道すじは?|折れ曲がる(くっ折)|まっすぐ 進む|もどって くる|消える|光||3\n酸性の 水よう液に 青色リトマス紙を つけると?|赤く なる|青の まま|白く なる|黒く なる|もの||3\n食べる・食べられる 関係(食物れんさ)の はじまりは?|植物|草食動物|肉食動物|分解者|植物||3\n心臓から 出る 血が 通る 血管は?|動脈|静脈|気管|食道|体||3\n地球に 季節が ある 理由は?|地球の 地じくが かたむいて いる から|太陽までの きょりが 季節で 大きく かわる から|月が 回る から|雲が 多い から|地球||3\n食塩水を 熱して 水を 蒸発させると、あとに 残る ものは?|食塩|何も 残らない|水|さとう|もの||3\n水は 何℃で こおる?|0℃|10℃|50℃|100℃|もの|freeze|2\nあたためた 空気は どう うごく?|上へ いく|下へ いく|うごかない|よこへ だけ|もの|warmair|2\n地面に ふった 雨水は どこへ 流れる?|ひくい ところ|高い ところ|まわりと 同じ 高さの ところ|どこへも 流れない|地球|rain|2\n冬が 近づくと、ツバメは どうする?|あたたかい 南の 国へ わたる|土の 中で ねむる|まっ白に なる|たまごを うむ|生き物|swallow|2\n人の 体で、ほねと ほねの つなぎ目を 何と いう?|関節|筋肉|ひふ|つめ|体|joint|2\n夏の 夜空の「夏の 大三角」に 入って いない 星は?|ベテルギウス|ベガ|アルタイル|デネブ|地球|triangle|2\n地球から いちばん 近い こう星(自分で 光る 星)は?|太陽|月|北極星|シリウス|地球|nearstar|2\nふりこが 1往復する 時間を 長く するには?|ひもを 長く する|おもりを 重く する|ふれはばを 大きく する|ひもを 短く する|もの|!pendulum|3\nものが もえる ために ひつような 気体は?|さんそ|ちっ素|水じょう気|ヘリウム|もの|fire|3\n人が はく 息に、すう 空気より 多く ふくまれる 気体は?|二酸化炭素|さんそ|ヘリウム|水そ|体|breath|3\nてこで、小さな 力で 重い ものを 持ち上げるには?|支点から 力点を 遠く する|支点から 力点を 近く する|おもりを ふやす|ぼうを 短く する|もの|lever|3\n台風は 日本の どの 方向から 来る ことが 多い?|南の 海の ほう|北の 海の ほう|西の 山の ほう|空の 真上|地球|typhoon|3\n川の 曲がった ところで、外がわは どうなって いる?|流れが 速く、けずられて ふかい|流れが おそく、石が つもる|水が 止まって いる|いつも かわいて いる|地球|!river|3\nメダカの たまごの 中で 育つ 子どもは、何から 養分を もらう?|たまごの 中の 養分|親が はこぶ えさ|水の 中の 日光|何も いらない|生き物|medaka|3";
+    var SCI_RAW = "たねを まくと、さいしょに 出てくる 葉を 何と いう?|子葉(しよう)|本葉|根|くき|植物|seed|1\nホウセンカの たねは 土の 中で、さいしょに 何が 出る?|根|花|実|本葉|植物|!root|1\nこん虫の 体は 頭・むね・何の 3つに 分かれている?|はら|あし|はね|しょっ角|こん虫|body|1\nこん虫の あしは 何本?|6本|4本|8本|10本|こん虫|legs|1\nこん虫の あしは 体の どこに ついている?|むね|頭|はら|はね|こん虫|!legs2|1\nチョウの 育ち方は たまご→よう虫→さなぎ→何?|せい虫|こん虫|たまご|ふ化|こん虫|cycle|1\nさなぎに ならない 育ち方を する 虫は どれ?|バッタ|チョウ|カブトムシ|ハチ|こん虫|bat|1\nクモは こん虫?|こん虫では ない(あしが 8本)|こん虫(あしが 6本)|こん虫(はねが ある)|こん虫(むねが ない)|こん虫|spider|1\n花が さいた あと、できる ものは?|実と たね|根|くき|つぼみ|植物|fruit|1\nヒマワリの つぼみ(花が さく 前)は、昼の あいだ 何の ほうを 向く?|太陽の ほう|ずっと 北|ずっと 下|かげの ほう|植物|sunflower|1\nくきが のびる 向きは?|上(光の ほう)|下|よこ だけ|のびない|植物|!stem|1\n葉に 日光が 当たると、つくられる ものは?|養分(でんぷん)|水|ほこり|たね|植物|!leaf|1\nかげが できるのは どうして?|光が さえぎられる から|光が 曲がる から|かげは 光|風が ふく から|光|shadow|1\nかげの 向きは 太陽と どちら?|はんたい がわ|同じ がわ|真下|ない|光|!shadow|1\n朝から 夕方にかけて、かげは どう うごく?|西→北→東 へ うごく|東→南→西|うごかない|ぐるぐる 回る|光|!shadow3|1\n太陽は どの 向きに うごいて 見える?|東から 西へ|西から 東へ|北から 南へ|南から 北へ|光|sunpath|1\n日なたと 日かげで、地面が あたたかいのは?|日なた|日かげ|同じ|わからない|光|shade|1\nかがみで はね返した 光は どう すすむ?|まっすぐ|曲がる|止まる|きえる|光|!mirror|1\n虫めがねで 光を 小さく あつめると、あつく なる?|なる(あつく なる)|ならない|つめたく なる|かわらない|光|lens|1\nじしゃくが ひきつけるのは?|鉄|紙|ゴム|ガラス|じしゃく|!magnet|1\nじしゃくの 同じ 極どうしを 近づけると?|しりぞけ合う|ひきつけ合う|くっつく|何も 起きない|じしゃく|!poles|1\nじしゃくの 力が いちばん 強いのは?|極(両はし)|まん中|どこも 同じ|ない|じしゃく|!clips|1\nじしゃくに つく ものは どれ?|くぎ|消しゴム|えんぴつの 木|ガラスの コップ|じしゃく|magitems|1\n方位じしんの はりの 色の ついた 方は、何の 方位を さす?|北|南|東|西|じしゃく|!compass|1\nものの 重さは、かたちを かえると どうなる?|かわらない|かるく なる|重く なる|なくなる|もの|clay|1\n同じ 体積(かさ)なのに 重さが ちがうのは なぜ?|ものの しゅるい が ちがう から|ふくろ が ちがう から|かたち が ちがう から|いつも 同じ|もの|balance|1\n音が 出ている ものは、どうなっている?|ふるえている|止まっている|あつい|つめたい|音|bell|1\n音が 大きいとき、ふるえは?|大きい|小さい|ない|止まる|音|!waves|1\n音は 何を 通って つたわる?|空気など|光|かげ|つたわらない|音|airsound|1\n空気は 何で できて いる?|ちっ素・さんそ など|水だけ|さんそ だけ|何も ない|もの|!airbar|1\n氷が とけると 何に なる?|水|水じょう気|空気|石|もの|ice|1\n水を 100℃ ちかくまで あたためると、中から あわ(水じょう気)が さかんに 出て くる。これを 何と いう?|ふっとう|こおる こと|とける こと|ひえる こと|もの|boil|1\n水が 水じょう気に なる ことを 何と いう?|じょう発|ぎょう結|ゆうかい|ぎょう固|もの|steam|1\n空気を とじこめて おすと、体積は?|小さく なる|大きく なる|かわらない|なくなる|もの|syringe|1\n月は 毎日 かたちが どうなる?|かわる(満ち欠け)|かわらない|ずっと 丸い|ずっと 三日月|地球|moon|1\n太陽の かがやきは、月と くらべて?|太陽は 自分で 光る|月も 自分で 光る|どちらも 光らない|月だけ 光る|地球|sunmoon|1\n地球が 回って 1日で かわるのは?|朝・昼・夜|春・夏・秋・冬|月の かたち|ない|地球|earth|1\n水を あたため つづけて ふっとう して いる とき、水の 温度は?|100℃ぐらいで ほぼ かわらない|どんどん 上がる|下がって いく|0℃に なる|もの||2\n水が こおって 氷に なると、体積は?|大きく なる|小さく なる|かわらない|なくなる|もの||2\n金ぞくを あたためると、体積は?|わずかに 大きく なる|小さく なる|かわらない|なくなる|もの||2\n金ぞくの ぼうの 一部を あたためると、熱は どう つたわる?|あたためた ところから じゅんに つたわる|ぜんぶ いっぺんに つたわる|つたわらない|あたためた ところと 反対がわから つたわる|もの||2\n月が 満ちたり 欠けたり して 見えるのは どうして?|太陽と 月と 地球の 位置が かわり、光って 見える 部分が かわる から|月の 大きさが かわる から|雲が 月を かくす から|毎日 地球の かげに 入る から|地球||2\n北の 空の 星は 1晩で どう うごいて 見える?|北極星の 近くを 中心に 回る|東から 西へ まっすぐ 進む|ぜんぜん うごかない|南へ おちて いく|地球||2\n植物が 日光を 受けて、養分を つくる はたらきを 何と いう?|光合成|こきゅう|じょう発|ぎょう結|植物||2\nメダカの たまごが 育つ ためには?|おすと めすの 精子と 卵が むすびつく(受精)|めすだけで 育つ|おすだけで 育つ|水だけで 育つ|こん虫||2\n川の 上流に ある 石は、下流の 石に くらべて?|大きくて 角ばって いる|小さくて まるい|ぜんぶ すな|どれも 同じ|地球||2\n流れる 水が 地面を けずる はたらきを 何と いう?|しん食|たい積|運ぱん|じょう発|地球||2\n食塩を 水に とかした とき、とかす 前と 後で 全体の 重さは?|かわらない|軽く なる|重く なる|なくなる|もの||2\n二酸化炭素を 石灰水に 通すと どうなる?|白く にごる|青く なる|赤く なる|かわらない|もの||2\n食べ物を 細かく して 養分を とり入れる はたらきを 何と いう?|消化|こきゅう|じゅんかん|はい出|体||2\n光が 空気から 水の 中へ 進む とき、道すじは?|折れ曲がる(くっ折)|まっすぐ 進む|もどって くる|消える|光||3\n酸性の 水よう液に 青色リトマス紙を つけると?|赤く なる|青の まま|白く なる|黒く なる|もの||3\n食べる・食べられる 関係(食物れんさ)の はじまりは?|植物|草食動物|肉食動物|分解者|植物||3\n心臓から 出る 血が 通る 血管は?|動脈|静脈|気管|食道|体||3\n地球に 季節が ある 理由は?|地球の 地じくが かたむいて いる から|太陽までの きょりが 季節で 大きく かわる から|月が 回る から|雲が 多い から|地球||3\n食塩水を 熱して 水を 蒸発させると、あとに 残る ものは?|食塩|何も 残らない|水|さとう|もの||3\n水は 何℃で こおる?|0℃|10℃|50℃|100℃|もの|freeze|2\nあたためた 空気は どう うごく?|上へ いく|下へ いく|うごかない|よこへ だけ|もの|warmair|2\n地面に ふった 雨水は どこへ 流れる?|ひくい ところ|高い ところ|まわりと 同じ 高さの ところ|どこへも 流れない|地球|rain|2\n冬が 近づくと、ツバメは どうする?|あたたかい 南の 国へ わたる|土の 中で ねむる|まっ白に なる|たまごを うむ|生き物|swallow|2\n人の 体で、ほねと ほねの つなぎ目を 何と いう?|関節|筋肉|ひふ|つめ|体|joint|2\n夏の 夜空の「夏の 大三角」に 入って いない 星は?|ベテルギウス|ベガ|アルタイル|デネブ|地球|triangle|2\n地球から いちばん 近い こう星(自分で 光る 星)は?|太陽|月|北極星|シリウス|地球|nearstar|2\nふりこが 1往復する 時間を 長く するには?|ひもを 長く する|おもりを 重く する|ふれはばを 大きく する|ひもを 短く する|もの|!pendulum|3\nものが もえる ために ひつような 気体は?|さんそ|ちっ素|水じょう気|ヘリウム|もの|fire|3\n人が はく 息に、すう 空気より 多く ふくまれる 気体は?|二酸化炭素|さんそ|ヘリウム|水そ|体|breath|3\nてこで、小さな 力で 重い ものを 持ち上げるには?|支点から 力点を 遠く する|支点から 力点を 近く する|おもりを ふやす|ぼうを 短く する|もの|lever|3\n台風は 日本の どの 方向から 来る ことが 多い?|南の 海の ほう|北の 海の ほう|西の 山の ほう|空の 真上|地球|typhoon|3\n川の 曲がった ところで、外がわは どうなって いる?|流れが 速く、けずられて ふかい|流れが おそく、石が つもる|水が 止まって いる|いつも かわいて いる|地球|!river|3\nメダカの たまごの 中で 育つ 子どもは、何から 養分を もらう?|たまごの 中の 養分|親が はこぶ えさ|水の 中の 日光|何も いらない|生き物|medaka|3\n豆電球が 光るのは、どんな ときかな?|電気の 通り道が ぐるっと 輪っかに なって いる とき|導線が とちゅうで 切れて いる とき|導線が 1本だけ つながって いる とき|豆電球が 電池に つながって いない とき|電気|c:denchi+pikari|1\n電気を 通すのは どれかな?|10円玉|紙|ガラスの コップ|ゴム|電気|c:pikari|1\n豆電球に 導線を つなぐ 場所は どこ?|横の 金属と、下の でっぱり|ガラスと 横の 金属|ガラスと 下の でっぱり|ガラスだけ|電気|c:pikari-off|1\n電池2個を 直列に つなぐと、豆電球は 1個の ときに くらべて?|明るく なる|暗く なる|明るさは 同じ|消える|電気|c:denchi+denchi+pikari|2\n電池2個を 並列に つなぐと、1個の ときに くらべて?|明るさは 同じで、電池が 長もちする|ずっと 明るく なる|すぐ 消える|モーターが 止まる|電気|c:denchi+denchi+pikari|2\n電池の 向きを 逆に すると、モーターは どうなる?|回る 向きが 逆に なる|止まって しまう|もっと 速く 回る|こわれる|電気|c:denchi+kururin|2\n肺で 酸素を 受け取って、体中に 運ぶ 血の なかまは?|赤血球|白血球|血小板|だ液|体|c:red+white+platelet|2\n体に 入った ばい菌を 見つけて やっつける 血の なかまは?|白血球|赤血球|血小板|だ液|体|c:red+white+platelet|2\nけがを した とき 集まって、血を 固めて 傷口を ふさぐのは?|血小板|白血球|赤血球|だ液|体|c:red+white+platelet|2\nごはんの でんぷんを、別の 甘い ものに 変える はたらきが あるのは?|だ液|胃液|なみだ|あせ|体|c:saliva|2\n細胞の 中で、体の 設計図を しまって いる ところは?|核|血小板|葉緑体|だ液|体|c:nucleus|3\n光合成で でんぷんを つくる、葉の 細胞の 中の 緑色の つぶは?|葉緑体|核|赤血球|気こう|植物|c:chloro|2\nヨウ素液を でんぷんに つけると 何色に なる?|青むらさき色|赤色|黄色|色は かわらない|植物|c:chloro|2\n根から すい上げた 水が 通る、くきの 中の 管は?|道管|気こう|根毛|胞子|植物|c:chloro|3\n植物が 葉から 水蒸気を 出して いく はたらきを 何と いう?|蒸散|光合成|こきゅう|発芽|植物|c:chloro|3\n空気の 約78%を しめて いる 気体は?|窒素|酸素|水素|二酸化炭素|元素|c:el-N|3\n水(H₂O)は 水素と 何で できて いる?|酸素|炭素|窒素|鉄|元素|c:el-H+el-O|3\n血が 赤い のは、何の おかげ?|鉄|カルシウム|窒素|炭素|元素|c:el-Fe|3\n骨や 歯を つくる 材料に なる 元素は?|カルシウム|鉄|水素|炭素|元素|c:el-Ca|3\nえんぴつの しんや ダイヤモンドは、何の 元素で できている?|炭素|鉄|酸素|水素|元素|c:el-C|3";
     var KOKU = {
 "types": ["だれが", "何を・何が", "いつ", "どこ", "なぜ(わけ)", "どうなった", "じゅんばん", "「それ」などが さす もの", "気持ち", "まとめ(いちばん 言いたい こと)"],
-"levels": ["小2〜3", "小4", "小5〜6"],
+"topics": ["お話", "せつめい文", "くらしの 文(日記・手紙・お知らせ)", "考えを つたえる 文・俳句《はいく》"],
 "passages": [
  {"id": "p1", "text": "みさきさんは、日曜日に おばあちゃんの 家へ 行きました。おばあちゃんは、うらの はたけで とれた トマトを 出して くれました。みさきさんは、あまくて おいしかったので、おかわりを しました。帰る とき、おばあちゃんは「また きてね」と 言って、トマトを ふくろに 入れて くれました。"},
  {"id": "p2", "text": "ゆうたくんは、雨の 日に 学校へ 行く とちゅうで、くつを ぬらして しまいました。教室に 入ると、友だちの そうたくんが「これを つかって」と タオルを かして くれました。ゆうたくんは「ありがとう」と 言って、くつを ふきました。"},
@@ -12354,66 +12442,66 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
  {"id": "p30", "text": "テストで まちがえた 問題は、つい そのままに して しまいがちです。しかし、まちがいには「自分が まだ 分かって いない ところ」が はっきり 表れて います。\nだから、まちがえた 問題こそ、もう一度 といて みる ことが 大切なのです。まちがいは、かしこく なる ための 地図のような ものだと いえるでしょう。"}
 ],
 "qs": [
- {"p": "p1", "t": "なぜ(わけ)", "q": "みさきさんが おかわりを したのは、なぜですか。", "a": "トマトが あまくて おいしかったから", "bad": ["おなかが ぺこぺこだったから", "おばあちゃんに おこられたから", "トマトが たくさん あまって いたから"], "ev": "あまくて おいしかったので", "why": "「〜ので」の ところに、わけが 書いて あるよ。", "lv": 1},
- {"p": "p1", "t": "何を・何が", "q": "おばあちゃんは、帰る ときに 何を して くれましたか。", "a": "トマトを ふくろに 入れて くれた", "bad": ["うらの はたけに つれて 行って くれた", "おかわりを 出して くれた", "駅まで 送って くれた"], "ev": "トマトを ふくろに 入れて くれました", "why": "「帰る とき」の あとの 文を 見よう。", "lv": 1},
- {"p": "p2", "t": "だれが", "q": "タオルを かして くれたのは だれですか。", "a": "そうたくん", "bad": ["ゆうたくん", "先生", "お母さん"], "ev": "友だちの そうたくんが", "why": "「かして くれた」人は、「〜が」の ところに 出て くるよ。", "lv": 1},
- {"p": "p2", "t": "なぜ(わけ)", "q": "ゆうたくんが くつを ふいたのは、なぜですか。", "a": "雨で くつを ぬらして しまったから", "bad": ["教室が よごれて いたから", "先生に 言われたから", "タオルが ほしかったから"], "ev": "くつを ぬらして しまいました", "why": "くつが ぬれた ことが 前の 文に 書いて あるよ。", "lv": 1},
- {"p": "p3", "t": "いつ", "q": "朝の 会は 何時に 始まりますか。", "a": "8時15分", "bad": ["8時", "8時10分", "9時"], "ev": "8時15分に 朝の 会が 始まります", "why": "「始まります」と 書いて ある 時こくを 見よう。", "lv": 1},
- {"p": "p3", "t": "なぜ(わけ)", "q": "ひろしくんが 走って 行ったのは、なぜですか。", "a": "ねぼうを して、家を 出るのが おそく なったから", "bad": ["走るのが すきだから", "友だちと やくそくして いたから", "先生に よばれたから"], "ev": "けさは めずらしく ねぼうを した", "why": "走る 前に 何が あったか、前の 文に 書いて あるよ。", "lv": 1},
- {"p": "p4", "t": "何を・何が", "q": "先生は あやかさんに 何と 言いましたか。", "a": "さいごまで ひけて えらかったね", "bad": ["まちがえては だめだよ", "もう 一回 ひきなさい", "また 来週 ね"], "ev": "さいごまで ひけて えらかったね", "why": "先生の ことばは「 」の 中に 書いて あるよ。", "lv": 1},
- {"p": "p4", "t": "どうなった", "q": "あやかさんの 気もちは、どう かわりましたか。", "a": "ざんねんな 気もちから、少し 元気に なった", "bad": ["たのしい 気もちから、かなしく なった", "はずかしい 気もちから、おこった", "元気な 気もちから、ざんねんに なった"], "ev": "少し 元気が 出ました", "why": "文の さいごに、気もちが どう なったか 書いて あるよ。", "lv": 1},
- {"p": "p5", "t": "何を・何が", "q": "ありは 何を つかって、なかまに 食べ物の 場所を 教えて いますか。", "a": "におい", "bad": ["声", "音", "色"], "ev": "においで なかまに 食べ物の 場所を 教えて いる", "why": "さいごの 文が、まとめに なって いるよ。", "lv": 1},
- {"p": "p5", "t": "何を・何が", "q": "食べ物を 見つけた ありは、地面に においを つけながら どこへ もどりますか。", "a": "すに", "bad": ["食べ物の ところへ", "水たまりへ", "木の 上へ"], "ev": "すに もどります", "why": "はじめの 文に「〜に もどります」と 書いて あるよ。", "lv": 1},
- {"p": "p6", "t": "じゅんばん", "q": "やさいを いためるのは、何の あとですか。", "a": "やさいを 切った あと", "bad": ["水を 入れた あと", "ルーを 入れた あと", "にこんだ あと"], "ev": "はじめに、やさいを 切ります。つぎに、やさいと にくを なべで いためます", "why": "「はじめに」「つぎに」と いう ことばが じゅんばんの ヒントだよ。", "lv": 1},
- {"p": "p6", "t": "じゅんばん", "q": "ルーを 入れるのは、いつですか。", "a": "さいごに", "bad": ["はじめに", "やさいを いためる 前に", "水を 入れる 前に"], "ev": "さいごに、ルーを 入れて", "why": "「さいごに」と いう ことばを さがそう。", "lv": 1},
- {"p": "p7", "t": "いつ", "q": "魚が つれたのは いつですか。", "a": "お昼前", "bad": ["朝 六時", "お昼の あと", "夕方"], "ev": "お昼前に 大きな 魚が 一ぴき つれました", "why": "「いつ」は、時を あらわす ことばを さがそう。", "lv": 1},
- {"p": "p7", "t": "なぜ(わけ)", "q": "日記を 書いた 人が とても うれしかったのは なぜですか。", "a": "お父さんが ほめて くれたから", "bad": ["魚を 食べられたから", "朝 早く おきられたから", "川で およげたから"], "ev": "お父さんが『すごいね』と ほめて くれたので", "why": "「〜ので」の 前に わけが あるよ。", "lv": 1},
- {"p": "p8", "t": "何を・何が", "q": "こおろぎは 体の どこを つかって 音を 出して いますか。", "a": "はね", "bad": ["口", "あし", "しょっかく"], "ev": "はねを こすり合わせて 音を 出して います", "why": "はじめの 文で「口では ない」と 言って いるよ。", "lv": 1},
- {"p": "p8", "t": "なぜ(わけ)", "q": "おすの こおろぎが 鳴くのは 何の ためですか。", "a": "めすに 自分の いる 場所を 知らせる ため", "bad": ["てきを おどかす ため", "なかまと けんかを する ため", "朝が きたのを 知らせる ため"], "ev": "めすに 自分の いる 場所を 知らせる ために 鳴くのです", "why": "「〜ために」と いう ことばを さがそう。", "lv": 1},
- {"p": "p9", "t": "何を・何が", "q": "来週から、本は 一人 何さつまで かりられますか。", "a": "三さつ", "bad": ["一さつ", "二さつ", "五さつ"], "ev": "一人 三さつまでに なります", "why": "数を あらわす ことばに 気を つけよう。「二週間」の 二と まちがえないでね。", "lv": 1},
- {"p": "p9", "t": "いつ", "q": "図書室が 開かないのは いつですか。", "a": "水曜日の 昼休み", "bad": ["月曜日の 昼休み", "水曜日の 朝", "金曜日の 昼休み"], "ev": "水曜日の 昼休みは そうじが あるので、図書室は 開きません", "why": "「開きません」の 前を よく 読もう。", "lv": 1},
- {"p": "p10", "t": "「それ」などが さす もの", "q": "「それ」は 何の ことですか。", "a": "ゆいさんが ひろった 小さな 石", "bad": ["公園", "つくえ", "ゆいさんの 家"], "ev": "公園で 小さな 石を ひろいました", "why": "「それ」は、すぐ 前の 文に 出て きた ものを さして いるよ。", "lv": 1},
- {"p": "p10", "t": "どこ", "q": "ゆいさんは、石を どこに かざりましたか。", "a": "つくえの 上", "bad": ["公園の ベンチ", "まどの そば", "げんかん"], "ev": "つくえの 上に かざりました", "why": "「どこ」は、場所を あらわす ことばを さがそう。", "lv": 1},
- {"p": "p11", "t": "何を・何が", "q": "先生は 何と 教えて くれましたか。", "a": "足で 地面を 強く けって ごらん", "bad": ["うでを まっすぐ のばして ごらん", "ゆっくり やって ごらん", "目を つぶって ごらん"], "ev": "足で 地面を 強く けって ごらん", "why": "先生の ことばは『 』の 中に あるよ。", "lv": 1},
- {"p": "p11", "t": "どうなった", "q": "先生に 言われた とおりに やって みると、どう なりましたか。", "a": "体が くるりと 回った", "bad": ["足を いためた", "こわくて やめた", "先生が やって 見せた"], "ev": "体が くるりと 回りました", "why": "「やって みると」の あとを 読もう。", "lv": 1},
- {"p": "p12", "t": "じゅんばん", "q": "いちばん はじめに する ことは 何ですか。", "a": "紙を たてに 半分に おる", "bad": ["つばさを 広げる", "角を おり目に 合わせて おる", "紙を 切る"], "ev": "まず、紙を たてに 半分に おって", "why": "「まず」は、いちばん はじめの しるしだよ。", "lv": 1},
- {"p": "p12", "t": "じゅんばん", "q": "つばさを 広げるのは いつですか。", "a": "さいごに 半分に おった あと", "bad": ["いちばん はじめ", "角を おる 前", "紙を たてに おる 前"], "ev": "さいごに 半分に おって、つばさを 広げたら", "why": "「さいごに」を さがそう。", "lv": 1},
- {"p": "p13", "t": "だれが", "q": "この 手紙を 書いたのは だれですか。", "a": "さくらさん", "bad": ["おばさん", "妹", "お母さん"], "ev": "さくらより", "why": "手紙の さいごに、書いた 人の 名前が あるよ。", "lv": 1},
- {"p": "p13", "t": "何を・何が", "q": "おばさんは 何を 送って くれましたか。", "a": "絵本", "bad": ["ねこの 人形", "手紙", "おかし"], "ev": "すてきな 絵本を 送って くださって", "why": "「送って くださって」の 前を 読もう。", "lv": 1},
- {"p": "p14", "t": "何を・何が", "q": "ペンギンが できない ことは 何ですか。", "a": "空を とぶ こと", "bad": ["およぐ こと", "魚を つかまえる こと", "水の 中を すすむ こと"], "ev": "空を とぶ ことは できません", "why": "「できません」と 書いて ある ところを さがそう。", "lv": 1},
- {"p": "p14", "t": "「それ」などが さす もの", "q": "「この つばさ」は、どんな つばさですか。", "a": "ひれのように つかって 水の 中を すすむ つばさ", "bad": ["空を とぶ ための つばさ", "魚を つかまえて おく つばさ", "体を あたためる つばさ"], "ev": "つばさを ひれのように つかって、水の 中を 速く すすみます", "why": "「この」は、前に 書いて ある ことを さして いるよ。", "lv": 1},
- {"p": "p15", "t": "なぜ(わけ)", "q": "はるかさんが がっかりしたのは なぜですか。", "a": "絵が 雨に ぬれて 色が にじんだから", "bad": ["お母さんが 家に いなかったから", "絵を 学校に わすれたから", "絵を ほめて もらえなかったから"], "ev": "雨に ぬれて、絵の 色が にじんで しまいました", "why": "がっかりする 前に、何が おきたかな。", "lv": 1},
- {"p": "p15", "t": "だれが", "q": "はるかさんは、絵を だれに 見せようと 思って いましたか。", "a": "お母さん", "bad": ["先生", "友だち", "お父さん"], "ev": "お母さんに 見せようと 思って いた", "why": "「見せようと」の 前を 読もう。", "lv": 1},
- {"p": "p16", "t": "どこ", "q": "まいさんの 組は どこの 方へ 行きましたか。", "a": "図書館", "bad": ["駅", "川", "公園"], "ev": "二組は 図書館の 方へ", "why": "まいさんは 何組かな? さいごの 文と 合わせて 考えよう。", "lv": 1},
- {"p": "p16", "t": "だれが", "q": "駅の 方へ 行ったのは、どの 組ですか。", "a": "一組", "bad": ["二組", "三組", "三年生 みんな"], "ev": "一組は 駅の 方へ", "why": "「駅」と いう ことばを さがそう。", "lv": 1},
- {"p": "p17", "t": "「それ」などが さす もの", "q": "「これ」は 何の ことですか。", "a": "コップの まわりに 水の つぶが つく こと", "bad": ["コップに 水を 入れる こと", "水が こおる こと", "空気が あたたまる こと"], "ev": "コップの まわりに 水の つぶが つきます", "why": "「これ」は、すぐ 前の 文の ことを さして いるよ。", "lv": 1},
- {"p": "p17", "t": "なぜ(わけ)", "q": "水の つぶは、どうして できたのですか。", "a": "空気の 中の 目に 見えない 水が ひやされたから", "bad": ["コップから 水が しみ出したから", "だれかが 水を かけたから", "コップが あたためられたから"], "ev": "空気の 中に ある 目に 見えない 水が、つめたい コップに ひやされて", "why": "「これは、〜のです」の 文が せつめいだよ。", "lv": 1},
- {"p": "p18", "t": "どこ", "q": "ぼうしは どこに ありましたか。", "a": "ベンチの そば", "bad": ["すべり台の 下", "すなば", "公園の 入り口"], "ev": "ベンチの そばを 見ると、ぼうしが おちて いました", "why": "「ぼうしが おちて いました」の 前を 読もう。", "lv": 1},
- {"p": "p18", "t": "じゅんばん", "q": "そらくんが 二番目に さがした ところは どこですか。", "a": "すなば", "bad": ["すべり台の 下", "ベンチの そば", "家の 中"], "ev": "つぎに すなばを さがしましたが", "why": "「はじめに」「つぎに」「さいごに」で じゅんばんが 分かるよ。", "lv": 1},
- {"p": "p19", "lv": 2, "t": "気持ち", "q": "「足どりは、きのうより ずっと 軽く なって いました」から、なつきさんの どんな 気持ちが 分かりますか。", "a": "友だちが できそうで うれしい 気持ち", "bad": ["つかれて 早く 帰りたい 気持ち", "図工が いやに なった 気持ち", "あおいさんに おこって いる 気持ち"], "ev": "足どりは、きのうより ずっと 軽く なって いました", "why": "「足どりが 軽い」は、うれしくて 心が はずんで いる ようすを あらわすよ。"},
- {"p": "p19", "lv": 2, "t": "なぜ(わけ)", "q": "なつきさんの 気持ちが 変《か》わった きっかけは 何ですか。", "a": "あおいさんが 声を かけて くれた こと", "bad": ["先生に ほめられた こと", "本を 読み終えた こと", "図工で 一番に なった こと"], "ev": "「その 色、きれいだね」と 声を かけて くれました", "why": "まん中の 段落《だんらく》で、何が おきたかな。"},
- {"p": "p20", "lv": 2, "t": "何を・何が", "q": "ラッコは、石を 何に つかいますか。", "a": "貝を わる ため", "bad": ["海に しずむ ため", "体を かく ため", "なかまに 合図を する ため"], "ev": "その 石に 何度も 打ちつけて わります", "why": "「打ちつけて わります」を さがそう。"},
- {"p": "p20", "lv": 2, "t": "まとめ(いちばん 言いたい こと)", "q": "この 文章で いちばん 言いたい ことは 何ですか。", "a": "ラッコは 道具を つかう めずらしい 動物だ", "bad": ["ラッコは 海に うかんで ねむる", "貝の からは かたい", "海の 底《そこ》には 石が 多い"], "ev": "ラッコは、道具を つかう めずらしい 動物です", "why": "はじめや おわりの 段落《だんらく》に、言いたい ことが まとめて ある ことが 多いよ。"},
- {"p": "p21", "lv": 2, "t": "何を・何が", "q": "プールに 入る ために、わすれては いけない ことは 何ですか。", "a": "プールカードに おうちの 人の はんこを もらう こと", "bad": ["九時より 前に 学校に 来る こと", "土曜日に 来る こと", "新しい 水着を 買う こと"], "ev": "プールカードに おうちの 人の はんこが ないと 入れません", "why": "「※」の ついた ところは、大事な 注《ちゅう》いだよ。"},
- {"p": "p21", "lv": 2, "t": "いつ", "q": "プールが 休みなのは 何曜日ですか。", "a": "土曜日と 日曜日", "bad": ["月曜日と 金曜日", "水曜日", "毎日"], "ev": "土曜日・日曜日は 休み", "why": "「期間」の 行の(　)の 中を 読もう。"},
- {"p": "p22", "lv": 2, "t": "何を・何が", "q": "「まるで 雪が 小さく 笑《わら》って いるように」聞こえたのは、何の 音ですか。", "a": "雪を ふむ 音", "bad": ["風の 音", "友だちの 笑《わら》い声", "車の 音"], "ev": "キュッ、キュッと いう 音", "why": "「まるで 〜ように」は、ほかの ものに たとえる 書き方だよ。"},
- {"p": "p22", "lv": 2, "t": "どこ", "q": "こうたが 足あとを つけたのは どこですか。", "a": "だれも 歩いて いない 雪の 上", "bad": ["学校の ろう下", "どろの 道", "家の 中"], "ev": "だれも 歩いて いない 雪の 上に、そっと 足あとを つけました", "why": "「足あとを つけました」の 前を 読もう。"},
- {"p": "p23", "lv": 2, "t": "何を・何が", "q": "えんがわの 役目として、文章に 書かれて いる ものは どれですか。", "a": "夏に 家の 中を すずしく する", "bad": ["冬に 雪を ためて おく", "家の 中で いちばん 広い へやに なる", "野さいを 育てる 場所に なる"], "ev": "日ざしを さえぎって、家の 中を すずしく します", "why": "二つ目の 段落《だんらく》に 役目が 書いて あるよ。"},
- {"p": "p23", "lv": 2, "t": "だれが", "q": "えんがわに こしかけて 話を したのは だれですか。", "a": "近所の 人", "bad": ["家を 建《た》てた 大工さん", "学校の 先生", "遠くの 町の 人"], "ev": "近所の 人が 気軽に こしかけて", "why": "「こしかけて」の 前を 読もう。"},
- {"p": "p24", "lv": 2, "t": "気持ち", "q": "「ぼく」の 気持ちは、どのように 変《か》わりましたか。", "a": "がっかりした 気持ちから、楽しい 気持ちに なった", "bad": ["楽しい 気持ちから、がっかりした 気持ちに なった", "おこった 気持ちから、ねむい 気持ちに なった", "さいごまで ずっと がっかりして いた"], "ev": "いつのまにか 笑《わら》って いました", "why": "はじめと おわりの「ぼく」の ようすを くらべよう。"},
- {"p": "p24", "lv": 2, "t": "なぜ(わけ)", "q": "遠足が 中止に なったのは なぜですか。", "a": "雨が ふって いたから", "bad": ["バスが 来なかったから", "かぜを ひいたから", "先生が 休んだから"], "ev": "朝から 雨が ふって いて", "why": "「中止に なりました」の 前を 読もう。"},
- {"p": "p25", "lv": 3, "t": "まとめ(いちばん 言いたい こと)", "q": "筆者が いちばん 言いたい ことは 何ですか。", "a": "「ありがとう」の 一言が、思いやりの 輪《わ》を 広げる", "bad": ["「ありがとう」は 大きな 声で 言う べきだ", "人の 役に 立つ ことは むずかしい", "思いやりは 生まれつき もって いる"], "ev": "思いやりの 輪《わ》を 広げて いくのです", "why": "「つまり」の あとに、まとめが 書いて ある ことが 多いよ。"},
- {"p": "p25", "lv": 3, "t": "どうなった", "q": "「ありがとう」と 言われた 人は、どう 感じると 書いて ありますか。", "a": "自分が 役に 立てたと 感じる", "bad": ["はずかしく なって にげたく なる", "つかれたと 感じる", "もっと ほめて ほしいと 感じる"], "ev": "自分が 役に 立てたと 感じます", "why": "はじめの 文を 読もう。"},
- {"p": "p26", "lv": 3, "t": "何を・何が", "q": "コウモリの つばさは、何で できて いますか。", "a": "指の 間に はられた うすい 皮ふ", "bad": ["鳥と 同じ 羽", "かたい ほねだけ", "あつまった 毛"], "ev": "指の 間に はられた うすい 皮ふで できて います", "why": "「〜ですが」の あとに、コウモリの ことが 書いて あるよ。"},
- {"p": "p26", "lv": 3, "t": "何を・何が", "q": "コウモリは 何の なかまですか。", "a": "ほにゅう類《るい》", "bad": ["鳥", "こん虫", "は虫類《るい》"], "ev": "わたしたちと 同じ ほにゅう類《るい》です", "why": "「けれども」の あとに、ほんとうの ことが 書いて あるよ。"},
- {"p": "p27", "lv": 3, "t": "なぜ(わけ)", "q": "「ぼく」が 止まらずに 走り続《つづ》けたのは なぜですか。", "a": "たくみが『行け!』と さけんだから", "bad": ["たくみに 勝ちたかったから", "たくみが ころんだのに 気づかなかったから", "先生に 言われたから"], "ev": "たくみが『行け!』と さけんだので", "why": "「〜ので」の 前に わけが あるよ。"},
- {"p": "p27", "lv": 3, "t": "気持ち", "q": "手を にぎった ときの たくみの 気持ちに 近い ものは どれですか。", "a": "くやしいけれど、もどって きて くれて うれしい", "bad": ["ころばされて おこって いる", "一番に なれて とくいに なって いる", "はずかしくて にげ出したい"], "ev": "少し くやしそうに、でも 笑《わら》って その 手を にぎった", "why": "「くやしそう」と「笑《わら》って」、二つの ようすが 書いて あるね。"},
- {"p": "p28", "lv": 3, "t": "何を・何が", "q": "「食品ロス」とは 何ですか。", "a": "まだ 食べられるのに すてられる 食べ物", "bad": ["くさって しまった 食べ物", "外国から 買った 食べ物", "お店で 売れ残《のこ》った 野さいだけ"], "ev": "まだ 食べられるのに すてられて しまう 食べ物", "why": "「〜を『食品ロス』と いいます」の 前を 読もう。"},
- {"p": "p28", "lv": 3, "t": "まとめ(いちばん 言いたい こと)", "q": "筆者の 考えに 合う ものは どれですか。", "a": "一人一人の 工夫《くふう》で 食品ロスは へらせる", "bad": ["食品ロスは お店だけの 問題だ", "食べ物は たくさん 買う ほうが よい", "食品ロスは へらす ことが できない"], "ev": "一人一人の 小さな 工夫《くふう》で、食品ロスは へらす ことが できます", "why": "さいごの 文に、筆者の 考えが あるよ。"},
- {"p": "p29", "lv": 3, "t": "何を・何が", "q": "この 俳句《はいく》の 季語《きご》(季節《きせつ》を あらわす ことば)は どれですか。", "a": "蛙《かわず》", "bad": ["古池", "水の音", "飛《と》びこむ"], "ev": "蛙《かわず》", "why": "かえる(かわず)は 春の 季語《きご》だよ。"},
- {"p": "p29", "lv": 3, "t": "何を・何が", "q": "水の 音を 聞いて、かえって 強く 感じられるのは 何ですか。", "a": "まわりの しずけさ", "bad": ["かえるの 元気さ", "池の 大きさ", "水の つめたさ"], "ev": "まわりの しずけさが かえって 強く 感じられる", "why": "せつめいの 文を 読もう。"},
- {"p": "p30", "lv": 3, "t": "まとめ(いちばん 言いたい こと)", "q": "筆者は、まちがえた 問題を どう する ことが 大切だと 言って いますか。", "a": "もう一度 といて みる こと", "bad": ["すぐに わすれる こと", "答えだけ 書き写す こと", "友だちに かくす こと"], "ev": "もう一度 といて みる ことが 大切なのです", "why": "「大切なのです」を さがそう。"},
- {"p": "p30", "lv": 3, "t": "何を・何が", "q": "筆者は、まちがいを 何に たとえて いますか。", "a": "地図", "bad": ["宝《たから》物", "かがみ", "時計《とけい》"], "ev": "地図のような もの", "why": "「〜のような もの」は、たとえの 書き方だよ。"}
+ {"p": "p1", "t": "なぜ(わけ)", "q": "みさきさんが おかわりを したのは、なぜですか。", "a": "トマトが あまくて おいしかったから", "bad": ["おなかが ぺこぺこだったから", "おばあちゃんに おこられたから", "トマトが たくさん あまって いたから"], "ev": "あまくて おいしかったので", "why": "「〜ので」の ところに、わけが 書いて あるよ。", "lv": 1, "tp": 0},
+ {"p": "p1", "t": "何を・何が", "q": "おばあちゃんは、帰る ときに 何を して くれましたか。", "a": "トマトを ふくろに 入れて くれた", "bad": ["うらの はたけに つれて 行って くれた", "おかわりを 出して くれた", "駅まで 送って くれた"], "ev": "トマトを ふくろに 入れて くれました", "why": "「帰る とき」の あとの 文を 見よう。", "lv": 1, "tp": 0},
+ {"p": "p2", "t": "だれが", "q": "タオルを かして くれたのは だれですか。", "a": "そうたくん", "bad": ["ゆうたくん", "先生", "お母さん"], "ev": "友だちの そうたくんが", "why": "「かして くれた」人は、「〜が」の ところに 出て くるよ。", "lv": 1, "tp": 0},
+ {"p": "p2", "t": "なぜ(わけ)", "q": "ゆうたくんが くつを ふいたのは、なぜですか。", "a": "雨で くつを ぬらして しまったから", "bad": ["教室が よごれて いたから", "先生に 言われたから", "タオルが ほしかったから"], "ev": "くつを ぬらして しまいました", "why": "くつが ぬれた ことが 前の 文に 書いて あるよ。", "lv": 1, "tp": 0},
+ {"p": "p3", "t": "いつ", "q": "朝の 会は 何時に 始まりますか。", "a": "8時15分", "bad": ["8時", "8時10分", "9時"], "ev": "8時15分に 朝の 会が 始まります", "why": "「始まります」と 書いて ある 時こくを 見よう。", "lv": 1, "tp": 0},
+ {"p": "p3", "t": "なぜ(わけ)", "q": "ひろしくんが 走って 行ったのは、なぜですか。", "a": "ねぼうを して、家を 出るのが おそく なったから", "bad": ["走るのが すきだから", "友だちと やくそくして いたから", "先生に よばれたから"], "ev": "けさは めずらしく ねぼうを した", "why": "走る 前に 何が あったか、前の 文に 書いて あるよ。", "lv": 1, "tp": 0},
+ {"p": "p4", "t": "何を・何が", "q": "先生は あやかさんに 何と 言いましたか。", "a": "さいごまで ひけて えらかったね", "bad": ["まちがえては だめだよ", "もう 一回 ひきなさい", "また 来週 ね"], "ev": "さいごまで ひけて えらかったね", "why": "先生の ことばは「 」の 中に 書いて あるよ。", "lv": 1, "tp": 0},
+ {"p": "p4", "t": "どうなった", "q": "あやかさんの 気もちは、どう かわりましたか。", "a": "ざんねんな 気もちから、少し 元気に なった", "bad": ["たのしい 気もちから、かなしく なった", "はずかしい 気もちから、おこった", "元気な 気もちから、ざんねんに なった"], "ev": "少し 元気が 出ました", "why": "文の さいごに、気もちが どう なったか 書いて あるよ。", "lv": 1, "tp": 0},
+ {"p": "p5", "t": "何を・何が", "q": "ありは 何を つかって、なかまに 食べ物の 場所を 教えて いますか。", "a": "におい", "bad": ["声", "音", "色"], "ev": "においで なかまに 食べ物の 場所を 教えて いる", "why": "さいごの 文が、まとめに なって いるよ。", "lv": 1, "tp": 1},
+ {"p": "p5", "t": "何を・何が", "q": "食べ物を 見つけた ありは、地面に においを つけながら どこへ もどりますか。", "a": "すに", "bad": ["食べ物の ところへ", "水たまりへ", "木の 上へ"], "ev": "すに もどります", "why": "はじめの 文に「〜に もどります」と 書いて あるよ。", "lv": 1, "tp": 1},
+ {"p": "p6", "t": "じゅんばん", "q": "やさいを いためるのは、何の あとですか。", "a": "やさいを 切った あと", "bad": ["水を 入れた あと", "ルーを 入れた あと", "にこんだ あと"], "ev": "はじめに、やさいを 切ります。つぎに、やさいと にくを なべで いためます", "why": "「はじめに」「つぎに」と いう ことばが じゅんばんの ヒントだよ。", "lv": 1, "tp": 1},
+ {"p": "p6", "t": "じゅんばん", "q": "ルーを 入れるのは、いつですか。", "a": "さいごに", "bad": ["はじめに", "やさいを いためる 前に", "水を 入れる 前に"], "ev": "さいごに、ルーを 入れて", "why": "「さいごに」と いう ことばを さがそう。", "lv": 1, "tp": 1},
+ {"p": "p7", "t": "いつ", "q": "魚が つれたのは いつですか。", "a": "お昼前", "bad": ["朝 六時", "お昼の あと", "夕方"], "ev": "お昼前に 大きな 魚が 一ぴき つれました", "why": "「いつ」は、時を あらわす ことばを さがそう。", "lv": 1, "tp": 2},
+ {"p": "p7", "t": "なぜ(わけ)", "q": "日記を 書いた 人が とても うれしかったのは なぜですか。", "a": "お父さんが ほめて くれたから", "bad": ["魚を 食べられたから", "朝 早く おきられたから", "川で およげたから"], "ev": "お父さんが『すごいね』と ほめて くれたので", "why": "「〜ので」の 前に わけが あるよ。", "lv": 1, "tp": 2},
+ {"p": "p8", "t": "何を・何が", "q": "こおろぎは 体の どこを つかって 音を 出して いますか。", "a": "はね", "bad": ["口", "あし", "しょっかく"], "ev": "はねを こすり合わせて 音を 出して います", "why": "はじめの 文で「口では ない」と 言って いるよ。", "lv": 1, "tp": 1},
+ {"p": "p8", "t": "なぜ(わけ)", "q": "おすの こおろぎが 鳴くのは 何の ためですか。", "a": "めすに 自分の いる 場所を 知らせる ため", "bad": ["てきを おどかす ため", "なかまと けんかを する ため", "朝が きたのを 知らせる ため"], "ev": "めすに 自分の いる 場所を 知らせる ために 鳴くのです", "why": "「〜ために」と いう ことばを さがそう。", "lv": 1, "tp": 1},
+ {"p": "p9", "t": "何を・何が", "q": "来週から、本は 一人 何さつまで かりられますか。", "a": "三さつ", "bad": ["一さつ", "二さつ", "五さつ"], "ev": "一人 三さつまでに なります", "why": "数を あらわす ことばに 気を つけよう。「二週間」の 二と まちがえないでね。", "lv": 1, "tp": 2},
+ {"p": "p9", "t": "いつ", "q": "図書室が 開かないのは いつですか。", "a": "水曜日の 昼休み", "bad": ["月曜日の 昼休み", "水曜日の 朝", "金曜日の 昼休み"], "ev": "水曜日の 昼休みは そうじが あるので、図書室は 開きません", "why": "「開きません」の 前を よく 読もう。", "lv": 1, "tp": 2},
+ {"p": "p10", "t": "「それ」などが さす もの", "q": "「それ」は 何の ことですか。", "a": "ゆいさんが ひろった 小さな 石", "bad": ["公園", "つくえ", "ゆいさんの 家"], "ev": "公園で 小さな 石を ひろいました", "why": "「それ」は、すぐ 前の 文に 出て きた ものを さして いるよ。", "lv": 1, "tp": 0},
+ {"p": "p10", "t": "どこ", "q": "ゆいさんは、石を どこに かざりましたか。", "a": "つくえの 上", "bad": ["公園の ベンチ", "まどの そば", "げんかん"], "ev": "つくえの 上に かざりました", "why": "「どこ」は、場所を あらわす ことばを さがそう。", "lv": 1, "tp": 0},
+ {"p": "p11", "t": "何を・何が", "q": "先生は 何と 教えて くれましたか。", "a": "足で 地面を 強く けって ごらん", "bad": ["うでを まっすぐ のばして ごらん", "ゆっくり やって ごらん", "目を つぶって ごらん"], "ev": "足で 地面を 強く けって ごらん", "why": "先生の ことばは『 』の 中に あるよ。", "lv": 1, "tp": 0},
+ {"p": "p11", "t": "どうなった", "q": "先生に 言われた とおりに やって みると、どう なりましたか。", "a": "体が くるりと 回った", "bad": ["足を いためた", "こわくて やめた", "先生が やって 見せた"], "ev": "体が くるりと 回りました", "why": "「やって みると」の あとを 読もう。", "lv": 1, "tp": 0},
+ {"p": "p12", "t": "じゅんばん", "q": "いちばん はじめに する ことは 何ですか。", "a": "紙を たてに 半分に おる", "bad": ["つばさを 広げる", "角を おり目に 合わせて おる", "紙を 切る"], "ev": "まず、紙を たてに 半分に おって", "why": "「まず」は、いちばん はじめの しるしだよ。", "lv": 1, "tp": 1},
+ {"p": "p12", "t": "じゅんばん", "q": "つばさを 広げるのは いつですか。", "a": "さいごに 半分に おった あと", "bad": ["いちばん はじめ", "角を おる 前", "紙を たてに おる 前"], "ev": "さいごに 半分に おって、つばさを 広げたら", "why": "「さいごに」を さがそう。", "lv": 1, "tp": 1},
+ {"p": "p13", "t": "だれが", "q": "この 手紙を 書いたのは だれですか。", "a": "さくらさん", "bad": ["おばさん", "妹", "お母さん"], "ev": "さくらより", "why": "手紙の さいごに、書いた 人の 名前が あるよ。", "lv": 1, "tp": 2},
+ {"p": "p13", "t": "何を・何が", "q": "おばさんは 何を 送って くれましたか。", "a": "絵本", "bad": ["ねこの 人形", "手紙", "おかし"], "ev": "すてきな 絵本を 送って くださって", "why": "「送って くださって」の 前を 読もう。", "lv": 1, "tp": 2},
+ {"p": "p14", "t": "何を・何が", "q": "ペンギンが できない ことは 何ですか。", "a": "空を とぶ こと", "bad": ["およぐ こと", "魚を つかまえる こと", "水の 中を すすむ こと"], "ev": "空を とぶ ことは できません", "why": "「できません」と 書いて ある ところを さがそう。", "lv": 1, "tp": 1},
+ {"p": "p14", "t": "「それ」などが さす もの", "q": "「この つばさ」は、どんな つばさですか。", "a": "ひれのように つかって 水の 中を すすむ つばさ", "bad": ["空を とぶ ための つばさ", "魚を つかまえて おく つばさ", "体を あたためる つばさ"], "ev": "つばさを ひれのように つかって、水の 中を 速く すすみます", "why": "「この」は、前に 書いて ある ことを さして いるよ。", "lv": 1, "tp": 1},
+ {"p": "p15", "t": "なぜ(わけ)", "q": "はるかさんが がっかりしたのは なぜですか。", "a": "絵が 雨に ぬれて 色が にじんだから", "bad": ["お母さんが 家に いなかったから", "絵を 学校に わすれたから", "絵を ほめて もらえなかったから"], "ev": "雨に ぬれて、絵の 色が にじんで しまいました", "why": "がっかりする 前に、何が おきたかな。", "lv": 1, "tp": 0},
+ {"p": "p15", "t": "だれが", "q": "はるかさんは、絵を だれに 見せようと 思って いましたか。", "a": "お母さん", "bad": ["先生", "友だち", "お父さん"], "ev": "お母さんに 見せようと 思って いた", "why": "「見せようと」の 前を 読もう。", "lv": 1, "tp": 0},
+ {"p": "p16", "t": "どこ", "q": "まいさんの 組は どこの 方へ 行きましたか。", "a": "図書館", "bad": ["駅", "川", "公園"], "ev": "二組は 図書館の 方へ", "why": "まいさんは 何組かな? さいごの 文と 合わせて 考えよう。", "lv": 1, "tp": 2},
+ {"p": "p16", "t": "だれが", "q": "駅の 方へ 行ったのは、どの 組ですか。", "a": "一組", "bad": ["二組", "三組", "三年生 みんな"], "ev": "一組は 駅の 方へ", "why": "「駅」と いう ことばを さがそう。", "lv": 1, "tp": 2},
+ {"p": "p17", "t": "「それ」などが さす もの", "q": "「これ」は 何の ことですか。", "a": "コップの まわりに 水の つぶが つく こと", "bad": ["コップに 水を 入れる こと", "水が こおる こと", "空気が あたたまる こと"], "ev": "コップの まわりに 水の つぶが つきます", "why": "「これ」は、すぐ 前の 文の ことを さして いるよ。", "lv": 1, "tp": 1},
+ {"p": "p17", "t": "なぜ(わけ)", "q": "水の つぶは、どうして できたのですか。", "a": "空気の 中の 目に 見えない 水が ひやされたから", "bad": ["コップから 水が しみ出したから", "だれかが 水を かけたから", "コップが あたためられたから"], "ev": "空気の 中に ある 目に 見えない 水が、つめたい コップに ひやされて", "why": "「これは、〜のです」の 文が せつめいだよ。", "lv": 1, "tp": 1},
+ {"p": "p18", "t": "どこ", "q": "ぼうしは どこに ありましたか。", "a": "ベンチの そば", "bad": ["すべり台の 下", "すなば", "公園の 入り口"], "ev": "ベンチの そばを 見ると、ぼうしが おちて いました", "why": "「ぼうしが おちて いました」の 前を 読もう。", "lv": 1, "tp": 0},
+ {"p": "p18", "t": "じゅんばん", "q": "そらくんが 二番目に さがした ところは どこですか。", "a": "すなば", "bad": ["すべり台の 下", "ベンチの そば", "家の 中"], "ev": "つぎに すなばを さがしましたが", "why": "「はじめに」「つぎに」「さいごに」で じゅんばんが 分かるよ。", "lv": 1, "tp": 0},
+ {"p": "p19", "lv": 2, "t": "気持ち", "q": "「足どりは、きのうより ずっと 軽く なって いました」から、なつきさんの どんな 気持ちが 分かりますか。", "a": "友だちが できそうで うれしい 気持ち", "bad": ["つかれて 早く 帰りたい 気持ち", "図工が いやに なった 気持ち", "あおいさんに おこって いる 気持ち"], "ev": "足どりは、きのうより ずっと 軽く なって いました", "why": "「足どりが 軽い」は、うれしくて 心が はずんで いる ようすを あらわすよ。", "tp": 0},
+ {"p": "p19", "lv": 2, "t": "なぜ(わけ)", "q": "なつきさんの 気持ちが 変《か》わった きっかけは 何ですか。", "a": "あおいさんが 声を かけて くれた こと", "bad": ["先生に ほめられた こと", "本を 読み終えた こと", "図工で 一番に なった こと"], "ev": "「その 色、きれいだね」と 声を かけて くれました", "why": "まん中の 段落《だんらく》で、何が おきたかな。", "tp": 0},
+ {"p": "p20", "lv": 2, "t": "何を・何が", "q": "ラッコは、石を 何に つかいますか。", "a": "貝を わる ため", "bad": ["海に しずむ ため", "体を かく ため", "なかまに 合図を する ため"], "ev": "その 石に 何度も 打ちつけて わります", "why": "「打ちつけて わります」を さがそう。", "tp": 1},
+ {"p": "p20", "lv": 2, "t": "まとめ(いちばん 言いたい こと)", "q": "この 文章で いちばん 言いたい ことは 何ですか。", "a": "ラッコは 道具を つかう めずらしい 動物だ", "bad": ["ラッコは 海に うかんで ねむる", "貝の からは かたい", "海の 底《そこ》には 石が 多い"], "ev": "ラッコは、道具を つかう めずらしい 動物です", "why": "はじめや おわりの 段落《だんらく》に、言いたい ことが まとめて ある ことが 多いよ。", "tp": 1},
+ {"p": "p21", "lv": 2, "t": "何を・何が", "q": "プールに 入る ために、わすれては いけない ことは 何ですか。", "a": "プールカードに おうちの 人の はんこを もらう こと", "bad": ["九時より 前に 学校に 来る こと", "土曜日に 来る こと", "新しい 水着を 買う こと"], "ev": "プールカードに おうちの 人の はんこが ないと 入れません", "why": "「※」の ついた ところは、大事な 注《ちゅう》いだよ。", "tp": 2},
+ {"p": "p21", "lv": 2, "t": "いつ", "q": "プールが 休みなのは 何曜日ですか。", "a": "土曜日と 日曜日", "bad": ["月曜日と 金曜日", "水曜日", "毎日"], "ev": "土曜日・日曜日は 休み", "why": "「期間」の 行の(　)の 中を 読もう。", "tp": 2},
+ {"p": "p22", "lv": 2, "t": "何を・何が", "q": "「まるで 雪が 小さく 笑《わら》って いるように」聞こえたのは、何の 音ですか。", "a": "雪を ふむ 音", "bad": ["風の 音", "友だちの 笑《わら》い声", "車の 音"], "ev": "キュッ、キュッと いう 音", "why": "「まるで 〜ように」は、ほかの ものに たとえる 書き方だよ。", "tp": 0},
+ {"p": "p22", "lv": 2, "t": "どこ", "q": "こうたが 足あとを つけたのは どこですか。", "a": "だれも 歩いて いない 雪の 上", "bad": ["学校の ろう下", "どろの 道", "家の 中"], "ev": "だれも 歩いて いない 雪の 上に、そっと 足あとを つけました", "why": "「足あとを つけました」の 前を 読もう。", "tp": 0},
+ {"p": "p23", "lv": 2, "t": "何を・何が", "q": "えんがわの 役目として、文章に 書かれて いる ものは どれですか。", "a": "夏に 家の 中を すずしく する", "bad": ["冬に 雪を ためて おく", "家の 中で いちばん 広い へやに なる", "野さいを 育てる 場所に なる"], "ev": "日ざしを さえぎって、家の 中を すずしく します", "why": "二つ目の 段落《だんらく》に 役目が 書いて あるよ。", "tp": 1},
+ {"p": "p23", "lv": 2, "t": "だれが", "q": "えんがわに こしかけて 話を したのは だれですか。", "a": "近所の 人", "bad": ["家を 建《た》てた 大工さん", "学校の 先生", "遠くの 町の 人"], "ev": "近所の 人が 気軽に こしかけて", "why": "「こしかけて」の 前を 読もう。", "tp": 1},
+ {"p": "p24", "lv": 2, "t": "気持ち", "q": "「ぼく」の 気持ちは、どのように 変《か》わりましたか。", "a": "がっかりした 気持ちから、楽しい 気持ちに なった", "bad": ["楽しい 気持ちから、がっかりした 気持ちに なった", "おこった 気持ちから、ねむい 気持ちに なった", "さいごまで ずっと がっかりして いた"], "ev": "いつのまにか 笑《わら》って いました", "why": "はじめと おわりの「ぼく」の ようすを くらべよう。", "tp": 0},
+ {"p": "p24", "lv": 2, "t": "なぜ(わけ)", "q": "遠足が 中止に なったのは なぜですか。", "a": "雨が ふって いたから", "bad": ["バスが 来なかったから", "かぜを ひいたから", "先生が 休んだから"], "ev": "朝から 雨が ふって いて", "why": "「中止に なりました」の 前を 読もう。", "tp": 0},
+ {"p": "p25", "lv": 3, "t": "まとめ(いちばん 言いたい こと)", "q": "筆者が いちばん 言いたい ことは 何ですか。", "a": "「ありがとう」の 一言が、思いやりの 輪《わ》を 広げる", "bad": ["「ありがとう」は 大きな 声で 言う べきだ", "人の 役に 立つ ことは むずかしい", "思いやりは 生まれつき もって いる"], "ev": "思いやりの 輪《わ》を 広げて いくのです", "why": "「つまり」の あとに、まとめが 書いて ある ことが 多いよ。", "tp": 3},
+ {"p": "p25", "lv": 3, "t": "どうなった", "q": "「ありがとう」と 言われた 人は、どう 感じると 書いて ありますか。", "a": "自分が 役に 立てたと 感じる", "bad": ["はずかしく なって にげたく なる", "つかれたと 感じる", "もっと ほめて ほしいと 感じる"], "ev": "自分が 役に 立てたと 感じます", "why": "はじめの 文を 読もう。", "tp": 3},
+ {"p": "p26", "lv": 3, "t": "何を・何が", "q": "コウモリの つばさは、何で できて いますか。", "a": "指の 間に はられた うすい 皮ふ", "bad": ["鳥と 同じ 羽", "かたい ほねだけ", "あつまった 毛"], "ev": "指の 間に はられた うすい 皮ふで できて います", "why": "「〜ですが」の あとに、コウモリの ことが 書いて あるよ。", "tp": 1},
+ {"p": "p26", "lv": 3, "t": "何を・何が", "q": "コウモリは 何の なかまですか。", "a": "ほにゅう類《るい》", "bad": ["鳥", "こん虫", "は虫類《るい》"], "ev": "わたしたちと 同じ ほにゅう類《るい》です", "why": "「けれども」の あとに、ほんとうの ことが 書いて あるよ。", "tp": 1},
+ {"p": "p27", "lv": 3, "t": "なぜ(わけ)", "q": "「ぼく」が 止まらずに 走り続《つづ》けたのは なぜですか。", "a": "たくみが『行け!』と さけんだから", "bad": ["たくみに 勝ちたかったから", "たくみが ころんだのに 気づかなかったから", "先生に 言われたから"], "ev": "たくみが『行け!』と さけんだので", "why": "「〜ので」の 前に わけが あるよ。", "tp": 0},
+ {"p": "p27", "lv": 3, "t": "気持ち", "q": "手を にぎった ときの たくみの 気持ちに 近い ものは どれですか。", "a": "くやしいけれど、もどって きて くれて うれしい", "bad": ["ころばされて おこって いる", "一番に なれて とくいに なって いる", "はずかしくて にげ出したい"], "ev": "少し くやしそうに、でも 笑《わら》って その 手を にぎった", "why": "「くやしそう」と「笑《わら》って」、二つの ようすが 書いて あるね。", "tp": 0},
+ {"p": "p28", "lv": 3, "t": "何を・何が", "q": "「食品ロス」とは 何ですか。", "a": "まだ 食べられるのに すてられる 食べ物", "bad": ["くさって しまった 食べ物", "外国から 買った 食べ物", "お店で 売れ残《のこ》った 野さいだけ"], "ev": "まだ 食べられるのに すてられて しまう 食べ物", "why": "「〜を『食品ロス』と いいます」の 前を 読もう。", "tp": 1},
+ {"p": "p28", "lv": 3, "t": "まとめ(いちばん 言いたい こと)", "q": "筆者の 考えに 合う ものは どれですか。", "a": "一人一人の 工夫《くふう》で 食品ロスは へらせる", "bad": ["食品ロスは お店だけの 問題だ", "食べ物は たくさん 買う ほうが よい", "食品ロスは へらす ことが できない"], "ev": "一人一人の 小さな 工夫《くふう》で、食品ロスは へらす ことが できます", "why": "さいごの 文に、筆者の 考えが あるよ。", "tp": 1},
+ {"p": "p29", "lv": 3, "t": "何を・何が", "q": "この 俳句《はいく》の 季語《きご》(季節《きせつ》を あらわす ことば)は どれですか。", "a": "蛙《かわず》", "bad": ["古池", "水の音", "飛《と》びこむ"], "ev": "蛙《かわず》", "why": "かえる(かわず)は 春の 季語《きご》だよ。", "tp": 3},
+ {"p": "p29", "lv": 3, "t": "何を・何が", "q": "水の 音を 聞いて、かえって 強く 感じられるのは 何ですか。", "a": "まわりの しずけさ", "bad": ["かえるの 元気さ", "池の 大きさ", "水の つめたさ"], "ev": "まわりの しずけさが かえって 強く 感じられる", "why": "せつめいの 文を 読もう。", "tp": 3},
+ {"p": "p30", "lv": 3, "t": "まとめ(いちばん 言いたい こと)", "q": "筆者は、まちがえた 問題を どう する ことが 大切だと 言って いますか。", "a": "もう一度 といて みる こと", "bad": ["すぐに わすれる こと", "答えだけ 書き写す こと", "友だちに かくす こと"], "ev": "もう一度 といて みる ことが 大切なのです", "why": "「大切なのです」を さがそう。", "tp": 3},
+ {"p": "p30", "lv": 3, "t": "何を・何が", "q": "筆者は、まちがいを 何に たとえて いますか。", "a": "地図", "bad": ["宝《たから》物", "かがみ", "時計《とけい》"], "ev": "地図のような もの", "why": "「〜のような もの」は、たとえの 書き方だよ。", "tp": 3}
 ]
 };
     var ROUNDS = { s:10, j:5, o:10, o4:10, o5:10 }, NAMES = { s:'理科', j:'国語(読解)', o:'社会 だん1', o4:'社会 だん2', o5:'社会 だん3' };
@@ -12531,141 +12619,150 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---------- 国語(小3)を ふやす: 読解の ルビ・文の組み立て(b)・ローマ字(r)。kokugo/apply.py が 入れる ----------
        漢字《よみ》 は ルビ。BUN の k:'tap' 文の ことばを タップ / 'ord' ならべかえ / 'ch' 4択。ROMA の k:'type' ローマ字を 打つ / 'ch' 4択 */
     var BUN = {
-"levels": ["主語《しゅご》・述語《じゅつご》", "くわしく する ことば・こそあど", "敬語《けいご》・長い 文"],
+"topics": ["主語《しゅご》と 述語《じゅつご》", "くわしく する ことば", "つなぐ ことば・こそあど", "文の 形・かぎ・敬語《けいご》", "ならべかえ"],
 "items": [
- {"k": "tap", "ask": "「だれが(何が)」に あたる ことば(主語《しゅご》)を タップしよう。", "s": ["小さな", "犬が", "公園で", "元気に", "走る。"], "a": "犬が", "why": "「〜が」「〜は」が ついて いて、「走る」のは だれかを あらわす ことばが 主語《しゅご》だよ。", "lv": 1},
- {"k": "tap", "ask": "「だれが(何が)」に あたる ことば(主語《しゅご》)を タップしよう。", "s": ["朝、", "妹は", "七時に", "おきた。"], "a": "妹は", "why": "おきたのは だれ? 「妹は」が 主語《しゅご》だよ。", "lv": 1},
- {"k": "tap", "ask": "「だれが(何が)」に あたる ことば(主語《しゅご》)を タップしよう。", "s": ["きのう", "校庭の", "花が", "たくさん", "さいた。"], "a": "花が", "why": "さいたのは 何? 「花が」が 主語《しゅご》だよ。", "lv": 1},
- {"k": "tap", "ask": "「だれが(何が)」に あたる ことば(主語《しゅご》)を タップしよう。", "s": ["白い", "雲が", "青い", "空に", "うかんで いる。"], "a": "雲が", "why": "うかんで いるのは 何? 「雲が」が 主語《しゅご》だよ。", "lv": 1},
- {"k": "tap", "ask": "「だれが(何が)」に あたる ことば(主語《しゅご》)を タップしよう。", "s": ["ぼくの", "兄は", "サッカーが", "とても", "上手だ。"], "a": "兄は", "why": "上手なのは だれ? 「兄は」が 主語《しゅご》だよ。「サッカーが」は 何が 上手かを あらわして いるよ。", "lv": 1},
- {"k": "tap", "ask": "「どうする・どんなだ・なんだ」に あたる ことば(述語《じゅつご》)を タップしよう。", "s": ["小鳥が", "木の 上で", "楽しそうに", "鳴いた。"], "a": "鳴いた。", "why": "小鳥が どう した? 「鳴いた」が 述語《じゅつご》。述語《じゅつご》は 文の さいごに ある ことが 多いよ。", "lv": 1},
- {"k": "tap", "ask": "「どうする・どんなだ・なんだ」に あたる ことば(述語《じゅつご》)を タップしよう。", "s": ["わたしの", "ゆめは", "花やさんだ。"], "a": "花やさんだ。", "why": "ゆめは なんだ? 「花やさんだ」が 述語《じゅつご》だよ。", "lv": 1},
- {"k": "tap", "ask": "「どうする・どんなだ・なんだ」に あたる ことば(述語《じゅつご》)を タップしよう。", "s": ["夜空の", "星が", "きらきらと", "光る。"], "a": "光る。", "why": "星が どう する? 「光る」が 述語《じゅつご》だよ。", "lv": 1},
- {"k": "tap", "ask": "「どうする・どんなだ・なんだ」に あたる ことば(述語《じゅつご》)を タップしよう。", "s": ["今日の", "海は", "とても", "しずかだ。"], "a": "しずかだ。", "why": "海は どんなだ? 「しずかだ」が 述語《じゅつご》だよ。", "lv": 1},
- {"k": "tap", "ask": "「どうする・どんなだ・なんだ」に あたる ことば(述語《じゅつご》)を タップしよう。", "s": ["母が", "台所で", "カレーを", "作る。"], "a": "作る。", "why": "母が どう する? 「作る」が 述語《じゅつご》だよ。", "lv": 1},
- {"k": "tap", "hl": "赤い", "ask": "「赤い」は、どの ことばを くわしく して いるかな? タップしよう。", "s": ["赤い", "花が", "風に", "ゆれる。"], "a": "花が", "why": "「赤い 花」と つなげて 読めるね。くわしく する ことばを 修飾語《しゅうしょくご》と いうよ。", "lv": 2},
- {"k": "tap", "hl": "ゆっくり", "ask": "「ゆっくり」は、どの ことばを くわしく して いるかな? タップしよう。", "s": ["大きな", "かめが", "ゆっくり", "歩く。"], "a": "歩く。", "why": "「ゆっくり 歩く」。どんなふうに 歩くかを くわしく して いるよ。", "lv": 2},
- {"k": "tap", "hl": "公園で", "ask": "「公園で」は、どの ことばを くわしく して いるかな? タップしよう。", "s": ["弟は", "公園で", "ボールを", "けった。"], "a": "けった。", "why": "「公園で けった」。どこで けったかを くわしく して いるよ。", "lv": 2},
- {"k": "tap", "hl": "となりの", "ask": "「となりの」は、どの ことばを くわしく して いるかな? タップしよう。", "s": ["となりの", "ねこが", "へいの 上で", "ねて いる。"], "a": "ねこが", "why": "「となりの ねこ」。どこの ねこかを くわしく して いるよ。", "lv": 2},
- {"k": "tap", "hl": "とても", "ask": "「とても」は、どの ことばを くわしく して いるかな? タップしよう。", "s": ["弟の", "声は", "とても", "大きい。"], "a": "大きい。", "why": "「とても 大きい」。どのくらい 大きいかを くわしく して いるよ。", "lv": 2},
- {"k": "ch", "q": "雨が ふって きた。(　　)、かさを さした。\n(　　)に 入る つなぎ言葉は どれ?", "a": "だから", "bad": ["しかし", "それとも", "たとえば"], "why": "雨が ふった → だから かさを さした。前の ことが わけに なる ときは「だから」。", "lv": 2},
- {"k": "ch", "q": "いっしょうけんめい 走った。(　　)、バスに まに合わなかった。\n(　　)に 入る つなぎ言葉は どれ?", "a": "けれども", "bad": ["だから", "そして", "それで"], "why": "走ったのに まに合わなかった。前と ちがう ことに なる ときは「けれども」「しかし」。", "lv": 2},
- {"k": "ch", "q": "はじめに 手を あらう。(　　)、ごはんを 食べる。\n(　　)に 入る つなぎ言葉は どれ?", "a": "それから", "bad": ["しかし", "なぜなら", "けれども"], "why": "する ことの じゅんばんを つなぐ ときは「それから」。", "lv": 2},
- {"k": "ch", "q": "ジュースに しますか。(　　)、お茶に しますか。\n(　　)に 入る つなぎ言葉は どれ?", "a": "それとも", "bad": ["だから", "しかし", "それから"], "why": "どちらかを えらぶ ときは「それとも」。", "lv": 2},
- {"k": "ch", "q": "今日は 学校を 休んだ。(　　)、ねつが あったからだ。\n(　　)に 入る つなぎ言葉は どれ?", "a": "なぜなら", "bad": ["だから", "それとも", "それから"], "why": "あとに わけを 書く ときは「なぜなら 〜からだ」。", "lv": 2},
- {"k": "ch", "q": "「犬が 走る。」は、どの 形の 文?", "a": "何が どうする", "bad": ["何が どんなだ", "何が なんだ", "何が ある"], "why": "「走る」は 動きを あらわすので「何が どうする」。", "lv": 1},
- {"k": "ch", "q": "「空が 青い。」は、どの 形の 文?", "a": "何が どんなだ", "bad": ["何が どうする", "何が なんだ", "何が ある"], "why": "「青い」は ようすを あらわすので「何が どんなだ」。", "lv": 1},
- {"k": "ch", "q": "「これは 図かんだ。」は、どの 形の 文?", "a": "何が なんだ", "bad": ["何が どうする", "何が どんなだ", "何が いる"], "why": "「図かんだ」は ものの 名前なので「何が なんだ」。", "lv": 1},
- {"k": "ch", "q": "「つくえの 上に 本が ある。」は、どの 形の 文?", "a": "何が ある", "bad": ["何が どうする", "何が どんなだ", "何が なんだ"], "why": "そこに あるかを あらわすので「何が ある(いる)」。", "lv": 1},
- {"k": "ch", "q": "かぎ(「 」)を つかうのは、どんな とき?", "a": "人が 話した ことばを 書く とき", "bad": ["文が おわった とき", "人の 名前を 書く とき", "文と 文を つなぐ とき"], "why": "話した ことばは「 」で かこむよ。", "lv": 1},
- {"k": "ch", "q": "正しく 書けて いる 文は どれ?", "a": "ぼくは「おはよう。」と 言った。", "bad": ["ぼくは おはようと「言った。」", "ぼくは「おはようと 言った。」", "「ぼくは」おはようと 言った。"], "why": "かぎで かこむのは 話した ことば「おはよう。」だけだよ。", "lv": 1},
- {"k": "ord", "s": ["大きな", "犬が", "ほえた。"], "stick": [[0, 1]], "why": "「大きな」は「犬が」を くわしく するので、すぐ 前に おくよ。", "lv": 1},
- {"k": "ord", "s": ["ぼくは", "朝ごはんを", "食べた。"], "stick": [], "why": "「食べた。」の ような 述語《じゅつご》は さいごに おくよ。", "lv": 1},
- {"k": "ord", "s": ["妹が", "赤い", "ふうせんを", "もらった。"], "stick": [[1, 2]], "why": "「赤い」は「ふうせんを」の すぐ 前。述語《じゅつご》「もらった。」は さいご。", "lv": 2},
- {"k": "ord", "s": ["白い", "ねこが", "目を", "とじた。"], "stick": [[0, 1]], "why": "「白い」は「ねこが」の すぐ 前。述語《じゅつご》「とじた。」は さいご。", "lv": 2},
- {"k": "ord", "s": ["小さな", "魚が", "川で", "およぐ。"], "stick": [[0, 1]], "why": "「小さな」は「魚が」の すぐ 前。述語《じゅつご》「およぐ。」は さいご。", "lv": 2},
- {"k": "ord", "s": ["姉は", "やさしい", "声で", "歌を", "歌った。"], "stick": [[1, 2]], "why": "「やさしい」は「声で」の すぐ 前。述語《じゅつご》「歌った。」は さいご。", "lv": 2},
- {"k": "ch", "lv": 2, "q": "自分の 近くに ある ものを 聞く とき。「(　　)は 何ですか。」\n(　　)に 入る ことばは?", "a": "これ", "bad": ["それ", "あれ", "どれ"], "why": "話す 人の 近くは「こ」、相手の 近くは「そ」、どちらからも 遠いと「あ」、分からない ときは「ど」。"},
- {"k": "ch", "lv": 2, "q": "遠くに 見える 山を 指さして。「(　　)山は 高いね。」\n(　　)に 入る ことばは?", "a": "あの", "bad": ["この", "その", "どの"], "why": "どちらからも 遠い ものは「あ」で さすよ。"},
- {"k": "ch", "lv": 2, "q": "相手が もって いる 本を 見て。「(　　)本、おもしろい?」\n(　　)に 入る ことばは?", "a": "その", "bad": ["この", "あの", "どの"], "why": "相手の 近くに ある ものは「そ」で さすよ。"},
- {"k": "ch", "lv": 2, "q": "行きたい 場所を たずねる とき。「(　　)に 行きたい?」\n(　　)に 入る ことばは?", "a": "どこ", "bad": ["ここ", "そこ", "あそこ"], "why": "分からない ことを たずねる ときは「ど」。"},
- {"k": "ch", "lv": 3, "q": "先生が 教室に (　　)。\n先生を うやまう 言い方は どれ?", "a": "いらっしゃった", "bad": ["まいった", "おった", "うかがった"], "why": "目上の 人が「来る」ときは「いらっしゃる」。「まいる」「うかがう」は 自分が へりくだる 言い方。"},
- {"k": "ch", "lv": 3, "q": "校長先生の お話を (　　)。\n自分が へりくだる 言い方は どれ?", "a": "うかがう", "bad": ["おっしゃる", "めしあがる", "いらっしゃる"], "why": "自分が「聞く」ときの へりくだった 言い方は「うかがう」。"},
- {"k": "ch", "lv": 3, "q": "お客さまが ケーキを (　　)。\nお客さまを うやまう 言い方は どれ?", "a": "めしあがる", "bad": ["いただく", "食う", "まいる"], "why": "相手が「食べる」ときは「めしあがる」。「いただく」は 自分が 食べる とき。"},
- {"k": "ch", "lv": 3, "q": "先生が「明日は 遠足です」と (　　)。\n先生を うやまう 言い方は どれ?", "a": "おっしゃった", "bad": ["申《もう》した", "うかがった", "いただいた"], "why": "目上の 人が「言う」ときは「おっしゃる」。「申《もう》す」は 自分が 言う とき。"},
- {"k": "ch", "lv": 3, "q": "お店の 人に 電話で。「母が、明日 そちらへ (　　)。」\n正しい 言い方は どれ?", "a": "まいります", "bad": ["いらっしゃいます", "おいでに なります", "おっしゃいます"], "why": "外の 人に 自分の 家族の ことを 話す ときは、へりくだって「まいります」。"},
- {"k": "ch", "lv": 3, "q": "「これは ぼくの 本だ。」を ていねいな 言い方に すると?", "a": "これは わたしの 本です。", "bad": ["これは ぼくの 本だぞ。", "これは おれの 本だ。", "これは ぼくの 本じゃん。"], "why": "「です」「ます」を つかうと ていねいに なるよ。"},
- {"k": "ch", "lv": 3, "q": "主語《しゅご》と 述語《じゅつご》が 正しく 合って いる 文は どれ?", "a": "ぼくの ゆめは、パイロットに なる ことです。", "bad": ["ぼくの ゆめは、パイロットに なりたいです。", "ぼくの ゆめは、パイロットに なります。", "ぼくの ゆめは、パイロットに なりました。"], "why": "「ゆめは」→「〜ことです」と 合わせるよ。"},
- {"k": "ch", "lv": 3, "q": "主語《しゅご》と 述語《じゅつご》が 正しく 合って いる 文は どれ?", "a": "わたしが 早く 起きたのは、遠足が あるからです。", "bad": ["わたしが 早く 起きたのは、遠足が あります。", "わたしが 早く 起きたのは、遠足が ありました。", "わたしが 早く 起きたのは、遠足に 行きます。"], "why": "「〜のは」→「〜からです」と わけで 合わせるよ。"},
- {"k": "ch", "lv": 3, "q": "主語《しゅご》と 述語《じゅつご》が 正しく 合って いる 文は どれ?", "a": "大切なのは、さいごまで あきらめない ことだ。", "bad": ["大切なのは、さいごまで あきらめない。", "大切なのは、さいごまで あきらめません。", "大切なのは、さいごまで あきらめずに がんばった。"], "why": "「大切なのは」→「〜ことだ」と 合わせるよ。"},
- {"k": "tap", "lv": 3, "ask": "何が「おもしろい」のかな? 文全体の 主語《しゅご》を タップしよう。", "s": ["駅前の", "大きな", "本屋さんで", "兄が", "買った", "図かんは", "とても", "おもしろい。"], "a": "図かんは", "why": "「兄が」は「買った」の 主語《しゅご》。「おもしろい」のは「図かんは」だよ。"},
- {"k": "tap", "lv": 3, "ask": "「ねこは」に 合う 述語《じゅつご》を タップしよう。", "s": ["ぼくが", "きのう", "公園で", "見つけた", "ねこは", "となりの", "家の", "ねこだった。"], "a": "ねこだった。", "why": "「ねこは → ねこだった」。「見つけた」は「ぼくが」の 述語《じゅつご》だよ。"},
- {"k": "tap", "lv": 3, "ask": "「ドッジボールを した」のは だれ? 主語《しゅご》を タップしよう。", "s": ["雨が", "ふって", "いたので", "わたしたちは", "体育館で", "ドッジボールを", "した。"], "a": "わたしたちは", "why": "「雨が」は「ふって いた」の 主語《しゅご》。「した」のは「わたしたちは」だよ。"},
- {"k": "ord", "lv": 3, "s": ["となりの", "家の", "白い", "犬が", "しっぽを", "ふった。"], "stick": [[0, 1], [1, 2], [2, 3]], "why": "「となりの 家の 白い 犬が」と、くわしく する ことばを つなげるよ。"},
- {"k": "ord", "lv": 3, "s": ["わたしは", "母に", "もらった", "赤い", "かさを", "さした。"], "stick": [[1, 2], [2, 3], [3, 4]], "why": "「母に もらった 赤い かさを」で ひとまとまりだよ。"}
+ {"k": "tap", "ask": "「だれが(何が)」に あたる ことば(主語《しゅご》)を タップしよう。", "s": ["小さな", "犬が", "公園で", "元気に", "走る。"], "a": "犬が", "why": "「〜が」「〜は」が ついて いて、「走る」のは だれかを あらわす ことばが 主語《しゅご》だよ。", "lv": 1, "tp": 0},
+ {"k": "tap", "ask": "「だれが(何が)」に あたる ことば(主語《しゅご》)を タップしよう。", "s": ["朝、", "妹は", "七時に", "おきた。"], "a": "妹は", "why": "おきたのは だれ? 「妹は」が 主語《しゅご》だよ。", "lv": 1, "tp": 0},
+ {"k": "tap", "ask": "「だれが(何が)」に あたる ことば(主語《しゅご》)を タップしよう。", "s": ["きのう", "校庭の", "花が", "たくさん", "さいた。"], "a": "花が", "why": "さいたのは 何? 「花が」が 主語《しゅご》だよ。", "lv": 1, "tp": 0},
+ {"k": "tap", "ask": "「だれが(何が)」に あたる ことば(主語《しゅご》)を タップしよう。", "s": ["白い", "雲が", "青い", "空に", "うかんで いる。"], "a": "雲が", "why": "うかんで いるのは 何? 「雲が」が 主語《しゅご》だよ。", "lv": 1, "tp": 0},
+ {"k": "tap", "ask": "「だれが(何が)」に あたる ことば(主語《しゅご》)を タップしよう。", "s": ["ぼくの", "兄は", "サッカーが", "とても", "上手だ。"], "a": "兄は", "why": "上手なのは だれ? 「兄は」が 主語《しゅご》だよ。「サッカーが」は 何が 上手かを あらわして いるよ。", "lv": 1, "tp": 0},
+ {"k": "tap", "ask": "「どうする・どんなだ・なんだ」に あたる ことば(述語《じゅつご》)を タップしよう。", "s": ["小鳥が", "木の 上で", "楽しそうに", "鳴いた。"], "a": "鳴いた。", "why": "小鳥が どう した? 「鳴いた」が 述語《じゅつご》。述語《じゅつご》は 文の さいごに ある ことが 多いよ。", "lv": 1, "tp": 0},
+ {"k": "tap", "ask": "「どうする・どんなだ・なんだ」に あたる ことば(述語《じゅつご》)を タップしよう。", "s": ["わたしの", "ゆめは", "花やさんだ。"], "a": "花やさんだ。", "why": "ゆめは なんだ? 「花やさんだ」が 述語《じゅつご》だよ。", "lv": 1, "tp": 0},
+ {"k": "tap", "ask": "「どうする・どんなだ・なんだ」に あたる ことば(述語《じゅつご》)を タップしよう。", "s": ["夜空の", "星が", "きらきらと", "光る。"], "a": "光る。", "why": "星が どう する? 「光る」が 述語《じゅつご》だよ。", "lv": 1, "tp": 0},
+ {"k": "tap", "ask": "「どうする・どんなだ・なんだ」に あたる ことば(述語《じゅつご》)を タップしよう。", "s": ["今日の", "海は", "とても", "しずかだ。"], "a": "しずかだ。", "why": "海は どんなだ? 「しずかだ」が 述語《じゅつご》だよ。", "lv": 1, "tp": 0},
+ {"k": "tap", "ask": "「どうする・どんなだ・なんだ」に あたる ことば(述語《じゅつご》)を タップしよう。", "s": ["母が", "台所で", "カレーを", "作る。"], "a": "作る。", "why": "母が どう する? 「作る」が 述語《じゅつご》だよ。", "lv": 1, "tp": 0},
+ {"k": "tap", "hl": "赤い", "ask": "「赤い」は、どの ことばを くわしく して いるかな? タップしよう。", "s": ["赤い", "花が", "風に", "ゆれる。"], "a": "花が", "why": "「赤い 花」と つなげて 読めるね。くわしく する ことばを 修飾語《しゅうしょくご》と いうよ。", "lv": 2, "tp": 1},
+ {"k": "tap", "hl": "ゆっくり", "ask": "「ゆっくり」は、どの ことばを くわしく して いるかな? タップしよう。", "s": ["大きな", "かめが", "ゆっくり", "歩く。"], "a": "歩く。", "why": "「ゆっくり 歩く」。どんなふうに 歩くかを くわしく して いるよ。", "lv": 2, "tp": 1},
+ {"k": "tap", "hl": "公園で", "ask": "「公園で」は、どの ことばを くわしく して いるかな? タップしよう。", "s": ["弟は", "公園で", "ボールを", "けった。"], "a": "けった。", "why": "「公園で けった」。どこで けったかを くわしく して いるよ。", "lv": 2, "tp": 1},
+ {"k": "tap", "hl": "となりの", "ask": "「となりの」は、どの ことばを くわしく して いるかな? タップしよう。", "s": ["となりの", "ねこが", "へいの 上で", "ねて いる。"], "a": "ねこが", "why": "「となりの ねこ」。どこの ねこかを くわしく して いるよ。", "lv": 2, "tp": 1},
+ {"k": "tap", "hl": "とても", "ask": "「とても」は、どの ことばを くわしく して いるかな? タップしよう。", "s": ["弟の", "声は", "とても", "大きい。"], "a": "大きい。", "why": "「とても 大きい」。どのくらい 大きいかを くわしく して いるよ。", "lv": 2, "tp": 1},
+ {"k": "ch", "q": "雨が ふって きた。(　　)、かさを さした。\n(　　)に 入る つなぎ言葉は どれ?", "a": "だから", "bad": ["しかし", "それとも", "たとえば"], "why": "雨が ふった → だから かさを さした。前の ことが わけに なる ときは「だから」。", "lv": 2, "tp": 2},
+ {"k": "ch", "q": "いっしょうけんめい 走った。(　　)、バスに まに合わなかった。\n(　　)に 入る つなぎ言葉は どれ?", "a": "けれども", "bad": ["だから", "そして", "それで"], "why": "走ったのに まに合わなかった。前と ちがう ことに なる ときは「けれども」「しかし」。", "lv": 2, "tp": 2},
+ {"k": "ch", "q": "はじめに 手を あらう。(　　)、ごはんを 食べる。\n(　　)に 入る つなぎ言葉は どれ?", "a": "それから", "bad": ["しかし", "なぜなら", "けれども"], "why": "する ことの じゅんばんを つなぐ ときは「それから」。", "lv": 2, "tp": 2},
+ {"k": "ch", "q": "ジュースに しますか。(　　)、お茶に しますか。\n(　　)に 入る つなぎ言葉は どれ?", "a": "それとも", "bad": ["だから", "しかし", "それから"], "why": "どちらかを えらぶ ときは「それとも」。", "lv": 2, "tp": 2},
+ {"k": "ch", "q": "今日は 学校を 休んだ。(　　)、ねつが あったからだ。\n(　　)に 入る つなぎ言葉は どれ?", "a": "なぜなら", "bad": ["だから", "それとも", "それから"], "why": "あとに わけを 書く ときは「なぜなら 〜からだ」。", "lv": 2, "tp": 2},
+ {"k": "ch", "q": "「犬が 走る。」は、どの 形の 文?", "a": "何が どうする", "bad": ["何が どんなだ", "何が なんだ", "何が ある"], "why": "「走る」は 動きを あらわすので「何が どうする」。", "lv": 1, "tp": 3},
+ {"k": "ch", "q": "「空が 青い。」は、どの 形の 文?", "a": "何が どんなだ", "bad": ["何が どうする", "何が なんだ", "何が ある"], "why": "「青い」は ようすを あらわすので「何が どんなだ」。", "lv": 1, "tp": 3},
+ {"k": "ch", "q": "「これは 図かんだ。」は、どの 形の 文?", "a": "何が なんだ", "bad": ["何が どうする", "何が どんなだ", "何が いる"], "why": "「図かんだ」は ものの 名前なので「何が なんだ」。", "lv": 1, "tp": 3},
+ {"k": "ch", "q": "「つくえの 上に 本が ある。」は、どの 形の 文?", "a": "何が ある", "bad": ["何が どうする", "何が どんなだ", "何が なんだ"], "why": "そこに あるかを あらわすので「何が ある(いる)」。", "lv": 1, "tp": 3},
+ {"k": "ch", "q": "かぎ(「 」)を つかうのは、どんな とき?", "a": "人が 話した ことばを 書く とき", "bad": ["文が おわった とき", "人の 名前を 書く とき", "文と 文を つなぐ とき"], "why": "話した ことばは「 」で かこむよ。", "lv": 1, "tp": 3},
+ {"k": "ch", "q": "正しく 書けて いる 文は どれ?", "a": "ぼくは「おはよう。」と 言った。", "bad": ["ぼくは おはようと「言った。」", "ぼくは「おはようと 言った。」", "「ぼくは」おはようと 言った。"], "why": "かぎで かこむのは 話した ことば「おはよう。」だけだよ。", "lv": 1, "tp": 3},
+ {"k": "ord", "s": ["大きな", "犬が", "ほえた。"], "stick": [[0, 1]], "why": "「大きな」は「犬が」を くわしく するので、すぐ 前に おくよ。", "lv": 1, "tp": 4},
+ {"k": "ord", "s": ["ぼくは", "朝ごはんを", "食べた。"], "stick": [], "why": "「食べた。」の ような 述語《じゅつご》は さいごに おくよ。", "lv": 1, "tp": 4},
+ {"k": "ord", "s": ["妹が", "赤い", "ふうせんを", "もらった。"], "stick": [[1, 2]], "why": "「赤い」は「ふうせんを」の すぐ 前。述語《じゅつご》「もらった。」は さいご。", "lv": 2, "tp": 4},
+ {"k": "ord", "s": ["白い", "ねこが", "目を", "とじた。"], "stick": [[0, 1]], "why": "「白い」は「ねこが」の すぐ 前。述語《じゅつご》「とじた。」は さいご。", "lv": 2, "tp": 4},
+ {"k": "ord", "s": ["小さな", "魚が", "川で", "およぐ。"], "stick": [[0, 1]], "why": "「小さな」は「魚が」の すぐ 前。述語《じゅつご》「およぐ。」は さいご。", "lv": 2, "tp": 4},
+ {"k": "ord", "s": ["姉は", "やさしい", "声で", "歌を", "歌った。"], "stick": [[1, 2]], "why": "「やさしい」は「声で」の すぐ 前。述語《じゅつご》「歌った。」は さいご。", "lv": 2, "tp": 4},
+ {"k": "ch", "lv": 2, "q": "自分の 近くに ある ものを 聞く とき。「(　　)は 何ですか。」\n(　　)に 入る ことばは?", "a": "これ", "bad": ["それ", "あれ", "どれ"], "why": "話す 人の 近くは「こ」、相手の 近くは「そ」、どちらからも 遠いと「あ」、分からない ときは「ど」。", "tp": 2},
+ {"k": "ch", "lv": 2, "q": "遠くに 見える 山を 指さして。「(　　)山は 高いね。」\n(　　)に 入る ことばは?", "a": "あの", "bad": ["この", "その", "どの"], "why": "どちらからも 遠い ものは「あ」で さすよ。", "tp": 2},
+ {"k": "ch", "lv": 2, "q": "相手が もって いる 本を 見て。「(　　)本、おもしろい?」\n(　　)に 入る ことばは?", "a": "その", "bad": ["この", "あの", "どの"], "why": "相手の 近くに ある ものは「そ」で さすよ。", "tp": 2},
+ {"k": "ch", "lv": 2, "q": "行きたい 場所を たずねる とき。「(　　)に 行きたい?」\n(　　)に 入る ことばは?", "a": "どこ", "bad": ["ここ", "そこ", "あそこ"], "why": "分からない ことを たずねる ときは「ど」。", "tp": 2},
+ {"k": "ch", "lv": 3, "q": "先生が 教室に (　　)。\n先生を うやまう 言い方は どれ?", "a": "いらっしゃった", "bad": ["まいった", "おった", "うかがった"], "why": "目上の 人が「来る」ときは「いらっしゃる」。「まいる」「うかがう」は 自分が へりくだる 言い方。", "tp": 3},
+ {"k": "ch", "lv": 3, "q": "校長先生の お話を (　　)。\n自分が へりくだる 言い方は どれ?", "a": "うかがう", "bad": ["おっしゃる", "めしあがる", "いらっしゃる"], "why": "自分が「聞く」ときの へりくだった 言い方は「うかがう」。", "tp": 3},
+ {"k": "ch", "lv": 3, "q": "お客さまが ケーキを (　　)。\nお客さまを うやまう 言い方は どれ?", "a": "めしあがる", "bad": ["いただく", "食う", "まいる"], "why": "相手が「食べる」ときは「めしあがる」。「いただく」は 自分が 食べる とき。", "tp": 3},
+ {"k": "ch", "lv": 3, "q": "先生が「明日は 遠足です」と (　　)。\n先生を うやまう 言い方は どれ?", "a": "おっしゃった", "bad": ["申《もう》した", "うかがった", "いただいた"], "why": "目上の 人が「言う」ときは「おっしゃる」。「申《もう》す」は 自分が 言う とき。", "tp": 3},
+ {"k": "ch", "lv": 3, "q": "お店の 人に 電話で。「母が、明日 そちらへ (　　)。」\n正しい 言い方は どれ?", "a": "まいります", "bad": ["いらっしゃいます", "おいでに なります", "おっしゃいます"], "why": "外の 人に 自分の 家族の ことを 話す ときは、へりくだって「まいります」。", "tp": 3},
+ {"k": "ch", "lv": 3, "q": "「これは ぼくの 本だ。」を ていねいな 言い方に すると?", "a": "これは わたしの 本です。", "bad": ["これは ぼくの 本だぞ。", "これは おれの 本だ。", "これは ぼくの 本じゃん。"], "why": "「です」「ます」を つかうと ていねいに なるよ。", "tp": 3},
+ {"k": "ch", "lv": 3, "q": "主語《しゅご》と 述語《じゅつご》が 正しく 合って いる 文は どれ?", "a": "ぼくの ゆめは、パイロットに なる ことです。", "bad": ["ぼくの ゆめは、パイロットに なりたいです。", "ぼくの ゆめは、パイロットに なります。", "ぼくの ゆめは、パイロットに なりました。"], "why": "「ゆめは」→「〜ことです」と 合わせるよ。", "tp": 0},
+ {"k": "ch", "lv": 3, "q": "主語《しゅご》と 述語《じゅつご》が 正しく 合って いる 文は どれ?", "a": "わたしが 早く 起きたのは、遠足が あるからです。", "bad": ["わたしが 早く 起きたのは、遠足が あります。", "わたしが 早く 起きたのは、遠足が ありました。", "わたしが 早く 起きたのは、遠足に 行きます。"], "why": "「〜のは」→「〜からです」と わけで 合わせるよ。", "tp": 0},
+ {"k": "ch", "lv": 3, "q": "主語《しゅご》と 述語《じゅつご》が 正しく 合って いる 文は どれ?", "a": "大切なのは、さいごまで あきらめない ことだ。", "bad": ["大切なのは、さいごまで あきらめない。", "大切なのは、さいごまで あきらめません。", "大切なのは、さいごまで あきらめずに がんばった。"], "why": "「大切なのは」→「〜ことだ」と 合わせるよ。", "tp": 0},
+ {"k": "tap", "lv": 3, "ask": "何が「おもしろい」のかな? 文全体の 主語《しゅご》を タップしよう。", "s": ["駅前の", "大きな", "本屋さんで", "兄が", "買った", "図かんは", "とても", "おもしろい。"], "a": "図かんは", "why": "「兄が」は「買った」の 主語《しゅご》。「おもしろい」のは「図かんは」だよ。", "tp": 0},
+ {"k": "tap", "lv": 3, "ask": "「ねこは」に 合う 述語《じゅつご》を タップしよう。", "s": ["ぼくが", "きのう", "公園で", "見つけた", "ねこは", "となりの", "家の", "ねこだった。"], "a": "ねこだった。", "why": "「ねこは → ねこだった」。「見つけた」は「ぼくが」の 述語《じゅつご》だよ。", "tp": 0},
+ {"k": "tap", "lv": 3, "ask": "「ドッジボールを した」のは だれ? 主語《しゅご》を タップしよう。", "s": ["雨が", "ふって", "いたので", "わたしたちは", "体育館で", "ドッジボールを", "した。"], "a": "わたしたちは", "why": "「雨が」は「ふって いた」の 主語《しゅご》。「した」のは「わたしたちは」だよ。", "tp": 0},
+ {"k": "ord", "lv": 3, "s": ["となりの", "家の", "白い", "犬が", "しっぽを", "ふった。"], "stick": [[0, 1], [1, 2], [2, 3]], "why": "「となりの 家の 白い 犬が」と、くわしく する ことばを つなげるよ。", "tp": 4},
+ {"k": "ord", "lv": 3, "s": ["わたしは", "母に", "もらった", "赤い", "かさを", "さした。"], "stick": [[1, 2], [2, 3], [3, 4]], "why": "「母に もらった 赤い かさを」で ひとまとまりだよ。", "tp": 4}
 ]
 }, ROMA = {
-"levels": ["きほん", "っ・ゃ・のばす 音・大文字", "パソコンで 打つ"],
+"topics": ["読む・書く", "文字で 打って みる", "書き方の きまり", "パソコンで 打つ"],
 "items": [
- {"k": "type", "w": "いぬ", "e": "🐶", "lv": 1},
- {"k": "type", "w": "ねこ", "e": "🐱", "lv": 1},
- {"k": "type", "w": "さかな", "e": "🐟", "lv": 1},
- {"k": "type", "w": "やま", "e": "⛰️", "lv": 1},
- {"k": "type", "w": "うみ", "e": "🌊", "lv": 1},
- {"k": "type", "w": "かさ", "e": "☂️", "lv": 1},
- {"k": "type", "w": "くも", "e": "☁️", "lv": 1},
- {"k": "type", "w": "たまご", "e": "🥚", "lv": 1},
- {"k": "type", "w": "りんご", "e": "🍎", "lv": 1},
- {"k": "type", "w": "めがね", "e": "👓", "lv": 1},
- {"k": "type", "w": "すいか", "e": "🍉", "lv": 1},
- {"k": "type", "w": "とけい", "e": "⏰", "lv": 1},
- {"k": "type", "w": "はさみ", "e": "✂️", "lv": 1},
- {"k": "type", "w": "ふね", "e": "⛵", "lv": 1},
- {"k": "type", "w": "ちず", "e": "🗺️", "lv": 1},
- {"k": "type", "w": "くつ", "e": "👟", "lv": 1},
- {"k": "type", "w": "きって", "e": "✉️", "lv": 2},
- {"k": "type", "w": "でんしゃ", "e": "🚃", "lv": 2},
- {"k": "type", "w": "じてんしゃ", "e": "🚲", "lv": 2},
- {"k": "type", "w": "きんぎょ", "e": "🐠", "lv": 2},
- {"k": "ch", "q": "「くるま」を ローマ字で 書くと?", "a": "kuruma", "bad": ["kuluma", "curuma", "kurma"], "why": "く=ku、る=ru、ま=ma。", "lv": 1},
- {"k": "ch", "q": "「sora」は 何と 読む?", "a": "そら", "bad": ["すら", "そろ", "さら"], "why": "so=そ、ra=ら。", "lv": 1},
- {"k": "ch", "q": "「momiji」は 何と 読む?", "a": "もみじ", "bad": ["まみじ", "もみぎ", "むみじ"], "why": "mo=も、mi=み、ji=じ(zi とも 書くよ)。", "lv": 1},
- {"k": "ch", "q": "「らっぱ」を ローマ字で 書くと?", "a": "rappa", "bad": ["rapa", "rappaa", "ratupa"], "why": "小さい「っ」は、つぎの 文字を 2つ かさねて 書くよ。", "lv": 2},
- {"k": "ch", "q": "「おかあさん」を ローマ字で 書くと?", "a": "okâsan", "bad": ["okasan", "okâsann", "ôkasan"], "why": "のばす 音は、上に「^」を つけて â の ように 書くよ。", "lv": 2},
- {"k": "ch", "q": "「hikôki」は 何と 読む?", "a": "ひこうき", "bad": ["ひこき", "ひっこき", "ひいこき"], "why": "ô は「お」を のばす 音。ひこうき だね。", "lv": 2},
- {"k": "ch", "q": "「ほんや」を ローマ字で 書くと?", "a": "hon'ya", "bad": ["honya", "hon-ya", "honnya"], "why": "honya だと「ほにゃ」と 読めて しまうので、ん の あとに「'」を つけるよ。", "lv": 2},
- {"k": "ch", "q": "「syasin」は 何と 読む?", "a": "しゃしん", "bad": ["しやしん", "さしん", "しゃしい"], "why": "sya は 小さい「ゃ」が つく「しゃ」。sha とも 書くよ。", "lv": 2},
- {"k": "ch", "q": "「し」は si と 書くほかに、もう 1つの 書き方が あるよ。どれ?", "a": "shi", "bad": ["ci", "sy", "sii"], "why": "し = si または shi。", "lv": 2},
- {"k": "ch", "q": "「つ」は tu と 書くほかに、もう 1つの 書き方が あるよ。どれ?", "a": "tsu", "bad": ["tzu", "chu", "tuu"], "why": "つ = tu または tsu。", "lv": 2},
- {"k": "ch", "q": "「ふ」は hu と 書くほかに、もう 1つの 書き方が あるよ。どれ?", "a": "fu", "bad": ["pu", "wu", "hhu"], "why": "ふ = hu または fu。", "lv": 2},
- {"k": "ch", "q": "「ち」は ti と 書くほかに、もう 1つの 書き方が あるよ。どれ?", "a": "chi", "bad": ["ci", "tsi", "thi"], "why": "ち = ti または chi。", "lv": 2},
- {"k": "ch", "q": "「ぼくは 犬が すき。」の「は」は、ローマ字で どう 書く?", "a": "wa", "bad": ["ha", "wo", "a"], "why": "「わ」と 読む「は」は wa と 書くよ。", "lv": 2},
- {"k": "ch", "q": "地名の「とうきょう」を ローマ字で 正しく 書くと?", "a": "Tôkyô", "bad": ["tôkyô", "Tôkyo", "tÔkyô"], "why": "地名や 人の 名前は、はじめの 文字を 大文字に するよ。のばす 音には「^」。", "lv": 2},
- {"k": "ch", "q": "人の 名前「やまだ はなこ」を ローマ字で 正しく 書くと?", "a": "Yamada Hanako", "bad": ["yamada hanako", "Yamada hanako", "yAMADA hANAKO"], "why": "名前は、それぞれの はじめの 文字を 大文字に するよ。", "lv": 2},
- {"k": "kbd", "lv": 3, "w": "がっこう", "e": "🏫"},
- {"k": "kbd", "lv": 3, "w": "ちょうちょ", "e": "🦋"},
- {"k": "kbd", "lv": 3, "w": "しんかんせん", "e": "🚄"},
- {"k": "kbd", "lv": 3, "w": "きゅうしょく", "e": "🍛"},
- {"k": "kbd", "lv": 3, "w": "こんにちは", "e": "👋"},
- {"k": "kbd", "lv": 3, "w": "にんじん", "e": "🥕"},
- {"k": "kbd", "lv": 3, "w": "ほっかいどう", "e": "🗾"},
- {"k": "kbd", "lv": 3, "w": "ありがとう", "e": "🙏"},
- {"k": "kbd", "lv": 3, "w": "ケーキ", "e": "🍰"},
- {"k": "kbd", "lv": 3, "w": "ゲーム", "e": "🎮"},
- {"k": "kbd", "lv": 3, "w": "ねこが すき", "e": "😺"},
- {"k": "kbd", "lv": 3, "w": "おはよう", "e": "🌅"},
- {"k": "ch", "lv": 3, "q": "パソコンで「ほんや」と 打つ とき、正しいのは どれ?", "a": "honnya", "bad": ["honya", "hon-ya", "hoya"], "why": "honya だと「ほにゃ」に なるよ。「ん」は nn と 打つと あんしん。"},
- {"k": "ch", "lv": 3, "q": "パソコンで「がっこう」と 打つ とき、正しいのは どれ?", "a": "gakkou", "bad": ["gakkô", "gakou", "gaccou"], "why": "パソコンでは、のばす 音も「う」の とおりに u と 打つよ。"},
- {"k": "ch", "lv": 3, "q": "パソコンで 小さい「っ」だけを 打ちたい とき、正しいのは どれ?", "a": "xtu", "bad": ["tt", "tu", "qtu"], "why": "x(または l)を 先に 打つと 小さい 字に なるよ。xtu、ltu。"},
- {"k": "ch", "lv": 3, "q": "パソコンで「ケーキ」の「ー」(のばす ぼう)を 打つ キーは?", "a": "-", "bad": ["^", "_", "="], "why": "「ー」は マイナスの キー(-)で 打つよ。"}
+ {"k": "type", "w": "いぬ", "e": "🐶", "lv": 1, "tp": 1},
+ {"k": "type", "w": "ねこ", "e": "🐱", "lv": 1, "tp": 1},
+ {"k": "type", "w": "さかな", "e": "🐟", "lv": 1, "tp": 1},
+ {"k": "type", "w": "やま", "e": "⛰️", "lv": 1, "tp": 1},
+ {"k": "type", "w": "うみ", "e": "🌊", "lv": 1, "tp": 1},
+ {"k": "type", "w": "かさ", "e": "☂️", "lv": 1, "tp": 1},
+ {"k": "type", "w": "くも", "e": "☁️", "lv": 1, "tp": 1},
+ {"k": "type", "w": "たまご", "e": "🥚", "lv": 1, "tp": 1},
+ {"k": "type", "w": "りんご", "e": "🍎", "lv": 1, "tp": 1},
+ {"k": "type", "w": "めがね", "e": "👓", "lv": 1, "tp": 1},
+ {"k": "type", "w": "すいか", "e": "🍉", "lv": 1, "tp": 1},
+ {"k": "type", "w": "とけい", "e": "⏰", "lv": 1, "tp": 1},
+ {"k": "type", "w": "はさみ", "e": "✂️", "lv": 1, "tp": 1},
+ {"k": "type", "w": "ふね", "e": "⛵", "lv": 1, "tp": 1},
+ {"k": "type", "w": "ちず", "e": "🗺️", "lv": 1, "tp": 1},
+ {"k": "type", "w": "くつ", "e": "👟", "lv": 1, "tp": 1},
+ {"k": "type", "w": "きって", "e": "✉️", "lv": 2, "tp": 1},
+ {"k": "type", "w": "でんしゃ", "e": "🚃", "lv": 2, "tp": 1},
+ {"k": "type", "w": "じてんしゃ", "e": "🚲", "lv": 2, "tp": 1},
+ {"k": "type", "w": "きんぎょ", "e": "🐠", "lv": 2, "tp": 1},
+ {"k": "ch", "q": "「くるま」を ローマ字で 書くと?", "a": "kuruma", "bad": ["kuluma", "curuma", "kurma"], "why": "く=ku、る=ru、ま=ma。", "lv": 1, "tp": 0},
+ {"k": "ch", "q": "「sora」は 何と 読む?", "a": "そら", "bad": ["すら", "そろ", "さら"], "why": "so=そ、ra=ら。", "lv": 1, "tp": 0},
+ {"k": "ch", "q": "「momiji」は 何と 読む?", "a": "もみじ", "bad": ["まみじ", "もみぎ", "むみじ"], "why": "mo=も、mi=み、ji=じ(zi とも 書くよ)。", "lv": 1, "tp": 0},
+ {"k": "ch", "q": "「らっぱ」を ローマ字で 書くと?", "a": "rappa", "bad": ["rapa", "rappaa", "ratupa"], "why": "小さい「っ」は、つぎの 文字を 2つ かさねて 書くよ。", "lv": 2, "tp": 2},
+ {"k": "ch", "q": "「おかあさん」を ローマ字で 書くと?", "a": "okâsan", "bad": ["okasan", "okâsann", "ôkasan"], "why": "のばす 音は、上に「^」を つけて â の ように 書くよ。", "lv": 2, "tp": 2},
+ {"k": "ch", "q": "「hikôki」は 何と 読む?", "a": "ひこうき", "bad": ["ひこき", "ひっこき", "ひいこき"], "why": "ô は「お」を のばす 音。ひこうき だね。", "lv": 2, "tp": 0},
+ {"k": "ch", "q": "「ほんや」を ローマ字で 書くと?", "a": "hon'ya", "bad": ["honya", "hon-ya", "honnya"], "why": "honya だと「ほにゃ」と 読めて しまうので、ん の あとに「'」を つけるよ。", "lv": 2, "tp": 2},
+ {"k": "ch", "q": "「syasin」は 何と 読む?", "a": "しゃしん", "bad": ["しやしん", "さしん", "しゃしい"], "why": "sya は 小さい「ゃ」が つく「しゃ」。sha とも 書くよ。", "lv": 2, "tp": 0},
+ {"k": "ch", "q": "「し」は si と 書くほかに、もう 1つの 書き方が あるよ。どれ?", "a": "shi", "bad": ["ci", "sy", "sii"], "why": "し = si または shi。", "lv": 2, "tp": 2},
+ {"k": "ch", "q": "「つ」は tu と 書くほかに、もう 1つの 書き方が あるよ。どれ?", "a": "tsu", "bad": ["tzu", "chu", "tuu"], "why": "つ = tu または tsu。", "lv": 2, "tp": 2},
+ {"k": "ch", "q": "「ふ」は hu と 書くほかに、もう 1つの 書き方が あるよ。どれ?", "a": "fu", "bad": ["pu", "wu", "hhu"], "why": "ふ = hu または fu。", "lv": 2, "tp": 2},
+ {"k": "ch", "q": "「ち」は ti と 書くほかに、もう 1つの 書き方が あるよ。どれ?", "a": "chi", "bad": ["ci", "tsi", "thi"], "why": "ち = ti または chi。", "lv": 2, "tp": 2},
+ {"k": "ch", "q": "「ぼくは 犬が すき。」の「は」は、ローマ字で どう 書く?", "a": "wa", "bad": ["ha", "wo", "a"], "why": "「わ」と 読む「は」は wa と 書くよ。", "lv": 2, "tp": 2},
+ {"k": "ch", "q": "地名の「とうきょう」を ローマ字で 正しく 書くと?", "a": "Tôkyô", "bad": ["tôkyô", "Tôkyo", "tÔkyô"], "why": "地名や 人の 名前は、はじめの 文字を 大文字に するよ。のばす 音には「^」。", "lv": 2, "tp": 2},
+ {"k": "ch", "q": "人の 名前「やまだ はなこ」を ローマ字で 正しく 書くと?", "a": "Yamada Hanako", "bad": ["yamada hanako", "Yamada hanako", "yAMADA hANAKO"], "why": "名前は、それぞれの はじめの 文字を 大文字に するよ。", "lv": 2, "tp": 2},
+ {"k": "kbd", "lv": 3, "w": "がっこう", "e": "🏫", "tp": 3},
+ {"k": "kbd", "lv": 3, "w": "ちょうちょ", "e": "🦋", "tp": 3},
+ {"k": "kbd", "lv": 3, "w": "しんかんせん", "e": "🚄", "tp": 3},
+ {"k": "kbd", "lv": 3, "w": "きゅうしょく", "e": "🍛", "tp": 3},
+ {"k": "kbd", "lv": 3, "w": "こんにちは", "e": "👋", "tp": 3},
+ {"k": "kbd", "lv": 3, "w": "にんじん", "e": "🥕", "tp": 3},
+ {"k": "kbd", "lv": 3, "w": "ほっかいどう", "e": "🗾", "tp": 3},
+ {"k": "kbd", "lv": 3, "w": "ありがとう", "e": "🙏", "tp": 3},
+ {"k": "kbd", "lv": 3, "w": "ケーキ", "e": "🍰", "tp": 3},
+ {"k": "kbd", "lv": 3, "w": "ゲーム", "e": "🎮", "tp": 3},
+ {"k": "kbd", "lv": 3, "w": "ねこが すき", "e": "😺", "tp": 3},
+ {"k": "kbd", "lv": 3, "w": "おはよう", "e": "🌅", "tp": 3},
+ {"k": "ch", "lv": 3, "q": "パソコンで「ほんや」と 打つ とき、正しいのは どれ?", "a": "honnya", "bad": ["honya", "hon-ya", "hoya"], "why": "honya だと「ほにゃ」に なるよ。「ん」は nn と 打つと あんしん。", "tp": 3},
+ {"k": "ch", "lv": 3, "q": "パソコンで「がっこう」と 打つ とき、正しいのは どれ?", "a": "gakkou", "bad": ["gakkô", "gakou", "gaccou"], "why": "パソコンでは、のばす 音も「う」の とおりに u と 打つよ。", "tp": 3},
+ {"k": "ch", "lv": 3, "q": "パソコンで 小さい「っ」だけを 打ちたい とき、正しいのは どれ?", "a": "xtu", "bad": ["tt", "tu", "qtu"], "why": "x(または l)を 先に 打つと 小さい 字に なるよ。xtu、ltu。", "tp": 3},
+ {"k": "ch", "lv": 3, "q": "パソコンで「ケーキ」の「ー」(のばす ぼう)を 打つ キーは?", "a": "-", "bad": ["^", "_", "="], "why": "「ー」は マイナスの キー(-)で 打つよ。", "tp": 3}
 ]
 };
     var TITLES = { j:'国語・読解', b:'文の組み立て', r:'ローマ字' };
     ROUNDS.b = 8; ROUNDS.r = 8; NAMES.j = '国語・読解'; NAMES.b = '文の組み立て'; NAMES.r = 'ローマ字';
-    /* だん: 学年に こだわらず 先へ。いまの だんで 8割 せいかいすると つぎの だんが ひらく。記録 keisan_gaku.kl[sub] = { max, cur } */
-    var KLV = { j:KOKU.levels, b:BUN.levels, r:ROMA.levels };
-    function kLv(s, sub){ s.kl = s.kl || {}; return s.kl[sub] = s.kl[sub] || { max:1, cur:1 }; }
-    function kCur(sub){ return kLv(get(), sub).cur; }
+    /* 分野: 学年に しばられず、すきな 分野を えらんで ふかく。分野の 中は、まだ できて いない 問題を
+       やさしい(lv1)→ふかい(lv3)の じゅんに 出す。S.lv = 分野の ばんごう+1。記録 keisan_gaku.kt[sub] = いまの 分野(1から) */
+    var KLV = { j:KOKU.topics, b:BUN.topics, r:ROMA.topics };
+    function kCur(s, sub){ s.kt = s.kt || {}; return s.kt[sub] || 1; }
+    function kAll(sub){ return sub === 'j' ? KOKU.qs.map(function(e, i){ return { id:'j'+i, tp:e.tp || 0 }; }) : sub === 'b' ? BUNQ : ROMAQ; }
+    function kCnt(s, sub, t){ var m = s[sub] || {}, a = kAll(sub).filter(function(e){ return e.tp === t - 1; }); return { n:a.filter(function(e){ return m[e.id] && m[e.id].ok > 0; }).length, all:a.length }; }
+    function kSum(s, sub){ var m = s[sub] || {}, a = kAll(sub); return a.filter(function(e){ return m[e.id] && m[e.id].ok > 0; }).length + '/' + a.length; }
+    function kPick(list, map, n){
+      var ok = function(e){ return map[e.id] && map[e.id].ok > 0; };
+      var yet = list.filter(function(e){ return !ok(e); }).map(function(e){ return { e:e, v:(e.lv || 1)*10 + Math.random()*3 }; });
+      yet.sort(function(a, b){ return a.v - b.v; });
+      var out = yet.slice(0, n).map(function(o){ return o.e; });
+      if(out.length < n) out = out.concat(pickSet(list.filter(ok), map, function(e){ return e.id; }, n - out.length));
+      return out;
+    }
     function kChips(sub){
-      var k = kLv(get(), sub);
-      return '<span class="kk-chips">' + KLV[sub].map(function(name, i){ var l = i+1, lock = l > k.max;
-        return '<span class="kk-chip'+(l === k.cur ? ' on' : '')+(lock ? ' lock' : '')+'" data-klv="'+l+'">'+(lock ? '🔒' : '')+'だん'+l+' <small>'+KRB(name)+'</small></span>'; }).join('') + '</span>';
+      var s = get(), cur = kCur(s, sub);
+      return '<span class="kk-chips">' + KLV[sub].map(function(name, i){ var t = i+1, c = kCnt(s, sub, t);
+        return '<span class="kk-chip'+(t === cur ? ' on' : '')+(c.n === c.all ? ' done' : '')+'" data-klv="'+t+'">'+KRB(name)+' <small>'+c.n+'/'+c.all+'</small></span>'; }).join('') + '</span>';
     }
     function kUp(s){
       if(!KLV[S.sub]) return '';
-      var k = kLv(s, S.sub), pass = S.ok >= Math.ceil(S.qs.length*0.8);
-      if(pass && S.lv === k.max && k.max < KLV[S.sub].length){ k.max++; k.cur = k.max; return '🎉 だん'+k.max+'「'+KRB(KLV[S.sub][k.max-1])+'」が ひらいたよ!<br><button class="btn btn-primary" id="kkGo" style="margin-top:8px">だん'+k.max+'へ すすむ</button>'; }
-      if(!pass && S.lv === k.max && k.max < KLV[S.sub].length) return 'あと '+(Math.ceil(S.qs.length*0.8) - S.ok)+'問 せいかいで、だん'+(k.max+1)+'が ひらくよ';
-      return '';
+      var c = kCnt(s, S.sub, S.lv), name = KRB(KLV[S.sub][S.lv-1]);
+      return '「'+name+'」 せいかい '+c.n+' / '+c.all+'<span class="gk-bar kk-bar"><i style="width:'+Math.round(c.n/c.all*100)+'%"></i></span>' +
+        (c.n >= c.all ? '🎉 この 分野は ぜんぶ できたよ! ほかの 分野も のぞいて みよう' : 'できた 問題の つぎは、もっと ふかい 問題が 出るよ');
     }
-    /* 国語の メニュー: だんの チップで えらび、えらんだ だんで はじめる(gaku の クリックより 先に うける) */
+    /* 国語の メニュー: 分野の チップで えらんで はじめる(gaku の クリックより 先に うける) */
     document.addEventListener('click', function(e){
-      if(e.target.closest('#kkGo')){ e.stopPropagation(); start(S.sub, kLv(get(), S.sub).max); return; }
       var row = e.target.closest('#gkSubs [data-sub]'); if(!row || !KLV[row.getAttribute('data-sub')]) return;
       e.stopPropagation();
-      var sub = row.getAttribute('data-sub'), c = e.target.closest('[data-klv]'), s = get(), k = kLv(s, sub);
-      if(c){ var l = +c.getAttribute('data-klv'); if(l > k.max){ toast('まえの だんで 8割 せいかいすると ひらくよ'); return; } k.cur = l; put(s); }
-      start(sub, k.cur);
+      var sub = row.getAttribute('data-sub'), c = e.target.closest('[data-klv]'), s = get();
+      if(c){ s.kt = s.kt || {}; s.kt[sub] = +c.getAttribute('data-klv'); put(s); }
+      start(sub, kCur(s, sub));
     }, true);
     function KRB(t){ return String(t).replace(/([一-龥々]+)《([^》]+)》/g, '<ruby>$1<rt>$2</rt></ruby>'); }
     function KPL(t){ return String(t).replace(/([一-龥々]+)《[^》]+》/g, '$1'); }
@@ -12708,14 +12805,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     function imeShow(w){ var u = units(w), t = ''; for(var i = 0; i < u.length; i++){ var o = uOpts(u, i); t += u[i] === 'っ' ? o[0] : o[o.length > 1 && /^[しちつふじ]/.test(u[i]) ? 1 : 0]; } return t; }
     var BUNQ = BUN.items.map(function(e, i){
-      var q = { id:'b'+i, map:'b', tag:'文の組み立て', lv:e.lv || 1, bad:[] };
+      var q = { id:'b'+i, map:'b', tag:'文の組み立て', lv:e.lv || 1, tp:e.tp || 0, bad:[] };
       if(e.k === 'tap'){ q.kind = 'tap'; q.s = e.s; q.hl = e.hl; q.a = e.a; q.html = '<div class="gk-text">'+KRB(e.ask)+'</div>'; q.say = '答えは「'+e.a+'」。'+KPL(e.why); }
       else if(e.k === 'ord'){ q.kind = 'ord'; q.s = e.s; q.stick = e.stick; q.a = e.s.join(' '); q.html = '<div class="gk-text">ことばを ならべて、正しい 文を 作ろう。</div>'; q.say = '正しい 文は「'+KPL(q.a)+'」。'+KPL(e.why); }
       else { q.a = e.a; q.bad = e.bad; q.html = '<div class="gk-text kk-sent">'+KRB(kesc(e.q)).replace(/\n/g, '<br>')+'</div>'; q.say = '答えは「'+KPL(e.a)+'」。'+KPL(e.why); }
       return q;
     });
     var ROMAQ = ROMA.items.map(function(e, i){
-      var q = { id:'r'+i, map:'r', tag:'ローマ字', lv:e.lv || 1, bad:[] };
+      var q = { id:'r'+i, map:'r', tag:'ローマ字', lv:e.lv || 1, tp:e.tp || 0, bad:[] };
       if(e.k === 'type'){
         var k = rom(e.w, 0), h = rom(e.w, 1);
         q.kind = 'type'; q.w = e.w; q.a = k; q.acc = k === h ? [k] : [k, h];
@@ -12798,6 +12895,209 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       sc.sort(function(a, b){ return a.v - b.v; });
       return sc.slice(0, n || ROUND).map(function(o){ return o.x; });
     }
+    /* 「理科で遊ぼう」(アーティファクト)の キャラの え。からだ・元素・電気の なかま。CHR('red+white') = ならべて 出す */
+    var CHR = (function(){
+  var INK = '#2E2A3D';
+
+  function eyesN(y, lx, rx){
+    var d = (-Math.random()*4).toFixed(2);
+    return '<g class="eyes face-n" style="animation-delay:'+d+'s">' +
+      '<ellipse cx="'+lx+'" cy="'+y+'" rx="10" ry="13" fill="'+INK+'"/>' +
+      '<ellipse cx="'+rx+'" cy="'+y+'" rx="10" ry="13" fill="'+INK+'"/>' +
+      '<circle cx="'+(lx-3)+'" cy="'+(y-5)+'" r="3" fill="#fff"/>' +
+      '<circle cx="'+(rx-3)+'" cy="'+(y-5)+'" r="3" fill="#fff"/></g>';
+  }
+  function eyesH(y, lx, rx){
+    var s = ' stroke="'+INK+'" stroke-width="5" fill="none" stroke-linecap="round"';
+    return '<g class="face-h">' +
+      '<path d="M'+(lx-10)+','+(y+3)+' Q'+lx+','+(y-13)+' '+(lx+10)+','+(y+3)+'"'+s+'/>' +
+      '<path d="M'+(rx-10)+','+(y+3)+' Q'+rx+','+(y-13)+' '+(rx+10)+','+(y+3)+'"'+s+'/></g>';
+  }
+  function eyesS(y, lx, rx){
+    var s = ' stroke="'+INK+'" stroke-width="3.5" fill="none" stroke-linecap="round"';
+    return '<g class="face-s">' +
+      '<ellipse cx="'+lx+'" cy="'+(y+3)+'" rx="7" ry="8" fill="'+INK+'"/><ellipse cx="'+rx+'" cy="'+(y+3)+'" rx="7" ry="8" fill="'+INK+'"/>' +
+      '<path d="M'+(lx-11)+','+(y-10)+' L'+(lx+7)+','+(y-15)+'"'+s+'/><path d="M'+(rx+11)+','+(y-10)+' L'+(rx-7)+','+(y-15)+'"'+s+'/>' +
+      '<path d="M'+(rx+8)+','+(y+12)+' q5,9 0,13 q-5,-4 0,-13 z" fill="#7CC4FF"/></g>';
+  }
+  function cheeks(y, lx, rx, c){
+    return '<ellipse cx="'+lx+'" cy="'+y+'" rx="11" ry="7" fill="'+c+'" opacity=".75"/>' +
+           '<ellipse cx="'+rx+'" cy="'+y+'" rx="11" ry="7" fill="'+c+'" opacity=".75"/>';
+  }
+  function mouthN(y){ return '<path class="face-n" d="M92,'+y+' Q100,'+(y+6)+' 108,'+y+'" stroke="'+INK+'" stroke-width="2.5" fill="none" stroke-linecap="round"/>'; }
+  function mouthH(y){ return '<path class="face-h" d="M90,'+(y-1)+' Q100,'+(y+15)+' 110,'+(y-1)+' Q100,'+(y+2)+' 90,'+(y-1)+' Z" fill="#C94A63"/>'; }
+  function face(y, gap, cheekC){
+    var lx = 100-gap, rx = 100+gap;
+    return eyesN(y, lx, rx) + eyesH(y, lx, rx) + eyesS(y, lx, rx) + cheeks(y+16, lx-14, rx+14, cheekC) + mouthN(y+22) + mouthH(y+22) +
+      '<path class="face-s" d="M90,'+(y+28)+' Q100,'+(y+19)+' 110,'+(y+28)+'" stroke="'+INK+'" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  }
+  function sparkle(x, y, s, delay, color){
+    return '<path class="sparkle" style="animation-delay:'+delay+'s" d="M'+x+','+(y-s)+' Q'+x+','+y+' '+(x+s)+','+y+' Q'+x+','+y+' '+x+','+(y+s)+' Q'+x+','+y+' '+(x-s)+','+y+' Q'+x+','+y+' '+x+','+(y-s)+' Z" fill="'+color+'"/>';
+  }
+
+  var CHARS = [
+    { group:'blood', id:'red', nick:'あかまる', real:'<ruby>赤血球<rt>せっけっきゅう</rt></ruby>', place:'血の中',
+      role:'<ruby>肺<rt>はい</rt></ruby>で<ruby>酸素<rt>さんそ</rt></ruby>を受け取って、体中に届ける<ruby>配達<rt>はいたつ</rt></ruby>係。',
+      say:'<ruby>酸素<rt>さんそ</rt></ruby>を体中に届けるよ！',
+      draw:function(){
+        return '<g class="o2"><circle cx="160" cy="52" r="17" fill="#CFEFFF" stroke="#8CCBF2" stroke-width="2.5"/>' +
+          '<text x="160" y="58" text-anchor="middle" font-size="15" font-weight="900" fill="#3E86D0" font-family="Zen Maru Gothic, sans-serif">O₂</text></g>' +
+          '<ellipse cx="100" cy="118" rx="76" ry="60" fill="#FF7A7A"/>' +
+          '<ellipse cx="100" cy="150" rx="38" ry="15" fill="#EF5D63" opacity=".55"/>' +
+          '<ellipse cx="66" cy="78" rx="18" ry="9" fill="#fff" opacity=".35" transform="rotate(-25 66 78)"/>' +
+          face(100, 26, '#FFC4C4');
+      }},
+    { group:'blood', id:'white', nick:'しろまる', real:'<ruby>白血球<rt>はっけっきゅう</rt></ruby>', place:'血の中',
+      role:'体に入ってきた<ruby>細菌<rt>さいきん</rt></ruby>やウイルスを見つけて、やっつける守り係。',
+      say:'ばい<ruby>菌<rt>きん</rt></ruby>は僕がやっつける！',
+      draw:function(){
+        var C = [[100,112,62],[50,96,26],[150,96,26],[60,146,26],[140,146,26],[100,54,28],[100,166,20],[68,62,20],[132,62,20]];
+        var sh = '', fl = '';
+        C.forEach(function(c){ sh += '<circle cx="'+c[0]+'" cy="'+(c[1]+3)+'" r="'+(c[2]+2.5)+'" fill="#D9D2F0"/>'; fl += '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="#F8F6FF"/>'; });
+        return '<g class="wobble">' + sh + fl +
+          '<circle cx="84" cy="146" r="8" fill="#CDBBF2"/><circle cx="100" cy="152" r="9" fill="#CDBBF2"/><circle cx="116" cy="146" r="8" fill="#CDBBF2"/>' +
+          face(98, 24, '#FFB6C8') + '</g>';
+      }},
+    { group:'blood', id:'platelet', nick:'ペタン', real:'<ruby>血小板<rt>けっしょうばん</rt></ruby>', place:'血の中',
+      role:'けがをすると集まって、血を固めて<ruby>傷口<rt>きずぐち</rt></ruby>をふさぐ。',
+      say:'けがをしたら、すぐ<ruby>駆<rt>か</rt></ruby>けつけてふさぐよ！',
+      draw:function(){
+        return '<g transform="translate(100 180) scale(.86) translate(-100 -180)">' +
+          '<ellipse cx="100" cy="124" rx="66" ry="50" fill="#FFD66B"/>' +
+          '<ellipse cx="100" cy="146" rx="36" ry="16" fill="#FFE9A8"/>' +
+          '<circle cx="74" cy="150" r="4" fill="#F2B632"/><circle cx="126" cy="150" r="4" fill="#F2B632"/>' +
+          face(112, 24, '#FFA98A') +
+          '<g class="band"><rect x="124" y="50" width="56" height="22" rx="11" fill="#F4C9A2"/><rect x="142" y="50" width="20" height="22" fill="#FBE3CC"/>' +
+          '<circle cx="132" cy="58" r="1.6" fill="#D9A579"/><circle cx="132" cy="65" r="1.6" fill="#D9A579"/><circle cx="172" cy="58" r="1.6" fill="#D9A579"/><circle cx="172" cy="65" r="1.6" fill="#D9A579"/></g>' +
+          '</g>';
+      }},
+    { group:'cell', id:'saliva', nick:'つばっち', real:'だ<ruby>液<rt>えき</rt></ruby>', place:'口の中',
+      role:'ご飯のでんぷんを、甘い別の物に変える。よくかむと、たくさん出てくる。',
+      say:'よくかんでね。でんぷんを変えちゃうよ！',
+      draw:function(){
+        return '<path d="M100,22 C118,56 166,88 166,124 A66,56 0 0 1 34,124 C34,88 82,56 100,22 Z" fill="#8FD3FF"/>' +
+          '<ellipse cx="100" cy="146" rx="40" ry="22" fill="#D4F0FF"/>' +
+          '<ellipse cx="68" cy="88" rx="9" ry="16" fill="#fff" opacity=".5" transform="rotate(25 68 88)"/>' +
+          '<path class="drip" d="M156,150 C160,158 164,162 164,166 A8,8 0 0 1 148,166 C148,162 152,158 156,150 Z" fill="#8FD3FF"/>' +
+          face(108, 24, '#FFB6C8');
+      }},
+    { group:'cell', id:'nucleus', nick:'かくちょう', real:'<ruby>核<rt>かく</rt></ruby>', place:'<ruby>細胞<rt>さいぼう</rt></ruby>の真ん中',
+      role:'<ruby>細胞<rt>さいぼう</rt></ruby>の真ん中で、体の<ruby>設計図<rt>せっけいず</rt></ruby>を大切にしまっている。',
+      say:'体の<ruby>設計図<rt>せっけいず</rt></ruby>は、わしが守っておる。',
+      draw:function(){
+        var pores = ''; for(var i=0;i<10;i++){ var t = i*Math.PI/5; pores += '<circle cx="'+(100+76*Math.cos(t)).toFixed(1)+'" cy="'+(114+76*Math.sin(t)).toFixed(1)+'" r="5" fill="#F8F4FF"/>'; }
+        return '<circle cx="100" cy="114" r="80" fill="#D8CBFA"/>' + pores + '<circle cx="100" cy="114" r="64" fill="#A58BEF"/>' +
+          '<g stroke="#C3B0F7" stroke-width="5" fill="none" stroke-linecap="round">' +
+          '<path d="M56,140 q10,-12 20,0 t20,0"/><path d="M110,152 q10,-12 20,0 t18,0"/><path d="M60,70 q10,-10 20,0"/><path d="M122,66 q10,-10 20,0"/></g>' +
+          '<circle cx="146" cy="128" r="9" fill="#7E62D6"/>' +
+          face(100, 24, '#FFB6C8');
+      }},
+    { group:'cell', id:'chloro', nick:'みどりん', real:'<ruby>葉緑体<rt>ようりょくたい</rt></ruby>', place:'葉の<ruby>細胞<rt>さいぼう</rt></ruby>',
+      role:'太陽の光を<ruby>浴<rt>あ</rt></ruby>びて、植物の<ruby>栄養<rt>えいよう</rt></ruby>になるでんぷんを作る。',
+      say:'太陽の光ででんぷんを作るよ！',
+      draw:function(){
+        return '<g class="sprout"><path d="M100,64 L100,40" stroke="#4FA845" stroke-width="5" stroke-linecap="round"/>' +
+          '<path d="M100,44 Q78,22 66,38 Q84,52 100,44 Z" fill="#8EDB6E"/><path d="M100,40 Q120,16 134,30 Q118,46 100,40 Z" fill="#6CC24E"/></g>' +
+          '<path d="M30,104 Q30,62 82,62 Q112,62 128,78 Q140,88 158,82 Q178,78 178,112 Q178,176 104,178 Q30,178 30,104 Z" fill="#86D76E"/>' +
+          '<g fill="#5DB84F"><rect x="52" y="140" width="20" height="8" rx="4"/><rect x="52" y="150" width="20" height="8" rx="4"/>' +
+          '<rect x="90" y="150" width="20" height="8" rx="4"/><rect x="90" y="160" width="20" height="8" rx="4"/>' +
+          '<rect x="128" y="140" width="20" height="8" rx="4"/><rect x="128" y="150" width="20" height="8" rx="4"/></g>' +
+          face(104, 26, '#FFB6C8') +
+          sparkle(168, 50, 12, 0, '#FFC53D') + sparkle(30, 72, 8, -1.1, '#FFC53D');
+      }}
+  ];
+
+
+  // 元素キャラの形: とがった角の数 = 手の数（H 1・O 2・N 3・C 4）。手がない仲間は輪っか付きの丸。
+  function rounded(points, fill){
+    var pts = points.map(function(p){ return p.join(','); }).join(' ');
+    return '<polygon points="'+pts+'" fill="'+fill+'" stroke="'+fill+'" stroke-width="30" stroke-linejoin="round"/>';
+  }
+  function elemBody(sym, kind, c){
+    switch(sym){
+      case 'H': return '<path d="M100,26 C114,58 162,82 162,124 A62,56 0 0 1 38,124 C38,82 86,58 100,26 Z" fill="'+c+'"/>';
+      case 'O': return '<path d="M18,116 Q52,48 100,48 Q148,48 182,116 Q148,180 100,180 Q52,180 18,116 Z" fill="'+c+'"/>';
+      case 'N': return rounded([[100,40],[166,168],[34,168]], c);
+      case 'C': return rounded([[100,36],[168,112],[100,184],[32,112]], c);
+      case 'Fe':
+        var g = '';
+        for(var i=0;i<8;i++) g += '<rect x="88" y="34" width="24" height="30" rx="6" fill="'+c+'" transform="rotate('+(i*45)+' 100 116)"/>';
+        return g + '<circle cx="100" cy="116" r="62" fill="'+c+'"/>';
+      case 'Ca': return '<path d="M42,72 Q42,42 72,42 Q88,42 100,54 Q112,42 128,42 Q158,42 158,72 L152,138 Q150,182 128,182 Q112,182 108,156 Q100,146 92,156 Q88,182 72,182 Q50,182 48,138 Z" fill="'+c+'"/>';
+    }
+    if(kind === 'noble') return '<circle cx="100" cy="116" r="60" fill="'+c+'"/><ellipse cx="100" cy="122" rx="92" ry="24" fill="none" stroke="'+c+'" stroke-width="8" opacity=".8"/>';
+    if(kind === 'metal') return '<rect x="38" y="54" width="124" height="126" rx="30" fill="'+c+'"/><rect x="52" y="64" width="40" height="10" rx="5" fill="#fff" opacity=".45"/>';
+    return '<circle cx="100" cy="116" r="64" fill="'+c+'"/>';
+  }
+  function elemDraw(body, belly, sym, symColor, size, kind){
+    var by = sym === 'Ca' ? 132 : sym === 'N' ? 146 : 144, br = sym === 'Ca' ? 24 : 28;
+    return elemBody(sym, kind, body) +
+      '<circle cx="100" cy="'+by+'" r="'+br+'" fill="'+belly+'"/>' +
+      '<text x="100" y="'+(by+size*0.36)+'" text-anchor="middle" font-size="'+(sym === 'Ca' ? size-4 : size)+'" font-weight="900" fill="'+symColor+'" font-family="ui-rounded, Zen Maru Gothic, sans-serif">'+sym+'</text>' +
+      face(sym === 'N' ? 104 : 90, 22, '#FFB6C8');
+  }
+  var ELEMS = [
+    { sym:'O', name:'<ruby>酸素<rt>さんそ</rt></ruby>', bg:'#9ED8FF', belly:'#E3F4FF', ink:'#2B79C2',
+      role:'体の重さの約65%が<ruby>酸素<rt>さんそ</rt></ruby>。空気の約21%も<ruby>酸素<rt>さんそ</rt></ruby>。', say:'息をすると、<ruby>肺<rt>はい</rt></ruby>から入ってくるよ！' },
+    { sym:'H', name:'<ruby>水素<rt>すいそ</rt></ruby>', bg:'#FFD3E2', belly:'#FFF1F6', ink:'#D6407A',
+      role:'水（H₂O）は<ruby>水素<rt>すいそ</rt></ruby>2つと<ruby>酸素<rt>さんそ</rt></ruby>1つでできている。体の約60%は水。', say:'水の中には僕がいるよ！' },
+    { sym:'C', name:'<ruby>炭素<rt>たんそ</rt></ruby>', bg:'#8E8A9E', belly:'#E6E3EE', ink:'#3A3650',
+      role:'でんぷんや体を作る材料。吐く息の<ruby>二酸化炭素<rt>にさんかたんそ</rt></ruby>（CO₂）にも入っている。', say:'<ruby>鉛筆<rt>えんぴつ</rt></ruby>の<ruby>芯<rt>しん</rt></ruby>もダイヤモンドも、僕でできているよ！' },
+    { sym:'N', name:'<ruby>窒素<rt>ちっそ</rt></ruby>', bg:'#C9B6FF', belly:'#F1EBFF', ink:'#6A48D1',
+      role:'<ruby>筋肉<rt>きんにく</rt></ruby>などを作るたんぱく質の材料。空気の約78%も<ruby>窒素<rt>ちっそ</rt></ruby>。', say:'空気の中では僕がいちばん多いよ！' },
+    { sym:'Fe', name:'<ruby>鉄<rt>てつ</rt></ruby>', bg:'#F4A36C', belly:'#FFE6D3', ink:'#B4521A',
+      role:'血が赤いのは<ruby>鉄<rt>てつ</rt></ruby>のおかげ。<ruby>酸素<rt>さんそ</rt></ruby>をつかまえる役目をしている。', say:'くぎやフライパンにもいるよ！' },
+    { sym:'Ca', name:'カルシウム', bg:'#F3E6C4', belly:'#FFFAEE', ink:'#9C7A2B',
+      role:'骨や歯を作る。牛乳や小魚にたくさん入っている。', say:'骨や歯は僕でできているよ！' }
+  ];
+  var RB = { O:'<ruby>酸素<rt>さんそ</rt></ruby>', H:'<ruby>水素<rt>すいそ</rt></ruby>', C:'<ruby>炭素<rt>たんそ</rt></ruby>', N:'<ruby>窒素<rt>ちっそ</rt></ruby>', Fe:'<ruby>鉄<rt>てつ</rt></ruby>', Ca:'カルシウム' };
+  ELEMS.forEach(function(e){
+    CHARS.push({ group:'elem', id:'el-'+e.sym, nick:e.sym, real:e.name, place:'', role:e.role, say:e.say,
+      draw:function(){ return elemDraw(e.bg, e.belly, e.sym, e.ink, e.sym.length > 1 ? 30 : 36); } });
+  });
+
+  // 電気の仲間（小3「電気の通り道」）
+  function battDraw(flip){
+    var y0 = flip ? 22 : 38, a = flip ? ['−','＋'] : ['＋','−'], ca = flip ? ['#2B79C2','#D6403A'] : ['#D6403A','#2B79C2'];
+    return '<rect x="84" y="'+(flip ? 162 : 24)+'" width="32" height="16" rx="5" fill="#C9CED8"/><rect x="52" y="'+y0+'" width="96" height="140" rx="30" fill="#FFC53D"/>' +
+      '<rect x="62" y="'+(y0+24)+'" width="76" height="104" rx="22" fill="#FFE59A"/>' +
+      '<text x="100" y="'+(y0+20)+'" text-anchor="middle" font-size="20" font-weight="900" fill="'+ca[0]+'">'+a[0]+'</text><text x="100" y="'+(y0+140)+'" text-anchor="middle" font-size="22" font-weight="900" fill="'+ca[1]+'">'+a[1]+'</text>' +
+      face(y0+68, 20, '#FF9E8A');
+  }
+  function bulbDraw(lit, lvl){
+    var big = lvl > 1;
+    return (lit ? '<circle cx="100" cy="92" r="'+(big ? 100 : 84)+'" fill="'+(big ? '#FFE05A' : '#FFE27A')+'" opacity="'+(big ? .7 : .55)+'"/>' : '') +
+      '<circle cx="100" cy="92" r="60" fill="'+(lit ? (big ? '#FFF08A' : '#FFF3A6') : '#E3ECF4')+'" stroke="#B7C6D4" stroke-width="3"/>' +
+      '<path d="M84,146 Q86,126 96,120 M116,146 Q114,126 104,120" stroke="#9AA3B2" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+      '<rect x="70" y="146" width="60" height="30" rx="7" fill="#B9C0CC"/><path d="M70,158 H130 M70,168 H130" stroke="#8E97A6" stroke-width="2.5"/>' +
+      '<path d="M82,176 H118 L108,190 H92 Z" fill="#7E8796"/>' +
+      face(84, 22, '#FFB6A0') + (lit ? sparkle(168, 36, 12, 0, '#FFC53D') + sparkle(30, 50, 9, -1.1, '#FFC53D') + (big ? sparkle(166, 120, 10, -.5, '#FFC53D') + sparkle(36, 130, 8, -1.6, '#FFC53D') + sparkle(100, 6, 10, -.8, '#FFC53D') : '') : '');
+  }
+  function motorDraw(){
+    return '<rect x="96" y="44" width="8" height="18" fill="#8E97A6"/><rect x="88" y="174" width="24" height="16" rx="4" fill="#8E97A6"/>' +
+      '<circle cx="100" cy="114" r="62" fill="#7FD0E0"/><circle cx="100" cy="122" r="46" fill="#D9F4FA"/>' +
+      '<g class="fan"><ellipse cx="100" cy="40" rx="40" ry="8" fill="#FFB74D"/><ellipse cx="100" cy="40" rx="40" ry="8" fill="#FFB74D" transform="rotate(60 100 40)"/><ellipse cx="100" cy="40" rx="40" ry="8" fill="#FFA226" transform="rotate(120 100 40)"/><circle cx="100" cy="40" r="7" fill="#E58A2E"/></g>' +
+      face(112, 22, '#FFB6A0');
+  }
+  CHARS.push({ group:'elec', id:'denchi', nick:'でんちゃん', real:'<ruby>電池<rt>でんち</rt></ruby>', place:'', role:'電気を送り出す。上の出っぱりが＋、下が−。', say:'電気を送り出すよ！', draw:battDraw });
+  CHARS.push({ group:'elec', id:'pikari', nick:'ピカリ', real:'<ruby>豆電球<rt>まめでんきゅう</rt></ruby>', place:'', role:'電気が通ると、光る。', say:'輪っかになったら光るよ！', draw:function(){ return bulbDraw(true); } });
+  CHARS.push({ group:'elec', id:'kururin', nick:'くるりん', real:'モーター', place:'4年で登場', role:'電気が流れると回る。電池の向きを変えると、回る向きも変わる。', say:'ぐるぐる回るよ！', draw:motorDraw });
+  function petSVG(c){
+    var delay = (-Math.random()*3).toFixed(2);
+    return '<svg class="pet" viewBox="0 0 200 200" role="img" aria-label="'+c.nick+'">' +
+      '<ellipse class="p-shadow" cx="100" cy="180" rx="56" ry="10" fill="'+INK+'" opacity=".08"/>' +
+      '<g class="p-jump"><g class="p-breathe" style="animation-delay:'+delay+'s">' + c.draw() + '</g></g></svg>';
+  }
+
+      CHARS.push({ id:'pikari-off', nick:'ピカリ', draw:function(){ return bulbDraw(false); } });
+      return function(ids){
+        var row = ids.split('+').map(function(id){
+          var c = CHARS.filter(function(x){ return x.id === id; })[0]; if(!c) return '';
+          return '<figure class="gk-chr">'+petSVG(c)+'<figcaption>'+c.nick+'</figcaption></figure>';
+        }).join('');
+        return '<div class="gk-chrow">'+row+'</div>';
+      };
+    })();
     /* 理科の えいぞう(イラスト): ILL[key] = SVG文字列。key の先頭 ! は「答えを えらんだ あと」に出す ずかい */
     var ILL = (function(){
       function W(b){ return '<svg class="gk-ill" viewBox="0 0 320 150" role="img" aria-hidden="true"><rect width="320" height="150" rx="14" fill="#e9f5ff"/>'+b+'</svg>'; }
@@ -12866,7 +13166,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       o.typhoon = W('<rect width="320" height="150" rx="14" fill="#cfe8ff"/><path d="M200 20 q30 10 20 40 q-10 30 -30 50 l-20 20 l-30 -6 l10 -20 q20 -20 30 -50 q6 -24 20 -34z" fill="#6cc070"/>' + E(150, 132, '🌀', 34) + T(160, 30, 'たいふうは どこから?', 13, '#c2410c') + T(240, 140, 'にほん', 12));
       o['!river'] = W('<rect width="320" height="150" rx="14" fill="#9bd48a"/><path d="M20 20 Q260 20 250 80 Q240 140 20 130" stroke="#5aa9e6" stroke-width="34" fill="none"/><path d="M262 40 q16 40 0 80" stroke="#c2410c" stroke-width="3" fill="none"/>' + T(290, 84, 'そと', 12, '#c2410c') + T(200, 84, 'うち', 12) + T(120, 80, 'そとがわは ながれが はやく ふかい', 11));
       o.medaka = W(E(90, 86, '🐟', 50) + T(90, 128, 'メダカ', 13) + '<circle cx="230" cy="80" r="26" fill="#fff6d0" stroke="#d9b54a" stroke-width="3"/><circle cx="222" cy="88" r="10" fill="#f2c14e"/><path d="M226 70 q14 -6 18 8" stroke="#35405a" stroke-width="3" fill="none"/>' + T(230, 128, 'たまごの 中', 13));
-      return function(k){ return o[k] || ''; };
+      return function(k){ if(k.indexOf('c:') === 0) return CHR(k.slice(2)); return o[k] || ''; };
     })();
 
     function sciQ(e){ var post = e.ill.charAt(0) === '!'; return { id:e.id, map:'s', tag:'理科 ('+e.cat+')', html:(post ? '' : ILL(e.ill)) + '<div class="gk-text">'+e.q+'</div>', post:post ? ILL(e.ill) : '', a:e.a, bad:e.bad, say:'答えは「'+e.a+'」' }; }
@@ -12878,22 +13178,38 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       return '<div class="gk-pass">'+KRB(t)+'</div>';
     }
     function kokuQ(e, i){
-      return { id:'j'+i, map:'j', p:e.p, ev:e.ev, ty:e.t, tag:'国語(読解)', lv:e.lv || 1, a:e.a, bad:e.bad, why:e.why, qtext:e.q, say:'答えは「'+KPL(e.a)+'」。'+KPL(e.why) };
+      return { id:'j'+i, map:'j', p:e.p, ev:e.ev, ty:e.t, tag:'国語(読解)', lv:e.lv || 1, tp:e.tp || 0, a:e.a, bad:e.bad, why:e.why, qtext:e.q, say:'答えは「'+KPL(e.a)+'」。'+KPL(e.why) };
     }
     var S = null;
-    var LV = { 1:['レベル1', '小3ごろ'], 2:['レベル2', '小4〜5ごろ'], 3:['レベル3', '小6〜ちゅうがくへ'] };
-    function lvStat(l){ var s = get(), a = SCI.filter(function(e){ return e.lv === l; }), n = a.filter(function(e){ return s.s[e.id] && s.s[e.id].ok > 0; }).length; return { n:n, all:a.length }; }
+    /* 理科は 学年ではなく 分野(すきな ところ)を えらぶ。同じ 分野を すすめるほど、ふかい もんだい(lv 2,3)が ひらく */
+    var TOPICS = [['植物','🌱'], ['こん虫','🐛'], ['生き物','🐟'], ['体','🫀'], ['光','🔆'], ['じしゃく','🧲'], ['電気','💡'], ['音','🔔'], ['もの','🧪'], ['元素','💎'], ['地球','🌏']];
+    function topicItems(cat){ return SCI_ALL.filter(function(e){ return cat === '*' || e.cat === cat; }); }
+    function okOf(e, s){ return s.s[e.id] && s.s[e.id].ok > 0; }
+    function depthOf(cat){ /* いま ひらいている いちばん ふかい lv */
+      var s = get(), items = topicItems(cat), lvs = [], d;
+      items.forEach(function(e){ if(lvs.indexOf(e.lv) < 0) lvs.push(e.lv); }); lvs.sort();
+      if(!lvs.length) return 1; d = lvs[0];
+      for(var i = 1; i < lvs.length; i++){
+        var prev = items.filter(function(e){ return e.lv < lvs[i]; });
+        if(prev.filter(function(e){ return okOf(e, s); }).length >= Math.ceil(prev.length*0.7)) d = lvs[i]; else break;
+      }
+      return d;
+    }
+    function topicPool(cat){
+      if(cat === '*'){ var out = []; TOPICS.forEach(function(t){ out = out.concat(topicPool(t[0])); }); return out; }
+      var d = depthOf(cat); return topicItems(cat).filter(function(e){ return e.lv <= d; });
+    }
+    function topicStat(cat){ var s = get(), a = topicItems(cat); return { n:a.filter(function(e){ return okOf(e, s); }).length, all:a.length, d:depthOf(cat), maxd:a.reduce(function(m, e){ return Math.max(m, e.lv); }, 1) }; }
     function levelMenu(){
       menu();
-      var rec = 0, h = '';
-      [1, 2, 3].forEach(function(l){ var st = lvStat(l); if(!rec && st.all && st.n < Math.ceil(st.all*0.7)) rec = l; });
-      if(!rec) rec = 3;
-      [1, 2, 3].forEach(function(l){
-        var st = lvStat(l); if(!st.all) return;
-        h += '<button class="gk-sub" data-lv="'+l+'"><span class="gk-ico" style="font-size:26px">'+l+'</span><span><b>'+LV[l][0]+'('+LV[l][1]+')</b><small>せいかい '+st.n+' / '+st.all+' もん'+(l === rec ? ' ・いまの おすすめ' : '')+'</small></span></button>';
+      var h = '<button class="gk-sub" data-lv="*"><span class="gk-ico" style="font-size:26px">🎲</span><span><b>ぜんぶ まぜる</b><small>すきな ことが きまって いない とき</small></span></button>';
+      TOPICS.forEach(function(t){
+        var st = topicStat(t[0]); if(!st.all) return;
+        var stars = ''; for(var i = 1; i <= 3; i++) stars += i <= st.d ? '★' : '☆';
+        h += '<button class="gk-sub" data-lv="'+t[0]+'"><span class="gk-ico" style="font-size:26px">'+t[1]+'</span><span><b>'+t[0]+'</b><small>せいかい '+st.n+' / '+st.all+' もん ・ ふかさ '+stars+(st.d < st.maxd ? '' : ' ・ぜんぶ ひらいたよ')+'</small></span></button>';
       });
-      $('gkTitle').textContent = '理科(すきな レベルから!)';
-      $('gkSubs').innerHTML = '<p class="gk-note">できる ところから、どんどん 先へ すすんで いいよ。どのレベルも えらべるよ。</p>' + h;
+      $('gkTitle').textContent = '理科(すきな ぶんやを えらぼう)';
+      $('gkSubs').innerHTML = '<p class="gk-note">すきな ぶんやを えらんでね。よく できると、もっと ふかい もんだいが ひらくよ(★が ふえる)。</p>' + h;
       LVOPEN = true; show('menu');
     }
     var LVOPEN = false;
@@ -12903,8 +13219,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var s = get(), sn = Object.keys(s.s).filter(function(x){ return s.s[x].ok > 0; }).length;
       var jn = Object.keys(s.j).filter(function(x){ return s.j[x].ok > 0; }).length;
       c.innerHTML = '<section class="gk-card"><span class="gk-ico k">漢</span><span class="fc-text"><b>漢字ドリル</b>書き順と 宝探し・お散歩の 宝物が コインに</span><a class="fc-go" href="'+KANJI_URL+'" target="_blank" rel="noopener" style="text-decoration:none">ひらく</a></section>' +
-        '<section class="gk-card" data-sub="s"><span class="gk-ico s">理</span><span class="fc-text"><b>理科（レベル1〜3）</b>もんだい '+sn+'/'+SCI.length+' こ せいかい</span><button class="fc-go" data-sub="s" style="background:var(--op-sub)">れんしゅう</button></section>' +
-        '<section class="gk-card" data-kmenu="1"><span class="gk-ico" style="background:var(--op-div)">国</span><span class="fc-text"><b>国語</b>読解 だん'+kLv(s,'j').max+'・文の組み立て だん'+kLv(s,'b').max+'・ローマ字 だん'+kLv(s,'r').max+'</span><button class="fc-go" data-kmenu="1" style="background:var(--op-div)">えらぶ</button></section>' +
+        '<section class="gk-card" data-sub="s"><span class="gk-ico s">理</span><span class="fc-text"><b>理科（すきな ぶんやで）</b>もんだい '+sn+'/'+SCI.length+' こ せいかい</span><button class="fc-go" data-sub="s" style="background:var(--op-sub)">れんしゅう</button></section>' +
+        '<section class="gk-card" data-kmenu="1"><span class="gk-ico" style="background:var(--op-div)">国</span><span class="fc-text"><b>国語</b>読解 '+kSum(s,'j')+'・文の組み立て '+kSum(s,'b')+'・ローマ字 '+kSum(s,'r')+'(すきな 分野を えらんで ふかく)</span><button class="fc-go" data-kmenu="1" style="background:var(--op-div)">えらぶ</button></section>' +
         (function(){ var top = 0; DAN.forEach(function(x, i){ if(danOpen(s.o, i)) top = i; }); var dn = DAN[top];
           return '<section class="gk-card" data-sub="'+dn.k+'"><span class="gk-ico" style="background:var(--op-add)">社</span><span class="fc-text"><b>社会 '+dn.n+'</b>もんだい '+danDone(s.o, dn.k)+'/'+SOCL[dn.k].length+' こ せいかい</span><button class="fc-go" data-sub="'+dn.k+'" style="background:var(--op-add)">れんしゅう</button></section>'; })();
     }
@@ -12914,7 +13230,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('gkTitle').textContent = 'まなぶ';
       $('gkWallet').innerHTML = '<span class="coin"></span><span>いまの コイン <b class="num">'+getCoins()+'</b></span><span class="gk-bar"><i style="width:'+Math.round(s.day.n/DAY_CAP*100)+'%"></i></span><span>今日 '+s.day.n+'/'+DAY_CAP+'</span>';
       $('gkSubs').innerHTML = '<a class="gk-sub" href="'+KANJI_URL+'" target="_blank" rel="noopener" style="text-decoration:none"><span class="gk-ico" style="font-size:30px">漢</span><span><b>漢字ドリル</b><small>書き順・宝探し(お散歩の 宝物が コインに なるよ)</small></span></a>' +
-        '<button class="gk-sub" data-sub="s"><span class="gk-ico" style="font-size:30px">理</span><span><b>理科</b><small>レベル1〜3・植物 こん虫 光 じしゃく 体 天気 など</small></span></button>' +
+        '<button class="gk-sub" data-sub="s"><span class="gk-ico" style="font-size:30px">理</span><span><b>理科</b><small>すきな ぶんやを えらんで、ふかく しらべよう</small></span></button>' +
         '<div class="gk-sub" data-sub="j" role="button"><span class="gk-ico" style="font-size:30px">国</span><span><b>国語・読解</b><small>短い 文を 読んで、聞かれている ことを つかまえよう(物語・せつめい文・日記・手紙・お知らせ・<ruby>俳句<rt>はいく</rt></ruby>)</small>'+kChips('j')+'</span></div>' +
         '<div class="gk-sub" data-sub="b" role="button"><span class="gk-ico" style="font-size:30px">文</span><span><b>国語・文の組み立て</b><small><ruby>主語<rt>しゅご</rt></ruby>と <ruby>述語<rt>じゅつご</rt></ruby>・くわしく する ことば・つなぎ言葉・<ruby>敬語<rt>けいご</rt></ruby>・ならべかえ</small>'+kChips('b')+'</span></div>' +
         '<div class="gk-sub" data-sub="r" role="button"><span class="gk-ico" style="font-size:24px">Aa</span><span><b>ローマ字</b><small>ローマ字を 読む・書く・パソコンで 打って みる</small>'+kChips('r')+'</span></div>' +
@@ -12927,19 +13243,19 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       show('menu');
     }
     function start(sub, lv){
-      lv = lv || 1;
-      var SCI = SCI_ALL.filter(function(e){ return e.lv === lv; }); /* この中だけ えらんだ レベルの もんだい */
+      lv = lv || '*';
+      var SCI = sub === 's' ? topicPool(lv) : SCI_ALL; /* この中だけ えらんだ ぶんやの もんだい */
       var s = get(), qs;
-      if(sub === 'b' || sub === 'r') qs = pickSet((sub === 'b' ? BUNQ : ROMAQ).filter(function(e){ return e.lv === lv; }), s[sub], function(e){ return e.id; }, ROUNDS[sub]);
+      if(sub === 'b' || sub === 'r') qs = kPick((sub === 'b' ? BUNQ : ROMAQ).filter(function(e){ return e.tp === lv - 1; }), s[sub], ROUNDS[sub]);
       else if(sub === 'j'){
         var all = KOKU.qs.map(function(e, i){ return kokuQ(e, i); });
-        qs = pickSet(all.filter(function(e){ return e.lv === lv; }), s.j, function(e){ return e.id; }, ROUNDS.j);
+        qs = kPick(all.filter(function(e){ return e.tp === lv - 1; }), s.j, ROUNDS.j);
       }else if(SOCL[sub]) qs = pickSet(SOCL[sub], s.o, function(e){ return e.id; }, ROUNDS[sub]).map(socQ);
       else qs = pickSet(SCI, s.s, function(e){ return e.id; }, ROUNDS.s).map(sciQ);
-      S = { lv:lv, sub:sub, qs:shuffle(qs), i:0, ok:0, res:[], step:0 };
+      S = { lv:lv, d0:sub === 's' ? depthOf(lv) : 0, sub:sub, qs:shuffle(qs), i:0, ok:0, res:[], step:0 };
       $('gkTitle').textContent = sub === 'j' ? '国語・読解（小3）' : SOCL[sub] ? '社会 '+DAN.filter(function(x){ return x.k === sub; })[0].n : '理科（小3）';
-      if(sub === 's') $('gkTitle').textContent = '理科 ' + LV[lv][0];
-      if(KLV[sub]) $('gkTitle').textContent = TITLES[sub] + ' だん' + S.lv;
+      if(sub === 's') $('gkTitle').textContent = '理科 ' + (lv === '*' ? 'ぜんぶ' : lv);
+      if(KLV[sub]) $('gkTitle').textContent = TITLES[sub] + '・' + KPL(KLV[sub][S.lv-1]);
       show('play'); ask();
     }
     function ask(){
@@ -12990,23 +13306,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var s = get(), want = S.ok + (S.ok >= Math.ceil(S.qs.length*0.8) ? 3 : 0), room = Math.max(0, DAY_CAP - s.day.n), got = Math.min(want, room);
       s.day.n += got; s.rounds++; var kup = kUp(s); put(s);
       if(got > 0) earn(got);
-      var name = NAMES[S.sub] + (S.sub === 's' ? ' '+LV[S.lv][0] : '');
-      $('gkResult').innerHTML = '<div class="gk-res"><div class="gk-big">'+S.ok+' / '+S.qs.length+'</div><p>'+name+(KLV[S.sub] ? ' だん'+S.lv : '')+'の れんしゅう おわり!</p>' + (kup ? '<div class="kk-up">'+kup+'</div>' : '') +
+      var name = NAMES[S.sub] + (S.sub === 's' ? ' '+(S.lv === '*' ? '' : S.lv) : '');
+      $('gkResult').innerHTML = '<div class="gk-res"><div class="gk-big">'+S.ok+' / '+S.qs.length+'</div><p>'+name+(KLV[S.sub] ? '・'+KPL(KLV[S.sub][S.lv-1]) : '')+'の れんしゅう おわり!</p>' + (kup ? '<div class="kk-up">'+kup+'</div>' : '') +
         '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン' + (got < want ? '（今日の 上限）' : '') + (S.ok >= Math.ceil(S.qs.length*0.8) ? '（8割 せいかい +3）' : '') + '</div>' +
         '<div class="gk-fb">1問 せいかいで 1コイン(読解は ②の 答えだけ)・今日 '+s.day.n+'/'+DAY_CAP+'</div>' +
-        ''+(S.sub === 's' && S.lv < 3 && lvStat(S.lv).n >= Math.ceil(lvStat(S.lv).all*0.7) ? '<p class="gk-note">よく できて いるね! 上の レベルに ちょうせん できるよ</p><button class="btn btn-primary" id="gkUp">レベル'+(S.lv+1)+'へ すすむ</button> ' : '')+'<button class="btn btn-primary" id="gkAgain">もう1回</button> '+(S.sub === 's' ? '<button class="btn btn-ghost" id="gkLvBtn">レベルを えらぶ</button> ' : '')+' <button class="btn btn-ghost" id="gkMenuBtn">まなぶ メニュー</button></div>';
+        ''+(S.sub === 's' && depthOf(S.lv) > S.d0 ? '<p class="gk-note">すごい! もっと ふかい もんだいが ひらいたよ</p>' : '')+'<button class="btn btn-primary" id="gkAgain">もう1回</button> '+(S.sub === 's' ? '<button class="btn btn-ghost" id="gkLvBtn">ぶんやを えらぶ</button> ' : '')+' <button class="btn btn-ghost" id="gkMenuBtn">まなぶ メニュー</button></div>';
       show('result');
     }
     $('gkBack').addEventListener('click', function(){ if($('gkMenu').hidden || LVOPEN){ menu(); } else goHome(); });
     $('view-gaku').addEventListener('click', function(e){
       var t = e.target;
-      var sub = t.closest('[data-sub]'); var lb = t.closest('[data-lv]'); if(lb && !$('gkMenu').hidden){ start('s', parseInt(lb.getAttribute('data-lv'), 10)); return; }
+      var sub = t.closest('[data-sub]'); var lb = t.closest('[data-lv]'); if(lb && !$('gkMenu').hidden){ start('s', lb.getAttribute('data-lv')); return; }
       if(sub && !sub.classList.contains('soon') && !$('gkMenu').hidden){ var k = sub.getAttribute('data-sub'); if(k === 's') levelMenu(); else start(k); return; }
       var cb = t.closest('#gkCh button'); if(cb){ answer(cb); return; }
       if(t.closest('#gkStep2')){ S.step = 1; S.lock = false; ask(); return; }
       if(t.closest('#gkNext')){ S.i++; S.step = 0; if(S.i >= S.qs.length) finish(); else ask(); return; }
       if(t.closest('#gkAgain')){ start(S.sub, S.lv); return; }
-      if(t.closest('#gkUp')){ start('s', S.lv + 1); return; }
       if(t.closest('#gkLvBtn')){ levelMenu(); return; }
       if(t.closest('#gkMenuBtn')){ menu(); }
     });
