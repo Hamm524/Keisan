@@ -4142,7 +4142,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   /* ---------- keisan_ で ない 記録も いっしょに 保存 ----------
      「地図で 遊ぼう」(map/)と「理科で 遊ぼう」は 自分で localStorage に 書く(名前が keisan_ で ない)。
      それを keisan_extra { key:{ v, t, z } } に うつして、ミラー・クラウド(合言葉)に のせる。
-     v = 中身、t = この 端末で 最後に かわった 時、z = 「記録を 消す」などで へった 時(それより 古い 方は つかわない)。 */
+     v = 中身、t = この 端末で 最後に かわった 時、z = 「記録を 消す」を した 回数(多い 方が 新しい。時計が ずれた 端末でも 正しく くらべられる)。 */
   var EXTRA_KEY = 'keisan_extra', extraBusy = false;
   var EXTRA_KEYS = ['jp-learned','jp-kanji','jp-best','jp-voice','jp-fdown','jp-kmode',
     'w-learned','w-best','w-voice','w-fdown','w-flagq','w-seas','w-rivers','w-glines',
@@ -4159,6 +4159,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   function extraVal(k, a, b){   /* a = この 端末、b = もう 一方 */
     if(EXTRA_SET[k]) return a;
+    if(k === 'rika-rev' && a && b && typeof a === 'object' && typeof b === 'object'){
+      /* 1問ずつ、さいごに 答えた ほう(due − 間かく)を つかう。まちがえて s=0 に もどったのが 古い 記録に まけない */
+      var INTV = [1, 7, 30, 90].map(function(d){ return d * 86400000; }), r = {};
+      function lastAt(e){ return e && typeof e.due === 'number' ? e.due - INTV[Math.max(0, Math.min(3, e.s | 0))] : -Infinity; }
+      Object.keys(b).forEach(function(x){ r[x] = b[x]; });
+      Object.keys(a).forEach(function(x){ r[x] = (x in b && lastAt(b[x]) > lastAt(a[x])) ? b[x] : a[x]; });
+      return r;
+    }
     if(/-best$/.test(k) && a && b && typeof a === 'object' && typeof b === 'object'){   /* タイムは 小さい ほうが よい */
       var o = {}; Object.keys(b).forEach(function(x){ o[x] = b[x]; });
       Object.keys(a).forEach(function(x){ o[x] = (x in b && typeof b[x] === 'number' && typeof a[x] === 'number') ? Math.min(a[x], b[x]) : a[x]; });
@@ -4169,10 +4177,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function extraEntry(k, a, b){
     if(!a || !('v' in a)) return b;
     if(!b || !('v' in b)) return a;
-    var z = Math.max(a.z || 0, b.z || 0);
-    if((a.t || 0) < z && (b.t || 0) >= z) return b;
-    if((b.t || 0) < z && (a.t || 0) >= z) return a;
-    return { v:extraVal(k, a.v, b.v), t:Math.max(a.t || 0, b.t || 0), z:z };
+    var za = a.z || 0, zb = b.z || 0;
+    if(za > zb) return a;   /* あとから「記録を 消す」を した ほう */
+    if(zb > za) return b;
+    return { v:extraVal(k, a.v, b.v), t:Math.max(a.t || 0, b.t || 0), z:za };
   }
   function extraMerge(l, r){   /* l, r = keisan_extra の 文字 */
     var L = extraJSON(l) || {}, R = extraJSON(r) || {}, o = {};
@@ -4192,7 +4200,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var v = cur, z = (e && e.z) || 0;
       if(e && 'v' in e && extraShrank(e.v, cur)){
         /* 空に した(記録を消す)ときだけ「消した」。ほかの へりかたは 古い ページの 上書きなので まぜて 取りもどす */
-        if(extraEmpty(cur)) z = now;
+        if(extraEmpty(cur)) z = z + 1;
         else{ v = extraVal(k, cur, e.v); try{ LS.setItem(k, JSON.stringify(v)); }catch(err){} }
       }
       o[k] = { v:v, t:now, z:z };
