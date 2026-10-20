@@ -279,6 +279,8 @@
   .rm-stage.editing .rm-it:not(.rm-front){ cursor:grab; }
   .rm-stage.editing .rm-it.sel{ filter:drop-shadow(0 0 0 transparent) drop-shadow(0 0 6px #FFC53D) drop-shadow(0 0 2px #E39B12); }
   .rm-stage.editing .rm-pet{ opacity:.35; pointer-events:none; }
+  .rm-dark{ position:absolute; inset:0; background:rgba(12,18,64,.26); z-index:5000; pointer-events:none; }
+  .rm-it.on{ filter:brightness(1.45) saturate(1.2); }
   .rm-glow{ opacity:0; transition:opacity .4s; } .rm-lit{ opacity:0; transition:opacity .4s; }
   .rm-it.on .rm-glow{ opacity:.9; } .rm-it.on .rm-lit{ opacity:1; }
   .rm-fan, .rm-drum{ transform-box:fill-box; transform-origin:50% 50%; }
@@ -453,6 +455,11 @@
   .rm-tabs{ display:flex; gap:6px; margin:0 0 10px; overflow-x:auto; padding-bottom:2px; }
   .rm-tab{ flex:none; border:1.5px solid var(--line); background:var(--surface); color:var(--ink); border-radius:100px; padding:8px 14px; font:inherit; font-size:13px; font-weight:900; cursor:pointer; }
   .rm-tab.sel{ background:var(--ink); border-color:var(--ink); color:var(--surface); }
+  /* 空: 時間で かわる(html[data-sky]) */
+  html[data-sky="eve"] .rm-house, html[data-sky="eve"] .rm-rfv, html[data-sky="eve"] .hub-house{ background:linear-gradient(#FFB38A, #FFE2C9 75%); }
+  html[data-sky="night"] .rm-house, html[data-sky="night"] .rm-rfv, html[data-sky="night"] .hub-house{ background:linear-gradient(#141B4D, #3A4A8F 78%); }
+  html[data-sky="eve"] .hub-rh .hx{ background:linear-gradient(#FFB38A, #FFE2C9 75%); }
+  html[data-sky="night"] .hub-rh .hx{ background:linear-gradient(#141B4D, #3A4A8F 78%); }
   .rm-house{ max-width:720px; margin:0 auto 10px; border-radius:22px; overflow:hidden; box-shadow:var(--shadow); background:linear-gradient(#BFE6FF, #E9F7FF 70%); position:relative; }
   .rm-house svg{ display:block; width:100%; height:auto; }
   .rm-house .hw{ cursor:pointer; }
@@ -11121,6 +11128,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function szOf(r){ var z = r && r.sz != null ? +r.sz : 1; return z >= 0 && z <= 3 ? z : 1; }
     var SIDE = .62, SIZES = [.5, .6, .7, .8, .9, 1, 1.15, 1.3, 1.5, 1.75, 2], FRONT = 114, LIFT = 50;
     function skyNow(){ var h = new Date().getHours(); return h >= 19 || h < 5 ? 'night' : h >= 16 ? 'eve' : 'day'; }
+    function isNight(){ var h = new Date().getHours(); return h >= 22 || h < 5; }
     function windowSvg(){
       var s = skyNow();
       var sky = s === 'night' ? '<rect x="14" y="12" width="102" height="80" fill="#34407A"/><circle cx="88" cy="34" r="11" fill="#FFF3C4"/><circle cx="93" cy="30" r="9" fill="#34407A"/><circle cx="34" cy="28" r="1.6" fill="#fff"/><circle cx="52" cy="60" r="1.3" fill="#fff"/><circle cx="100" cy="72" r="1.5" fill="#fff"/>'
@@ -11242,7 +11250,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var els = [];
       r.items.forEach(function(it, i){
         var g = geo(it), el = document.createElement('div');
-        el.className = 'rm-it z-' + g.d.z + (lampOn[i] && g.d.tap === 'light' ? ' on' : '') + (!mini && pv && pv.it === it ? ' pv' : '');
+        if(!mini && isNight() && g.d.id === 'lamp' && lampOn[i] === undefined) lampOn[i] = true;
+        el.className = 'rm-it z-' + g.d.z + ((lampOn[i] || (mini && isNight() && g.d.id === 'lamp')) && g.d.tap === 'light' ? ' on' : '') + (!mini && pv && pv.it === it ? ' pv' : '');
         el.innerHTML = itemSvg(g.d, null, it);
         el._i = i;
         place(el, it, g, g.z);
@@ -11259,8 +11268,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           p.className = 'rm-pet'; p.innerHTML = Pet.svg(sp, sp === a.sp ? a.lv : petLv(sp) || 0);
           if(k === 0) moodPet(p);
           p.style.left = x + '%'; p.style.bottom = (100 - y) + '%'; p.style.width = (PET_W * depth(y) * SK) + '%'; p.style.zIndex = 100 + y * 10 + 5;
+          if(isNight()){
+            var bd = r.items.filter(function(o){ return BY[o.k].act === 'sleep'; })[k];
+            if(bd){ var st = seatOf(bd); p.style.left = st.x + '%'; p.style.bottom = (100 - st.y) + '%'; p.style.width = (PET_W * st.s * SK) + '%'; p.style.zIndex = st.z; }
+            p.classList.add('sleep');
+            var zz = document.createElement('span'); zz.className = 'rm-zz'; zz.innerHTML = '<i>z</i><i>z</i><i>Z</i>'; p.appendChild(zz);
+          }
           stage.appendChild(p);
         });
+        if(isNight()){ var dk2 = document.createElement('div'); dk2.className = 'rm-dark'; stage.appendChild(dk2); }
       }
       return { r:r, els:els };
     }
@@ -11384,7 +11400,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             else P.el.classList.add('sit');
             if(d.act === 'bath'){ var a = document.createElement('span'); a.className = 'rm-zz rm-awa'; a.innerHTML = '<i>o</i><i>o</i><i>O</i>'; P.el.appendChild(a); }
             if(byUser || Math.random() < .5) say(nm + '「' + any(talk) + '」');
-            P.t = setTimeout(function(){ getUp(P); }, d.act === 'sleep' ? 9000 + Math.random() * 6000 : 5000 + Math.random() * 4000);
+            P.t = setTimeout(function(){ getUp(P); }, d.act === 'sleep' ? (isNight() ? 3600000 : 9000 + Math.random() * 6000) : 5000 + Math.random() * 4000);
           }, 400);
         });
         return;
@@ -11440,11 +11456,27 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       })();
     }
     function wander(P){ var f = freeSpot(); walkTo(P, f.x, f.y, null, null, function(){ next(P, 1200 + Math.random() * 2600); }); }
+    function nightSleep(P){
+      if(P.el.classList.contains('sleep')) return;
+      var beds = [];
+      S.r.items.forEach(function(it, i){ var d = BY[it.k]; if(d.act === 'sleep' && !S.used[i]) beds.push(i); });
+      if(beds.length) return useItem(P, beds[(Math.random() * beds.length) | 0]);
+      leave(P);
+      P.el.classList.remove('walk'); P.el.classList.add('sleep');
+      var z = document.createElement('span'); z.className = 'rm-zz'; z.innerHTML = '<i>z</i><i>z</i><i>Z</i>'; P.el.appendChild(z);
+    }
+    var nightOn = isNight();
+    function nightTick(){
+      if(!live()) return;
+      if(isNight() === nightOn) return;
+      render();
+    }
     function next(P, ms){
       clearTimeout(P.t);
       P.t = setTimeout(function(){
         if(!live()) return;
         if(edit) return next(P, 1500);
+        if(isNight() && !(P.awake > Date.now())) return nightSleep(P);
         var usable = [];
         S.r.items.forEach(function(it, i){ var d = BY[it.k]; if(d.act && !(d.seat && S.used[i])) usable.push(i); });
         var r = Math.random();
@@ -12006,9 +12038,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function render(){
       var stage = $('rmStage'), keep = S ? S.pets : null;
       stopPets();
+      nightOn = isNight();
       var b = build(stage, false);
       S = { r:b.r, els:b.els, used:{}, pets:[] };
       stage.classList.toggle('editing', edit);
+      if(isNight()){ var dk = document.createElement('div'); dk.className = 'rm-dark'; stage.appendChild(dk); }
       if(roomN() > 1){ var pl = document.createElement('div'); pl.className = 'rm-plate'; pl.textContent = '部屋 ' + (RI + 1); stage.appendChild(pl); }
       if(!b.r.items.length && !pv){ var em = document.createElement('div'); em.className = 'rm-empty'; em.innerHTML = 'まだ からっぽの 部屋だよ<small>下の ショップで 家具を 買って おこう</small>'; stage.appendChild(em); }
       petsHere().forEach(function(p, k){
@@ -12027,7 +12061,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           if(S.concert && S.concert.tapPet && S.concert.tapPet(P)) return;
           if(S.ball && S.ball.tapPet && S.ball.tapPet(P)) return;
           var wasSleep = P.el.classList.contains('sleep');
-          if(P.seat != null){ getUp(P); }
+          if(P.seat != null){ getUp(P); } else if(wasSleep){ leave(P); }
+          P.awake = Date.now() + 45000;
           Pet.spin(el); bubble(P, '♥');
           say(petName(P.sp) + '「' + (wasSleep ? 'ふあ〜、おはよう!' : any(['えへへ', 'なあに?', '遊ぼう!', 'この 部屋 好き!'])) + '」');
           next(P, 2200);
@@ -12038,6 +12073,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       clockT = setInterval(function(){
         if(!live()) return clearInterval(clockT);
         S.r.items.forEach(function(it, i){ var d = BY[it.k]; if(d.clock || d.sky){ S.els[i].el.innerHTML = itemSvg(d, null, it); } });
+        nightTick();
       }, 30000);
       renderTools(); renderShop(); renderRooms(); renderPlay();
     }
@@ -12454,7 +12490,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           });
         }
       }
-      o += '<circle cx="34" cy="60" r="16" fill="#FFF3C4" opacity=".9"/><g fill="#fff" opacity=".9"><circle cx="250" cy="34" r="9"/><circle cx="262" cy="30" r="12"/><circle cx="274" cy="35" r="8"/></g>';
+      var SKY = skyNow(); document.documentElement.setAttribute('data-sky', SKY);
+      if(SKY === 'night'){
+        o += '<circle cx="46" cy="52" r="15" fill="#FFF3C4"/><circle cx="53" cy="47" r="13" fill="#1B2455"/>' +
+          '<g fill="#fff"><circle cx="110" cy="30" r="1.6"/><circle cx="170" cy="18" r="1.3"/><circle cx="215" cy="46" r="1.7"/><circle cx="262" cy="22" r="1.4"/><circle cx="305" cy="52" r="1.6"/><circle cx="-8" cy="24" r="1.4"/><circle cx="340" cy="20" r="1.3"/><circle cx="130" cy="64" r="1.2"/><circle cx="240" cy="70" r="1.2"/></g>' +
+          '<path d="M180,36 l1.6,3.4 3.7,.5 -2.7,2.6 .7,3.7 -3.3,-1.8 -3.3,1.8 .7,-3.7 -2.7,-2.6 3.7,-.5 Z" fill="#FFE58A"/>';
+      } else {
+        var ev = SKY === 'eve';
+        o += '<circle cx="34" cy="' + (ev ? 84 : 60) + '" r="16" fill="' + (ev ? '#FF9A5C' : '#FFF3C4') + '" opacity=".9"/><g fill="' + (ev ? '#FFDCC4' : '#fff') + '" opacity=".9"><circle cx="250" cy="34" r="9"/><circle cx="262" cy="30" r="12"/><circle cx="274" cy="35" r="8"/></g>';
+      }
       var pin = '';   /* いまの へやの しるしは ほかの かべより 上に かく */
       function win(i, x, y, w, h, round){
         var here = hereOf(i), sp = here[0], id = 'rmhw' + (uid++), lit = here.length ? '#FFE7A3' : '#BFE6FF';
@@ -12539,6 +12583,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }
       if(!mini) o = o.replace('viewBox="0 0 340 200"', 'viewBox="-40 0 420 200"');   /* にわの ぶん ひろく */
       if(mini) o = o.replace('viewBox="0 0 340 200"', 'viewBox="' + ['', '76 46 168 120', '76 46 204 136', '70 10 220 180', '30 10 260 180', '20 0 300 200'][n] + '"');
+      if(SKY === 'night') o += '<rect x="-40" y="0" width="420" height="200" fill="#0B1440" opacity=".3" pointer-events="none"/>';
       return o + pin + '</svg>';
     }
     /* おうちの リフォーム: keisan_house = { t, roof, wall, door, deco:{id:1}, own:{id:1} } */
