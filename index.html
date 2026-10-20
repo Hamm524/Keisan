@@ -1498,6 +1498,7 @@
   .rk-sky i:nth-child(4){ left:66%; top:36%; } .rk-sky i:nth-child(5){ left:48%; top:8%; } .rk-sky i:nth-child(6){ left:88%; top:52%; }
   @keyframes rkUp{ 0%{ transform:translateY(0); } 15%{ transform:translateY(6px); } 100%{ transform:translateY(-130vh); } }
   @keyframes rkFade{ 0%,85%{ opacity:1; } 100%{ opacity:0; } }
+  @media (prefers-reduced-motion: reduce){ .rk.small, .rk-fire, .rk-launch .rk-fire, .rk-cd.hot .rk-t b, .rk-msg{ animation:none !important; } .rk-launch .rk.big{ animation:none; } }
   .dot-item{
     flex:1; height:8px; border-radius:100px; background:var(--line);
     transition:background .25s ease, transform .2s ease;
@@ -5091,7 +5092,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function mixPlan(n){
     var t = todayKey(), miss = {}, total = 0, ops = [];
     SINGLE_OPS.forEach(function(o){ miss[o] = 0; });
-    printLog().forEach(function(e){ if(e.d === t && e.k === 'daily' && miss.hasOwnProperty(e.op)){ var m = Math.max(0, (e.n | 0) - (e.ok | 0)); miss[e.op] += m; total += m; } });
+    printLog().forEach(function(e){ if(e.d === t && (e.k === 'daily' || e.k === 'review') && miss.hasOwnProperty(e.op)){ var m = Math.max(0, (e.n | 0) - (e.ok | 0)); miss[e.op] += m; total += m; } });
     var base = Math.min(2, Math.floor(n / SINGLE_OPS.length));
     SINGLE_OPS.forEach(function(o){ for(var i = 0; i < base; i++) ops.push(o); });
     var rest = n - ops.length, cnt = {}, given = 0;
@@ -8219,10 +8220,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function finishAccuracy(){
     var N = state.questions.length;
     var pr = state.print;
-    if(pr && pr.kind === 'weekend') rocketLaunch();
     var firstTry = state.questions.filter(function(q){ return q.mistakes===0; }).length;
     var accuracy = Math.round(firstTry/N*100);
     var elapsed = Date.now() - state.startTime;
+    if(pr && pr.kind === 'weekend') rocketLaunch();   /* タイムを 計った あとに(絵を 作る 時間を 入れない) */
     var totalMistakes = state.questions.reduce(function(s,q){ return s+q.mistakes; },0);
     var isReview = !!(pr && pr.kind==='review');
     var target = printTarget(state.op, N, isReview ? pr.lv : null);
