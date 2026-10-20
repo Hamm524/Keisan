@@ -4992,10 +4992,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function progressOf(op){ var lv = currentLevelIndex(op); return lv * 3 + Math.min(3, clearsAtLevel(op, lv)); }
   function sheetPlan(){
     var t = todayKey(), rec = safeGet('keisan_plan');
-    if(rec && rec.d === t && rec.ops && rec.ops.length === DAILY_SHEETS) return rec.ops;
-    var off = Math.max(0, SINGLE_OPS.indexOf('mul')), ops = SINGLE_OPS.slice(off).concat(SINGLE_OPS.slice(0, off)), weak = ops[0];
-    ops.forEach(function(o){ if(progressOf(o) < progressOf(weak)) weak = o; });
-    ops.push(weak);
+    if(rec && rec.d === t && rec.ops && rec.ops.length === DAILY_SHEETS && rec.ops[DAILY_SHEETS - 1] === 'mix') return rec.ops;
+    /* 5枚目は ふりかえりの ミックス(今日 まちがいが 多かった 計算を 多めに。同じ 計算を もう1枚だと「さっき やった」に なるため) */
+    var off = Math.max(0, SINGLE_OPS.indexOf('mul')), ops = SINGLE_OPS.slice(off).concat(SINGLE_OPS.slice(0, off));
+    ops.push('mix');
     safeSet('keisan_plan', { d:t, ops:ops });
     return ops;
   }
@@ -5063,16 +5063,32 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function isWeekend(){ return true; }   /* daily now */
   function weekendKey(){ return dayKeyOf(new Date()); }   /* today */
   function weekendDone(){ return safeGet('keisan_weekend') === weekendKey(); }
+  /* ミックスの プリント: ＋－×÷を 2問ずつ+のこりは 今日の プリントで まちがいが 多かった 計算に 多めに。数は 毎回 新しく 作る */
+  function mixPlan(n){
+    var t = todayKey(), miss = {}, total = 0, ops = [];
+    SINGLE_OPS.forEach(function(o){ miss[o] = 0; });
+    printLog().forEach(function(e){ if(e.d === t && e.k === 'daily' && miss.hasOwnProperty(e.op)){ var m = Math.max(0, (e.n | 0) - (e.ok | 0)); miss[e.op] += m; total += m; } });
+    var base = Math.min(2, Math.floor(n / SINGLE_OPS.length));
+    SINGLE_OPS.forEach(function(o){ for(var i = 0; i < base; i++) ops.push(o); });
+    var rest = n - ops.length, cnt = {}, given = 0;
+    SINGLE_OPS.forEach(function(o){ cnt[o] = total ? Math.floor(rest * miss[o] / total) : Math.floor(rest / SINGLE_OPS.length); given += cnt[o]; });
+    var order = SINGLE_OPS.slice().sort(function(a, b){ return miss[b] - miss[a]; });
+    for(var j = 0; given < rest; j++, given++) cnt[order[j % order.length]]++;
+    SINGLE_OPS.forEach(function(o){ for(var i = 0; i < cnt[o]; i++) ops.push(o); });
+    for(var k = ops.length - 1; k > 0; k--){ var r = pick(0, k), x = ops[k]; ops[k] = ops[r]; ops[r] = x; }
+    return ops;
+  }
   function startPrint(op, n, kind, lv){
     state.op = op;
     state.print = { n:n, kind:kind, lv:(kind==='review' ? lv : null) };
     setLive(op==='mix' ? 'add' : op);
     var qs = [];
     var seenQ = {};
+    var mixOps = (kind === 'daily' && op === 'mix') ? mixPlan(n) : null;
     for(var i=0;i<n;i++){
       var q;
       for(var tr = 0; tr < 12; tr++){
-        q = kind==='review' ? genForOp(op, lv) : (kind==='weekend' ? gen100(op) : genProblem(op));
+        q = mixOps ? genForOp(mixOps[i]) : kind==='review' ? genForOp(op, lv) : (kind==='weekend' ? gen100(op) : genProblem(op));
         if(!seenQ[q.op+'|'+q.a+'|'+q.b]) break;
       }
       seenQ[q.op+'|'+q.a+'|'+q.b] = 1;
@@ -5523,13 +5539,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('todayCard').classList.toggle('asg', asg);
     $('todayCard').querySelector('.today-label').textContent = asg ? '今日の プリント' : '何を練習する?';
     var meta = OP_META[rec];
-    $('todayBtn').innerHTML = asg ? 'プリント '+(sheetsToday() + 1)+'枚目 スタート' : (rec==='mix' ? '混ぜて' : meta.label+'の') + 'プリントを始める';
+    $('todayBtn').innerHTML = asg ? 'プリント '+(sheetsToday() + 1)+'枚目'+(rec === 'mix' ? '(ミックス)' : '')+' スタート' : (rec==='mix' ? '混ぜて' : meta.label+'の') + 'プリントを始める';
     renderPrintInfo(rec);
     var sn = sheetsToday(), sd = '';
     var plan = sheetPlan();
     for(var k = 0; k < DAILY_SHEETS; k++){
       if(sn < DAILY_SHEETS){
-        var po = plan[k], pl = currentLevelIndex(po);
+        var po = plan[k];
         sd += '<b class="chip'+(k < sn ? ' on' : (k === sn ? ' now' : ''))+'" style="--c:var('+OP_META[po].color+')"><span class="cs">'+OP_META[po].symbol+'</span>'+(k < sn ? '<small>✓</small>' : '')+'</b>';
       }else sd += '<i class="on"></i>';
     }
