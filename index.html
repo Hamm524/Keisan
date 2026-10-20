@@ -14472,7 +14472,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var b = document.createElement('button'); b.type = 'button'; b.className = 'isle-ticket'; b.style.setProperty('--sp', pl[3]);
       b.innerHTML = '<span class="tk-veh">'+pl[4]+'</span><span class="tk-txt"><small>'+pl[7]+'</small><b>'+pl[5]+'</b></span><span class="tk-go">'+pl[8]+' <span aria-hidden="true">↗</span></span>';
       b.setAttribute('aria-label', pl[5] + '(' + pl[8] + 'が ひらくよ)');
-      b._orig = el; return b;
+      b._orig = el; b._key = pl[0]; return b;
     }
     function placeFor(T, nm){ for(var i = 0; i < T.places.length; i++) if(nm.indexOf(clean(T.places[i][0])) === 0) return T.places[i]; return null; }
     Object.keys(THEMES).forEach(function(k){ var T = THEMES[k]; T.at = function(key){ for(var i = 0; i < T.places.length; i++) if(T.places[i][0] === key) return [T.places[i][1], T.places[i][2]]; return null; }; });
@@ -14526,8 +14526,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       subs.classList.add('has-isle');
       if($('gkTitle')) $('gkTitle').textContent = { s:'理科の 島', o:'社会の 島', j:'ことばの 島' }[t];
       if(pending && pending[0] === t){
-        var key = pending[1]; pending = null;
-        var sp = Array.prototype.filter.call(map.querySelectorAll('.spot'), function(x){ return x._key === key; })[0];
+        var key = pending[1], isGo = pending[2] === 'go'; pending = null;
+        var sp = Array.prototype.filter.call(isGo ? tickets.querySelectorAll('.isle-ticket') : map.querySelectorAll('.spot'), function(x){ return x._key === key; })[0];
         if(sp) setTimeout(function(){ sp.click(); }, 250);
       }else pending = null;
     }
@@ -14575,6 +14575,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           if(pl[6] === 'go'){
             var o = pl[0] === '漢字' ? document.querySelector('#gakuCards a[href*="Kanji"]') : pl[0] === '地図で' ? panel.querySelector('.subj-map') : null;
             if(o){ tk.appendChild(ticket(o, pl)); (o.closest('.gk-card') || o).classList.add('pv-card'); }
+            else tk.appendChild(ticket(null, pl)); /* 宇宙・理科で遊ぼう: 教科の島ページへ行って、そこの チケットを ひらく */
             return;
           }
           var b = document.createElement('button'); b.type = 'button';
@@ -14594,7 +14595,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       panel.classList.add('has-pv');
     }
     document.addEventListener('click', function(e){
-      var tk = e.target.closest('.isle-tickets.pv .isle-ticket'); if(tk && tk._orig){ e.preventDefault(); tk._orig.click(); return; }
+      var tk = e.target.closest('.isle-tickets.pv .isle-ticket');
+      if(tk && tk._orig){ e.preventDefault(); tk._orig.click(); return; }
+      if(tk){ e.preventDefault(); var tt = tk.closest('.isle-tickets').className.match(/pv-(\w)/), cc = tt && card(tt[1]); if(cc){ pending = [tt[1], tk._key, 'go']; cc.querySelector('button').click(); } return; }
       var m = e.target.closest('.isle.pv'); if(!m) return;
       var b = e.target.closest('.spot'), t = m.getAttribute('data-t'), c = card(t); if(!c) return;
       pending = b && b._pv ? b._pv : null;
