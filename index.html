@@ -1474,6 +1474,30 @@
   }
   .level-tag b{ color:var(--live); }
   .dots{ display:flex; gap:6px; flex:1; }
+  .rk-cd{ flex:1; display:flex; align-items:center; gap:8px; font-weight:900; font-size:15px; color:var(--ink); }
+  .rk-cd .rk-t b{ font-size:26px; color:var(--op-mul); }
+  .rk-cd.hot .rk-t b{ color:var(--bad); animation:rkPulse .6s ease; }
+  .rk{ position:relative; display:inline-block; flex:none; }
+  .rk.small{ width:30px; height:50px; animation:rkShake 1.2s ease-in-out infinite; }
+  .rk.big{ width:120px; height:200px; }
+  .rk-svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .rk-pet{ position:absolute; left:28%; top:33%; width:44%; height:26%; overflow:hidden; border-radius:50%; }
+  .rk-pet svg{ width:100%; height:auto; transform:translateY(-6%) scale(1.25); }
+  .rk-fire{ position:absolute; left:36%; top:76%; width:28%; height:20%; border-radius:0 0 50% 50%; background:radial-gradient(ellipse at 50% 0, #fff6b0, #ffb02e 45%, #ff5a2e 80%, transparent 82%); opacity:0; }
+  .rk-cd.hot .rk-fire{ opacity:1; animation:rkFire .25s ease-in-out infinite alternate; }
+  @keyframes rkShake{ 0%,100%{ transform:rotate(-3deg); } 50%{ transform:rotate(3deg); } }
+  @keyframes rkPulse{ 0%{ transform:scale(1.5); } 100%{ transform:scale(1); } }
+  @keyframes rkFire{ from{ transform:scaleY(.8); } to{ transform:scaleY(1.25); } }
+  .rk-launch{ position:fixed; inset:0; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; padding-bottom:12vh; background:linear-gradient(#1d2b5a, #3d5aa8 60%, #9fc6ef); overflow:hidden; cursor:pointer; animation:rkFade 3.2s ease forwards; }
+  .rk-launch .rk.big{ animation:rkUp 2.6s cubic-bezier(.5,0,.8,.4) .5s forwards; }
+  .rk-launch .rk-fire{ opacity:1; height:40%; animation:rkFire .15s ease-in-out infinite alternate; transform-origin:top; }
+  .rk-msg{ position:absolute; top:22vh; left:0; right:0; text-align:center; color:#fff; font-size:30px; font-weight:900; text-shadow:0 2px 8px rgba(0,0,0,.35); animation:rkPulse .5s ease; }
+  .rk-msg small{ display:block; font-size:16px; margin-top:6px; opacity:.9; }
+  .rk-sky i{ position:absolute; width:4px; height:4px; border-radius:50%; background:#fff; opacity:.8; }
+  .rk-sky i:nth-child(1){ left:12%; top:10%; } .rk-sky i:nth-child(2){ left:80%; top:14%; } .rk-sky i:nth-child(3){ left:30%; top:40%; }
+  .rk-sky i:nth-child(4){ left:66%; top:36%; } .rk-sky i:nth-child(5){ left:48%; top:8%; } .rk-sky i:nth-child(6){ left:88%; top:52%; }
+  @keyframes rkUp{ 0%{ transform:translateY(0); } 15%{ transform:translateY(6px); } 100%{ transform:translateY(-130vh); } }
+  @keyframes rkFade{ 0%,85%{ opacity:1; } 100%{ opacity:0; } }
   .dot-item{
     flex:1; height:8px; border-radius:100px; background:var(--line);
     transition:background .25s ease, transform .2s ease;
@@ -4992,10 +5016,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function progressOf(op){ var lv = currentLevelIndex(op); return lv * 3 + Math.min(3, clearsAtLevel(op, lv)); }
   function sheetPlan(){
     var t = todayKey(), rec = safeGet('keisan_plan');
-    if(rec && rec.d === t && rec.ops && rec.ops.length === DAILY_SHEETS) return rec.ops;
-    var off = Math.max(0, SINGLE_OPS.indexOf('mul')), ops = SINGLE_OPS.slice(off).concat(SINGLE_OPS.slice(0, off)), weak = ops[0];
-    ops.forEach(function(o){ if(progressOf(o) < progressOf(weak)) weak = o; });
-    ops.push(weak);
+    if(rec && rec.d === t && rec.ops && rec.ops.length === DAILY_SHEETS && rec.ops[DAILY_SHEETS - 1] === 'mix') return rec.ops;
+    /* 5枚目は ふりかえりの ミックス(今日 まちがいが 多かった 計算を 多めに。同じ 計算を もう1枚だと「さっき やった」に なるため) */
+    var off = Math.max(0, SINGLE_OPS.indexOf('mul')), ops = SINGLE_OPS.slice(off).concat(SINGLE_OPS.slice(0, off));
+    ops.push('mix');
     safeSet('keisan_plan', { d:t, ops:ops });
     return ops;
   }
@@ -5063,16 +5087,32 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function isWeekend(){ return true; }   /* daily now */
   function weekendKey(){ return dayKeyOf(new Date()); }   /* today */
   function weekendDone(){ return safeGet('keisan_weekend') === weekendKey(); }
+  /* ミックスの プリント: ＋－×÷を 2問ずつ+のこりは 今日の プリントで まちがいが 多かった 計算に 多めに。数は 毎回 新しく 作る */
+  function mixPlan(n){
+    var t = todayKey(), miss = {}, total = 0, ops = [];
+    SINGLE_OPS.forEach(function(o){ miss[o] = 0; });
+    printLog().forEach(function(e){ if(e.d === t && e.k === 'daily' && miss.hasOwnProperty(e.op)){ var m = Math.max(0, (e.n | 0) - (e.ok | 0)); miss[e.op] += m; total += m; } });
+    var base = Math.min(2, Math.floor(n / SINGLE_OPS.length));
+    SINGLE_OPS.forEach(function(o){ for(var i = 0; i < base; i++) ops.push(o); });
+    var rest = n - ops.length, cnt = {}, given = 0;
+    SINGLE_OPS.forEach(function(o){ cnt[o] = total ? Math.floor(rest * miss[o] / total) : Math.floor(rest / SINGLE_OPS.length); given += cnt[o]; });
+    var order = SINGLE_OPS.slice().sort(function(a, b){ return miss[b] - miss[a]; });
+    for(var j = 0; given < rest; j++, given++) cnt[order[j % order.length]]++;
+    SINGLE_OPS.forEach(function(o){ for(var i = 0; i < cnt[o]; i++) ops.push(o); });
+    for(var k = ops.length - 1; k > 0; k--){ var r = pick(0, k), x = ops[k]; ops[k] = ops[r]; ops[r] = x; }
+    return ops;
+  }
   function startPrint(op, n, kind, lv){
     state.op = op;
     state.print = { n:n, kind:kind, lv:(kind==='review' ? lv : null) };
     setLive(op==='mix' ? 'add' : op);
     var qs = [];
     var seenQ = {};
+    var mixOps = (kind === 'daily' && op === 'mix') ? mixPlan(n) : null;
     for(var i=0;i<n;i++){
       var q;
       for(var tr = 0; tr < 12; tr++){
-        q = kind==='review' ? genForOp(op, lv) : (kind==='weekend' ? gen100(op) : genProblem(op));
+        q = mixOps ? genForOp(mixOps[i]) : kind==='review' ? genForOp(op, lv) : (kind==='weekend' ? gen100(op) : genProblem(op));
         if(!seenQ[q.op+'|'+q.a+'|'+q.b]) break;
       }
       seenQ[q.op+'|'+q.a+'|'+q.b] = 1;
@@ -5523,13 +5563,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('todayCard').classList.toggle('asg', asg);
     $('todayCard').querySelector('.today-label').textContent = asg ? '今日の プリント' : '何を練習する?';
     var meta = OP_META[rec];
-    $('todayBtn').innerHTML = asg ? 'プリント '+(sheetsToday() + 1)+'枚目 スタート' : (rec==='mix' ? '混ぜて' : meta.label+'の') + 'プリントを始める';
+    $('todayBtn').innerHTML = asg ? 'プリント '+(sheetsToday() + 1)+'枚目'+(rec === 'mix' ? '(ミックス)' : '')+' スタート' : (rec==='mix' ? '混ぜて' : meta.label+'の') + 'プリントを始める';
     renderPrintInfo(rec);
     var sn = sheetsToday(), sd = '';
     var plan = sheetPlan();
     for(var k = 0; k < DAILY_SHEETS; k++){
       if(sn < DAILY_SHEETS){
-        var po = plan[k], pl = currentLevelIndex(po);
+        var po = plan[k];
         sd += '<b class="chip'+(k < sn ? ' on' : (k === sn ? ' now' : ''))+'" style="--c:var('+OP_META[po].color+')"><span class="cs">'+OP_META[po].symbol+'</span>'+(k < sn ? '<small>✓</small>' : '')+'</b>';
       }else sd += '<i class="on"></i>';
     }
@@ -7837,7 +7877,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   function renderDots(){
     var wrap = $('dots'); wrap.innerHTML = '';
-    if(state.print && state.print.kind==='weekend') return;   /* 100問: のこりが 多く 見えて しんどいので 進み具合は 出さない */
+    if(state.print && state.print.kind==='weekend'){ rocketCount(wrap); return; }   /* 100問: のこりが 多く 見えて しんどいので、のこり10問まで 進み具合は 出さない */
     if(state.print && (state.print.kind==='daily' || state.print.kind==='review') && !pbarOn()) return;   /* プリント: おうちの人が かくせる */
     if(state.questions.length > 20){
       var done = state.questions.filter(function(q){ return q.solved; }).length, N = state.questions.length;
@@ -7852,6 +7892,43 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       else if(q.mistakes>0) d.className += (state.mode==='jump' ? ' miss' : ' retry');
       wrap.appendChild(d);
     });
+  }
+
+  /* ---------- 100問: のこり10問から ロケットの カウントダウン、さいごに 相棒を のせて 発射 ---------- */
+  var ROCKET_FROM = 10;
+  function rocketSVG(){
+    return '<svg class="rk-svg" viewBox="0 0 60 100" aria-hidden="true">' +
+      '<path d="M30 4 C46 18 50 40 48 70 L12 70 C10 40 14 18 30 4 Z" fill="#F4F1EA"/>' +
+      '<path d="M30 4 C38 11 43 20 45 30 L15 30 C17 20 22 11 30 4 Z" fill="#E8604C"/>' +
+      '<path d="M12 56 L2 80 L14 74 Z M48 56 L58 80 L46 74 Z" fill="#E8604C"/>' +
+      '<rect x="22" y="70" width="16" height="7" rx="2" fill="#8A8F98"/>' +
+      '<circle cx="30" cy="46" r="13" fill="#9FD3F0" stroke="#5A7A95" stroke-width="3"/></svg>';
+  }
+  function rocketHTML(cls){
+    return '<span class="rk '+(cls || '')+'">'+rocketSVG()+'<span class="rk-pet"></span><span class="rk-fire"></span></span>';
+  }
+  function mountRocketPet(root){
+    var a = activePet(), el = root.querySelector('.rk-pet');
+    if(a && el) Pet.mount(el, a.sp, a.lv);
+  }
+  function rocketCount(wrap){
+    var left = state.questions.filter(function(q){ return !q.solved; }).length;
+    if(left > ROCKET_FROM || left <= 0) return;
+    wrap.innerHTML = '<div class="rk-cd'+(left <= 3 ? ' hot' : '')+'">'+rocketHTML('small')+'<span class="rk-t">あと <b class="num">'+left+'</b>問</span></div>';
+    mountRocketPet(wrap);
+    if(left === ROCKET_FROM) say('あと 10問! ロケット 発射まで カウントダウン!');
+    else if(left <= 3) say(left === 1 ? 'さいごの 1問!' : 'あと ' + left + '問!');
+  }
+  function rocketLaunch(){
+    var ov = document.createElement('div');
+    ov.className = 'rk-launch';
+    ov.innerHTML = '<div class="rk-sky"><i></i><i></i><i></i><i></i><i></i><i></i></div>' + rocketHTML('big') +
+      '<div class="rk-msg">よく がんばったね!<small>100問 とけたよ</small></div>';
+    mountRocketPet(ov);
+    document.body.appendChild(ov);
+    var done = function(){ if(ov.parentNode) ov.parentNode.removeChild(ov); };
+    ov.addEventListener('click', done);
+    setTimeout(done, 3200);
   }
 
   function nextAccuracyProblem(){
@@ -8142,6 +8219,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function finishAccuracy(){
     var N = state.questions.length;
     var pr = state.print;
+    if(pr && pr.kind === 'weekend') rocketLaunch();
     var firstTry = state.questions.filter(function(q){ return q.mistakes===0; }).length;
     var accuracy = Math.round(firstTry/N*100);
     var elapsed = Date.now() - state.startTime;
