@@ -13290,13 +13290,19 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }));
     }
     function ensureCard(tr){
-      var v = tabiGet(), al = v.album || (v.album = []), i, e;
-      for(i = 0; i < al.length; i++) if(al[i].id === tr.t0) return al[i];
+      var v = tabiGet(), al = v.album || (v.album = []), i, e, dirty = false, old = !tr.id && !(v.trip && v.trip.id);
+      /* 旅行ごとに きまった 番号(trip.id)。出発の 時こく t0 は おためしの ⏩ で かわるので 使わない */
+      if(v.trip && v.trip.t0 === tr.t0 && !v.trip.id){ v.trip.id = tr.t0; dirty = true; }
+      var id = tr.id || (v.trip && v.trip.t0 === tr.t0 && v.trip.id) || tr.t0;
+      /* 前の 版で 1回の 旅行に 何枚も ふえた 分を まとめる(同じ子・同じ県で 3時間いない) */
+      for(i = al.length - 1; i > 0; i--) if(al[i].p === al[i - 1].p && al[i].sp === al[i - 1].sp && al[i].t - al[i - 1].t < 3 * 3600000){ al.splice(i, 1); dirty = true; }
+      for(i = 0; i < al.length; i++) if(al[i].id === id || (old && al[i].p === tr.p && al[i].sp === tr.sp && Math.abs(al[i].t - Date.now()) < 3 * 3600000 && al.length - 1 === i)){ e = al[i]; break; }
+      if(e){ if(e.id !== id){ e.id = id; dirty = true; } if(dirty) save(v); return e; }
       var used = {}, last = al.length ? al[al.length - 1].k : -1, c = [];
       al.forEach(function(x){ if(x.p === tr.p) used[x.k] = 1; });
       for(i = 0; i < MSG.length; i++) if(!used[i] && i !== last) c.push(i);
       if(!c.length) for(i = 0; i < MSG.length; i++) if(i !== last) c.push(i);
-      e = { id:tr.t0, p:tr.p, sp:tr.sp, k:c[Math.floor(Math.random() * c.length)], g:tr.i ? 0 : 1, t:Date.now() };
+      e = { id:id, p:tr.p, sp:tr.sp, k:c[Math.floor(Math.random() * c.length)], g:tr.i ? 0 : 1, t:Date.now() };
       al.push(e); if(al.length > 300) al.shift();
       save(v);
       return e;
@@ -13486,7 +13492,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(!buyGate(L.price, petName(pick.sp) + 'を ' + pname(pick.p) + 'へ?', postcard(pick.sp, pick.p, { small:true }), 'いってらっしゃい', go)) return;
       var got = v.got || {}, i = got[pick.p + '-0'] && !got[pick.p + '-1'] ? 1 : got[pick.p + '-1'] && !got[pick.p + '-0'] ? 0 : Math.random() < .5 ? 0 : 1;
       var now = Date.now();
-      v.trip = { sp:pick.sp, sub:sub, p:pick.p, i:i, n:pick.n ? 1 : 0, t0:now, t1:now + L.ms, h:tabiGet().home || null };
+      v.trip = { id:now, sp:pick.sp, sub:sub, p:pick.p, i:i, n:pick.n ? 1 : 0, t0:now, t1:now + L.ms, h:tabiGet().home || null };
       v.got = got;
       save(v);
       toast(petName(pick.sp) + 'が ' + pname(pick.p) + 'へ 出発したよ!');
