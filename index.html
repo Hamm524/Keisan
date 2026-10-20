@@ -4150,6 +4150,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   var EXTRA_SET = { 'jp-voice':1,'jp-fdown':1,'jp-kmode':1,'w-voice':1,'w-fdown':1,'w-flagq':1,'w-seas':1,'w-rivers':1,'w-glines':1 };  /* 設定: この 端末の ほう */
   function extraJSON(t){ if(t == null) return null; try{ return JSON.parse(t); }catch(e){ return null; } }
   function extraGet(){ var o = extraJSON(rawGet(EXTRA_KEY)); return o && typeof o === 'object' && !Array.isArray(o) ? o : {}; }
+  function extraEmpty(v){ return v == null || (Array.isArray(v) ? !v.length : typeof v === 'object' ? !Object.keys(v).length : false); }
+  var extraLast = {};   /* 最後に 写した/書いた 中身(ページが そのあと 自分で 書きかえたか 見分ける) */
   function extraShrank(a, b){   /* a に あった ものが b で なくなった */
     if(Array.isArray(a) && Array.isArray(b)){ var sb = {}; b.forEach(function(x){ sb[JSON.stringify(x)] = 1; }); return a.some(function(x){ return !sb[JSON.stringify(x)]; }); }
     if(a && b && typeof a === 'object' && typeof b === 'object') return Object.keys(a).some(function(x){ return !(x in b); });
@@ -4185,9 +4187,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     EXTRA_KEYS.forEach(function(k){
       var cur = null; try{ cur = extraJSON(LS.getItem(k)); }catch(e){}
       if(cur == null) return;
-      var e = o[k];
-      if(e && 'v' in e && canon(JSON.stringify(e.v)) === canon(JSON.stringify(cur))) return;
-      o[k] = { v:cur, t:now, z:(e && 'v' in e && extraShrank(e.v, cur)) ? now : ((e && e.z) || 0) };
+      var e = o[k], same = e && 'v' in e && canon(JSON.stringify(e.v)) === canon(JSON.stringify(cur));
+      if(same){ extraLast[k] = canon(JSON.stringify(cur)); return; }
+      var v = cur, z = (e && e.z) || 0;
+      if(e && 'v' in e && extraShrank(e.v, cur)){
+        /* 空に した(記録を消す)ときだけ「消した」。ほかの へりかたは 古い ページの 上書きなので まぜて 取りもどす */
+        if(extraEmpty(cur)) z = now;
+        else{ v = extraVal(k, cur, e.v); try{ LS.setItem(k, JSON.stringify(v)); }catch(err){} }
+      }
+      o[k] = { v:v, t:now, z:z };
+      extraLast[k] = canon(JSON.stringify(v));
       ch = true;
     });
     if(!ch) return;
@@ -4197,14 +4206,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   /* keisan_extra → 端末の 記録(ない もの・ちがう ものを 書く) */
   function extraUnpack(){
     if(!LS || TRIAL_ON) return;
-    var o = extraGet();
+    var o = extraGet(), skipped = false;
     EXTRA_KEYS.forEach(function(k){
       var e = o[k]; if(!e || !('v' in e) || e.v == null) return;
       var v = JSON.stringify(e.v), cur = null;
       try{ cur = LS.getItem(k); }catch(err){}
       if(EXTRA_SET[k] && cur != null) return;
+      if(cur != null && canon(cur) !== extraLast[k]){ skipped = true; return; }   /* ページが 自分で 書いた あと: 上書きしないで、あとで まぜる */
       if(cur == null || canon(cur) !== canon(v)){ try{ LS.setItem(k, v); }catch(err){} }
+      extraLast[k] = canon(v);
     });
+    if(skipped) setTimeout(function(){ try{ extraPack(); }catch(err){} }, 0);
   }
 
   var DBN = 'keisan-mirror', ST = 'kv', mirrorOn = false, mirrorTimer = null;
