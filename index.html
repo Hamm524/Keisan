@@ -2870,7 +2870,7 @@
     </div>
     <div id="gkMenu">
       <div class="gk-wallet" id="gkWallet"></div>
-      <p class="gk-note">コインは けいさんと <b>同じ さいふ</b> に たまるよ。まなぶ コインは 1日 40コインまで。</p>
+      <p class="gk-note">コインは けいさんと <b>同じ さいふ</b> に たまるよ。まなぶ コインは 1日 40コインまで(地図で 遊ぼう の コインは べつ)。</p>
       <div class="gk-menu" id="gkSubs"></div>
     </div>
     <div id="gkPlay" hidden>
@@ -14350,7 +14350,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           var k = 'o:'+t.k, L = SOCL[k], done = L.filter(function(e){ return okd(s.o, e); }).length;
           return '<button class="gk-sub" data-sub="'+k+'"><span style="font-size:30px">'+t.i+'</span><span><b>'+t.n+' <small style="display:inline;color:#e0a400;letter-spacing:1px">'+stars(s.o, k)+'</small></b><small>'+t.d+'・せいかい '+done+'/'+L.length+'</small></span></button>';
         }).join('') +
-        '<a class="gk-sub" href="'+'map/'+'" style="text-decoration:none"><span style="font-size:30px">🗾</span><span><b>地図で 遊ぼう</b><small>47都道府県の パズル・どこクイズ(4年生の 先どり)・世界の 国。覚えた 県や クリアで コイン</small></span></a>';
+        '<a class="gk-sub" href="'+'map/'+'" style="text-decoration:none"><span style="font-size:30px">🗾</span><span><b>地図で 遊ぼう</b><small>47都道府県の パズル・どこクイズ(4年生の 先どり)・世界の 国。覚えた 県や クリアで コイン(1日の 上限とは べつ)</small></span></a>';
       show('menu');
     }
     function start(sub, lv){
@@ -14469,9 +14469,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var d = safeGet('map-coins-v1'), n = d && typeof d.n === 'number' ? Math.max(0, d.n) : 0;
       var cr = safeGet('map-coins-cred'), done = cr && typeof cr.n === 'number' ? cr.n : 0;
       var delta = n - done; if(delta <= 0) return;
-      var s = get(), room = Math.max(0, DAY_CAP - s.day.n), got = Math.min(delta, room);
-      if(got <= 0) return;
-      s.day.n += got; put(s); safeSet('map-coins-cred', { n:done + got });
+      /* 地図の コインは 上限の 外(地図アプリの中で 1日3回などに しぼって いる) */
+      var got = delta;
+      safeSet('map-coins-cred', { n:done + got });
       earn(got);
       toast('地図で 遊ぼう で +' + got + 'コイン!');
     }
