@@ -14961,7 +14961,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var g = c.createGain(); g.connect(c.destination);
       g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.012);
       g.gain.exponentialRampToValueAtTime(v * 0.5, t + 0.2); g.gain.setTargetAtTime(0.0001, t + Math.max(0.1, d - 0.06), 0.05);
-      [[1, 'triangle', 1], [2, 'sine', 0.3], [3, 'sine', 0.1]].forEach(function(h){
+      /* ひくい 音は 小さな スピーカーで 聞こえにくいので、上の ひびき(倍音)を 強める */
+      (m < 64 ? [[1, 'triangle', 0.8], [2, 'sine', 0.55], [3, 'sine', 0.35], [4, 'sine', 0.2]] : [[1, 'triangle', 1], [2, 'sine', 0.3], [3, 'sine', 0.1]]).forEach(function(h){
         var o = c.createOscillator(), gg = c.createGain(); o.type = h[1]; o.frequency.value = hz(m) * h[0]; gg.gain.value = h[2];
         o.connect(gg); gg.connect(g); o.start(t); o.stop(t + d + 0.5);
       });
@@ -15355,8 +15356,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     var STEPS = [
       { k:'r1', n:'たかい 音・ひくい 音', s:'たかい・ひくい', i:'🐦', x:14, y:74,
-        teach:[['<div class="ok-big">🐦 ⬆<br>🐻 ⬇</div>', 'ことりの こえは たかい 音。くまの こえは ひくい 音。▶ で きいて みよう。', function(){ D.play([[M(14), 0.6], [M(14), 0.6], [null, 0.5], [M(-10), 0.9], [M(-10), 0.9]], 100); }]],
-        quiz:function(){ return sh([[72, 55], [52, 67], [76, 60], [60, 79], [69, 50], [57, 74], [81, 64], [48, 64]]).slice(0, 5).map(function(p){
+        teach:[['<div class="ok-big">🐦 ⬆<br>🐻 ⬇</div>', 'ことりの こえは たかい 音。くまの こえは ひくい 音。▶ で きいて みよう。', function(){ D.play([[84, 0.6], [84, 0.6], [null, 0.5], [57, 0.9], [57, 0.9]], 100); }]],
+        quiz:function(){ return sh([[76, 57], [57, 72], [79, 62], [60, 81], [74, 55], [57, 76], [84, 65], [55, 69]]).slice(0, 5).map(function(p){
           var up = p[1] > p[0]; return { q:'2つ目の 音は、1つ目より たかい? ひくい?', fig:EAR, auto:true, snd:two(p[0], p[1]), a:up ? 'たかい ⬆' : 'ひくい ⬇', bad:[up ? 'ひくい ⬇' : 'たかい ⬆'], ex:up ? 'ことりの ほうへ 上がったね。' : 'くまの ほうへ 下がったね。' }; }); } },
       { k:'r2', n:'ながい 音・みじかい 音', s:'ながい・みじかい', i:'🐢', x:32, y:77,
         teach:[['<div class="ok-big">🐢 〰〰〰<br>🐇 ・</div>', 'かめは のんびり「ぽーーーん」と ながい 音。うさぎは ぴょんと「ぽん」と みじかい 音。', function(){ D.play([[M(4), 3], [null, 0.6], [M(4), 0.35]], 90); }]],
