@@ -808,6 +808,7 @@
   .gk-ch button.ok{ border-color:var(--good); background:color-mix(in srgb, var(--good) 18%, var(--surface)); }
   .gk-ch button.ng{ border-color:var(--bad); background:color-mix(in srgb, var(--bad) 14%, var(--surface)); }
   .gk-ch.one{ grid-template-columns:1fr; }
+  .gk-cap{ background:#FFF4D6; border:2px solid #F2B632; color:#7A5200; border-radius:14px; padding:10px 12px; margin:0 0 12px; font-size:14px; font-weight:800; line-height:1.6; text-align:center; }
   .gk-fb{ min-height:28px; text-align:center; font-weight:900; margin:10px 0; }
   .gk-fb.ok{ color:var(--good); } .gk-fb.ng{ color:var(--bad); }
   .gk-prog{ display:flex; gap:4px; margin:0 0 12px; } .gk-prog i{ flex:1; height:6px; border-radius:100px; background:var(--line); }
@@ -13461,7 +13462,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var g = safeGet('keisan_gaku') || {}, n = g.day && g.day.d === todayKey() ? (g.day.n || 0) : 0;
       $('subjCoin').innerHTML = k === 'm'
         ? '<span class="coin"></span><span>コインは どの 教科も 同じ さいふに たまるよ</span>'
-        : '<span class="coin"></span><span>国語・理科・社会の コイン 今日 <b class="num">'+n+'</b> / '+CAP+'</span><span class="sc-bar"><i style="width:'+Math.min(100, Math.round(n/CAP*100))+'%"></i></span>';
+        : '<span class="coin"></span><span>国語・理科・社会の コイン 今日 <b class="num">'+n+'</b> / '+CAP+'</span><span class="sc-bar"><i style="width:'+Math.min(100, Math.round(n/CAP*100))+'%"></i></span>' + (n >= CAP ? '<span>あした また もらえるよ</span>' : '');
       $('subjNote').textContent = NOTE[k];
     }
     $('subjTabs').addEventListener('click', function(e){
@@ -14338,6 +14339,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var s = get(), left = Math.max(0, DAY_CAP - s.day.n);
       $('gkTitle').textContent = 'まなぶ';
       $('gkWallet').innerHTML = '<span class="coin"></span><span>いまの コイン <b class="num">'+getCoins()+'</b></span><span class="gk-bar"><i style="width:'+Math.round(s.day.n/DAY_CAP*100)+'%"></i></span><span>今日 '+s.day.n+'/'+DAY_CAP+'</span>';
+      var om = $('gkCapM'); if(om) om.remove();
+      if(!left) $('gkWallet').insertAdjacentHTML('afterend', '<div class="gk-cap" id="gkCapM">🎉 今日の まなぶコインは 20こ ぜんぶ もらったよ! もんだいは とけるけど、コインは あした また もらえるよ</div>');
       $('gkSubs').innerHTML = '<a class="gk-sub" href="'+KANJI_URL+'" target="_blank" rel="noopener" style="text-decoration:none"><span class="gk-ico" style="font-size:30px">漢</span><span><b>漢字ドリル</b><small>書き順・宝探し(お散歩の 宝物が コインに なるよ)</small></span></a>' +
         '<button class="gk-sub" data-sub="s"><span class="gk-ico" style="font-size:30px">理</span><span><b>理科</b><small>すきな ぶんやを えらんで、ふかく しらべよう</small></span></button>' +
         '<div class="gk-sub" data-sub="j" role="button"><span class="gk-ico" style="font-size:30px">国</span><span><b>国語・読解</b><small>短い 文を 読んで、聞かれている ことを つかまえよう(物語・せつめい文・日記・手紙・お知らせ・<ruby>俳句<rt>はいく</rt></ruby>)</small>'+kChips('j')+'</span></div>' +
@@ -14364,6 +14367,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('gkTitle').textContent = sub === 'j' ? '国語・読解（小3）' : SOCL[sub] ? NAMES[sub] : '理科（小3）';
       if(sub === 's') $('gkTitle').textContent = '理科 ' + (lv === '*' ? 'ぜんぶ' : lv);
       if(KLV[sub]) $('gkTitle').textContent = TITLES[sub] + '・' + KPL(KLV[sub][S.lv-1]);
+      var oc = $('gkCapP'); if(oc) oc.remove();
+      if(s.day.n >= DAY_CAP) $('gkProg').insertAdjacentHTML('beforebegin', '<div class="gk-cap" id="gkCapP">今日の まなぶコインは 20こ ぜんぶ もらったよ! もんだいは とけるけど、コインは あした また もらえるよ</div>');
       show('play'); ask();
     }
     function ask(){
@@ -14416,7 +14421,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(got > 0) earn(got);
       var name = NAMES[S.sub] + (S.sub === 's' ? ' '+(S.lv === '*' ? '' : S.lv) : '');
       $('gkResult').innerHTML = '<div class="gk-res"><div class="gk-big">'+S.ok+' / '+S.qs.length+'</div><p>'+name+(KLV[S.sub] ? '・'+KPL(KLV[S.sub][S.lv-1]) : '')+'の れんしゅう おわり!</p>' + (kup ? '<div class="kk-up">'+kup+'</div>' : '') +
-        '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン' + (got < want ? '（今日の 上限）' : '') + (S.ok >= Math.ceil(S.qs.length*0.8) ? '（8割 せいかい +3）' : '') + '</div>' +
+        '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン' + (S.ok >= Math.ceil(S.qs.length*0.8) && got >= want ? '（8割 せいかい +3）' : '') + '</div>' +
+        (got < want ? '<div class="gk-cap">'+(got ? 'これで 今日の まなぶコインは 20こ ぜんぶ もらったよ!' : '今日の まなぶコインは もう 20こ ぜんぶ もらって いるので、今回は 0コインだよ。')+' コインは あした また もらえるよ</div>' : '') +
         '<div class="gk-fb">1問 せいかいで 1コイン(読解は ②の 答えだけ)・今日 '+s.day.n+'/'+DAY_CAP+'</div>' +
         ''+(S.sub === 's' && depthOf(S.lv) > S.d0 ? '<p class="gk-note">すごい! もっと ふかい もんだいが ひらいたよ</p>' : '')+'<button class="btn btn-primary" id="gkAgain">もう1回</button> '+(S.sub === 's' ? '<button class="btn btn-ghost" id="gkLvBtn">ぶんやを えらぶ</button> ' : '')+' <button class="btn btn-ghost" id="gkMenuBtn">まなぶ メニュー</button></div>';
       show('result');
