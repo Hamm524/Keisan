@@ -712,6 +712,12 @@
   .tb-cap rt{ font-size:8px; }
   .tb-lead{ margin:0; display:grid; gap:2px; } .tb-lead b{ font-size:16px; font-weight:900; } .tb-lead span{ font-size:12.5px; color:var(--ink-soft); font-weight:700; }
   .tb-mail{ margin:0; font-size:14px; font-weight:900; color:var(--op-add); }
+  .tb-msg{ margin:0; padding:10px 12px; background:#fffbea; border:2px dashed #e9c46a; border-radius:12px; font-size:14px; font-weight:800; line-height:1.9; }
+  .tb-msg rt{ font-size:8px; } .tb-msg em{ display:block; text-align:right; font-style:normal; font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+  .tb-alb{ display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:10px; }
+  .tb-al{ border:0; background:none; padding:0; cursor:pointer; font:inherit; color:inherit; text-align:left; display:grid; gap:3px; }
+  .tb-al small{ font-size:11px; font-weight:800; color:var(--ink-soft); }
+  .tb-al:active{ transform:scale(.97); }
   .tb-about{ margin:0; font-size:13.5px; font-weight:700; line-height:1.75; }
   .tb-about rt{ font-size:8px; }
   .tb-move{ position:relative; height:120px; border-radius:14px; background:linear-gradient(#bfe6ff, #e9f7ff); overflow:hidden; }
@@ -2865,6 +2871,9 @@
       <h1>旅行</h1>
     </div>
     <div id="tbMain"></div>
+    <h2 class="sec-title">📮 <ruby>絵<rt>え</rt></ruby>はがきアルバム</h2>
+    <p class="sec-sub">旅行の とちゅうで 相棒から とどいた 絵はがきが、1通ずつ たまるよ。</p>
+    <div id="tbAlbum"></div>
     <h2 class="sec-title">おみやげ<ruby>図鑑<rt>ずかん</rt></ruby></h2>
     <p class="sec-sub">旅行に 行くと、その 県の <ruby>特産品<rt>とくさんひん</rt></ruby>を 1つ 持って 帰ってくるよ。どの 県にも 2つ あるよ。</p>
     <div id="tbBook"></div>
@@ -13258,6 +13267,53 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* 地図で 行き先が 右(東)なら 右へ、左(西)なら 左へ 進む。鼻先が 進む向きに なるよう 反転 */
     function vehRight(tr){ var hm = tr.h || tabiGet().home || 13; return tr.p === 47 ? false : hm === 47 ? true : CEN[tr.p][0] >= CEN[hm][0]; }
     function frac(tr){ return (Date.now() - tr.t0) / (tr.t1 - tr.t0); }
+    /* ---- 絵はがきアルバム: 旅行ごとに 1通。一言は 毎回 ちがう文(同じ県でも かぶらない) ---- */
+    var MSG = [
+      '{pn}の {spot}に 来たよ! ひろくて とっても きれい。{g}も 名物なんだって。たのしみに していてね!',
+      'ただいま {spot}を 見ているよ。{nm}は 元気! {g}が おいしそうで、ずっと 気に なっているんだ。',
+      '{pn}は すてきな ところだよ! {spot}で 写真を いっぱい とったよ。帰ったら 見せてあげるね。',
+      '{spot}に ついたよ。ここの 風が とっても 気もちいいの。{g}も さがしてみるね!',
+      'おうちの みんな 元気? {nm}は {pn}で たのしく すごしているよ。{spot}、また いっしょに 来たいな。',
+      '{spot}で 大きく 息を すったよ。{pn}の {g}の こと、ちょっと だけ 教えてもらったよ。おみやげ、まっててね!',
+      'わーい、{pn}に 来られたよ! {spot}は 思っていたより ずっと すごかった。ぜひ 見てほしいな。',
+      'いま {spot}の 前だよ。{nm}と {pn}の おもいで、たくさん 作るね。帰るまで まっててね。',
+      '{pn}から こんにちは! {spot}が とっても すてき。{g}も 食べてみたいな。',
+      'あちこち 歩いて ちょっと つかれたけど、{spot}を 見たら 元気に なったよ! 帰るのが たのしみ。',
+      '{nm}より。{pn}の {spot}に 来ているよ。ここで 見た けしきは わすれないよ。おみやげも たのしみに してね。',
+      '{pn}まで 来たよ! {spot}で ちょっと どきどき。でも すごく たのしい!'
+    ];
+    function msgOf(e){
+      var d = D[e.p], g = d.gifts[e.g != null ? e.g : 0];
+      return rb(MSG[e.k % MSG.length].replace(/\{(\w+)\}/g, function(m, key){
+        return key === 'pn' ? pname(e.p) : key === 'spot' ? d.spot : key === 'g' ? g.name : key === 'nm' ? petName(e.sp) : '';
+      }));
+    }
+    function ensureCard(tr){
+      var v = tabiGet(), al = v.album || (v.album = []), i, e;
+      for(i = 0; i < al.length; i++) if(al[i].id === tr.t0) return al[i];
+      var used = {}, last = al.length ? al[al.length - 1].k : -1, c = [];
+      al.forEach(function(x){ if(x.p === tr.p) used[x.k] = 1; });
+      for(i = 0; i < MSG.length; i++) if(!used[i] && i !== last) c.push(i);
+      if(!c.length) for(i = 0; i < MSG.length; i++) if(i !== last) c.push(i);
+      e = { id:tr.t0, p:tr.p, sp:tr.sp, k:c[Math.floor(Math.random() * c.length)], g:tr.i ? 0 : 1, t:Date.now() };
+      al.push(e); if(al.length > 300) al.shift();
+      save(v);
+      return e;
+    }
+    function dateOf(t){ var d = new Date(t); return (d.getMonth() + 1) + '月' + d.getDate() + '日'; }
+    function letter(e){ return '<p class="tb-msg">' + msgOf(e) + '<em>' + rb(petName(e.sp)) + 'より</em></p>'; }
+    function album(){
+      var al = (tabiGet().album || []).slice().reverse();
+      if(!al.length) return '<p class="tb-note">まだ とどいて いないよ。旅行に 行くと、観光の ときに 絵はがきが とどくよ!</p>';
+      return '<div class="tb-alb">' + al.map(function(e){
+        return '<button class="tb-al" data-al="' + e.id + '">' + postcard(e.sp, e.p, { small:true }) + '<small>' + dateOf(e.t) + '・' + pname(e.p) + '</small></button>';
+      }).join('') + '</div>';
+    }
+    function albumModal(id){
+      var e = (tabiGet().album || []).filter(function(x){ return x.id === id; })[0]; if(!e) return;
+      openBk('<div class="bk-title">' + pname(e.p) + 'から 絵はがき(' + dateOf(e.t) + ')</div>' + postcard(e.sp, e.p) + letter(e),
+        [{ label:'とじる', primary:true, onClick:closeBk }]);
+    }
     function phase(tr){
       if(!tr) return '';
       if(Date.now() >= tr.t1) return 'back';
@@ -13305,6 +13361,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var ms = $('tbMain').querySelector('.tb-stage.meal .pet');
       if(ms){ var on = false; render.mm = setInterval(function(){ if(!ms.isConnected){ clearInterval(render.mm); return; } on = !on; ms.classList.toggle('happy', on); }, 320); }
       $('tbBook').innerHTML = book();
+      $('tbAlbum').innerHTML = album();
       clearTimeout(render.tm);
       if(tr && phase(tr) !== 'back') render.tm = setTimeout(function(){ if(!views.tabi.hidden) render(); }, 30000);
     }
@@ -13323,6 +13380,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     function trip(tr){
       var ph = phase(tr), nm = petName(tr.sp), pn = pname(tr.p), d = D[tr.p], h = '', pet = Pet.svg(tr.sp, lvOf(tr.sp));
+      var card = ph !== 'go' ? ensureCard(tr) : null;
       if(ph === 'back'){
         h = '<div class="tb-box"><p class="tb-lead"><b>' + nm + 'が ' + pn + 'から 帰ってきたよ!</b></p>' +
           '<div class="tb-home">' + pet + '<button class="tb-giftbox" id="tbOpen" aria-label="おみやげを あける">🎁</button></div>' +
@@ -13332,7 +13390,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         h = '<div class="tb-box"><p class="tb-lead"><b>' + nm + 'は ' + pn + 'に 行っているよ!</b><span>' + lenOf(tr).name + 'の 旅・あと ' + fmtLeft(left(tr)) + 'で 帰ってくるよ</span></p>' + steps(tr, ph);
         if(ph === 'go') h += ride(tr, false) + '<p class="tb-about">いま 向かって いるところ。つくと 観光を するよ。</p>';
         else if(ph === 'ret') h += ride(tr, true) + '<p class="tb-about">もうすぐ おうちに つくよ。</p>';
-        else if(ph === 'tour') h += '<p class="tb-mail">📮 絵はがきが とどいたよ!</p>' + postcard(tr.sp, tr.p) + '<p class="tb-about"><b>' + rb(d.spot) + '</b>で ' + ACT[Math.floor(Date.now() / 600000) % ACT.length] + '<br>' + rb(d.about) + '</p>';
+        else if(ph === 'tour') h += '<p class="tb-mail">📮 絵はがきが とどいたよ!</p>' + postcard(tr.sp, tr.p) + letter(card) + '<p class="tb-about"><b>' + rb(d.spot) + '</b>で ' + ACT[Math.floor(Date.now() / 600000) % ACT.length] + '<br>' + rb(d.about) + '</p>';
         else if(ph === 'meal') h += stage('meal', tr.p, pet) + '<p class="tb-about">' + pn + 'の おいしい ものを 食べて いるよ。もぐもぐ!</p>';
         else if(ph === 'hotel') h += stage('hotel', tr.p, pet) + '<p class="tb-about">ホテルに とまって いるよ。つかれたから ぐっすり ねて いるよ。</p>';
         else if(ph === 'shop') h += stage('shop', tr.p, pet) + '<p class="tb-about">' + pn + 'の 特産品を えらんで いるよ。何に するのかな? 帰ってからの おたのしみ!</p>';
@@ -13437,6 +13495,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function openGift(){
       var v = tabiGet(), tr = v.trip;
       if(!tr || phase(tr) !== 'back') return;
+      ensureCard(tr); v = tabiGet();
       var k = tr.p + '-' + tr.i, isNew = !(v.got || {})[k];
       v.got = v.got || {}; if(isNew) v.got[k] = Date.now();
       v.trip = null;
@@ -13462,6 +13521,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(e.target.closest('#tbRand')){ var s = seenMap(), c = []; for(var p = 1; p <= 47; p++) if(!s[p] && p !== pick.p && canGo(pick.sp, p)) c.push(p); if(!c.length) for(p = 1; p <= 47; p++) if(canGo(pick.sp, p)) c.push(p); pick.p = any(c); pick.reg = regOf(pick.p); render(); return; }
       if(e.target.closest('#tbGo')){ go(); return; }
       if(e.target.closest('#tbOpen, #tbOpen2')){ openGift(); return; }
+      if((b = e.target.closest('[data-al]'))){ albumModal(+b.getAttribute('data-al')); return; }
       if((b = e.target.closest('#tbBookMap [data-p]'))){ var q = +b.getAttribute('data-p'); if(seenMap()[q]) cardModal(q); else toast(pname(q) + 'は まだ 行って いないよ'); return; }
       if((b = e.target.closest('.tb-item.tb-have'))){ var kk = b.getAttribute('data-k').split('-'); giftModal(+kk[0], +kk[1], false); return; }
       if((b = e.target.closest('[data-try]'))){
