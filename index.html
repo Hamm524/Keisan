@@ -815,6 +815,7 @@
   .gk-ch button.ok{ border-color:var(--good); background:color-mix(in srgb, var(--good) 18%, var(--surface)); }
   .gk-ch button.ng{ border-color:var(--bad); background:color-mix(in srgb, var(--bad) 14%, var(--surface)); }
   .gk-ch.one{ grid-template-columns:1fr; }
+  .gk-cap{ background:#FFF4D6; border:2px solid #F2B632; color:#7A5200; border-radius:14px; padding:10px 12px; margin:0 0 12px; font-size:14px; font-weight:800; line-height:1.6; text-align:center; }
   .gk-fb{ min-height:28px; text-align:center; font-weight:900; margin:10px 0; }
   .gk-fb.ok{ color:var(--good); } .gk-fb.ng{ color:var(--bad); }
   .gk-prog{ display:flex; gap:4px; margin:0 0 12px; } .gk-prog i{ flex:1; height:6px; border-radius:100px; background:var(--line); }
@@ -2876,7 +2877,7 @@
     </div>
     <div id="gkMenu">
       <div class="gk-wallet" id="gkWallet"></div>
-      <p class="gk-note">コインは けいさんと <b>同じ さいふ</b> に たまるよ。まなぶ コインは 1日 20コインまで。</p>
+      <p class="gk-note">コインは けいさんと <b>同じ さいふ</b> に たまるよ。まなぶ コインは 1日 40コインまで(漢字ドリル と 地図で 遊ぼう の コインは べつ)。</p>
       <div class="gk-menu" id="gkSubs"></div>
     </div>
     <div id="gkPlay" hidden>
@@ -13483,7 +13484,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   /* ホームの 教科タブ。えらんだ 教科は この端末だけに 覚える */
   var Subj = (function(){
-    var KEY = 'kapp_subj', CAP = 20;
+    var KEY = 'kapp_subj', CAP = 40;
     var NOTE = {
       m: '',
       j: '漢字ドリルの お散歩の 宝物も コインに なるよ。',
@@ -13506,7 +13507,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var g = safeGet('keisan_gaku') || {}, n = g.day && g.day.d === todayKey() ? (g.day.n || 0) : 0;
       $('subjCoin').innerHTML = k === 'm'
         ? '<span class="coin"></span><span>コインは どの 教科も 同じ さいふに たまるよ</span>'
-        : '<span class="coin"></span><span>国語・理科・社会の コイン 今日 <b class="num">'+n+'</b> / '+CAP+'</span><span class="sc-bar"><i style="width:'+Math.min(100, Math.round(n/CAP*100))+'%"></i></span>';
+        : '<span class="coin"></span><span>国語・理科・社会の コイン 今日 <b class="num">'+n+'</b> / '+CAP+'</span><span class="sc-bar"><i style="width:'+Math.min(100, Math.round(n/CAP*100))+'%"></i></span>' + (n >= CAP ? '<span>あした また もらえるよ</span>' : '');
       $('subjNote').textContent = NOTE[k];
     }
     $('subjTabs').addEventListener('click', function(e){
@@ -13517,7 +13518,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return { render:render, subjOf:subjOf };
   })();
   var Gaku = (function(){
-    var KEY = 'keisan_gaku', KANJI_URL = 'https://hamm524.github.io/Kanji/', KC_KEY = 'kanji-drill-coins-v1', KC_CRED = 'keisan_kcredit', ROUND = 10, DAY_CAP = 20, RUBY_OK = /[一-龥]/;
+    var KEY = 'keisan_gaku', KANJI_URL = 'https://hamm524.github.io/Kanji/', KC_KEY = 'kanji-drill-coins-v1', KC_CRED = 'keisan_kcredit', ROUND = 10, DAY_CAP = 40, RUBY_OK = /[一-龥]/;
     var SCI_RAW = "たねを まくと、さいしょに 出てくる 葉を 何と いう?|子葉(しよう)|本葉|根|くき|植物|seed|1\nホウセンカの たねは 土の 中で、さいしょに 何が 出る?|根|花|実|本葉|植物|!root|1\nこん虫の 体は 頭・むね・何の 3つに 分かれている?|はら|あし|はね|しょっ角|こん虫|body|1\nこん虫の あしは 何本?|6本|4本|8本|10本|こん虫|legs|1\nこん虫の あしは 体の どこに ついている?|むね|頭|はら|はね|こん虫|!legs2|1\nチョウの 育ち方は たまご→よう虫→さなぎ→何?|せい虫|こん虫|たまご|ふ化|こん虫|cycle|1\nさなぎに ならない 育ち方を する 虫は どれ?|バッタ|チョウ|カブトムシ|ハチ|こん虫|bat|1\nクモは こん虫?|こん虫では ない(あしが 8本)|こん虫(あしが 6本)|こん虫(はねが ある)|こん虫(むねが ない)|こん虫|spider|1\n花が さいた あと、できる ものは?|実と たね|根|くき|つぼみ|植物|fruit|1\nヒマワリの つぼみ(花が さく 前)は、昼の あいだ 何の ほうを 向く?|太陽の ほう|ずっと 北|ずっと 下|かげの ほう|植物|sunflower|1\nくきが のびる 向きは?|上(光の ほう)|下|よこ だけ|のびない|植物|!stem|1\n葉に 日光が 当たると、つくられる ものは?|養分(でんぷん)|水|ほこり|たね|植物|!leaf|1\nかげが できるのは どうして?|光が さえぎられる から|光が 曲がる から|かげは 光|風が ふく から|光|shadow|1\nかげの 向きは 太陽と どちら?|はんたい がわ|同じ がわ|真下|ない|光|!shadow|1\n朝から 夕方にかけて、かげは どう うごく?|西→北→東 へ うごく|東→南→西|うごかない|ぐるぐる 回る|光|!shadow3|1\n太陽は どの 向きに うごいて 見える?|東から 西へ|西から 東へ|北から 南へ|南から 北へ|光|sunpath|1\n日なたと 日かげで、地面が あたたかいのは?|日なた|日かげ|同じ|わからない|光|shade|1\nかがみで はね返した 光は どう すすむ?|まっすぐ|曲がる|止まる|きえる|光|!mirror|1\n虫めがねで 光を 小さく あつめると、あつく なる?|なる(あつく なる)|ならない|つめたく なる|かわらない|光|lens|1\nじしゃくが ひきつけるのは?|鉄|紙|ゴム|ガラス|じしゃく|!magnet|1\nじしゃくの 同じ 極どうしを 近づけると?|しりぞけ合う|ひきつけ合う|くっつく|何も 起きない|じしゃく|!poles|1\nじしゃくの 力が いちばん 強いのは?|極(両はし)|まん中|どこも 同じ|ない|じしゃく|!clips|1\nじしゃくに つく ものは どれ?|くぎ|消しゴム|えんぴつの 木|ガラスの コップ|じしゃく|magitems|1\n方位じしんの はりの 色の ついた 方は、何の 方位を さす?|北|南|東|西|じしゃく|!compass|1\nものの 重さは、かたちを かえると どうなる?|かわらない|かるく なる|重く なる|なくなる|もの|clay|1\n同じ 体積(かさ)なのに 重さが ちがうのは なぜ?|ものの しゅるい が ちがう から|ふくろ が ちがう から|かたち が ちがう から|いつも 同じ|もの|balance|1\n音が 出ている ものは、どうなっている?|ふるえている|止まっている|あつい|つめたい|音|bell|1\n音が 大きいとき、ふるえは?|大きい|小さい|ない|止まる|音|!waves|1\n音は 何を 通って つたわる?|空気など|光|かげ|つたわらない|音|airsound|1\n空気は 何で できて いる?|ちっ素・さんそ など|水だけ|さんそ だけ|何も ない|もの|!airbar|1\n氷が とけると 何に なる?|水|水じょう気|空気|石|もの|ice|1\n水を 100℃ ちかくまで あたためると、中から あわ(水じょう気)が さかんに 出て くる。これを 何と いう?|ふっとう|こおる こと|とける こと|ひえる こと|もの|boil|1\n水が 水じょう気に なる ことを 何と いう?|じょう発|ぎょう結|ゆうかい|ぎょう固|もの|steam|1\n空気を とじこめて おすと、体積は?|小さく なる|大きく なる|かわらない|なくなる|もの|syringe|1\n月は 毎日 かたちが どうなる?|かわる(満ち欠け)|かわらない|ずっと 丸い|ずっと 三日月|地球|moon|1\n太陽の かがやきは、月と くらべて?|太陽は 自分で 光る|月も 自分で 光る|どちらも 光らない|月だけ 光る|地球|sunmoon|1\n地球が 回って 1日で かわるのは?|朝・昼・夜|春・夏・秋・冬|月の かたち|ない|地球|earth|1\n水を あたため つづけて ふっとう して いる とき、水の 温度は?|100℃ぐらいで ほぼ かわらない|どんどん 上がる|下がって いく|0℃に なる|もの||2\n水が こおって 氷に なると、体積は?|大きく なる|小さく なる|かわらない|なくなる|もの||2\n金ぞくを あたためると、体積は?|わずかに 大きく なる|小さく なる|かわらない|なくなる|もの||2\n金ぞくの ぼうの 一部を あたためると、熱は どう つたわる?|あたためた ところから じゅんに つたわる|ぜんぶ いっぺんに つたわる|つたわらない|あたためた ところと 反対がわから つたわる|もの||2\n月が 満ちたり 欠けたり して 見えるのは どうして?|太陽と 月と 地球の 位置が かわり、光って 見える 部分が かわる から|月の 大きさが かわる から|雲が 月を かくす から|毎日 地球の かげに 入る から|地球||2\n北の 空の 星は 1晩で どう うごいて 見える?|北極星の 近くを 中心に 回る|東から 西へ まっすぐ 進む|ぜんぜん うごかない|南へ おちて いく|地球||2\n植物が 日光を 受けて、養分を つくる はたらきを 何と いう?|光合成|こきゅう|じょう発|ぎょう結|植物||2\nメダカの たまごが 育つ ためには?|おすと めすの 精子と 卵が むすびつく(受精)|めすだけで 育つ|おすだけで 育つ|水だけで 育つ|こん虫||2\n川の 上流に ある 石は、下流の 石に くらべて?|大きくて 角ばって いる|小さくて まるい|ぜんぶ すな|どれも 同じ|地球||2\n流れる 水が 地面を けずる はたらきを 何と いう?|しん食|たい積|運ぱん|じょう発|地球||2\n食塩を 水に とかした とき、とかす 前と 後で 全体の 重さは?|かわらない|軽く なる|重く なる|なくなる|もの||2\n二酸化炭素を 石灰水に 通すと どうなる?|白く にごる|青く なる|赤く なる|かわらない|もの||2\n食べ物を 細かく して 養分を とり入れる はたらきを 何と いう?|消化|こきゅう|じゅんかん|はい出|体||2\n光が 空気から 水の 中へ 進む とき、道すじは?|折れ曲がる(くっ折)|まっすぐ 進む|もどって くる|消える|光||3\n酸性の 水よう液に 青色リトマス紙を つけると?|赤く なる|青の まま|白く なる|黒く なる|もの||3\n食べる・食べられる 関係(食物れんさ)の はじまりは?|植物|草食動物|肉食動物|分解者|植物||3\n心臓から 出る 血が 通る 血管は?|動脈|静脈|気管|食道|体||3\n地球に 季節が ある 理由は?|地球の 地じくが かたむいて いる から|太陽までの きょりが 季節で 大きく かわる から|月が 回る から|雲が 多い から|地球||3\n食塩水を 熱して 水を 蒸発させると、あとに 残る ものは?|食塩|何も 残らない|水|さとう|もの||3\n水は 何℃で こおる?|0℃|10℃|50℃|100℃|もの|freeze|2\nあたためた 空気は どう うごく?|上へ いく|下へ いく|うごかない|よこへ だけ|もの|warmair|2\n地面に ふった 雨水は どこへ 流れる?|ひくい ところ|高い ところ|まわりと 同じ 高さの ところ|どこへも 流れない|地球|rain|2\n冬が 近づくと、ツバメは どうする?|あたたかい 南の 国へ わたる|土の 中で ねむる|まっ白に なる|たまごを うむ|生き物|swallow|2\n人の 体で、ほねと ほねの つなぎ目を 何と いう?|関節|筋肉|ひふ|つめ|体|joint|2\n夏の 夜空の「夏の 大三角」に 入って いない 星は?|ベテルギウス|ベガ|アルタイル|デネブ|地球|triangle|2\n地球から いちばん 近い こう星(自分で 光る 星)は?|太陽|月|北極星|シリウス|地球|nearstar|2\nふりこが 1往復する 時間を 長く するには?|ひもを 長く する|おもりを 重く する|ふれはばを 大きく する|ひもを 短く する|もの|!pendulum|3\nものが もえる ために ひつような 気体は?|さんそ|ちっ素|水じょう気|ヘリウム|もの|fire|3\n人が はく 息に、すう 空気より 多く ふくまれる 気体は?|二酸化炭素|さんそ|ヘリウム|水そ|体|breath|3\nてこで、小さな 力で 重い ものを 持ち上げるには?|支点から 力点を 遠く する|支点から 力点を 近く する|おもりを ふやす|ぼうを 短く する|もの|lever|3\n台風は 日本の どの 方向から 来る ことが 多い?|南の 海の ほう|北の 海の ほう|西の 山の ほう|空の 真上|地球|typhoon|3\n川の 曲がった ところで、外がわは どうなって いる?|流れが 速く、けずられて ふかい|流れが おそく、石が つもる|水が 止まって いる|いつも かわいて いる|地球|!river|3\nメダカの たまごの 中で 育つ 子どもは、何から 養分を もらう?|たまごの 中の 養分|親が はこぶ えさ|水の 中の 日光|何も いらない|生き物|medaka|3\n豆電球が 光るのは、どんな ときかな?|電気の 通り道が ぐるっと 輪っかに なって いる とき|導線が とちゅうで 切れて いる とき|導線が 1本だけ つながって いる とき|豆電球が 電池に つながって いない とき|電気|c:denchi+pikari|1\n電気を 通すのは どれかな?|10円玉|紙|ガラスの コップ|ゴム|電気|c:pikari|1\n豆電球に 導線を つなぐ 場所は どこ?|横の 金属と、下の でっぱり|ガラスと 横の 金属|ガラスと 下の でっぱり|ガラスだけ|電気|c:pikari-off|1\n電池2個を 直列に つなぐと、豆電球は 1個の ときに くらべて?|明るく なる|暗く なる|明るさは 同じ|消える|電気|c:denchi+denchi+pikari|2\n電池2個を 並列に つなぐと、1個の ときに くらべて?|明るさは 同じで、電池が 長もちする|ずっと 明るく なる|すぐ 消える|モーターが 止まる|電気|c:denchi+denchi+pikari|2\n電池の 向きを 逆に すると、モーターは どうなる?|回る 向きが 逆に なる|止まって しまう|もっと 速く 回る|こわれる|電気|c:denchi+kururin|2\n肺で 酸素を 受け取って、体中に 運ぶ 血の なかまは?|赤血球|白血球|血小板|だ液|体|c:red+white+platelet|2\n体に 入った ばい菌を 見つけて やっつける 血の なかまは?|白血球|赤血球|血小板|だ液|体|c:red+white+platelet|2\nけがを した とき 集まって、血を 固めて 傷口を ふさぐのは?|血小板|白血球|赤血球|だ液|体|c:red+white+platelet|2\nごはんの でんぷんを、別の 甘い ものに 変える はたらきが あるのは?|だ液|胃液|なみだ|あせ|体|c:saliva|2\n細胞の 中で、体の 設計図を しまって いる ところは?|核|血小板|葉緑体|だ液|体|c:nucleus|3\n光合成で でんぷんを つくる、葉の 細胞の 中の 緑色の つぶは?|葉緑体|核|赤血球|気こう|植物|c:chloro|2\nヨウ素液を でんぷんに つけると 何色に なる?|青むらさき色|赤色|黄色|色は かわらない|植物|c:chloro|2\n根から すい上げた 水が 通る、くきの 中の 管は?|道管|気こう|根毛|胞子|植物|c:chloro|3\n植物が 葉から 水蒸気を 出して いく はたらきを 何と いう?|蒸散|光合成|こきゅう|発芽|植物|c:chloro|3\n空気の 約78%を しめて いる 気体は?|窒素|酸素|水素|二酸化炭素|元素|c:el-N|3\n水(H₂O)は 水素と 何で できて いる?|酸素|炭素|窒素|鉄|元素|c:el-H+el-O|3\n血が 赤い のは、何の おかげ?|鉄|カルシウム|窒素|炭素|元素|c:el-Fe|3\n骨や 歯を つくる 材料に なる 元素は?|カルシウム|鉄|水素|炭素|元素|c:el-Ca|3\nえんぴつの しんや ダイヤモンドは、何の 元素で できている?|炭素|鉄|酸素|水素|元素|c:el-C|3\n太陽の まわりを まわって いる 惑星は、いくつ ある?|8つ|9つ|7つ|10こ|天体|!solar|1\n地球が 太陽の まわりを 1周 するのに かかる 時間は?|1年|1か月|1日|1週間|天体||1\n太陽に いちばん 近い 惑星は?|水星|金星|地球|火星|天体|!solar|1\n太陽系で いちばん 大きい 惑星は?|木星|土星|地球|海王星|天体|!solar|2\n大きな 輪が ある ことで 有名な 惑星は?|土星|火星|水星|金星|天体|!solar|2\n太陽系で いちばん 太陽から 遠い 惑星は?|海王星|土星|天王星|火星|天体|!solar|2\n月の 満ち欠けが ひとまわり する のに かかる 日数は 約 どれぐらい?|約30日|約7日|約365日|約3日|天体|moon|2\n月が 地球から 見て 太陽と 反対がわに ある とき、見える 月は?|満月|新月|三日月|半月|天体|moon|2\n月食は、どう して おこる?|月が 地球の かげに 入る から|月が 太陽を かくす から|雲が 月を かくす から|太陽が 月の かげに 入る から|天体||3\n太陽は、太陽系の 中で どんな 星?|自分で 光を 出す 星(こう星)|地球と 同じ 惑星|月と 同じ 衛星|光を はね返して いる 星|天体|sunmoon|3";
     var KOKU = {
 "types": ["だれが", "何を・何が", "いつ", "どこ", "なぜ(わけ)", "どうなった", "じゅんばん", "「それ」などが さす もの", "気持ち", "まとめ(いちばん 言いたい こと)"],
@@ -14383,6 +14384,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var s = get(), left = Math.max(0, DAY_CAP - s.day.n);
       $('gkTitle').textContent = 'まなぶ';
       $('gkWallet').innerHTML = '<span class="coin"></span><span>いまの コイン <b class="num">'+getCoins()+'</b></span><span class="gk-bar"><i style="width:'+Math.round(s.day.n/DAY_CAP*100)+'%"></i></span><span>今日 '+s.day.n+'/'+DAY_CAP+'</span>';
+      var om = $('gkCapM'); if(om) om.remove();
+      if(!left) $('gkWallet').insertAdjacentHTML('afterend', '<div class="gk-cap" id="gkCapM">🎉 今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ! もんだいは とけるけど、コインは あした また もらえるよ</div>');
       $('gkSubs').innerHTML = '<a class="gk-sub" href="'+KANJI_URL+'" target="_blank" rel="noopener" style="text-decoration:none"><span class="gk-ico" style="font-size:30px">漢</span><span><b>漢字ドリル</b><small>書き順・宝探し(お散歩の 宝物が コインに なるよ)</small></span></a>' +
         '<button class="gk-sub" data-sub="s"><span class="gk-ico" style="font-size:30px">理</span><span><b>理科</b><small>すきな ぶんやを えらんで、ふかく しらべよう</small></span></button>' +
         '<div class="gk-sub" data-sub="j" role="button"><span class="gk-ico" style="font-size:30px">国</span><span><b>国語・読解</b><small>短い 文を 読んで、聞かれている ことを つかまえよう(物語・せつめい文・日記・手紙・お知らせ・<ruby>俳句<rt>はいく</rt></ruby>)</small>'+kChips('j')+'</span></div>' +
@@ -14392,7 +14395,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           var k = 'o:'+t.k, L = SOCL[k], done = L.filter(function(e){ return okd(s.o, e); }).length;
           return '<button class="gk-sub" data-sub="'+k+'"><span style="font-size:30px">'+t.i+'</span><span><b>'+t.n+' <small style="display:inline;color:#e0a400;letter-spacing:1px">'+stars(s.o, k)+'</small></b><small>'+t.d+'・せいかい '+done+'/'+L.length+'</small></span></button>';
         }).join('') +
-        '<a class="gk-sub" href="'+'map/'+'" style="text-decoration:none"><span style="font-size:30px">🗾</span><span><b>地図で 遊ぼう</b><small>47都道府県の パズル・どこクイズ(4年生の 先どり)・世界の 国。覚えた 県や クリアで コイン</small></span></a>';
+        '<a class="gk-sub" href="'+'map/'+'" style="text-decoration:none"><span style="font-size:30px">🗾</span><span><b>地図で 遊ぼう</b><small>47都道府県の パズル・どこクイズ(4年生の 先どり)・世界の 国。覚えた 県や クリアで コイン(1日の 上限とは べつ)</small></span></a>';
       show('menu');
     }
     function start(sub, lv){
@@ -14409,6 +14412,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('gkTitle').textContent = sub === 'j' ? '国語・読解（小3）' : SOCL[sub] ? NAMES[sub] : '理科（小3）';
       if(sub === 's') $('gkTitle').textContent = '理科 ' + (lv === '*' ? 'ぜんぶ' : lv);
       if(KLV[sub]) $('gkTitle').textContent = TITLES[sub] + '・' + KPL(KLV[sub][S.lv-1]);
+      var oc = $('gkCapP'); if(oc) oc.remove();
+      if(s.day.n >= DAY_CAP) $('gkProg').insertAdjacentHTML('beforebegin', '<div class="gk-cap" id="gkCapP">今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ! もんだいは とけるけど、コインは あした また もらえるよ</div>');
       show('play'); ask();
     }
     function ask(){
@@ -14461,7 +14466,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(got > 0) earn(got);
       var name = NAMES[S.sub] + (S.sub === 's' ? ' '+(S.lv === '*' ? '' : S.lv) : '');
       $('gkResult').innerHTML = '<div class="gk-res"><div class="gk-big">'+S.ok+' / '+S.qs.length+'</div><p>'+name+(KLV[S.sub] ? '・'+KPL(KLV[S.sub][S.lv-1]) : '')+'の れんしゅう おわり!</p>' + (kup ? '<div class="kk-up">'+kup+'</div>' : '') +
-        '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン' + (got < want ? '（今日の 上限）' : '') + (S.ok >= Math.ceil(S.qs.length*0.8) ? '（8割 せいかい +3）' : '') + '</div>' +
+        '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン' + (S.ok >= Math.ceil(S.qs.length*0.8) && got >= want ? '（8割 せいかい +3）' : '') + '</div>' +
+        (got < want ? '<div class="gk-cap">'+(got ? 'これで 今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ!' : '今日の まなぶコインは もう '+DAY_CAP+'こ ぜんぶ もらって いるので、今回は 0コインだよ。')+' コインは あした また もらえるよ</div>' : '') +
         '<div class="gk-fb">1問 せいかいで 1コイン(読解は ②の 答えだけ)・今日 '+s.day.n+'/'+DAY_CAP+'</div>' +
         ''+(S.sub === 's' && depthOf(S.lv) > S.d0 ? '<p class="gk-note">すごい! もっと ふかい もんだいが ひらいたよ</p>' : '')+'<button class="btn btn-primary" id="gkAgain">もう1回</button> '+(S.sub === 's' ? '<button class="btn btn-ghost" id="gkLvBtn">ぶんやを えらぶ</button> ' : '')+' <button class="btn btn-ghost" id="gkMenuBtn">まなぶ メニュー</button></div>';
       show('result');
@@ -14497,9 +14503,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(!cr || typeof cr.n !== 'number'){ safeSet(KC_CRED, { n:n }); return; }
         var delta = n - cr.n;
         if(delta <= 0) return;
-        var s = get(), room = Math.max(0, DAY_CAP - s.day.n), got = Math.min(delta, room);
-        if(got <= 0) return;
-        s.day.n += got; put(s); safeSet(KC_CRED, { n:cr.n + got });
+        /* 漢字の コインは 上限の 外 */
+        var got = delta;
+        safeSet(KC_CRED, { n:cr.n + got });
         earn(got);
         toast('漢字ドリルの たからで +' + got + 'コイン!');
       }catch(e){}finally{ pulling = false; }
@@ -14508,9 +14514,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var d = safeGet('map-coins-v1'), n = d && typeof d.n === 'number' ? Math.max(0, d.n) : 0;
       var cr = safeGet('map-coins-cred'), done = cr && typeof cr.n === 'number' ? cr.n : 0;
       var delta = n - done; if(delta <= 0) return;
-      var s = get(), room = Math.max(0, DAY_CAP - s.day.n), got = Math.min(delta, room);
-      if(got <= 0) return;
-      s.day.n += got; put(s); safeSet('map-coins-cred', { n:done + got });
+      /* 地図の コインは 上限の 外(地図アプリの中で 1日3回などに しぼって いる) */
+      var got = delta;
+      safeSet('map-coins-cred', { n:done + got });
       earn(got);
       toast('地図で 遊ぼう で +' + got + 'コイン!');
     }
