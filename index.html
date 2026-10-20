@@ -12656,6 +12656,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var v = tabiGet(), tr = v.trip, h = '';
       if(tr) h = trip(tr); else h = plan();
       $('tbMain').innerHTML = h;
+      clearInterval(render.mm);
+      var ms = $('tbMain').querySelector('.tb-stage.meal .pet');
+      if(ms){ var on = false; render.mm = setInterval(function(){ if(!ms.isConnected){ clearInterval(render.mm); return; } on = !on; ms.classList.toggle('happy', on); }, 320); }
       $('tbBook').innerHTML = book();
       clearTimeout(render.tm);
       if(tr && phase(tr) !== 'back') render.tm = setTimeout(function(){ if(!views.tabi.hidden) render(); }, 30000);
