@@ -5021,7 +5021,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('bkBody').appendChild(pb);
   }
   /* プリント中の 進み具合(●の 列)。{on, t}: t で 新しい 方を 使う(真偽値だと 同期で OR に なるため) */
-  function pbarOn(){ var v = safeGet('keisan_pbar'); return !v || v.on !== false; }
+  function pbarOn(){ var v = safeGet('keisan_pbar'); return !!(v && v.on); }   /* 最初は かくす */
   function setPbar(on){ safeSet('keisan_pbar', { on: on, t: Date.now() }); }
   function grade3Open(){
     if(safeGet('keisan_grade3')) return false;
