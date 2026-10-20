@@ -771,6 +771,19 @@
   .tb-scene.shop{ background:linear-gradient(#ffe0ee, #fff3f8); } .tb-bag{ font-size:54px; position:absolute; bottom:12px; left:calc(50% + 18px); animation:tbShake 1.8s ease-in-out infinite; } .tb-scene.shop .tb-q{ position:absolute; top:20px; left:calc(50% + 30px); font-size:28px; font-weight:900; color:var(--op-mix); }
   .tb-scene.shop .tb-sp{ margin-right:56px; }
   @media (prefers-reduced-motion: reduce){ .tb-st.now i, .tb-scene *, .tb-bag{ animation:none !important; } }
+  .tb-stage{ position:relative; aspect-ratio:16 / 10; max-width:100%; border-radius:14px; overflow:hidden; box-shadow:0 6px 18px -10px rgba(0,0,0,.45); background:#f6e2bf; }
+  .tb-stage .tb-bk, .tb-stage .tb-fr{ position:absolute; inset:0; width:100%; height:100%; }
+  .tb-stage .tb-fr{ z-index:2; pointer-events:none; }
+  .tb-sp2{ position:absolute; z-index:1; left:50%; width:30%; transform:translateX(-50%); bottom:14%; } .tb-sp2 > svg{ width:100%; height:auto; display:block; }
+  .tb-stage.meal .tb-sp2{ bottom:12%; animation:tbChew .7s ease-in-out infinite; }
+  .tb-stage.hotel .tb-sp2{ width:24%; left:54%; bottom:16%; }
+  .tb-sp2.sleep .pet .eyes{ animation:none; transform:scaleY(.12); } .tb-sp2.sleep .pet .wet{ display:none; } .tb-sp2.sleep .p-breathe{ animation-duration:4.5s; }
+  .tb-zz2{ color:#fff; right:-14%; top:-6%; }
+  .tb-stage.shop .tb-sp2{ left:40%; bottom:16%; width:28%; }
+  .tb-bag2{ position:absolute; right:-28%; bottom:4%; font-size:clamp(22px, 9vw, 40px); animation:tbShake 1.8s ease-in-out infinite; }
+  .tb-steam2 path{ animation:tbSteam2 2s ease-out infinite; } .tb-steam2 path:nth-child(2){ animation-delay:.7s; }
+  @keyframes tbSteam2{ from{ transform:translateY(6px); opacity:.8; } to{ transform:translateY(-10px); opacity:0; } }
+  @media (prefers-reduced-motion: reduce){ .tb-stage *{ animation:none !important; } }
 </style></head><body>
 <title>けいさんチャレンジ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12506,6 +12519,65 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       else b = '<g fill="#d8d3e6"><rect x="10" y="80" width="40" height="80"/><rect x="58" y="60" width="34" height="100"/><rect x="236" y="70" width="36" height="90"/><rect x="278" y="90" width="34" height="70"/></g><g fill="#fff" opacity=".7"><rect x="18" y="90" width="8" height="8"/><rect x="32" y="90" width="8" height="8"/><rect x="66" y="72" width="8" height="8"/><rect x="246" y="82" width="8" height="8"/></g><rect y="160" width="320" height="40" fill="#c9c4b8"/>';
       return '<svg class="tb-bg" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + sky + b + '</svg>';
     }
+    /* ---- 旅の とちゅうの 場面(うしろの 絵 → 相棒 → 手前の 絵)---- */
+    var NOFOOD = { kama:1, koma:1, beko:1, daruma:1, kiriko:1, yosegi:1, wan:1, washi:1, pearl:1, aizome:1, towel:1, arita:1, shisa:1, '✨':1, '👓':1, '✂️':1, '🦝':1, '🧮':1, '🖌️':1 };
+    function icoSvg(ico, x, y, size){
+      if(ART[ico]) return '<g transform="translate(' + (x - size / 2) + ' ' + (y - size / 2) + ') scale(' + (size / 40) + ')">' + ART[ico] + '</g>';
+      return '<text x="' + x + '" y="' + (y + size * .36) + '" font-size="' + size + '" text-anchor="middle">' + ico + '</text>';
+    }
+    function sceneBody(k){ return sceneSvg(k).replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, ''); }
+    /* まどの 外に 行き先の けしき(夜は 暗く) */
+    function win(x, y, w, h, k, night){
+      return '<rect x="' + (x - 5) + '" y="' + (y - 5) + '" width="' + (w + 10) + '" height="' + (h + 10) + '" rx="4" fill="' + (night ? '#6a5a4a' : '#a9784e') + '"/>' +
+        '<svg x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice">' + sceneBody(k) +
+        (night ? '<rect width="320" height="200" fill="#0b1440" opacity=".72"/><circle cx="250" cy="45" r="22" fill="#fff6c8"/><circle cx="262" cy="38" r="20" fill="#0b1440" opacity=".72"/><g fill="#fff"><circle cx="40" cy="30" r="3"/><circle cx="110" cy="55" r="2.5"/><circle cx="170" cy="22" r="3"/><circle cx="200" cy="80" r="2"/></g>' : '') +
+        '</svg><path d="M' + (x + w / 2) + ' ' + y + 'V' + (y + h) + 'M' + x + ' ' + (y + h / 2) + 'H' + (x + w) + '" stroke="' + (night ? '#6a5a4a' : '#a9784e') + '" stroke-width="4"/>';
+    }
+    function stage(kind, p, pet){
+      var d = D[p], pn = pname(p), back = '', front = '', extra = '', pc = '';
+      if(kind === 'meal'){
+        var foods = d.gifts.filter(function(g){ return !NOFOOD[g.ico]; }), food = foods.length ? foods[0].ico : '🍱';
+        back = '<rect width="320" height="200" fill="#f6e2bf"/><rect y="120" width="320" height="80" fill="#c98f5a"/><path d="M0 120H320" stroke="#a8703f" stroke-width="4"/>' +
+          '<g stroke="#b98250" stroke-width="2" opacity=".5"><path d="M40 120V200M100 120V200M160 120V200M220 120V200M280 120V200"/></g>' +
+          win(18, 22, 96, 66, d.scene, false) +
+          '<rect x="200" y="18" width="104" height="70" rx="6" fill="#4b3b2e"/><rect x="205" y="23" width="94" height="60" rx="4" fill="#2f5a3e"/>' +
+          '<text x="252" y="42" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">' + pn + 'の</text><text x="252" y="58" font-size="12" fill="#ffe28a" text-anchor="middle" font-weight="700">めいぶつ</text>' + icoSvg(food, 252, 72, 14) +
+          '<g><path d="M150 0V18" stroke="#6b4a2a" stroke-width="2"/><path d="M134 18H166L158 32H142Z" fill="#f2b84b"/><ellipse cx="150" cy="34" rx="10" ry="3" fill="#fff3c4" opacity=".9"/></g>';
+        front = '<path d="M-10 168Q160 150 330 168V200H-10Z" fill="#fff"/><path fill="none" d="M-10 168Q160 150 330 168" stroke="#e5484d" stroke-width="6" stroke-dasharray="12 12"/>' +
+          '<ellipse cx="160" cy="176" rx="46" ry="11" fill="#fff" stroke="#d9cfc0" stroke-width="2"/>' + icoSvg(food, 160, 166, 30) +
+          '<g class="tb-steam2" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"><path d="M150 150Q145 140 150 130"/><path d="M168 148Q163 138 168 128"/></g>' +
+          '<path d="M210 182L246 162M214 186L250 166" stroke="#8a5a2a" stroke-width="3" stroke-linecap="round"/><rect x="74" y="160" width="20" height="22" rx="4" fill="#7fb38a"/><path d="M94 166Q102 168 94 176" stroke="#7fb38a" stroke-width="3" fill="none"/>';
+        pc = 'meal';
+      }else if(kind === 'hotel'){
+        back = '<defs><radialGradient id="tbLamp"><stop offset="0" stop-color="#ffe7a3" stop-opacity=".8"/><stop offset="1" stop-color="#ffe7a3" stop-opacity="0"/></radialGradient></defs>' +
+          '<rect width="320" height="200" fill="#3c3f6e"/><g stroke="#46497a" stroke-width="2"><path d="M0 40H320M0 80H320M0 120H320"/></g><rect y="150" width="320" height="50" fill="#5a4a6e"/>' +
+          win(120, 18, 92, 64, d.scene, true) +
+          '<path d="M108 10Q120 50 112 92H100V10Z" fill="#c45a7a"/><path d="M224 10Q212 50 220 92H232V10Z" fill="#c45a7a"/><rect x="96" y="6" width="140" height="6" rx="3" fill="#8a6a4a"/>' +
+          '<circle cx="44" cy="100" r="46" fill="url(#tbLamp)"/><rect x="26" y="118" width="38" height="36" rx="3" fill="#8a6a4a"/><path d="M36 92H54L58 108H32Z" fill="#ffe7a3"/><rect x="43" y="108" width="4" height="10" fill="#d9c08a"/>' +
+          '<rect x="96" y="96" width="150" height="62" rx="12" fill="#a8835e"/><rect x="104" y="104" width="134" height="40" rx="8" fill="#c9a07a"/>' +
+          '<ellipse cx="148" cy="140" rx="26" ry="10" fill="#fff"/><ellipse cx="200" cy="140" rx="26" ry="10" fill="#fff"/>' +
+          '<rect x="262" y="128" width="40" height="26" rx="4" fill="#8a6a4a"/><text x="282" y="124" font-size="18" text-anchor="middle">🧳</text>';
+        front = '<path d="M86 156Q170 140 258 156V196H86Z" fill="#7b9be0"/><path fill="none" d="M86 156Q170 140 258 156" stroke="#fff" stroke-width="5"/><g fill="#a8c0f0" opacity=".7"><circle cx="120" cy="176" r="5"/><circle cx="160" cy="182" r="5"/><circle cx="200" cy="176" r="5"/><circle cx="235" cy="182" r="5"/></g><rect x="82" y="190" width="180" height="10" rx="3" fill="#8a6a4a"/>';
+        extra = '<span class="rm-zz tb-zz2"><i>z</i><i>z</i><i>Z</i></span>';
+        pc = 'hotel';
+      }else if(kind === 'shop'){
+        var items = [], i;
+        for(i = 0; i < 6; i++) items.push(d.gifts[i % 2].ico);
+        back = '<rect width="320" height="200" fill="#fdf1dc"/><rect y="150" width="320" height="50" fill="#d9b98a"/>' +
+          '<path d="M0 0H320V30Q300 40 280 30T240 30T200 30T160 30T120 30T80 30T40 30T0 30Z" fill="#2f5aa8"/><text x="160" y="22" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">' + pn + ' おみやげ</text>' +
+          '<g fill="#b98250"><rect x="16" y="56" width="104" height="6"/><rect x="16" y="100" width="104" height="6"/><rect x="200" y="56" width="104" height="6"/><rect x="200" y="100" width="104" height="6"/></g>' +
+          '<g>' + items.map(function(ic, k){ var col = k % 3, row = Math.floor(k / 3) % 2; return icoSvg(ic, 36 + col * 32, 44 + row * 44, 22); }).join('') +
+          items.map(function(ic, k){ var col = k % 3, row = Math.floor(k / 3) % 2; return icoSvg(k % 2 ? '🎁' : ic, 220 + col * 32, 44 + row * 44, 22); }).join('') + '</g>' +
+          '<g><path d="M150 30V46" stroke="#6b4a2a" stroke-width="2"/><ellipse cx="150" cy="58" rx="12" ry="14" fill="#e5484d"/><path d="M138 58H162" stroke="#a8241f" stroke-width="2"/><text x="150" y="62" font-size="9" fill="#fff" text-anchor="middle">旅</text></g>';
+        front = '<rect x="-4" y="160" width="328" height="44" fill="#a8703f"/><rect x="-4" y="156" width="328" height="8" fill="#c98f5a"/>' +
+          '<rect x="232" y="132" width="44" height="28" rx="4" fill="#5a6a7a"/><rect x="238" y="136" width="32" height="10" rx="2" fill="#bfe6ff"/><text x="110" y="186" font-size="12" fill="#fff6e4" font-weight="700">どれに しようかな?</text>';
+        extra = '<span class="tb-bag2">🛍️</span>';
+        pc = 'shop';
+      }
+      return '<div class="tb-stage ' + pc + '"><svg class="tb-bk" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + back + '</svg>' +
+        '<span class="tb-sp2' + (kind === 'hotel' ? ' sleep' : '') + '">' + pet + extra + '</span>' +
+        '<svg class="tb-fr" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + front + '</svg></div>';
+    }
     /* 絵はがき: けしき+名所の 絵+相棒 */
     function postcard(sp, p, opt){
       opt = opt || {};
@@ -12613,9 +12685,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(ph === 'go') h += ride(tr, false) + '<p class="tb-about">いま 向かって いるところ。つくと 観光を するよ。</p>';
         else if(ph === 'ret') h += ride(tr, true) + '<p class="tb-about">もうすぐ おうちに つくよ。</p>';
         else if(ph === 'tour') h += '<p class="tb-mail">📮 絵はがきが とどいたよ!</p>' + postcard(tr.sp, tr.p) + '<p class="tb-about"><b>' + rb(d.spot) + '</b>で ' + ACT[Math.floor(Date.now() / 600000) % ACT.length] + '<br>' + rb(d.about) + '</p>';
-        else if(ph === 'meal') h += '<div class="tb-scene meal"><span class="tb-steam">♨</span><span class="tb-food">🍽️</span><span class="tb-sp">' + pet + '</span></div><p class="tb-about">' + pn + 'の おいしい ものを 食べて いるよ。もぐもぐ!</p>';
-        else if(ph === 'hotel') h += '<div class="tb-scene hotel"><span class="tb-moon">🌙</span><span class="tb-star s1">✦</span><span class="tb-star s2">✦</span><span class="tb-bed">🛏️</span><span class="tb-sp">' + pet + '</span><span class="tb-zz">z<i>z</i><b>z</b></span></div><p class="tb-about">ホテルに とまって いるよ。つかれたから ぐっすり ねて いるよ。</p>';
-        else if(ph === 'shop') h += '<div class="tb-scene shop"><span class="tb-bag">🛍️</span><span class="tb-q">?</span><span class="tb-sp">' + pet + '</span></div><p class="tb-about">' + pn + 'の 特産品を えらんで いるよ。何に するのかな? 帰ってからの おたのしみ!</p>';
+        else if(ph === 'meal') h += stage('meal', tr.p, pet) + '<p class="tb-about">' + pn + 'の おいしい ものを 食べて いるよ。もぐもぐ!</p>';
+        else if(ph === 'hotel') h += stage('hotel', tr.p, pet) + '<p class="tb-about">ホテルに とまって いるよ。つかれたから ぐっすり ねて いるよ。</p>';
+        else if(ph === 'shop') h += stage('shop', tr.p, pet) + '<p class="tb-about">' + pn + 'の 特産品を えらんで いるよ。何に するのかな? 帰ってからの おたのしみ!</p>';
         h += '<div class="tb-dest">' + map([tr.p], null, 'sm') + '<span><b>' + pn + '</b><small>' + REG[regOf(tr.p)][0] + '地方</small></span></div>';
         if(TRIAL) h += '<div class="tb-try"><button class="sr-btn" data-try="next">⏩ 次の 場面へ</button><button class="sr-btn" data-try="back">⏩ 帰ってくる</button></div>';
         h += '</div>';
