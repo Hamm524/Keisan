@@ -1987,6 +1987,10 @@
   .backup-more button{ border:1.5px solid var(--line); background:var(--surface); color:var(--ink); border-radius:14px; padding:12px; font-size:14px; font-weight:700; text-align:left; cursor:pointer; }
   .backup-more small{ display:block; font-size:11px; color:var(--ink-soft); font-weight:500; margin-top:2px; }
   .bk-btns{ display:flex; gap:8px; margin-top:8px; }
+  .pset{ margin-top:10px; padding:10px; border:1.5px solid var(--line); border-radius:12px; }
+  .pset-h{ display:block; font-size:14px; font-weight:900; margin-bottom:2px; }
+  .pset-btns{ display:flex; gap:6px; margin-top:6px; }
+  .pset-btns .btn{ flex:1; padding:9px 4px; font-size:14px; }
   .bk-btns .btn{ flex:1; padding:12px; font-size:14px; }
 
   /* ---- food / hunger ---- */
@@ -5008,10 +5012,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     refreshHome();
   }
   function openGradeSet(){
-    var btns = [1, 2, 3, 4].map(function(g){ return { label:'小' + g, primary:g === pgrade(), onClick:function(){ setGrade(g); } }; });
-    btns.push({ label:'✕', onClick:closeBk });
-    openBk('<div class="bk-title">プリントを 始める 学年</div><div class="bk-body">学年に 合わせて、足し算・引き算・かけ算・割り算の スタートの 位置が 変わるよ。<br>小3: ＋－は 3桁、×は 2桁×1桁、÷は 答えが2桁 から。<br>(今の 学年は 色が ついているよ。✕ で 閉じる。コインや 記録は そのまま。今の レベルは 選んだ 学年に 戻るよ)</div>', btns);
+    var on = pbarOn();
+    var gb = [1, 2, 3, 4].map(function(g){ return '<button type="button" class="btn ' + (g === pgrade() ? 'btn-primary' : 'btn-ghost') + '" data-g="' + g + '">小' + g + '</button>'; }).join('');
+    openBk('<div class="bk-title">おうちの人の 設定</div>' +
+      '<div class="pset"><b class="pset-h">① プリントを 始める 学年</b>' +
+      '<div class="bk-body">学年に 合わせて、足し算・引き算・かけ算・割り算の スタートの 位置が 変わるよ。小3: ＋－は 3桁、×は 2桁×1桁、÷は 答えが2桁 から。<br>(色が ついているのが 今の 学年。押すと 今の レベルは その 学年の スタートに 戻るよ。コインや 記録は そのまま)</div>' +
+      '<div class="pset-btns" id="psetG">' + gb + '</div></div>' +
+      '<div class="pset"><b class="pset-h">② プリント中の「●●●」(今 何問目かの しるし)</b>' +
+      '<div class="bk-body">問題の 上に 並ぶ ●で、何問 とけたかが 見えるよ。</div>' +
+      '<div class="pset-btns" id="psetP"><button type="button" class="btn ' + (on ? 'btn-primary' : 'btn-ghost') + '" data-pb="1">出す</button><button type="button" class="btn ' + (on ? 'btn-ghost' : 'btn-primary') + '" data-pb="0">かくす</button></div></div>',
+      [{ label:'閉じる', onClick:closeBk }]);
+    $('psetG').onclick = function(e){ var b = e.target.closest('[data-g]'); if(b) setGrade(+b.getAttribute('data-g')); };
+    $('psetP').onclick = function(e){ var b = e.target.closest('[data-pb]'); if(!b) return; setPbar(b.getAttribute('data-pb') === '1'); refreshHome(); openGradeSet(); };
   }
+  /* プリント中の 進み具合(●の 列)。{on, t}: t で 新しい 方を 使う(真偽値だと 同期で OR に なるため) */
+  function pbarOn(){ var v = safeGet('keisan_pbar'); return !!(v && v.on); }   /* 最初は かくす */
+  function setPbar(on){ safeSet('keisan_pbar', { on: on, t: Date.now() }); }
   function grade3Open(){
     if(safeGet('keisan_grade3')) return false;
     return SINGLE_OPS.some(function(o){ return currentLevelIndex(o) < G3_START[o]; });
@@ -5519,7 +5535,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">今日の プリント <b class="num">'+Math.min(sn, DAILY_SHEETS)+'/'+DAILY_SHEETS+'</b>枚</span><span class="sheets-d'+(sn < DAILY_SHEETS ? ' wide' : '')+'">'+sd+'</span></div>' +
       '<span class="sz-next">1枚 '+SHEET_N+'問。'+(sn >= DAILY_SHEETS ? '5枚 できたよ!もっと やっても OK' : 'あと <b>'+(DAILY_SHEETS - sn)+'枚</b>で 今日の プリントが クリア!')+'</span>' +
-      '<button type="button" class="gset" id="gSet">学年: 小' + pgrade() + '(おうちの人が 変える)</button>';
+      '<button type="button" class="gset" id="gSet">⚙ おうちの人の 設定(学年: 小' + pgrade() + ')</button>';
     renderWeekend(rec);
     if(rec === 'mix'){
       $('todayMain').innerHTML = '<span class="sym num" style="font-size:15px">MIX</span><span><span class="t1">混ぜて練習</span><br><span class="t2">＋－×÷が混ざって出るよ</span></span>';
@@ -7822,6 +7838,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function renderDots(){
     var wrap = $('dots'); wrap.innerHTML = '';
     if(state.print && state.print.kind==='weekend') return;   /* 100問: のこりが 多く 見えて しんどいので 進み具合は 出さない */
+    if(state.print && (state.print.kind==='daily' || state.print.kind==='review') && !pbarOn()) return;   /* プリント: おうちの人が かくせる */
     if(state.questions.length > 20){
       var done = state.questions.filter(function(q){ return q.solved; }).length, N = state.questions.length;
       wrap.innerHTML = '<div class="pbar-wrap"><div class="pbar"><i style="width:'+(done/N*100)+'%"></i></div><span class="pcount">'+done+'/'+N+'</span></div>';
