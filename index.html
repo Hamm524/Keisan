@@ -2870,7 +2870,7 @@
     </div>
     <div id="gkMenu">
       <div class="gk-wallet" id="gkWallet"></div>
-      <p class="gk-note">コインは けいさんと <b>同じ さいふ</b> に たまるよ。まなぶ コインは 1日 40コインまで(地図で 遊ぼう の コインは べつ)。</p>
+      <p class="gk-note">コインは けいさんと <b>同じ さいふ</b> に たまるよ。まなぶ コインは 1日 40コインまで(漢字ドリル と 地図で 遊ぼう の コインは べつ)。</p>
       <div class="gk-menu" id="gkSubs"></div>
     </div>
     <div id="gkPlay" hidden>
@@ -14458,9 +14458,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(!cr || typeof cr.n !== 'number'){ safeSet(KC_CRED, { n:n }); return; }
         var delta = n - cr.n;
         if(delta <= 0) return;
-        var s = get(), room = Math.max(0, DAY_CAP - s.day.n), got = Math.min(delta, room);
-        if(got <= 0) return;
-        s.day.n += got; put(s); safeSet(KC_CRED, { n:cr.n + got });
+        /* 漢字の コインは 上限の 外 */
+        var got = delta;
+        safeSet(KC_CRED, { n:cr.n + got });
         earn(got);
         toast('漢字ドリルの たからで +' + got + 'コイン!');
       }catch(e){}finally{ pulling = false; }
