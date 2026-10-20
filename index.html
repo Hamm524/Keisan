@@ -4129,7 +4129,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   if(TRIAL_ON) LS = null;
   var memStore = {};
   function rawGet(k){ if(LS){ try{ return LS.getItem(k); }catch(e){} } return memStore.hasOwnProperty(k) ? memStore[k] : null; }
-  function rawSet(k, v){ memStore[k] = String(v); if(LS){ try{ LS.setItem(k, String(v)); }catch(e){} } cloudQueue(k); }
+  function rawSet(k, v){ memStore[k] = String(v); if(LS){ try{ LS.setItem(k, String(v)); }catch(e){} } cloudQueue(k); if(k === EXTRA_KEY && !extraBusy) extraUnpack(); }
   function rawDel(k){ delete memStore[k]; if(LS){ try{ LS.removeItem(k); }catch(e){} } cloudQueue(k); }
   function snapshot(){
     var o = {};
@@ -4138,6 +4138,74 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return o;
   }
   function hasData(o){ var v = o && o.keisan_pets; return !!v && v !== 'null'; }
+
+  /* ---------- keisan_ で ない 記録も いっしょに 保存 ----------
+     「地図で 遊ぼう」(map/)と「理科で 遊ぼう」は 自分で localStorage に 書く(名前が keisan_ で ない)。
+     それを keisan_extra { key:{ v, t, z } } に うつして、ミラー・クラウド(合言葉)に のせる。
+     v = 中身、t = この 端末で 最後に かわった 時、z = 「記録を 消す」などで へった 時(それより 古い 方は つかわない)。 */
+  var EXTRA_KEY = 'keisan_extra', extraBusy = false;
+  var EXTRA_KEYS = ['jp-learned','jp-kanji','jp-best','jp-voice','jp-fdown','jp-kmode',
+    'w-learned','w-best','w-voice','w-fdown','w-flagq','w-seas','w-rivers','w-glines',
+    'map-coins-v1','map-coins-cred','rika-rev','karada-gems'];
+  var EXTRA_SET = { 'jp-voice':1,'jp-fdown':1,'jp-kmode':1,'w-voice':1,'w-fdown':1,'w-flagq':1,'w-seas':1,'w-rivers':1,'w-glines':1 };  /* 設定: この 端末の ほう */
+  function extraJSON(t){ if(t == null) return null; try{ return JSON.parse(t); }catch(e){ return null; } }
+  function extraGet(){ var o = extraJSON(rawGet(EXTRA_KEY)); return o && typeof o === 'object' && !Array.isArray(o) ? o : {}; }
+  function extraShrank(a, b){   /* a に あった ものが b で なくなった */
+    if(Array.isArray(a) && Array.isArray(b)){ var sb = {}; b.forEach(function(x){ sb[JSON.stringify(x)] = 1; }); return a.some(function(x){ return !sb[JSON.stringify(x)]; }); }
+    if(a && b && typeof a === 'object' && typeof b === 'object') return Object.keys(a).some(function(x){ return !(x in b); });
+    return false;
+  }
+  function extraVal(k, a, b){   /* a = この 端末、b = もう 一方 */
+    if(EXTRA_SET[k]) return a;
+    if(/-best$/.test(k) && a && b && typeof a === 'object' && typeof b === 'object'){   /* タイムは 小さい ほうが よい */
+      var o = {}; Object.keys(b).forEach(function(x){ o[x] = b[x]; });
+      Object.keys(a).forEach(function(x){ o[x] = (x in b && typeof b[x] === 'number' && typeof a[x] === 'number') ? Math.min(a[x], b[x]) : a[x]; });
+      return o;
+    }
+    return mergeData(a, b);
+  }
+  function extraEntry(k, a, b){
+    if(!a || !('v' in a)) return b;
+    if(!b || !('v' in b)) return a;
+    var z = Math.max(a.z || 0, b.z || 0);
+    if((a.t || 0) < z && (b.t || 0) >= z) return b;
+    if((b.t || 0) < z && (a.t || 0) >= z) return a;
+    return { v:extraVal(k, a.v, b.v), t:Math.max(a.t || 0, b.t || 0), z:z };
+  }
+  function extraMerge(l, r){   /* l, r = keisan_extra の 文字 */
+    var L = extraJSON(l) || {}, R = extraJSON(r) || {}, o = {};
+    Object.keys(R).forEach(function(k){ o[k] = R[k]; });
+    Object.keys(L).forEach(function(k){ o[k] = extraEntry(k, L[k], R[k]); });
+    return JSON.stringify(o);
+  }
+  /* 端末の 記録 → keisan_extra */
+  function extraPack(){
+    if(!LS || TRIAL_ON) return;
+    var o = extraGet(), ch = false, now = Date.now();
+    EXTRA_KEYS.forEach(function(k){
+      var cur = null; try{ cur = extraJSON(LS.getItem(k)); }catch(e){}
+      if(cur == null) return;
+      var e = o[k];
+      if(e && 'v' in e && canon(JSON.stringify(e.v)) === canon(JSON.stringify(cur))) return;
+      o[k] = { v:cur, t:now, z:(e && 'v' in e && extraShrank(e.v, cur)) ? now : ((e && e.z) || 0) };
+      ch = true;
+    });
+    if(!ch) return;
+    extraBusy = true;
+    try{ safeSet(EXTRA_KEY, o); }finally{ extraBusy = false; }
+  }
+  /* keisan_extra → 端末の 記録(ない もの・ちがう ものを 書く) */
+  function extraUnpack(){
+    if(!LS || TRIAL_ON) return;
+    var o = extraGet();
+    EXTRA_KEYS.forEach(function(k){
+      var e = o[k]; if(!e || !('v' in e) || e.v == null) return;
+      var v = JSON.stringify(e.v), cur = null;
+      try{ cur = LS.getItem(k); }catch(err){}
+      if(EXTRA_SET[k] && cur != null) return;
+      if(cur == null || canon(cur) !== canon(v)){ try{ LS.setItem(k, v); }catch(err){} }
+    });
+  }
 
   var DBN = 'keisan-mirror', ST = 'kv', mirrorOn = false, mirrorTimer = null;
   function openDb(){
@@ -4174,7 +4242,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   /* calls done(restoredFromMirror) exactly once */
   function storageBoot(done){
     var called = false;
-    function finish(r){ if(called) return; called = true; mirrorOn = true; if(hasData(snapshot())) scheduleMirror(); done(r); }
+    function finish(r){ if(called) return; called = true; mirrorOn = true; try{ extraPack(); }catch(e){} if(hasData(snapshot())) scheduleMirror(); done(r); }
     if(TRIAL_ON){ finish(false); return; }
     try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function(){}); }catch(e){}
     if(hasData(snapshot()) || typeof indexedDB === 'undefined'){ finish(false); return; }
@@ -4383,6 +4451,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       return JSON.stringify(base == null ? Math.max(L, R) : Math.max(0, R + (L - base)));
     }
     if(KEEP_LOCAL[k]) return l;
+    if(k === EXTRA_KEY) return extraMerge(l, r);
     /* おしゃれは 新しい ほうを まるごと 使う(まぜると、しまった ものや はずした ものが もどって きて しまう) */
     /* 色・もよう・宝石の つけかえも、新しく えらんだ ほうを まるごと 使う(まぜると「もと」に もどしたのが もどって くる) */
     if(k === 'keisan_skin' || k === 'keisan_wear' || k === 'keisan_sex'){
@@ -4407,6 +4476,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   /* remote = {key: string}; returns true when this device's records changed */
   function cloudMergeIn(remote){
+    try{ extraPack(); }catch(e){}
     var local = snapshot(), keys = {}, changed = false, pushed = false;
     Object.keys(local).forEach(function(k){ keys[k] = 1; });
     Object.keys(remote).forEach(function(k){ keys[k] = 1; });
@@ -4494,10 +4564,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(Object.keys(cloud.dirty).length) cloudFlush();
     return changed;
   }
-  setInterval(function(){ if(document.visibilityState === 'visible') cloudSync(); }, 30000);
+  setInterval(function(){ if(document.visibilityState === 'visible'){ try{ extraPack(); }catch(e){} cloudSync(); } }, 30000);
   document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible') cloudSync(); });
   window.addEventListener('online', function(){ cloudSync(); });
-  document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'hidden' && cloud.timer){ clearTimeout(cloud.timer); cloudFlush(); } });
+  document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'hidden'){ try{ extraPack(); }catch(e){} } if(document.visibilityState === 'hidden' && cloud.timer){ clearTimeout(cloud.timer); cloudFlush(); } });
 
   function safeGet(key){
     try{ return JSON.parse(rawGet(key) || 'null'); }catch(e){ return null; }
@@ -14135,7 +14205,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       w.innerHTML = '<div class="gk-uchu-bar"><button class="btn btn-ghost" id="gkUchuX">← もどる</button></div>';
       var f = document.createElement('iframe'); f.setAttribute('title', title || '宇宙をのぞこう'); f.srcdoc = html || UCHU_HTML; w.appendChild(f);
       document.body.appendChild(w);
-      w.querySelector('#gkUchuX').addEventListener('click', function(){ w.remove(); });
+      w.querySelector('#gkUchuX').addEventListener('click', function(){ w.remove(); try{ extraPack(); }catch(e){} });
     }
     function show(part){ if(part !== 'menu') LVOPEN = false;  $('gkMenu').hidden = part !== 'menu'; $('gkPlay').hidden = part !== 'play'; $('gkResult').hidden = part !== 'result'; showView('gaku'); }
     function card(){
