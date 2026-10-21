@@ -1081,6 +1081,9 @@
   .ok-qkb .ok-w.ng, .ok-qkb .ok-b.ng{ background:color-mix(in srgb, var(--bad) 35%, #fffdf6); }
   .ok-qkb button:disabled{ cursor:default; }
   .ok-mini-kb span.hl{ background:#fff1a8; }
+  .ok-games{ display:grid; gap:8px; margin:8px 0 12px; }
+  .ok-games .btn{ width:100%; font-size:17px; padding:14px 10px; }
+  .ok-games small{ text-align:center; color:#777; font-weight:700; }
 </style>
 </head><body>
 <title>けいさんチャレンジ</title>
@@ -15500,7 +15503,20 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             { q:'タイで つないだ 2分音符《にぶおんぷ》 2つは、何拍《なんぱく》 のばす?', fig:tie, a:'4拍《よんはく》', bad:['2拍《にはく》', '3拍《さんぱく》'], post:function(){ D.play([[M(4), 4]], 90, { click:4, beat:true }); }, ex:'2+2で 4拍《よんはく》。1つの 長い 音に なるよ。' },
             { q:'くりかえし 記号《きごう》の 間《あいだ》は、ぜんぶで 何回 えんそう する?', fig:rep, a:'2回', bad:['1回', '3回'], ex:'もう 1回 くりかえすから 2回。' }]); } }
     ];
-    return { STEPS:STEPS };
+    /* 練習ゲーム: 音符あて(見て 名前を えらぶ・けんばん)と 耳で きく(高い/低い・音の 名前・リズム・強弱) */
+    function drillNotes(){ var q = [], ds = take([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 2, 4, 6], 10);
+      ds.forEach(function(d, i){ q.push(noteQ(d, 0, 11, i % 3 === 2 && d <= 7)); }); return q; }
+    function drillEar(){
+      var q = [];
+      take([[67, 60], [60, 72], [79, 64], [62, 81], [76, 59], [57, 74]], 3).forEach(function(p){ var up = p[1] > p[0];
+        q.push({ q:'2つ目の 音は、1つ目より 高い? 低《ひく》い?', fig:EAR, auto:true, snd:function(){ D.play([[p[0], 1], [null, 0.4], [p[1], 1]], 90); }, a:up ? '高い' : '低《ひく》い', bad:[up ? '低《ひく》い' : '高い'], ex:up ? '2つ目の 方が 高かったね。' : '2つ目の 方が 低《ひく》かったね。' }); });
+      take([0, 1, 2, 3, 4, 5, 6, 7], 3).forEach(function(d){
+        q.push({ q:'聞《き》こえた 音の 名前は? (まず ドを 聞くよ)', fig:EAR, auto:true, snd:function(){ D.play([[M(0), 0.8], [null, 0.4], [M(d), 1]], 90); }, a:NM(d), bad:names(d, 0, 7), ex:'ドの 次に 聞こえたのは ' + NM(d) + '。' }); });
+      q.push(earR(['q', 'e', 'e', 'q', 'q'], [['q', 'q', 'q', 'q'], ['e', 'e', 'q', 'q', 'q']], 'タン・タタ・タン・タン だったね。'));
+      q.push(earR(['q', 'R:q', 'q', 'q'], [['q', 'q', 'q', 'q'], ['q', 'q', 'R:q', 'q']], 'タン・(休み)・タン・タン だったね。'));
+      return sh(q);
+    }
+    return { STEPS:STEPS, drillNotes:drillNotes, drillEar:drillEar };
   })();
 
   /* ===== 音楽の 島: 五線譜の 読み方を 見て・聞いて・クイズ。記録は keisan_gaku.u、コインは まなぶ 共通(1日20) ===== */
@@ -15620,6 +15636,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('okTitle').textContent = '音楽の 島';
       var s = rec(), u = ur(s), all = OK_ALL || u >= STEPS.length;
       var box = $('okMap'); box.innerHTML = '<div class="gk-wallet">'+wallet()+'</div>' + (capped() ? capNote('okCapM', '🎉 ') : '') + '<p class="gk-note" style="text-align:center">'+(all ? '道を ぜんぶ クリアしたね! 下の「もっと くわしく」で ふかく 学ぼう。' : '1ばんから じゅんばんに すすもう。いまは '+(u + 1)+'ばん「'+STEPS[Math.min(u, STEPS.length - 1)].n+'」')+'</p>';
+      var gameOk = OK_ALL || u >= 6;
+      box.insertAdjacentHTML('beforeend', ruby('<div class="ok-games"><button class="btn btn-primary" data-drill="notes"'+(gameOk ? '' : ' disabled')+'>🎼 音符《おんぷ》あて クイズ</button><button class="btn btn-primary" data-drill="ear"'+(gameOk ? '' : ' disabled')+'>👂 耳《みみ》で 聞《き》く クイズ</button>'+(gameOk ? '' : '<small>6ばんを クリアすると あそべるよ</small>')+'</div>'));
       box.appendChild(isle(false));
       box.insertAdjacentHTML('beforeend', '<h3 class="ok-sec">もっと くわしく'+(all ? '' : ' <small>(道を ぜんぶ クリアすると ひらくよ)</small>')+'</h3><div class="gk-menu ok-more'+(all ? '' : ' lock')+'">' + TOPICS.map(function(t){
         return '<button class="gk-sub" data-topic="'+t.k+'"'+(all ? '' : ' disabled')+'><span style="font-size:28px">'+(all ? t.i : '🔒')+'</span><span><b>'+ruby(t.n)+' <small style="display:inline;color:#e0a400;letter-spacing:1px">'+stars(s.u, t.k)+'</small></b><small>'+t.d+'</small></span></button>'; }).join('') + '</div>');
@@ -15655,6 +15673,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       S = { road:i, qs:STEPS[i].quiz(), i:0, ok:0, res:[] };
       show('okPlay'); capP(); ask();
     }
+    function startDrill(kind){
+      S = { drill:kind, qs:(kind === 'ear' ? OkRoad.drillEar() : OkRoad.drillNotes()), i:0, ok:0, res:[] };
+      show('okPlay'); capP(); ask();
+    }
     function start(k){
       var s = rec(), d0 = depth(s.u, k).cur;
       S = { k:k, qs:pick(s.u, k), i:0, ok:0, res:[], d0:d0 };
@@ -15663,7 +15685,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     function capP(){ var o = $('okCapP'); if(o) o.remove(); if(capped()) $('okProg').insertAdjacentHTML('beforebegin', capNote('okCapP')); }
     function ask(){
-      var e = S.qs[S.i], t = S.road != null ? { n:(S.road + 1) + 'ばん ' + STEPS[S.road].n } : tp(S.k);
+      var e = S.qs[S.i], t = S.drill ? { n:S.drill === 'ear' ? '耳《みみ》で 聞《き》く クイズ' : '音符《おんぷ》あて クイズ' } : S.road != null ? { n:(S.road + 1) + 'ばん ' + STEPS[S.road].n } : tp(S.k);
       S.lock = false;
       $('okProg').innerHTML = S.qs.map(function(x, i){ return '<i class="'+(S.res[i] || '')+'"></i>'; }).join('');
       var fig = typeof e.fig === 'function' ? e.fig() : (e.fig || '');
@@ -15726,6 +15748,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           '<button class="btn btn-ghost" id="okToStep">見て・きいて</button> <button class="btn btn-ghost" id="okToMap">島に もどる</button></div>';
         show('okResult');
         if(pass) D.play([[M0(0), 0.25], [M0(2), 0.25], [M0(4), 0.25], [M0(7), 0.75]], 120);
+        return;
+      }
+      if(S.drill){
+        s.day.n += got; s.rounds++; safeSet(KEY, s); if(got > 0) earn(got);
+        $('okResult').innerHTML = '<div class="gk-res"><div class="gk-big">'+S.ok+' / '+S.qs.length+'</div><p>'+(S.ok >= Math.ceil(S.qs.length * 0.8) ? 'すごい! よく できたね 🎉' : 'もう 1回 やって みよう!')+'</p>' +
+          (got < want ? '<div class="gk-cap">'+(got ? 'これで 今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ!' : '今日の まなぶコインは もう '+DAY_CAP+'こ ぜんぶ もらって いるので、今回は 0コインだよ。')+' コインは あした また もらえるよ</div>' : '') +
+          '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン</div><div class="gk-fb">1問 せいかいで 1コイン・今日 '+s.day.n+'/'+DAY_CAP+'</div>' +
+          '<button class="btn btn-primary" id="okAgain">もう1回</button> <button class="btn btn-ghost" id="okToMap">島に もどる</button></div>';
+        show('okResult'); if(S.ok >= Math.ceil(S.qs.length * 0.8)) D.play([[M0(0), 0.25], [M0(2), 0.25], [M0(4), 0.25], [M0(7), 0.75]], 120);
         return;
       }
       s.day.n += got; s.rounds++; safeSet(KEY, s);
@@ -15792,6 +15823,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(!canGo(si)){ toast('まだ ひらいて いないよ。'+(ur() + 1)+'ばんから じゅんばんに すすもう'); return; }
         walk(sp.closest('.isle'), k, function(){ if(k === 'piano') piano(); else step(si); }); return;
       }
+      var dr = t.closest('[data-drill]'); if(dr){ startDrill(dr.getAttribute('data-drill')); return; }
       var tb = t.closest('[data-topic]'); if(tb){ topic(tb.getAttribute('data-topic')); return; }
       if(t.closest('[data-road]')){ startRoad(STEP); return; }
       var ti = t.closest('[data-ti]'); if(ti){ var tl = STEPS[STEP].teach[+ti.getAttribute('data-ti')]; if(tl && tl[2]) tl[2](); return; }
@@ -15802,7 +15834,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(t.closest('[data-snd]')){ var q = S && S.qs[S.i]; if(q && q.snd) q.snd(); else if(q && q.post) q.post(); return; }
       var cb = t.closest('#okCh button'); if(cb){ answer(cb); return; }
       if(t.closest('#okNext')){ S.i++; if(S.i >= S.qs.length) finish(); else ask(); return; }
-      if(t.closest('#okAgain')){ if(S.road != null) startRoad(S.road); else start(S.k); return; }
+      if(t.closest('#okAgain')){ if(S.drill){ startDrill(S.drill); return; } if(S.road != null) startRoad(S.road); else start(S.k); return; }
       if(t.closest('#okToTopic')){ topic(S.k); return; }
       if(t.closest('#okToMap')){ open(); return; }
       var pk = t.closest('#okKb button'); if(pk){ press(pk); return; }
