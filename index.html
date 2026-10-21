@@ -15717,7 +15717,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function open(k){
       $('okTitle').textContent = '音楽の 島';
       var s = rec(), u = ur(s), all = OK_ALL || u >= STEPS.length;
-      var box = $('okMap'); box.innerHTML = '<div class="gk-wallet">'+wallet()+'</div>' + (capped() ? capNote('okCapM', '🎉 ') : '') + '<p class="gk-note" style="text-align:center">'+(all ? '道を ぜんぶ クリアしたね! 下の「もっと くわしく」で ふかく 学ぼう。' : '1ばんから じゅんばんに すすもう。いまは '+(u + 1)+'ばん「'+STEPS[Math.min(u, STEPS.length - 1)].n+'」')+'</p>';
+      var box = $('okMap'); box.innerHTML = '<div class="gk-wallet">'+wallet()+'</div>' + (capped() ? capNote('okCapM', '🎉 ') : '') + '<p class="gk-note" style="text-align:center">'+(all ? '道を ぜんぶ クリアしたね! 下の「もっと くわしく」で ふかく 学ぼう。' : '1ばんから じゅんばんに すすもう。いまは '+(u + 1)+'ばん「'+ruby(STEPS[Math.min(u, STEPS.length - 1)].n)+'」')+'</p>';
       var gameOk = OK_ALL || u >= 6;
       box.insertAdjacentHTML('beforeend', ruby('<div class="ok-games"><button class="btn btn-primary" data-drill="notes"'+(gameOk ? '' : ' disabled')+'>🎼 音符《おんぷ》あて クイズ</button><button class="btn btn-primary" data-drill="keys"'+(gameOk ? '' : ' disabled')+'>🎹 けんばんで あてる クイズ</button><button class="btn btn-primary" data-drill="ear"'+(gameOk ? '' : ' disabled')+'>👂 耳《みみ》で 聞《き》く クイズ</button>'+(gameOk ? '' : '<small>6ばんを クリアすると あそべるよ</small>')+'</div>'));
       box.appendChild(isle(false));
