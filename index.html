@@ -16114,7 +16114,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { k:'gem', n:'キラキラ 宝物《たからもの》', i:'💍', c:'#C9A10C', d:'金・銀《ぎん》・水銀《すいぎん》、宝石《ほうせき》や 砂《すな》の 元素' },
       { k:'fun', n:'光る・ふしぎな なかま', i:'🎆', c:'#8A5BD0', d:'花火の 色・強い 磁石《じしゃく》・宇宙《うちゅう》へ 行った ガス' },
       { k:'name', n:'名前の ひみつ', i:'🌏', c:'#2E9B6B', d:'国や 科学者《かがくしゃ》の 名前が ついた 元素。日本の 元素も!' },
-      { k:'tough', n:'じょうぶな 金属《きんぞく》', i:'🔧', c:'#4F74A8', d:'自転車《じてんしゃ》・工具《こうぐ》・リニアモーターカー。強くて たよれる 金属' }
+      { k:'tough', n:'じょうぶな 金属《きんぞく》', i:'🔧', c:'#4F74A8', d:'自転車《じてんしゃ》・工具《こうぐ》・リニアモーターカー。強くて たよれる 金属' },
+      { k:'denshi', n:'電子《でんし》の 金属《きんぞく》', i:'💡', c:'#3A8FB7', d:'LED・スマホの 画面《がめん》・にじ色の 結晶《けっしょう》。光や 電気で かつやくする なかま' }
     ];
 
     /* r: へや、f: まめちしき、y: キャラの セリフ、q: もんだい、col: [体, おなか, 字]、p: もちもの */
@@ -16352,7 +16353,40 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { s:'Pb', r:'tough', col:['#9CA3B4', '#E2E5EC', '#353B4A'], p:'pencil',
         f:'重《おも》くて やわらかい 金属《きんぞく》。車の バッテリーや、レントゲン室《しつ》で 放射線《ほうしゃせん》を さえぎる かべに 使《つか》われる。「えんぴつ」の しんは、じつは 鉛《なまり》では なく 炭素《たんそ》!',
         y:'えんぴつに 名前が あるのに、しんには いないんだ…。',
-        q:[['「えんぴつ」の 名前に 入って いるけど、しんには 入って いない 金属《きんぞく》は?', ['C']]] }
+        q:[['「えんぴつ」の 名前に 入って いるけど、しんには 入って いない 金属《きんぞく》は?', ['C']]] },
+
+      { s:'Ga', r:'denshi', col:['#D8DEE8', '#F4F6FA', '#4A5670'], p:'led', led:'#3D7BFF',
+        f:'約《やく》30℃で とけるので、手のひらに のせると とける 金属《きんぞく》。青色LEDの 材料《ざいりょう》に なる。日本で 青色LEDを つくった 研究者《けんきゅうしゃ》たちは ノーベル賞《しょう》を もらった。',
+        y:'手の 上で とろけちゃう〜。',
+        q:[['手のひらに のせると とける 金属《きんぞく》は?', ['Hg', 'Cs', 'Fr']]] },
+      { s:'In', r:'denshi', col:['#C4D8E4', '#EEF5F9', '#2E5A70'], p:'phone',
+        f:'スマホや テレビの 画面《がめん》で、電気を 通す とうめいな まくに 使《つか》われる。',
+        y:'画面《がめん》を さわると、ぼくが 気づくよ。',
+        q:[['スマホの 画面《がめん》の、電気を 通す とうめいな まくに 使《つか》われる 元素《げんそ》は?', ['Ta', 'Si', 'Sn', 'O', 'Zn']]] },
+      { s:'As', r:'denshi', col:['#B8C8A8', '#ECF2E6', '#3E5228'], p:'led', led:'#FF4040',
+        f:'毒《どく》で 有名《ゆうめい》な 元素《げんそ》。でも、赤い LEDや 半導体《はんどうたい》の 材料《ざいりょう》にも なる。',
+        y:'こわいだけじゃ ないよ。LEDにも なるんだ。',
+        q:[['毒《どく》で 有名《ゆうめい》だけど、LEDの 材料《ざいりょう》にも なる 元素《げんそ》は?', ['Ga', 'In', 'Hg', 'Cd', 'Pb']]] },
+      { s:'Se', r:'denshi', col:['#F0C8A0', '#FCEEE0', '#8A4A10'], p:'moon',
+        f:'名前は ギリシャ語《ご》の「月(セレネ)」から。光が 当たると 電気を 通しやすく なるので、むかしの コピー機《き》に 使《つか》われた。',
+        y:'名前は お月さま なんだ。',
+        q:[['名前が「月」と いう 意味《いみ》の 元素《げんそ》は?', ['Te']]] },
+      { s:'Te', r:'denshi', col:['#B8D8F0', '#E8F4FC', '#1E5A8A'], p:'earth',
+        f:'名前は ラテン語《ご》の「地球《ちきゅう》(テルス)」から。周期表《しゅうきひょう》で すぐ 上に いる セレンは「月」。書きかえられる DVDにも 使《つか》われた。',
+        y:'上の セレンが 月で、ぼくが 地球《ちきゅう》だよ。',
+        q:[['名前が「地球《ちきゅう》」と いう 意味《いみ》の 元素《げんそ》は?', ['Se', 'U']]] },
+      { s:'Sb', r:'denshi', col:['#B0B4C0', '#E8E9EE', '#30343E'], p:'paint', paint:'#2E2A3D',
+        f:'古代《こだい》エジプトでは、アンチモンを ふくむ 黒い 石の 粉《こな》を、目もとの お化粧《けしょう》(アイライン)に 使《つか》う ことが あった。今は、ものを もえにくく する ために 使われる。',
+        y:'エジプトの 女王さまの おしゃれ係《がかり》だったよ。',
+        q:[['古代《こだい》エジプトで、目もとの 黒い お化粧《けしょう》に 使《つか》われた ことが ある 元素《げんそ》は?', ['Pb', 'Cu', 'Mn', 'C', 'S']]] },
+      { s:'Cd', r:'denshi', col:['#FFE88A', '#FFF8D6', '#8C6A00'], p:'paint', paint:'#FFC800',
+        f:'絵の具《ぐ》の あざやかな 黄色や 赤(カドミウムイエロー、カドミウムレッド)に 使《つか》われる。体には よくないので、使い方に 気を つける 元素《げんそ》。',
+        y:'絵の具《ぐ》の 黄色は ぼくの 色!',
+        q:[['絵の具《ぐ》の あざやかな 黄色に 使《つか》われる 元素《げんそ》は?', ['S', 'Au', 'Pb', 'Cr', 'Fe', 'Bi', 'V', 'Sb', 'As', 'Ti', 'Ni', 'Zn', 'Ba', 'Sr', 'Co', 'K', 'N', 'O', 'Sn', 'Se', 'U']]] },
+      { s:'Bi', r:'denshi', col:['#F0B8E0', '#FCEAF6', '#8A2A70'], p:'crystal',
+        f:'とかして 固《かた》めると、にじ色に かがやく、かいだんの ような 形の 結晶《けっしょう》が できる。おなかの 薬《くすり》にも 使《つか》われる。',
+        y:'にじ色の かいだん、きれいでしょ?',
+        q:[['にじ色の かいだんの ような 結晶《けっしょう》が できる 元素《げんそ》は?', ['Ir']]] }
     ];
     var BY = {}; ALL.forEach(function(e){ BY[e.sym] = e; });
     CARDS.forEach(function(c){ var e = BY[c.s]; c.z = e.z; c.name = e.name; c.kind = e.kind; e.card = c; });
@@ -16412,7 +16446,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* もちもの(手がき ふう)。ふちは INK、線は まるく */
     var L = ' stroke="'+INK+'" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
     function coin(x, y, r, fill, txt, tc){ return '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+fill+'"'+L+'/><circle cx="'+x+'" cy="'+y+'" r="'+(r-5)+'" fill="none" stroke="'+tc+'" stroke-width="1.5" opacity=".6"/><text x="'+x+'" y="'+(y+r*0.36)+'" text-anchor="middle" font-size="'+(r*0.95)+'" font-weight="900" fill="'+tc+'">'+txt+'</text>'; }
-    function flag(inner){ return '<path d="M158,92 V30"'+L+' fill="none"/><g transform="translate(158 30)">'+inner+'<rect width="38" height="26" fill="none"'+L+'/></g>'; }
+    function flag(inner){ return '<path d="M158,92 V30" stroke="#fff" stroke-width="7" stroke-linecap="round"/><path d="M158,92 V30"'+L+' fill="none"/><g transform="translate(158 30)">'+inner+'<rect width="38" height="26" fill="none"'+L+'/></g>'; }
     var PROPS = {
       sun:function(){ var r = ''; for(var i = 0; i < 8; i++) r += '<path d="M172,22 L172,12" transform="rotate('+(i*45)+' 172 34)" stroke="#FFB020" stroke-width="4" stroke-linecap="round"/>'; return r + '<circle cx="172" cy="34" r="12" fill="#FFD54A"'+L+'/>'; },
       balloon:function(){ return '<path d="M150,140 Q170,110 166,80" fill="none"'+L+'/><ellipse cx="168" cy="56" rx="20" ry="25" fill="#FF7AA8"'+L+'/><path d="M162,82 L174,82 L168,76Z" fill="#FF7AA8"'+L+'/><path d="M158,46 Q160,38 166,36" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>'; },
@@ -16456,11 +16490,18 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       flask:function(){ return '<path d="M166,30 L180,30 L180,52 L194,92 Q196,98 188,98 L158,98 Q150,98 152,92 L166,52Z" fill="#fff"'+L+'/><path d="M158,80 L188,80 L193,94 Q194,96 188,96 L158,96 Q152,96 153,94Z" fill="#C2A2FF"/><circle cx="170" cy="70" r="3" fill="#C2A2FF"/><circle cx="178" cy="62" r="2" fill="#C2A2FF"/>'; },
       hair:function(){ return '<path d="M44,74 Q30,50 52,48 Q48,26 74,34 Q80,14 100,28 Q120,14 126,34 Q152,26 148,48 Q170,50 156,74 Q146,58 128,60 Q114,46 100,56 Q86,46 72,60 Q54,58 44,74Z" fill="#F4F4F4"'+L+'/><path d="M82,124 Q100,116 118,124 Q100,132 82,124Z" fill="#E6E6E6"'+L+'/>'; },
       gem:function(c){ var g = c.gem || '#2FB86A'; return '<path d="M156,46 L164,34 L184,34 L192,46 L174,76 Z" fill="'+g+'"'+L+'/><path d="M156,46 L192,46 M164,34 L170,46 L174,76 M184,34 L178,46 L174,76" fill="none" stroke="'+INK+'" stroke-width="1.6" opacity=".55"/><path d="M166,38 L170,44" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8"/>' + sparkle(196, 28, 7, 0, '#fff'); },
-      bike:function(){ return '<g fill="none"'+L+'><circle cx="156" cy="84" r="11"/><circle cx="190" cy="84" r="11"/><path d="M156,84 L168,64 L184,64 L190,84 M168,64 L174,84 L184,64 M164,58 L172,58 M184,64 L182,56 L190,56"/></g><circle cx="174" cy="84" r="3" fill="'+INK+'"/>'; },
+      bike:function(){ var fr = 'M156,84 L168,64 L184,64 L190,84 M168,64 L174,84 L184,64 M164,58 L172,58 M184,64 L182,56 L190,56';
+        return '<g fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="156" cy="84" r="11" stroke="#fff" stroke-width="8"/><circle cx="190" cy="84" r="11" stroke="#fff" stroke-width="8"/><path d="'+fr+'" stroke="#fff" stroke-width="8"/>' +
+          '<circle cx="156" cy="84" r="11" stroke="'+INK+'" stroke-width="4"/><circle cx="190" cy="84" r="11" stroke="'+INK+'" stroke-width="4"/><path d="'+fr+'" stroke="#E0503C" stroke-width="4"/></g><circle cx="174" cy="84" r="3" fill="'+INK+'"/>'; },
       wrench:function(){ return '<g transform="rotate(40 172 60)"><rect x="166" y="46" width="12" height="52" rx="5" fill="#AAB4C0"'+L+'/><path d="M160,30 A14,14 0 1 0 184,30 L178,30 L178,40 L166,40 L166,30 Z" fill="#AAB4C0"'+L+'/></g>'; },
       train:function(){ return '<path d="M144,84 Q144,52 176,48 L196,48 L196,84 Z" fill="#fff"'+L+'/><path d="M150,66 Q156,56 170,56 L170,66 Z" fill="#7CC4FF"'+L+'/><rect x="176" y="56" width="12" height="10" rx="2" fill="#7CC4FF"'+L+'/><path d="M144,78 L196,78" stroke="#3D7BE0" stroke-width="4"/><path d="M140,96 L200,96"'+L+'/><path d="M150,90 q4,-4 8,0 M176,90 q4,-4 8,0" fill="none" stroke="#9FD8FF" stroke-width="3" stroke-linecap="round"/>'; },
       leaf:function(){ return '<path d="M156,92 Q150,48 192,34 Q198,80 156,92Z" fill="#7CC760"'+L+'/><path d="M158,88 Q172,64 188,42" fill="none" stroke="#3D8F45" stroke-width="2.5" stroke-linecap="round"/>'; },
-      phone:function(){ return '<rect x="158" y="30" width="30" height="54" rx="7" fill="#2E2A3D"'+L+'/><rect x="162" y="38" width="22" height="38" rx="3" fill="#9FD8FF"/><circle cx="173" cy="80" r="2" fill="#fff"/><path d="M166,48 L180,48 M166,56 L176,56 M166,64 L178,64" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>'; },
+      phone:function(){ return '<rect x="158" y="30" width="30" height="54" rx="7" fill="#5A6075"'+L+'/><rect x="162" y="38" width="22" height="38" rx="3" fill="#9FD8FF"/><circle cx="173" cy="80" r="2" fill="#fff"/><path d="M166,48 L180,48 M166,56 L176,56 M166,64 L178,64" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>'; },
+      led:function(c){ var g = c.led || '#3D7BFF'; return '<circle cx="173" cy="44" r="22" fill="'+g+'" opacity=".25"/><path d="M162,62 L162,40 A11,11 0 0 1 184,40 L184,62 Z" fill="'+g+'"'+L+'/><rect x="158" y="62" width="30" height="7" rx="2" fill="#C9D2DC"'+L+'/><path d="M166,69 V90 M180,69 V84" stroke="#fff" stroke-width="7" stroke-linecap="round"/><path d="M166,69 V90 M180,69 V84" stroke="#8E97A6" stroke-width="3.5" stroke-linecap="round"/><path d="M166,40 Q168,34 172,32" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/>'; },
+      moon:function(){ return '<path d="M184,30 A26,26 0 1 0 184,82 A34,34 0 0 1 184,30 Z" fill="#FFE06A"'+L+'/>' + sparkle(144, 34, 7, 0, '#FFE06A') + sparkle(196, 92, 6, -1, '#FFE06A'); },
+      earth:function(){ return '<circle cx="172" cy="56" r="22" fill="#5BB8F0"'+L+'/><path d="M158,44 Q166,38 170,46 Q164,54 172,60 Q166,70 158,64 Q152,54 158,44Z M178,40 Q190,42 190,52 Q182,54 178,48Z M180,66 Q188,64 190,70 Q184,76 178,72Z" fill="#7CC760"/>'; },
+      paint:function(c){ var g = c.paint || '#FFC800'; return '<path d="M150,56 Q150,32 176,32 Q200,32 200,54 Q200,70 186,68 Q176,66 176,76 Q176,90 162,88 Q150,84 150,56Z" fill="#F4E1BE"'+L+'/><circle cx="164" cy="48" r="6" fill="'+g+'"/><circle cx="182" cy="44" r="5" fill="#E0503C"/><circle cx="190" cy="56" r="4" fill="#3D7BE0"/><circle cx="162" cy="66" r="4" fill="'+INK+'" opacity=".25"/>'; },
+      crystal:function(){ var cols = ['#FF7AA8', '#FFC53D', '#7CE0C0', '#7CA8FF', '#C29BFF'], r = ''; for(var i = 0; i < 4; i++){ var x = 150 + i * 6, y = 92 - i * 14, w = 44 - i * 12; r += '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="14" fill="'+cols[i]+'"'+L+'/>'; } return r + sparkle(196, 30, 8, 0, '#FFC53D'); },
       table:function(){ var g = ''; [[0,0],[3,0],[0,1],[1,1],[2,1],[3,1],[0,2],[1,2],[2,2],[3,2]].forEach(function(p){ g += '<rect x="'+(152+p[0]*11)+'" y="'+(34+p[1]*11)+'" width="10" height="10" rx="2" fill="'+['#FFB59A','#BFE3FF','#CFEFC8','#E2D4FF'][(p[0]+p[1])%4]+'" stroke="'+INK+'" stroke-width="1.6"/>'; }); return g; }
     };
     var FRONT = { glasses:1, crown:1, hair:1 }, BACK = { glow:1, pool:0 };
