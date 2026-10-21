@@ -15588,7 +15588,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       q.push(earR(['q', 'R:q', 'q', 'q'], [['q', 'q', 'q', 'q'], ['q', 'q', 'R:q', 'q']], 'タン・(休み)・タン・タン だったね。'));
       return sh(q);
     }
-    return { STEPS:STEPS, drillNotes:drillNotes, drillEar:drillEar };
+    /* けんばんで あてる: 楽譜《がくふ》を 見て ひく・聞《き》いて ひく・♯《シャープ》の 音を 黒い けんばんで */
+    function drillKeys(){
+      var q = [];
+      take([0, 1, 2, 3, 4, 5, 6, 7], 4).forEach(function(d){ q.push({ q:'この 音を けんばんで ひいてね', fig:one(d), kb:true, kd:[d], post:function(){ D.tone(M(d), 0, 0.8); }, ex:NM(d) + 'は ' + where(d) + '。' }); });
+      take([1, 2, 3, 4, 5, 6, 7], 4).forEach(function(d){ q.push({ q:'まず ドが 鳴《な》るよ。次に 聞《き》こえた 音を けんばんで ひいてね', fig:EAR, auto:true, snd:function(){ D.play([[M(0), 0.8], [null, 0.4], [M(d), 1]], 90); }, kb:true, kd:[d], ex:'ドの 次に 聞《き》こえたのは ' + NM(d) + '。' }); });
+      take([[0, 'ド'], [3, 'ファ'], [4, 'ソ']], 2).forEach(function(p){ q.push({ q:'この 音を けんばんで ひいてね', fig:one(p[0], 'q', { acc:1 }), kb:true, kd:[], kbk:[p[0]], post:function(){ D.tone(M(p[0], 1), 0, 0.8); }, ex:p[1] + '♯は ' + p[1] + 'の すぐ 右の 黒い けんばん。' }); });
+      return sh(q);
+    }
+    return { STEPS:STEPS, drillNotes:drillNotes, drillEar:drillEar, drillKeys:drillKeys };
   })();
 
   /* ===== 音楽の 島: 五線譜の 読み方を 見て・聞いて・クイズ。記録は keisan_gaku.u、コインは まなぶ 共通(1日20) ===== */
@@ -15711,7 +15719,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var s = rec(), u = ur(s), all = OK_ALL || u >= STEPS.length;
       var box = $('okMap'); box.innerHTML = '<div class="gk-wallet">'+wallet()+'</div>' + (capped() ? capNote('okCapM', '🎉 ') : '') + '<p class="gk-note" style="text-align:center">'+(all ? '道を ぜんぶ クリアしたね! 下の「もっと くわしく」で ふかく 学ぼう。' : '1ばんから じゅんばんに すすもう。いまは '+(u + 1)+'ばん「'+STEPS[Math.min(u, STEPS.length - 1)].n+'」')+'</p>';
       var gameOk = OK_ALL || u >= 6;
-      box.insertAdjacentHTML('beforeend', ruby('<div class="ok-games"><button class="btn btn-primary" data-drill="notes"'+(gameOk ? '' : ' disabled')+'>🎼 音符《おんぷ》あて クイズ</button><button class="btn btn-primary" data-drill="ear"'+(gameOk ? '' : ' disabled')+'>👂 耳《みみ》で 聞《き》く クイズ</button>'+(gameOk ? '' : '<small>6ばんを クリアすると あそべるよ</small>')+'</div>'));
+      box.insertAdjacentHTML('beforeend', ruby('<div class="ok-games"><button class="btn btn-primary" data-drill="notes"'+(gameOk ? '' : ' disabled')+'>🎼 音符《おんぷ》あて クイズ</button><button class="btn btn-primary" data-drill="keys"'+(gameOk ? '' : ' disabled')+'>🎹 けんばんで あてる クイズ</button><button class="btn btn-primary" data-drill="ear"'+(gameOk ? '' : ' disabled')+'>👂 耳《みみ》で 聞《き》く クイズ</button>'+(gameOk ? '' : '<small>6ばんを クリアすると あそべるよ</small>')+'</div>'));
       box.appendChild(isle(false));
       box.insertAdjacentHTML('beforeend', '<h3 class="ok-sec">もっと くわしく'+(all ? '' : ' <small>(道を ぜんぶ クリアすると ひらくよ)</small>')+'</h3><div class="gk-menu ok-more'+(all ? '' : ' lock')+'">' + TOPICS.map(function(t){
         return '<button class="gk-sub" data-topic="'+t.k+'"'+(all ? '' : ' disabled')+'><span style="font-size:28px">'+(all ? t.i : '🔒')+'</span><span><b>'+ruby(t.n)+' <small style="display:inline;color:#e0a400;letter-spacing:1px">'+stars(s.u, t.k)+'</small></b><small>'+t.d+'</small></span></button>'; }).join('') + '</div>');
@@ -15748,7 +15756,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       show('okPlay'); capP(); ask();
     }
     function startDrill(kind){
-      S = { drill:kind, qs:(kind === 'ear' ? OkRoad.drillEar() : OkRoad.drillNotes()), i:0, ok:0, res:[] };
+      S = { drill:kind, qs:(kind === 'ear' ? OkRoad.drillEar() : kind === 'keys' ? OkRoad.drillKeys() : OkRoad.drillNotes()), i:0, ok:0, res:[] };
       show('okPlay'); capP(); ask();
     }
     function start(k){
@@ -15759,7 +15767,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     function capP(){ var o = $('okCapP'); if(o) o.remove(); if(capped()) $('okProg').insertAdjacentHTML('beforebegin', capNote('okCapP')); }
     function ask(){
-      var e = S.qs[S.i], t = S.drill ? { n:S.drill === 'ear' ? '耳《みみ》で 聞《き》く クイズ' : '音符《おんぷ》あて クイズ' } : S.road != null ? { n:(S.road + 1) + 'ばん ' + STEPS[S.road].n } : tp(S.k);
+      var e = S.qs[S.i], t = S.drill ? { n:{ ear:'耳《みみ》で 聞《き》く クイズ', keys:'けんばんで あてる クイズ' }[S.drill] || '音符《おんぷ》あて クイズ' } : S.road != null ? { n:(S.road + 1) + 'ばん ' + STEPS[S.road].n } : tp(S.k);
       S.lock = false;
       $('okProg').innerHTML = S.qs.map(function(x, i){ return '<i class="'+(S.res[i] || '')+'"></i>'; }).join('');
       var fig = typeof e.fig === 'function' ? e.fig() : (e.fig || '');
