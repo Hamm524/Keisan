@@ -1091,6 +1091,100 @@
   .ok-games .btn{ width:100%; font-size:17px; padding:14px 10px; }
   .ok-games small{ text-align:center; color:#777; font-weight:700; }
 </style>
+<style id="gensoStyle">
+  /* ===== 元素ずかん ===== */
+  #view-genso rt{ font-size:.5em; font-weight:700; }
+  svg.gzp{ display:block; width:100%; height:auto; overflow:visible; }
+  .gzp .p-breathe{ transform-box:view-box; transform-origin:100px 186px; animation:gz-breathe 3.4s ease-in-out infinite; }
+  @keyframes gz-breathe{ 0%,100%{ transform:scale(1,1); } 50%{ transform:scale(1.03,1.05); } }
+  .gzp .eyes{ transform-box:fill-box; transform-origin:center; animation:gz-blink 4.6s infinite; }
+  @keyframes gz-blink{ 0%,92%,100%{ transform:scaleY(1); } 95%{ transform:scaleY(.1); } }
+  .gzp .p-jump{ transform-box:view-box; transform-origin:100px 186px; }
+  .gzp.hop .p-jump{ animation:gz-hop .62s cubic-bezier(.3,.7,.4,1); }
+  @keyframes gz-hop{ 0%{ transform:translateY(0) scale(1,1); } 14%{ transform:translateY(0) scale(1.1,.88); } 42%{ transform:translateY(-30px) scale(.94,1.08); } 66%{ transform:translateY(0) scale(1.08,.92); } 82%{ transform:translateY(-5px); } 100%{ transform:translateY(0); } }
+  .gzp:not(.happy) .face-h, .gzp .face-s{ display:none; }
+  .gzp.happy .face-n{ display:none; }
+  .gzp.sad .face-s{ display:inline; } .gzp.sad .face-n, .gzp.sad .face-h{ display:none; }
+  .gzp.sad .p-jump{ animation:gz-no .55s ease; }
+  @keyframes gz-no{ 20%{ transform:translateX(-7px) rotate(-5deg); } 40%{ transform:translateX(7px) rotate(5deg); } 60%{ transform:translateX(-5px); } 80%{ transform:translateX(4px); } }
+  .gzp .sparkle{ transform-box:fill-box; transform-origin:center; animation:gz-tw 2.2s ease-in-out infinite; }
+  @keyframes gz-tw{ 0%,100%{ transform:scale(.4); opacity:.35; } 50%{ transform:scale(1); opacity:1; } }
+  @media (prefers-reduced-motion: reduce){ .gzp *{ animation:none !important; } }
+
+  .gz-hero{ display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; align-items:end; background:linear-gradient(180deg, #F3EEFF, #FFF8E8); border:2px dashed #C9B6FF; border-radius:22px; padding:12px 14px 10px; margin-bottom:12px; }
+  .gz-hero svg{ max-width:96px; margin:0 auto; cursor:pointer; }
+  .gz-hero p{ grid-column:1 / -1; margin:6px 0 0; font-size:15px; font-weight:700; line-height:1.9; color:#3A3650; }
+  .gz-count{ text-align:center; font-weight:900; font-size:15px; margin:0 0 10px; }
+  .gz-count b{ font-size:22px; color:#8A5BD0; }
+  .gz-room{ border-color:color-mix(in srgb, var(--rc) 45%, var(--line)); }
+  .gz-room .gk-ico{ width:50px; height:50px; flex:none; border-radius:16px; display:grid; place-items:center; background:color-mix(in srgb, var(--rc) 16%, var(--surface)); }
+  .gz-room.lock{ opacity:.6; cursor:default; border-style:dashed; }
+  .gz-dots{ display:flex; gap:4px; align-items:center; margin-top:6px; }
+  .gz-dots i{ width:11px; height:11px; border-radius:50%; background:var(--line); }
+  .gz-dots i.on{ background:var(--rc); }
+  .gz-dots em{ font-style:normal; font-size:12px; color:var(--ink-soft); font-weight:800; margin-left:4px; }
+  .gz-mix{ display:block; width:100%; margin:12px 0 4px; }
+  .gz-sec{ font-size:16px; font-weight:900; margin:18px 2px 6px; }
+  .gz-small{ font-size:12px; }
+
+  .gz-ptw{ overflow-x:auto; -webkit-overflow-scrolling:touch; background:#FFFDF6; border:1.5px solid var(--line); border-radius:16px; padding:8px; margin-bottom:6px; }
+  .gz-pt{ display:grid; grid-template-columns:repeat(18, 38px); grid-template-rows:repeat(7, 42px) 10px 42px 42px; gap:3px; width:max-content; }
+  .gz-c{ position:relative; border:1.5px solid rgba(0,0,0,.08); border-radius:8px; padding:0; font:inherit; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1; color:#3A3650; }
+  .gz-c small{ font-size:8px; opacity:.7; } .gz-c b{ font-size:14px; font-weight:900; margin-top:2px; }
+  .gz-c:not(.has){ opacity:.55; }
+  .gz-c.has:not(.got){ border:1.5px dashed #8A7FA8; }
+  .gz-c.got{ background:#fff !important; border:2px solid #FFC53D; }
+  .gz-c.got svg{ width:36px; height:36px; }
+  .gz-c.here{ box-shadow:0 0 0 3px #FF7AA8; }
+  .gz-c.k-metal, .gz-leg .k-metal{ background:#FFE3CC; } .gz-c.k-non, .gz-leg .k-non{ background:#D6ECFF; }
+  .gz-c.k-semi, .gz-leg .k-semi{ background:#DDF3D6; } .gz-c.k-noble, .gz-leg .k-noble{ background:#E9DEFF; }
+  .gz-lan{ font-size:9px; display:grid; place-items:center; color:var(--ink-soft); background:repeating-linear-gradient(45deg, #FFE3CC, #FFE3CC 4px, #fff 4px, #fff 8px); border-radius:8px; }
+  .gz-leg{ display:flex; flex-wrap:wrap; gap:6px 12px; font-size:12px; font-weight:700; margin:0 2px 8px; }
+  .gz-leg span{ display:flex; align-items:center; gap:4px; } .gz-leg i{ width:14px; height:14px; border-radius:4px; border:1px solid rgba(0,0,0,.12); }
+
+  .gz-rhead{ display:flex; align-items:center; gap:12px; background:var(--surface); border:2px solid color-mix(in srgb, var(--rc) 45%, var(--line)); border-radius:20px; padding:12px 14px; margin-bottom:8px; }
+  .gz-ri{ width:52px; height:52px; flex:none; border-radius:16px; display:grid; place-items:center; font-size:30px; background:color-mix(in srgb, var(--rc) 15%, var(--surface)); }
+  .gz-rhead b{ display:block; font-size:18px; font-weight:900; } .gz-rhead small{ display:block; font-size:13px; color:var(--ink-soft); line-height:1.6; }
+  .gz-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); gap:10px; }
+  .gz-card{ position:relative; background:var(--surface); border:2px solid var(--line); border-radius:18px; padding:8px 6px 10px; font:inherit; color:var(--ink); cursor:pointer; text-align:center; }
+  .gz-card svg{ max-width:84px; margin:0 auto; }
+  .gz-card b{ display:block; font-size:15px; font-weight:900; margin-top:2px; } .gz-card small{ font-size:11px; color:var(--ink-soft); }
+  .gz-card.got{ border-color:#FFC53D; background:color-mix(in srgb, #FFC53D 10%, var(--surface)); }
+  .gz-ck{ position:absolute; top:6px; right:8px; width:24px; height:24px; border-radius:50%; background:#3FA34D; color:#fff; font-weight:900; display:grid; place-items:center; font-size:14px; }
+  .gz-go{ display:block; width:100%; margin:14px 0 4px; }
+
+  .gz-over{ position:fixed; inset:0; z-index:60; background:rgba(30,26,46,.45); display:grid; place-items:center; padding:16px; }
+  .gz-over[hidden]{ display:none; }
+  .gz-sheet{ position:relative; width:min(380px, 100%); max-height:90vh; overflow:auto; background:#FFFDF6; color:#2E2A3D; border-radius:26px; padding:18px 18px 20px; text-align:center; box-shadow:0 12px 40px rgba(0,0,0,.25); }
+  .gz-x{ position:absolute; top:10px; right:12px; width:36px; height:36px; border-radius:50%; border:none; background:#EEEAF6; font-size:20px; font-weight:900; cursor:pointer; color:#2E2A3D; }
+  .gz-big{ position:relative; width:170px; margin:4px auto 0; cursor:pointer; }
+  .gz-say{ position:relative; margin:4px auto 6px; background:#fff; border:2px solid #2E2A3D; border-radius:16px; padding:8px 10px; font-size:14px; font-weight:800; line-height:1.7; }
+  .gz-no{ font-size:13px; font-weight:800; color:#6E6880; } .gz-sym{ font-size:22px; color:#2E2A3D; }
+  .gz-sheet h2{ margin:2px 0 6px; font-size:26px; font-weight:900; }
+  .gz-kind{ display:inline-block; font-size:12px; font-weight:800; padding:4px 10px; border-radius:100px; }
+  .gz-kind.k-metal{ background:#FFE3CC; } .gz-kind.k-non{ background:#D6ECFF; } .gz-kind.k-semi{ background:#DDF3D6; } .gz-kind.k-noble{ background:#E9DEFF; }
+  .gz-fact{ text-align:left; font-size:16px; line-height:2; font-weight:600; margin:10px 0 6px; }
+  .gz-got{ color:#3FA34D; font-weight:900; margin:4px 0 0; } .gz-hint{ font-size:14px; line-height:1.9; color:#6E6880; font-weight:700; margin:10px 0 0; }
+
+  .gz-q{ font-size:19px; font-weight:800; line-height:1.9; }
+  .gz-qn{ display:block; font-size:12px; color:var(--ink-soft); font-weight:700; }
+  .gz-ch button{ display:flex; align-items:center; justify-content:center; gap:6px; flex-direction:column; }
+  .gz-ch.pic button svg{ width:62px; height:62px; }
+  .gz-ch button span{ font-size:16px; line-height:1.4; }
+  .gz-symch{ font-size:30px; font-weight:900; font-family:ui-rounded, sans-serif; }
+  .gz-fbbox{ display:flex; gap:10px; align-items:flex-start; text-align:left; border-radius:18px; padding:10px 12px; margin:12px 0 10px; }
+  .gz-fbbox.ok{ background:color-mix(in srgb, var(--good) 14%, var(--surface)); } .gz-fbbox.ng{ background:color-mix(in srgb, var(--bad) 10%, var(--surface)); }
+  .gz-fbbox svg{ width:76px; flex:none; }
+  .gz-fbbox b{ display:block; font-size:16px; } .gz-fbbox p{ margin:4px 0 0; font-size:15px; line-height:1.9; font-weight:600; }
+
+  .gz-res{ text-align:center; }
+  .gz-res h2{ font-size:24px; margin:6px 0 10px; }
+  .gz-new{ font-weight:900; margin:4px 0; }
+  .gz-newrow{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:0 0 10px; }
+  .gz-newrow span{ width:84px; } .gz-newrow b{ display:block; font-size:13px; }
+  .gz-open{ background:#FFF4D6; border:2px solid #F2B632; border-radius:14px; padding:10px; font-weight:900; }
+  .gz-btns{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:14px; }
+</style>
 </head><body>
 <title>けいさんチャレンジ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2984,6 +3078,24 @@
     </div>
     <div id="okResult" hidden></div>
     <div id="okPiano" hidden></div>
+  </main>
+  <main id="view-genso" class="view" hidden>
+    <div class="shop-head">
+      <button class="icon-btn" id="gzBack" aria-label="もどる">←</button>
+      <h1 id="gzTitle"><ruby>元素<rt>げんそ</rt></ruby>ずかん</h1>
+    </div>
+    <div id="gzTop"></div>
+    <div id="gzRoom" hidden></div>
+    <div id="gzPlay" hidden>
+      <div id="gzCapP"></div>
+      <div class="gk-prog" id="gzProg"></div>
+      <div class="gk-q gz-q" id="gzQ"></div>
+      <div class="gk-ch gz-ch" id="gzCh"></div>
+      <div id="gzFb"></div>
+      <div id="gzNextBox" style="text-align:center"></div>
+    </div>
+    <div id="gzResult" hidden></div>
+    <div id="gzCard" class="gz-over" hidden></div>
   </main>
   <main id="view-gaku" class="view" hidden>
     <div class="shop-head">
@@ -5109,7 +5221,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     speed:{ timerId:null, endAt:0, correct:0, attempted:0, streak:0, maxStreak:0 }
   };
 
-  var views = { gaku:$('view-gaku'), pick:$('view-pick'), setup:$('view-setup'), shop:$('view-shop'), care:$('view-care'), food:$('view-food'), toy:$('view-toy'), mode:$('view-mode'), play:$('view-play'), result:$('view-result'), fish:$('view-fish'), kuri:$('view-kuri'), deci:$('view-deci'), hsl:$('view-hsl'), room:$('view-room'), medal:$('view-medal'), tabi:$('view-tabi'), ongaku:$('view-ongaku') };
+  var views = { gaku:$('view-gaku'), pick:$('view-pick'), setup:$('view-setup'), shop:$('view-shop'), care:$('view-care'), food:$('view-food'), toy:$('view-toy'), mode:$('view-mode'), play:$('view-play'), result:$('view-result'), fish:$('view-fish'), kuri:$('view-kuri'), deci:$('view-deci'), hsl:$('view-hsl'), room:$('view-room'), medal:$('view-medal'), tabi:$('view-tabi'), ongaku:$('view-ongaku'), genso:$('view-genso') };
   function showView(name){
     Object.keys(views).forEach(function(k){ views[k].hidden = (k!==name); });
     window.scrollTo(0,0);
@@ -14530,7 +14642,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function topicStat(cat){ var s = get(), a = topicItems(cat), lvs = [], d = depthOf(cat); a.forEach(function(e){ if(lvs.indexOf(e.lv) < 0) lvs.push(e.lv); }); lvs.sort(); return { n:a.filter(function(e){ return okOf(e, s); }).length, all:a.length, rank:lvs.indexOf(d) + 1, cnt:lvs.length }; }
     function levelMenu(){
       menu();
-      var h = '<button class="gk-sub" data-rika="1"><span class="gk-ico" style="font-size:26px">🔬</span><span><b>理科で 遊ぼう</b><small>体の なかま・元素・電気・植物の じっけん・分子づくり</small></span></button><button class="gk-sub" data-uchu="1"><span class="gk-ico" style="font-size:26px">🔭</span><span><b>宇宙を のぞこう(あそぶ)</b><small>太陽系の ちずと、月の みちかけ。星を タップ!</small></span></button><button class="gk-sub" data-lv="*"><span class="gk-ico" style="font-size:26px">🎲</span><span><b>ぜんぶ まぜる</b><small>すきな ことが きまって いない とき</small></span></button>';
+      var h = '<button class="gk-sub" data-genso="1"><span class="gk-ico" style="font-size:26px">📗</span><span><b>元素ずかん</b><small>118の 元素の 表と 元素キャラ。クイズで ずかんに あつめよう</small></span></button><button class="gk-sub" data-rika="1"><span class="gk-ico" style="font-size:26px">🔬</span><span><b>理科で 遊ぼう</b><small>体の なかま・元素・電気・植物の じっけん・分子づくり</small></span></button><button class="gk-sub" data-uchu="1"><span class="gk-ico" style="font-size:26px">🔭</span><span><b>宇宙を のぞこう(あそぶ)</b><small>太陽系の ちずと、月の みちかけ。星を タップ!</small></span></button><button class="gk-sub" data-lv="*"><span class="gk-ico" style="font-size:26px">🎲</span><span><b>ぜんぶ まぜる</b><small>すきな ことが きまって いない とき</small></span></button>';
       TOPICS.forEach(function(t){
         var st = topicStat(t[0]); if(!st.all) return;
         var stars = ''; for(var i = 1; i <= st.cnt; i++) stars += i <= st.rank ? '★' : '☆';
@@ -14657,6 +14769,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('view-gaku').addEventListener('click', function(e){
       var t = e.target;
       var sub = t.closest('[data-sub]'); if(t.closest('[data-uchu]') && !$('gkMenu').hidden){ openUchu(); return; }
+      if(t.closest('[data-genso]') && !$('gkMenu').hidden){ Genso.open(); return; }
       if(t.closest('[data-rika]') && !$('gkMenu').hidden){ openUchu(RIKA_HTML, '理科で遊ぼう'); return; }
       var lb = t.closest('[data-lv]'); if(lb && !$('gkMenu').hidden){ start('s', lb.getAttribute('data-lv')); return; }
       if(sub && !sub.classList.contains('soon') && !$('gkMenu').hidden){ var k = sub.getAttribute('data-sub'); if(k === 's') levelMenu(); else start(k); return; }
@@ -14805,11 +14918,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---- 教科ごとの 島 ---- 場所: [名前の 先頭, x%, y%, 色, 絵文字(なければ もとの 絵), 表示名, 形] */
     var THEMES = {
       s: { title:'🏝️ 理科の 島', icons:{ '天体':'🪐', '地球':'🌏', '元素':'💎', 'じしゃく':'🧲', '音':'🔔', '電気':'💡', 'もの':'🧪', '体':'🫀', '光':'🔆', '植物':'🌱', 'こん虫':'🐛', '生き物':'🐟', 'ぜんぶ':'🎲' },
-        pick:function(){ return list(':scope > .gk-sub[data-lv], :scope > .gk-sub[data-uchu], :scope > .gk-sub[data-rika]'); },
-        places:[['天体', 50, 9, '#5B6CE0'], ['地球', 80, 20, '#D9654A'], ['元素', 20, 19, '#9B6BE8'], ['じしゃく', 17, 37, '#7A8796'], ['音', 50, 29, '#E9A21C'], ['電気', 83, 39, '#C9A10C'],
+        pick:function(){ return list(':scope > .gk-sub[data-lv], :scope > .gk-sub[data-uchu], :scope > .gk-sub[data-rika], :scope > .gk-sub[data-genso]'); },
+        places:[['天体', 50, 9, '#5B6CE0'], ['地球', 80, 20, '#D9654A'], ['元素ずかん', 79, 82, '#8A5BD0', '📗', '元素ずかん'], ['元素', 20, 19, '#9B6BE8'], ['じしゃく', 17, 37, '#7A8796'], ['音', 50, 29, '#E9A21C'], ['電気', 83, 39, '#C9A10C'],
           ['もの', 52, 48, '#2E9BB5'], ['体', 22, 56, '#E05A7A'], ['光', 86, 60, '#E39B1D'], ['植物', 30, 74, '#3FA34D'], ['こん虫', 63, 70, '#7FAF2A'], ['生き物', 46, 88, '#2F86D9'],
           ['宇宙', 0, 0, '#5B6CE0', '🚀', '宇宙を のぞこう', 'go', 'ロケットで 行く', 'あそびの ページ'], ['理科で', 0, 0, '#2E9B6B', '🔬', '理科で 遊ぼう', 'go', 'けんびきょうで 行く', 'あそびの ページ'], ['ぜんぶ', 20, 95, '#7A8796', '', 'ぜんぶ まぜる', 'side']],
-        roads:[['天体','音'], ['音','元素'], ['音','地球'], ['音','もの'], ['元素','じしゃく'], ['地球','電気'], ['じしゃく','体'], ['電気','光'], ['もの','体'], ['もの','こん虫'], ['体','植物'], ['植物','生き物'], ['こん虫','生き物'], ['光','こん虫']],
+        roads:[['天体','音'], ['音','元素'], ['音','地球'], ['音','もの'], ['元素','じしゃく'], ['地球','電気'], ['じしゃく','体'], ['電気','光'], ['もの','体'], ['もの','こん虫'], ['体','植物'], ['植物','生き物'], ['こん虫','生き物'], ['光','こん虫'], ['こん虫','元素ずかん']],
         bg:function(T){ return svgOpen() +
           '<defs><linearGradient id="isSeaS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fd0f0"/><stop offset="1" stop-color="#3aa2d8"/></linearGradient></defs>' +
           '<rect width="360" height="470" fill="url(#isSeaS)"/>' + waves([[14,60],[300,120],[20,300],[296,430],[150,455]]) +
@@ -15956,6 +16069,545 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(b) walk(m, k, function(){ open(k); }); else open();
     });
     return { open:open, cardHTML:cardHTML, homeRender:homeRender, _items:ITEMS, _steps:STEPS };
+  })();
+
+  /* ===== 元素ずかん: データ(118の 名前と、ずかんに 入る 47の 元素キャラ) =====
+     文の 漢字《かんじ》は ruby() で ルビに なる。q: [もんだい, 答えに まぎらわしい 元素(えらびに 出さない)] */
+  var GzData = (function(){
+    var NAMES = ('H水素《すいそ》 Heヘリウム Liリチウム Beベリリウム Bホウ素《そ》 C炭素《たんそ》 N窒素《ちっそ》 O酸素《さんそ》 Fフッ素《そ》 Neネオン ' +
+      'Naナトリウム Mgマグネシウム Alアルミニウム Siケイ素《そ》 Pリン S硫黄《いおう》 Cl塩素《えんそ》 Arアルゴン Kカリウム Caカルシウム ' +
+      'Scスカンジウム Tiチタン Vバナジウム Crクロム Mnマンガン Fe鉄《てつ》 Coコバルト Niニッケル Cu銅《どう》 Zn亜鉛《あえん》 ' +
+      'Gaガリウム Geゲルマニウム Asヒ素《そ》 Seセレン Br臭素《しゅうそ》 Krクリプトン Rbルビジウム Srストロンチウム Yイットリウム Zrジルコニウム ' +
+      'Nbニオブ Moモリブデン Tcテクネチウム Ruルテニウム Rhロジウム Pdパラジウム Ag銀《ぎん》 Cdカドミウム Inインジウム Snスズ ' +
+      'Sbアンチモン Teテルル Iヨウ素《そ》 Xeキセノン Csセシウム Baバリウム Laランタン Ceセリウム Prプラセオジム Ndネオジム ' +
+      'Pmプロメチウム Smサマリウム Euユウロピウム Gdガドリニウム Tbテルビウム Dyジスプロシウム Hoホルミウム Erエルビウム Tmツリウム Ybイッテルビウム ' +
+      'Luルテチウム Hfハフニウム Taタンタル Wタングステン Reレニウム Osオスミウム Irイリジウム Pt白金《はっきん》 Au金《きん》 Hg水銀《すいぎん》 ' +
+      'Tlタリウム Pb鉛《なまり》 Biビスマス Poポロニウム Atアスタチン Rnラドン Frフランシウム Raラジウム Acアクチニウム Thトリウム ' +
+      'Paプロトアクチニウム Uウラン Npネプツニウム Puプルトニウム Amアメリシウム Cmキュリウム Bkバークリウム Cfカリホルニウム Esアインスタイニウム Fmフェルミウム ' +
+      'Mdメンデレビウム Noノーベリウム Lrローレンシウム Rfラザホージウム Dbドブニウム Sgシーボーギウム Bhボーリウム Hsハッシウム Mtマイトネリウム Dsダームスタチウム ' +
+      'Rgレントゲニウム Cnコペルニシウム Nhニホニウム Flフレロビウム Mcモスコビウム Lvリバモリウム Tsテネシン Ogオガネソン').split(' ');
+    var ALL = NAMES.map(function(t, i){ var m = t.match(/^([A-Z][a-z]?)(.+)$/); return { z:i + 1, sym:m[1], name:m[2] }; });
+    /* なかま: noble=だれとも 手を つながない ガス、non=金属《きんぞく》では ない、semi=金属と そうで ない ものの あいだ、metal=金属 */
+    var NOBLE = [2, 10, 18, 36, 54, 86, 118], NON = [1, 6, 7, 8, 9, 15, 16, 17, 34, 35, 53], SEMI = [5, 14, 32, 33, 51, 52, 85, 117];
+    ALL.forEach(function(e){ e.kind = NOBLE.indexOf(e.z) >= 0 ? 'noble' : NON.indexOf(e.z) >= 0 ? 'non' : SEMI.indexOf(e.z) >= 0 ? 'semi' : 'metal'; });
+
+    /* ずかんの へや(じゅんばんに ひらく) */
+    var ROOMS = [
+      { k:'air', n:'空気《くうき》と 水の なかま', i:'☁️', c:'#3D9BE0', d:'息《いき》を して いる 空気や、水を つくる 元素《げんそ》' },
+      { k:'body', n:'体の 中の なかま', i:'🫀', c:'#E05A7A', d:'わたしたちの 骨《ほね》や 血《ち》を つくる 元素' },
+      { k:'life', n:'くらしの 金属《きんぞく》', i:'🍳', c:'#E07A12', d:'お金や 電池《でんち》や フライパン。まわりに ある 金属' },
+      { k:'gem', n:'キラキラ 宝物《たからもの》', i:'💍', c:'#C9A10C', d:'金・銀《ぎん》・水銀《すいぎん》、宝石《ほうせき》や 砂《すな》の 元素' },
+      { k:'fun', n:'光る・ふしぎな なかま', i:'🎆', c:'#8A5BD0', d:'花火の 色・強い 磁石《じしゃく》・宇宙《うちゅう》へ 行った ガス' },
+      { k:'name', n:'名前の ひみつ', i:'🌏', c:'#2E9B6B', d:'国や 科学者《かがくしゃ》の 名前が ついた 元素。日本の 元素も!' }
+    ];
+
+    /* r: へや、f: まめちしき、y: キャラの セリフ、q: もんだい、col: [体, おなか, 字]、p: もちもの */
+    var CARDS = [
+      { s:'H', r:'air', col:['#FFD3E2', '#FFF1F6', '#D6407A'], p:'sun',
+        f:'いちばん 軽《かる》い 元素《げんそ》で、宇宙《うちゅう》で いちばん 多い。水の 材料《ざいりょう》。太陽《たいよう》は、水素どうしが くっついて ヘリウムに なる ときに 光と 熱《ねつ》を 出して いる。',
+        y:'ぼくが いちばん 軽《かる》いよ! 水の 中にも いるよ。',
+        q:[['宇宙《うちゅう》で いちばん 多い 元素《げんそ》は?'], ['水(H₂O)の 「H」は 何の 元素?']] },
+      { s:'He', r:'air', col:['#FFE7A0', '#FFF8DE', '#B07A00'], p:'balloon',
+        f:'空気より ずっと 軽い ガス。風船《ふうせん》や 飛行船《ひこうせん》を ふわふわ うかせる。だれとも 手を つながない、のんびりやさん。',
+        y:'ふわ〜っと うかぶのが とくいだよ。',
+        q:[['風船《ふうせん》を ふわふわ うかせる ガスは?', ['H']]] },
+      { s:'C', r:'air', col:['#8E8A9E', '#E6E3EE', '#3A3650'], p:'pencil',
+        f:'えんぴつの しん(黒鉛《こくえん》)も、ダイヤモンドも、炭素《たんそ》だけで できて いる。ならび方が ちがうだけ! 生き物の 体の もとにも なる。',
+        y:'えんぴつの しんも ダイヤモンドも、ぼくだよ!',
+        q:[['えんぴつの しんと ダイヤモンド。どちらも 何の 元素で できて いる?']] },
+      { s:'N', r:'air', col:['#C9B6FF', '#F1EBFF', '#6A48D1'], p:'chips',
+        f:'空気の 約《やく》78%は 窒素《ちっそ》で、いちばん 多い。ポテトチップスの ふくろには 窒素が つめて あって、中身《なかみ》が しけにくい。',
+        y:'空気の 中では ぼくが いちばん 多いよ!',
+        q:[['空気の 中で いちばん 多い 元素《げんそ》は?', ['O']], ['ポテトチップスの ふくろに つめて ある、空気で いちばん 多い ガスは?']] },
+      { s:'O', r:'air', col:['#9ED8FF', '#E3F4FF', '#2B79C2'], p:'fire',
+        f:'空気の 約《やく》21%。息《いき》を すうと 体に 入って、エネルギーを つくるのに 使われる。ものが もえる ときにも ひつよう。',
+        y:'息《いき》を すうと、肺《はい》から 入って くるよ!',
+        q:[['ものが もえる ときに ひつような、空気の 中の 元素《げんそ》は?', ['N']], ['息を すうと 体に とり入れて いる 元素は?', ['N']]] },
+      { s:'Ne', r:'air', col:['#FFB59A', '#FFE9DF', '#D0451B'], p:'glow', glow:'#FF6A3D',
+        f:'電気を 通すと、あざやかな 赤オレンジ色に かがやく ガス。むかしの 光る 看板《かんばん》「ネオンサイン」の 名前の もと。',
+        y:'電気を 通すと、ぴかーっと 赤く 光るよ。',
+        q:[['電気を 通すと 赤オレンジ色に 光る、看板《かんばん》の 名前にも なった ガスは?']] },
+      { s:'Ar', r:'air', col:['#D9CCFF', '#F4F0FF', '#6A48D1'], p:'bulb',
+        f:'空気に 約《やく》1% 入って いる。だれとも くっつかないので、電球《でんきゅう》の 中に 入れて、光る 線《せん》を まもる。名前は「なまけもの」と いう 意味《いみ》。',
+        y:'だれとも くっつかない、のんびりやだよ。',
+        q:[['空気に 約《やく》1% 入って いる、名前が「なまけもの」と いう 意味《いみ》の ガスは?', ['He', 'Ne']]] },
+
+      { s:'Ca', r:'body', col:['#F3E6C4', '#FFFAEE', '#9C7A2B'], p:'milk',
+        f:'骨《ほね》や 歯《は》の 材料《ざいりょう》。牛乳《ぎゅうにゅう》や 小魚に 多い。貝がらや チョークにも 入って いる。',
+        y:'骨《ほね》や 歯《は》は ぼくで できて いるよ!',
+        q:[['骨《ほね》や 歯《は》を つくる、牛乳《ぎゅうにゅう》に 多い 元素《げんそ》は?', ['P']]] },
+      { s:'P', r:'body', col:['#FF9E8A', '#FFE4DC', '#B23A22'], p:'match',
+        f:'骨《ほね》や 歯《は》にも 入って いる。マッチ箱《ばこ》の こする ところには、リンの なかま(赤リン)が ぬって ある。',
+        y:'マッチを シュッと するときに 出番《でばん》だよ。',
+        q:[['マッチ箱《ばこ》の こする ところに 使《つか》われる 元素《げんそ》は?']] },
+      { s:'K', r:'body', col:['#FFE06A', '#FFF7CC', '#8C6A00'], p:'banana',
+        f:'バナナや 野菜《やさい》に 多く 入って いる。植物《しょくぶつ》を 育てる ひりょうにも なる。水に 入れると はげしく 反応《はんのう》する 金属《きんぞく》。',
+        y:'バナナの 中にも いるよ!',
+        q:[['バナナに 多く 入って いる 元素《げんそ》は?', ['Mg']]] },
+      { s:'Na', r:'body', col:['#FFC98A', '#FFEFD9', '#B4621A'], p:'salt',
+        f:'塩素《えんそ》と くっつくと、食塩《しょくえん》に なる。むかしの トンネルの オレンジ色の 明かりは、ナトリウムの 光。',
+        y:'塩素《えんそ》くんと 手を つなぐと、おしおに なるよ。',
+        q:[['塩素《えんそ》と くっつくと 食塩《しょくえん》に なる 金属《きんぞく》は?', ['K']]] },
+      { s:'Cl', r:'body', col:['#C8F08A', '#F0FBDD', '#4A8A10'], p:'pool',
+        f:'ナトリウムと くっつくと 食塩《しょくえん》に なる。プールの 水を 消毒《しょうどく》する 薬《くすり》にも、塩素《えんそ》が 入って いる。',
+        y:'プールの 水を きれいに して いるよ。',
+        q:[['プールの 消毒《しょうどく》に 使われ、ナトリウムと くっつくと 食塩《しょくえん》に なる 元素《げんそ》は?']] },
+      { s:'Mg', r:'body', col:['#E6EEF5', '#FFFFFF', '#56718A'], p:'tofu',
+        f:'豆腐《とうふ》を かためる「にがり」に 入って いる。もやすと、目が くらむほど まぶしい 白い 光を 出す。',
+        y:'とうふを かためる おてつだいを して いるよ。',
+        q:[['豆腐《とうふ》を かためる「にがり」に 入って いる 元素《げんそ》は?', ['Ca']]] },
+      { s:'Fe', r:'body', col:['#F4A36C', '#FFE6D3', '#B4521A'], p:'magnet',
+        f:'血《ち》が 赤いのは 鉄《てつ》の おかげで、体中に 酸素《さんそ》を はこぶ。くぎや フライパン、ビルの ほねぐみにも 使われる。磁石《じしゃく》に くっつく。',
+        y:'血《ち》の 中で 酸素《さんそ》を はこんで いるよ!',
+        q:[['血《ち》が 赤いのは、何の 元素《げんそ》の おかげ?'], ['くぎや フライパンに 使われる、磁石《じしゃく》に くっつく 金属《きんぞく》は?', ['Ni', 'Co', 'Nd']]] },
+      { s:'I', r:'body', col:['#B79AE0', '#EDE3FA', '#5B2E9B'], p:'seaweed',
+        f:'こんぶなどの 海そうに 多い。うがい薬《ぐすり》に 使われる。ヨウ素《そ》液《えき》を でんぷんに つけると、青むらさき色に かわる。',
+        y:'でんぷんに あうと、青むらさきに なっちゃう!',
+        q:[['こんぶに 多く、でんぷんを しらべる 液《えき》にも 使われる 元素《げんそ》は?']] },
+
+      { s:'Al', r:'life', col:['#DDE5EC', '#F7FAFC', '#5E7387'], p:'yen1',
+        f:'軽《かる》くて さびにくい 金属《きんぞく》。1円玉《えんだま》は アルミニウム だけで できて いる。アルミかんや アルミホイルにも。',
+        y:'1円玉は ぼくだけで できて いるよ!',
+        q:[['1円玉《えんだま》は 何で できて いる?']] },
+      { s:'Cu', r:'life', col:['#E8956A', '#FFE3D3', '#9A4A22'], p:'yen10',
+        f:'電気を よく 通すので、電線《でんせん》に 使われる。10円玉《えんだま》の ほとんどは 銅《どう》。自由の女神《めがみ》の 外がわも 銅で できて いる。',
+        y:'10円玉は、ほとんど ぼくだよ。',
+        q:[['10円玉《えんだま》の ほとんどを しめて いて、電線《でんせん》にも 使われる 金属《きんぞく》は?']] },
+      { s:'Zn', r:'life', col:['#BFD4DC', '#EEF5F8', '#3E6573'], p:'yen5',
+        f:'5円玉《えんだま》は、銅《どう》と 亜鉛《あえん》を まぜた「黄銅《おうどう》」で できて いる。鉄《てつ》の 表面《ひょうめん》に ぬって、さびから まもる(トタン)。',
+        y:'鉄《てつ》くんを さびから まもって いるよ。',
+        q:[['5円玉《えんだま》は、銅《どう》と 何を まぜた 金属《きんぞく》で できて いる?', ['Cu', 'Ni']]] },
+      { s:'Ni', r:'life', col:['#C9D2C0', '#F3F6EF', '#55634A'], p:'yen100',
+        f:'50円玉《えんだま》と 100円玉は、銅《どう》と ニッケルを まぜた 金属《きんぞく》(白銅《はくどう》)で できて いる。ニッケル そのものは 磁石《じしゃく》に くっつく。',
+        y:'100円玉に 入って いるよ。',
+        q:[['100円玉《えんだま》に、銅《どう》と いっしょに 入って いる 金属《きんぞく》は?', ['Cu', 'Zn']]] },
+      { s:'Ti', r:'life', col:['#B8C4E8', '#EDF0FB', '#3B4C8C'], p:'glasses',
+        f:'軽《かる》くて じょうぶで、さびにくい 金属《きんぞく》。めがねの フレームや、飛行機《ひこうき》・ロケットの 部品《ぶひん》に 使われる。',
+        y:'軽《かる》くて つよい、ヒーローみたいでしょ?',
+        q:[['軽《かる》くて じょうぶ。めがねの フレームや 飛行機《ひこうき》に 使われる 金属《きんぞく》は?', ['Al']]] },
+      { s:'Sn', r:'life', col:['#D5D9E0', '#F5F6F8', '#5A6170'], p:'robot',
+        f:'やわらかくて、とけやすい 金属《きんぞく》。電子《でんし》部品《ぶひん》を つなぐ「はんだ」の おもな 材料《ざいりょう》。ブリキの おもちゃは、鉄《てつ》に スズを ぬった もの。',
+        y:'ブリキの ロボットは、ぼくが ぬって あるよ。',
+        q:[['はんだや ブリキに 使われる、とけやすい 金属《きんぞく》は?', ['Zn']]] },
+      { s:'W', r:'life', col:['#A7AFC0', '#E4E7EE', '#3A4152'], p:'bulb',
+        f:'金属《きんぞく》の 中で いちばん とけにくい(約《やく》3400℃)。それで、むかしの 電球《でんきゅう》の 光る 線《せん》(フィラメント)に 使われた。',
+        y:'どんなに 熱《あつ》くても、とけないぞ!',
+        q:[['金属《きんぞく》の 中で いちばん とけにくく、電球《でんきゅう》の 光る 線《せん》に 使われた 元素《げんそ》は?']] },
+      { s:'Li', r:'life', col:['#FFB3C9', '#FFE8EF', '#B2335A'], p:'battery',
+        f:'いちばん 軽《かる》い 金属《きんぞく》。スマホや ゲーム機《き》の 電池《でんち》(リチウムイオン電池)に 使われる。',
+        y:'スマホの 電池の 中で はたらいて いるよ。',
+        q:[['スマホや ゲーム機《き》の 電池《でんち》に 使われる、いちばん 軽《かる》い 金属《きんぞく》は?']] },
+
+      { s:'Au', r:'gem', col:['#FFD54A', '#FFF3BF', '#9C6A00'], p:'crown',
+        f:'ずっと ピカピカで、さびない。とても よく のびて、1グラムで たたみ 1まいくらいの うすい「金ぱく」に なる。',
+        y:'いつまでも ピカピカ、さびないよ!',
+        q:[['ずっと さびなくて、紙《かみ》より うすく のばせる、黄色く かがやく 金属《きんぞく》は?', ['Pt', 'Ag']]] },
+      { s:'Ag', r:'gem', col:['#E3E8EE', '#FFFFFF', '#5E6B7A'], p:'medal',
+        f:'金属《きんぞく》の 中で、電気と 熱《ねつ》を いちばん よく 通す。オリンピックの 金メダルは、じつは 中の ほとんどが 銀《ぎん》で、まわりを 金で おおって いる。',
+        y:'金メダルの 中みは、ないしょで ぼくなんだ。',
+        q:[['金属《きんぞく》の 中で、電気を いちばん よく 通すのは?'], ['オリンピックの 金メダルの 中の ほとんどは 何?', ['Au']]] },
+      { s:'Pt', r:'gem', col:['#D7DCE6', '#F7F8FB', '#4F5A70'], p:'ring',
+        f:'「プラチナ」とも よばれる。さびにくく、ゆびわに 使われる。車の はいきガスを きれいに する 部品《ぶひん》にも 入って いる。',
+        y:'プラチナって よんでね。',
+        q:[['「プラチナ」とも よばれる 金属《きんぞく》は?']] },
+      { s:'Hg', r:'gem', col:['#C9D3DE', '#F0F4F8', '#4C5A6B'], p:'drop',
+        f:'ふつうの 温度《おんど》で 液体《えきたい》の、ただ ひとつの 金属《きんぞく》。むかしは 体温計《たいおんけい》に 使われた。毒《どく》が あるので さわっては だめ。',
+        y:'金属《きんぞく》なのに、とろ〜っと 液体《えきたい》なんだ。',
+        q:[['ふつうの 温度《おんど》で 液体《えきたい》の 金属《きんぞく》は?', ['Br']]] },
+      { s:'Si', r:'gem', col:['#BFD8C8', '#EEF7F1', '#3D6E50'], p:'chip',
+        f:'砂《すな》や 石、ガラスの もと。地球の 岩の 中では、酸素《さんそ》の 次に 多い。コンピューターや スマホの 頭《あたま》(半導体《はんどうたい》)にも なる。',
+        y:'すなの つぶも、コンピューターも、ぼくから できて いるよ。',
+        q:[['砂《すな》や ガラスの もとで、コンピューターの 部品《ぶひん》にも なる 元素《げんそ》は?']] },
+      { s:'S', r:'gem', col:['#FFE84A', '#FFF9C8', '#8C7A00'], p:'onsen',
+        f:'黄色い 石。火山や 温泉《おんせん》の 近くで 見つかる。温泉の「ゆでたまごの ような におい」は、硫黄《いおう》が 入った ガスの におい。',
+        y:'温泉《おんせん》の においは、ぼくの なかまだよ。',
+        q:[['火山や 温泉《おんせん》の 近くで 見つかる、黄色い 元素《げんそ》は?']] },
+      { s:'F', r:'gem', col:['#B6F0E0', '#E8FBF6', '#147A60'], p:'tooth',
+        f:'フッ素《そ》の 入った 歯みがき粉《こ》は、歯を むし歯から まもる。フライパンの こげつかない 表面《ひょうめん》にも 使われる。',
+        y:'歯《は》を むし歯から まもって いるよ!',
+        q:[['歯みがき粉《こ》に 入って いて、歯を むし歯から まもる 元素《げんそ》は?', ['Ca', 'P']]] },
+      { s:'Co', r:'gem', col:['#7FA6F0', '#E1EAFC', '#1F4AA8'], p:'vase',
+        f:'ガラスや 焼《や》き物《もの》を、あざやかな 青に する(コバルトブルー)。電池《でんち》や 強い 磁石《じしゃく》にも 使われる。',
+        y:'あざやかな 青は、ぼくの 色!',
+        q:[['ガラスや 焼《や》き物《もの》を あざやかな 青に する 元素《げんそ》は?']] },
+
+      { s:'Sr', r:'fun', col:['#FF8A8A', '#FFE0E0', '#B21E1E'], p:'firework', fw:'#FF3B3B',
+        f:'花火《はなび》の あざやかな 赤い 色は、ストロンチウムの 色。もやすと 赤く 光る。',
+        y:'夜空に 赤い 花を さかせるよ!',
+        q:[['花火《はなび》の 赤い 色を 出す 元素《げんそ》は?']] },
+      { s:'Ba', r:'fun', col:['#9FE09A', '#E3F7E1', '#2F7A28'], p:'firework', fw:'#36C24A',
+        f:'花火《はなび》の 緑《みどり》色を 出す。おなかの レントゲンの ときに のむ 白い 薬《くすり》(バリウム)にも 入って いる。',
+        y:'花火の 緑《みどり》色は ぼくの 色だよ。',
+        q:[['花火《はなび》の 緑《みどり》色を 出す 元素《げんそ》は?']] },
+      { s:'B', r:'fun', col:['#9FE6D0', '#E2F8F1', '#167A5E'], p:'slime',
+        f:'スライム作りに 使う「ホウ砂《しゃ》」に 入って いる(スライムを 作る ときは、大人と いっしょに。口に 入れては だめ)。熱《ねつ》に 強い ガラスの 材料《ざいりょう》にも なる。',
+        y:'スライムを ぷにぷにに するのが とくい!',
+        q:[['スライム作りに 使う「ホウ砂《しゃ》」に 入って いる 元素《げんそ》は?']] },
+      { s:'Br', r:'fun', col:['#C9744A', '#F6DDCF', '#7A2E10'], p:'drop',
+        f:'金属《きんぞく》では ないのに、ふつうの 温度《おんど》で 液体《えきたい》の ただ ひとつの 元素《げんそ》。赤茶《あかちゃ》色で、名前の とおり 強い においが する。',
+        y:'くさいって 言わないで〜!',
+        q:[['金属《きんぞく》では ないのに、ふつうの 温度《おんど》で 液体《えきたい》の 元素《げんそ》は?', ['Hg']]] },
+      { s:'Nd', r:'fun', col:['#B9A8D8', '#ECE6F6', '#4E3A80'], p:'magnet',
+        f:'鉄《てつ》・ホウ素《そ》と まぜると、とても 強い「ネオジム磁石《じしゃく》」に なる。日本人が 発明《はつめい》した 磁石で、イヤホンや モーターの 中に ある。',
+        y:'小さくても、すごい 力の 磁石《じしゃく》に なるよ!',
+        q:[['日本人が 発明《はつめい》した、とても 強い 磁石《じしゃく》に 使われる 元素《げんそ》は?', ['Fe', 'B', 'Co', 'Ni']]] },
+      { s:'Xe', r:'fun', col:['#A8D8FF', '#E6F4FF', '#1E6AB0'], p:'rocket', glow:'#6FB8FF',
+        f:'電気を 通すと 青白く 光る ガス。小わくせい探査機《たんさき》「はやぶさ」の イオンエンジンで、ふき出す ガスと して 使われた。',
+        y:'はやぶさと いっしょに 宇宙《うちゅう》を 旅《たび》したよ!',
+        q:[['探査機《たんさき》「はやぶさ」の イオンエンジンに 使われた ガスは?']] },
+      { s:'Kr', r:'fun', col:['#D8E0FF', '#F3F5FF', '#3F4DA0'], p:'glow', glow:'#C8D2FF',
+        f:'電気を 通すと 白っぽく 光る ガス。名前は ギリシャ語《ご》の「かくれた もの」から。空気の 中に ほんの 少し かくれて いる。',
+        y:'空気の 中に かくれて いたんだ。見つかっちゃった!',
+        q:[['名前が「かくれた もの」と いう 意味《いみ》の ガスは?', ['Ar']]] },
+      { s:'U', r:'fun', col:['#BFE88A', '#EEF9DE', '#4E7A10'], p:'planet',
+        f:'原子力《げんしりょく》発電の 燃料《ねんりょう》に なる。名前は、天王星《てんのうせい》(ウラヌス)から つけられた。',
+        y:'名前は 天王星から もらったよ。',
+        q:[['天王星《てんのうせい》から 名前が つけられた、原子力《げんしりょく》発電の 燃料《ねんりょう》に なる 元素《げんそ》は?']] },
+
+      { s:'Nh', r:'name', col:['#FFD9D6', '#FFFFFF', '#D0302A'], p:'japan',
+        f:'日本で はじめて 見つけた 元素《げんそ》。理化学研究所《りかがくけんきゅうしょ》の チームが つくりだし、「日本」から 名前を つけた。アジアの 国が 名前を つけた、はじめての 元素。',
+        y:'113ばん、日本生まれの 元素《げんそ》だよ!',
+        q:[['日本で 見つかり、「日本」から 名前が ついた 元素《げんそ》は?']] },
+      { s:'Ge', r:'name', col:['#C8C0B0', '#F2EEE6', '#5A5040'], p:'flagde',
+        f:'名前は ドイツ(むかしの よび名 ゲルマニア)から。メンデレーエフが「こんな 元素《げんそ》が あるはず」と 予想《よそう》して いて、あとから 本当に 見つかった。',
+        y:'ぼくが いることは、見つかる 前から 予想《よそう》されて いたんだ。',
+        q:[['ドイツから 名前が ついた 元素《げんそ》は?']] },
+      { s:'Po', r:'name', col:['#F3B0C0', '#FDE6EC', '#A0284A'], p:'flagpl',
+        f:'キュリー夫人《ふじん》(マリー・キュリー)たちが 見つけ、生まれた 国 ポーランドから 名前を つけた。',
+        y:'マリーさんの ふるさとの 名前なんだ。',
+        q:[['キュリー夫人《ふじん》が、生まれた 国から 名前を つけた 元素《げんそ》は?', ['Cm']]] },
+      { s:'Fr', r:'name', col:['#B9C8F5', '#E9EEFD', '#2A3F9A'], p:'flagfr',
+        f:'名前は フランスから。フランスの 科学者《かがくしゃ》 ペレーが 見つけた。とても めずらしく、すぐに ほかの 元素《げんそ》に かわって しまう。',
+        y:'すぐ いなくなっちゃう、はずかしがりやだよ。',
+        q:[['フランスから 名前が ついた 元素《げんそ》は?']] },
+      { s:'Am', r:'name', col:['#F5C6A8', '#FDEADF', '#9A4A1E'], p:'flagus',
+        f:'名前は アメリカ大陸《たいりく》から。けむりを 見つける 火災《かさい》けいほうきに 使われる ことが ある。',
+        y:'アメリカから 名前を もらったよ。',
+        q:[['アメリカ大陸《たいりく》から 名前が ついた 元素《げんそ》は?']] },
+      { s:'Cm', r:'name', col:['#D8C2F0', '#F3EAFC', '#5A2E9B'], p:'flask',
+        f:'元素《げんそ》の 研究《けんきゅう》を した キュリー夫妻《ふさい》(マリーと ピエール)の 名前から。人の 名前が ついた 元素の ひとつ。',
+        y:'キュリーさん ふうふの 名前だよ。',
+        q:[['キュリー夫妻《ふさい》の 名前が ついた 元素《げんそ》は?', ['Po']]] },
+      { s:'Es', r:'name', col:['#E8E0C8', '#FAF7EE', '#6A5A2A'], p:'hair',
+        f:'有名な 科学者《かがくしゃ》 アインシュタインの 名前から。とても めずらしくて、目に 見えるほど 集めるのも むずかしい。',
+        y:'あの アインシュタイン博士《はかせ》の 名前なんだ!',
+        q:[['科学者《かがくしゃ》 アインシュタインの 名前が ついた 元素《げんそ》は?']] },
+      { s:'Md', r:'name', col:['#F0D08A', '#FCF3DC', '#8A5A00'], p:'table',
+        f:'元素《げんそ》を ならべた「周期表《しゅうきひょう》」を 考えた ロシアの メンデレーエフの 名前から。メンデレーエフは、まだ 見つかって いない 元素まで 予想《よそう》した。',
+        y:'この ずかんの 表《ひょう》を 考えた 人の 名前だよ!',
+        q:[['周期表《しゅうきひょう》を 考えた 人の 名前が ついた 元素《げんそ》は?']] }
+    ];
+    var BY = {}; ALL.forEach(function(e){ BY[e.sym] = e; });
+    CARDS.forEach(function(c){ var e = BY[c.s]; c.z = e.z; c.name = e.name; c.kind = e.kind; e.card = c; });
+    return { ALL:ALL, BY:BY, ROOMS:ROOMS, CARDS:CARDS };
+  })();
+
+  /* ===== 元素ずかん: 元素キャラの 絵(「理科で遊ぼう」の 元素キャラと 同じ かき方。とがった 角の 数 = 手の 数 H1・O2・N3・C4) ===== */
+  var GzDraw = (function(){
+    var INK = '#2E2A3D';
+    var KCOL = { metal:['#FFD9B8', '#FFF1E4', '#B4521A'], non:['#BFE3FF', '#E9F6FF', '#2B79C2'], noble:['#E2D4FF', '#F5F0FF', '#6A48D1'], semi:['#CFEFC8', '#F0FBEE', '#3C7A30'] };
+    function eyesN(y, lx, rx){
+      var d = (-Math.random() * 4).toFixed(2);
+      return '<g class="eyes face-n" style="animation-delay:'+d+'s"><ellipse cx="'+lx+'" cy="'+y+'" rx="10" ry="13" fill="'+INK+'"/><ellipse cx="'+rx+'" cy="'+y+'" rx="10" ry="13" fill="'+INK+'"/>' +
+        '<circle cx="'+(lx-3)+'" cy="'+(y-5)+'" r="3" fill="#fff"/><circle cx="'+(rx-3)+'" cy="'+(y-5)+'" r="3" fill="#fff"/></g>';
+    }
+    function eyesH(y, lx, rx){
+      var s = ' stroke="'+INK+'" stroke-width="5" fill="none" stroke-linecap="round"';
+      return '<g class="face-h"><path d="M'+(lx-10)+','+(y+3)+' Q'+lx+','+(y-13)+' '+(lx+10)+','+(y+3)+'"'+s+'/><path d="M'+(rx-10)+','+(y+3)+' Q'+rx+','+(y-13)+' '+(rx+10)+','+(y+3)+'"'+s+'/></g>';
+    }
+    function eyesS(y, lx, rx){
+      var s = ' stroke="'+INK+'" stroke-width="3.5" fill="none" stroke-linecap="round"';
+      return '<g class="face-s"><ellipse cx="'+lx+'" cy="'+(y+3)+'" rx="7" ry="8" fill="'+INK+'"/><ellipse cx="'+rx+'" cy="'+(y+3)+'" rx="7" ry="8" fill="'+INK+'"/>' +
+        '<path d="M'+(lx-11)+','+(y-10)+' L'+(lx+7)+','+(y-15)+'"'+s+'/><path d="M'+(rx+11)+','+(y-10)+' L'+(rx-7)+','+(y-15)+'"'+s+'/>' +
+        '<path d="M'+(rx+8)+','+(y+12)+' q5,9 0,13 q-5,-4 0,-13 z" fill="#7CC4FF"/></g>';
+    }
+    function face(y, gap){
+      var lx = 100 - gap, rx = 100 + gap;
+      return eyesN(y, lx, rx) + eyesH(y, lx, rx) + eyesS(y, lx, rx) +
+        '<ellipse cx="'+(lx-14)+'" cy="'+(y+16)+'" rx="11" ry="7" fill="#FFB6C8" opacity=".75"/><ellipse cx="'+(rx+14)+'" cy="'+(y+16)+'" rx="11" ry="7" fill="#FFB6C8" opacity=".75"/>' +
+        '<path class="face-n" d="M92,'+(y+22)+' Q100,'+(y+28)+' 108,'+(y+22)+'" stroke="'+INK+'" stroke-width="2.5" fill="none" stroke-linecap="round"/>' +
+        '<path class="face-h" d="M90,'+(y+21)+' Q100,'+(y+37)+' 110,'+(y+21)+' Q100,'+(y+24)+' 90,'+(y+21)+' Z" fill="#C94A63"/>' +
+        '<path class="face-s" d="M90,'+(y+28)+' Q100,'+(y+19)+' 110,'+(y+28)+'" stroke="'+INK+'" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    }
+    function sparkle(x, y, s, delay, color){
+      return '<path class="sparkle" style="animation-delay:'+delay+'s" d="M'+x+','+(y-s)+' Q'+x+','+y+' '+(x+s)+','+y+' Q'+x+','+y+' '+x+','+(y+s)+' Q'+x+','+y+' '+(x-s)+','+y+' Q'+x+','+y+' '+x+','+(y-s)+' Z" fill="'+color+'"/>';
+    }
+    function rounded(points, fill){
+      return '<polygon points="'+points.map(function(p){ return p.join(','); }).join(' ')+'" fill="'+fill+'" stroke="'+fill+'" stroke-width="30" stroke-linejoin="round"/>';
+    }
+    function body(sym, kind, c, p){
+      switch(sym){
+        case 'H': return '<path d="M100,26 C114,58 162,82 162,124 A62,56 0 0 1 38,124 C38,82 86,58 100,26 Z" fill="'+c+'"/>';
+        case 'O': return '<path d="M18,116 Q52,48 100,48 Q148,48 182,116 Q148,180 100,180 Q52,180 18,116 Z" fill="'+c+'"/>';
+        case 'N': return rounded([[100,40],[166,168],[34,168]], c);
+        case 'C': return rounded([[100,36],[168,112],[100,184],[32,112]], c);
+        case 'Fe':
+          var g = ''; for(var i = 0; i < 8; i++) g += '<rect x="88" y="34" width="24" height="30" rx="6" fill="'+c+'" transform="rotate('+(i*45)+' 100 116)"/>';
+          return g + '<circle cx="100" cy="116" r="62" fill="'+c+'"/>';
+        case 'Ca': return '<path d="M42,72 Q42,42 72,42 Q88,42 100,54 Q112,42 128,42 Q158,42 158,72 L152,138 Q150,182 128,182 Q112,182 108,156 Q100,146 92,156 Q88,182 72,182 Q50,182 48,138 Z" fill="'+c+'"/>';
+      }
+      if(p === 'drop') return '<path d="M100,30 C120,70 162,100 162,132 A62,52 0 0 1 38,132 C38,100 80,70 100,30 Z" fill="'+c+'"/><path d="M70,100 Q76,84 86,76" stroke="#fff" stroke-width="7" opacity=".6" fill="none" stroke-linecap="round"/>';
+      if(kind === 'noble') return '<circle cx="100" cy="116" r="60" fill="'+c+'"/><ellipse cx="100" cy="122" rx="92" ry="24" fill="none" stroke="'+c+'" stroke-width="8" opacity=".8"/>';
+      if(kind === 'metal') return '<rect x="38" y="54" width="124" height="126" rx="30" fill="'+c+'"/><rect x="52" y="64" width="40" height="10" rx="5" fill="#fff" opacity=".45"/>';
+      if(kind === 'semi') return rounded([[70,62],[130,62],[160,116],[130,170],[70,170],[40,116]], c);
+      return '<circle cx="100" cy="116" r="64" fill="'+c+'"/>';
+    }
+    /* もちもの(手がき ふう)。ふちは INK、線は まるく */
+    var L = ' stroke="'+INK+'" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
+    function coin(x, y, r, fill, txt, tc){ return '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+fill+'"'+L+'/><circle cx="'+x+'" cy="'+y+'" r="'+(r-5)+'" fill="none" stroke="'+tc+'" stroke-width="1.5" opacity=".6"/><text x="'+x+'" y="'+(y+r*0.36)+'" text-anchor="middle" font-size="'+(r*0.95)+'" font-weight="900" fill="'+tc+'">'+txt+'</text>'; }
+    function flag(inner){ return '<path d="M158,92 V30"'+L+' fill="none"/><g transform="translate(158 30)">'+inner+'<rect width="38" height="26" fill="none"'+L+'/></g>'; }
+    var PROPS = {
+      sun:function(){ var r = ''; for(var i = 0; i < 8; i++) r += '<path d="M172,22 L172,12" transform="rotate('+(i*45)+' 172 34)" stroke="#FFB020" stroke-width="4" stroke-linecap="round"/>'; return r + '<circle cx="172" cy="34" r="12" fill="#FFD54A"'+L+'/>'; },
+      balloon:function(){ return '<path d="M150,140 Q170,110 166,80" fill="none"'+L+'/><ellipse cx="168" cy="56" rx="20" ry="25" fill="#FF7AA8"'+L+'/><path d="M162,82 L174,82 L168,76Z" fill="#FF7AA8"'+L+'/><path d="M158,46 Q160,38 166,36" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>'; },
+      pencil:function(){ return '<g transform="rotate(35 170 70)"><rect x="162" y="30" width="16" height="64" fill="#FFC53D"'+L+'/><path d="M162,94 L170,114 L178,94Z" fill="#F7D9B0"'+L+'/><path d="M167,106 L170,114 L173,106Z" fill="'+INK+'"/><rect x="162" y="22" width="16" height="10" fill="#FF8AA8"'+L+'/></g>' + sparkle(30, 50, 10, 0, '#8FD8FF'); },
+      chips:function(){ return '<path d="M156,40 L190,40 L186,96 L160,96 Z" fill="#FFD54A"'+L+'/><path d="M156,40 l4,-6 l4,6 l4,-6 l4,6 l4,-6 l4,6 l4,-6 l4,6 l4,-6 l2,6" fill="none"'+L+'/><ellipse cx="173" cy="68" rx="9" ry="7" fill="#F2A33A"'+L+'/><text x="173" y="90" text-anchor="middle" font-size="11" font-weight="900" fill="#B4521A">N₂</text>'; },
+      fire:function(){ return '<path d="M172,96 C150,90 150,66 162,54 C162,66 168,68 170,62 C168,48 176,36 184,30 C182,46 196,56 192,76 C190,90 182,96 172,96Z" fill="#FF8A3D"'+L+'/><path d="M172,94 C164,90 164,78 170,72 C172,80 178,80 180,76 C184,86 180,94 172,94Z" fill="#FFD54A"/>'; },
+      glow:function(c){ return '<circle cx="100" cy="116" r="92" fill="'+(c.glow || '#FFD54A')+'" opacity=".22"/><circle cx="100" cy="116" r="78" fill="none" stroke="'+(c.glow || '#FFD54A')+'" stroke-width="4" opacity=".5" stroke-dasharray="6 10"/>' + sparkle(26, 42, 10, 0, c.glow || '#FFD54A') + sparkle(176, 40, 12, -1, c.glow || '#FFD54A'); },
+      bulb:function(){ return '<circle cx="170" cy="46" r="20" fill="#FFF3A6"'+L+'/><path d="M162,52 Q166,40 170,52 Q174,40 178,52" fill="none" stroke="#E0A400" stroke-width="2.5" stroke-linecap="round"/><rect x="161" y="66" width="18" height="14" rx="3" fill="#B9C0CC"'+L+'/>' + sparkle(140, 24, 8, 0, '#FFC53D'); },
+      milk:function(){ return '<path d="M160,52 L160,98 L190,98 L190,52 L184,40 L166,40 Z" fill="#fff"'+L+'/><path d="M166,40 L184,40 L184,32 L166,32Z" fill="#7CC4FF"'+L+'/><rect x="160" y="62" width="30" height="16" fill="#7CC4FF"/><text x="175" y="75" text-anchor="middle" font-size="10" font-weight="900" fill="#fff">MILK</text>'; },
+      match:function(){ return '<g transform="rotate(20 172 70)"><rect x="168" y="44" width="8" height="54" rx="2" fill="#F7D9B0"'+L+'/><ellipse cx="172" cy="42" rx="8" ry="10" fill="#E0503C"'+L+'/></g><path d="M174,26 C166,20 168,10 176,4 C176,12 184,14 182,22 C180,28 176,28 174,26Z" fill="#FF8A3D"/>'; },
+      banana:function(){ return '<path d="M150,40 C170,48 186,74 180,104 C176,108 172,106 172,100 C174,76 162,58 148,48 Z" fill="#FFE06A"'+L+'/><path d="M148,48 L146,38 L152,38Z" fill="#7A5A2A"'+L+'/>'; },
+      salt:function(){ return '<path d="M162,58 L188,58 L186,100 L164,100 Z" fill="#fff"'+L+'/><path d="M162,58 Q175,40 188,58Z" fill="#C9D2DC"'+L+'/><circle cx="170" cy="50" r="1.8" fill="'+INK+'"/><circle cx="176" cy="47" r="1.8" fill="'+INK+'"/><circle cx="181" cy="51" r="1.8" fill="'+INK+'"/><text x="175" y="86" text-anchor="middle" font-size="12" font-weight="900" fill="#B4621A">しお</text>'; },
+      pool:function(){ return '<path d="M14,186 q14,-10 28,0 t28,0 t28,0 t28,0 t28,0 t28,0 t28,0" fill="none" stroke="#5BC0F0" stroke-width="6" stroke-linecap="round"/><circle cx="174" cy="58" r="20" fill="#fff"'+L+'/><path d="M154,58 A20,20 0 0 1 174,38 V58Z" fill="#FF5A5A"/><path d="M194,58 A20,20 0 0 1 174,78 V58Z" fill="#FF5A5A"/><circle cx="174" cy="58" r="8" fill="#C8F0FF"'+L+'/>'; },
+      tofu:function(){ return '<path d="M154,70 L176,60 L198,70 L176,80 Z" fill="#FFFDF4"'+L+'/><path d="M154,70 L154,94 L176,104 L176,80 Z" fill="#F4EEDC"'+L+'/><path d="M198,70 L198,94 L176,104 L176,80 Z" fill="#EDE5CC"'+L+'/>'; },
+      magnet:function(){ return '<path d="M156,40 L156,74 A20,20 0 0 0 196,74 L196,40 L184,40 L184,74 A8,8 0 0 1 168,74 L168,40 Z" fill="#E0503C"'+L+'/><rect x="156" y="34" width="12" height="12" fill="#C9D2DC"'+L+'/><rect x="184" y="34" width="12" height="12" fill="#C9D2DC"'+L+'/>'; },
+      seaweed:function(){ return '<path d="M166,110 C150,90 180,76 164,56 C152,40 170,30 168,18 C186,32 176,48 184,60 C196,80 172,92 184,110 Z" fill="#4E8A3A"'+L+'/>'; },
+      yen1:function(){ return coin(172, 54, 20, '#E3E8EE', '1', '#5E7387'); },
+      yen10:function(){ return coin(172, 54, 20, '#D9875A', '10', '#7A3510'); },
+      yen5:function(){ return '<circle cx="172" cy="54" r="20" fill="#E8C35A"'+L+'/><circle cx="172" cy="54" r="5" fill="#fff"'+L+'/><text x="172" y="44" text-anchor="middle" font-size="9" font-weight="900" fill="#7A5A00">5</text>'; },
+      yen100:function(){ return coin(172, 54, 20, '#DCE0E4', '100', '#4C5560'); },
+      glasses:function(){ return '<g fill="none" stroke="'+INK+'" stroke-width="4"><circle cx="78" cy="92" r="17"/><circle cx="122" cy="92" r="17"/><path d="M95,90 Q100,84 105,90"/><path d="M61,88 L44,80 M139,88 L156,80"/></g>'; },
+      robot:function(){ return '<rect x="158" y="44" width="30" height="26" rx="4" fill="#C9D2DC"'+L+'/><circle cx="167" cy="56" r="3.5" fill="'+INK+'"/><circle cx="179" cy="56" r="3.5" fill="'+INK+'"/><path d="M173,44 V34"'+L+'/><circle cx="173" cy="32" r="4" fill="#E0503C"'+L+'/><rect x="160" y="72" width="26" height="24" rx="3" fill="#AAB4C0"'+L+'/>'; },
+      battery:function(){ return '<rect x="160" y="38" width="28" height="56" rx="6" fill="#7CD992"'+L+'/><rect x="168" y="30" width="12" height="8" rx="2" fill="#AAB4C0"'+L+'/><path d="M176,48 L168,66 L176,66 L170,84 L182,62 L174,62 L180,48Z" fill="#FFE06A"'+L+'/>'; },
+      crown:function(){ return '<path d="M64,58 L72,24 L88,46 L100,18 L112,46 L128,24 L136,58 Z" fill="#FFC53D"'+L+'/><circle cx="100" cy="44" r="5" fill="#E0503C"/><circle cx="78" cy="48" r="3.5" fill="#3D9BE0"/><circle cx="122" cy="48" r="3.5" fill="#3D9BE0"/>' + sparkle(170, 30, 12, 0, '#FFC53D') + sparkle(28, 60, 8, -1.2, '#FFC53D'); },
+      medal:function(){ return '<path d="M162,20 L172,50 L182,20"'+L+' fill="none" stroke-width="6"/><path d="M162,20 L172,50 L182,20" fill="none" stroke="#3D7BE0" stroke-width="3"/><circle cx="172" cy="62" r="16" fill="#FFD54A"'+L+'/><circle cx="172" cy="62" r="9" fill="none" stroke="#C9D2DC" stroke-width="3"/>'; },
+      ring:function(){ return '<ellipse cx="172" cy="66" rx="18" ry="15" fill="none" stroke="'+INK+'" stroke-width="10"/><ellipse cx="172" cy="66" rx="18" ry="15" fill="none" stroke="#E3E8EE" stroke-width="5"/><path d="M164,46 L172,36 L180,46 L172,54 Z" fill="#BFE8FF"'+L+'/>' + sparkle(192, 30, 8, 0, '#8FD8FF'); },
+      drop:function(){ return '<path d="M176,52 C182,62 188,68 188,76 A12,12 0 0 1 164,76 C164,68 170,62 176,52Z" fill="#C9D3DE"'+L+'/>'; },
+      chip:function(){ var p = ''; for(var i = 0; i < 4; i++){ var y = 44 + i * 9; p += '<path d="M152,'+y+' H158 M188,'+y+' H194"'+L+'/>'; } return p + '<rect x="158" y="38" width="30" height="34" rx="3" fill="#3D6E50"'+L+'/><rect x="166" y="47" width="14" height="14" rx="2" fill="#9FD8B0"/>'; },
+      onsen:function(){ return '<path d="M154,84 Q172,98 192,84 L190,94 Q172,106 156,94Z" fill="#7CC4FF"'+L+'/><path d="M160,74 q-6,-10 0,-18 q6,-8 0,-18 M174,74 q-6,-10 0,-18 q6,-8 0,-18 M188,74 q-6,-10 0,-18 q6,-8 0,-18" fill="none" stroke="#FF8AA8" stroke-width="4" stroke-linecap="round"/>'; },
+      tooth:function(){ return '<path d="M156,44 Q156,30 168,32 Q174,34 180,32 Q192,30 192,44 Q192,58 186,66 L184,92 Q182,98 178,92 L174,74 L170,92 Q166,98 164,92 L162,66 Q156,58 156,44Z" fill="#fff"'+L+'/>' + sparkle(146, 30, 8, 0, '#8FD8FF'); },
+      vase:function(){ return '<path d="M164,34 L182,34 L180,44 Q196,58 190,82 Q186,98 173,98 Q160,98 156,82 Q150,58 166,44Z" fill="#2F5FC8"'+L+'/><path d="M160,66 Q173,58 186,66" stroke="#fff" stroke-width="3" fill="none"/><circle cx="173" cy="78" r="5" fill="#fff"/>'; },
+      firework:function(c){ var col = c.fw || '#FF5A5A', r = ''; for(var i = 0; i < 12; i++) r += '<path d="M172,40 L172,16" transform="rotate('+(i*30)+' 172 40)" stroke="'+col+'" stroke-width="4" stroke-linecap="round"/>'; return r + '<circle cx="172" cy="40" r="6" fill="#FFE06A"/>' + sparkle(30, 40, 9, -.6, col); },
+      slime:function(){ return '<path d="M150,100 Q150,70 172,68 Q196,68 196,100 Q186,94 180,102 Q172,94 164,102 Q158,94 150,100Z" fill="#7CE0C0"'+L+'/><circle cx="166" cy="84" r="3" fill="'+INK+'"/><circle cx="180" cy="84" r="3" fill="'+INK+'"/>'; },
+      rocket:function(){ return '<g transform="rotate(30 172 56)"><path d="M172,18 Q186,34 184,70 L160,70 Q158,34 172,18Z" fill="#fff"'+L+'/><circle cx="172" cy="44" r="6" fill="#7CC4FF"'+L+'/><path d="M160,58 L150,76 L160,72Z M184,58 L194,76 L184,72Z" fill="#E0503C"'+L+'/><path d="M164,72 Q172,96 180,72Z" fill="#6FB8FF"/></g>'; },
+      planet:function(){ return '<circle cx="172" cy="48" r="16" fill="#9FE0F0"'+L+'/><ellipse cx="172" cy="48" rx="8" ry="28" fill="none" stroke="'+INK+'" stroke-width="3" transform="rotate(10 172 48)"/>' + sparkle(140, 26, 7, 0, '#FFC53D'); },
+      japan:function(){ return flag('<rect width="38" height="26" fill="#fff"/><circle cx="19" cy="13" r="7" fill="#D0302A"/>'); },
+      flagde:function(){ return flag('<rect width="38" height="9" fill="#2E2A3D"/><rect y="9" width="38" height="8" fill="#D0302A"/><rect y="17" width="38" height="9" fill="#FFC53D"/>'); },
+      flagpl:function(){ return flag('<rect width="38" height="13" fill="#fff"/><rect y="13" width="38" height="13" fill="#D0302A"/>'); },
+      flagfr:function(){ return flag('<rect width="13" height="26" fill="#2A4FB0"/><rect x="13" width="12" height="26" fill="#fff"/><rect x="25" width="13" height="26" fill="#D0302A"/>'); },
+      flagus:function(){ var s = ''; for(var i = 0; i < 7; i++) s += '<rect y="'+(i*3.7)+'" width="38" height="1.9" fill="#D0302A"/>'; return flag('<rect width="38" height="26" fill="#fff"/>' + s + '<rect width="16" height="13" fill="#2A4FB0"/>'); },
+      flask:function(){ return '<path d="M166,30 L180,30 L180,52 L194,92 Q196,98 188,98 L158,98 Q150,98 152,92 L166,52Z" fill="#fff"'+L+'/><path d="M158,80 L188,80 L193,94 Q194,96 188,96 L158,96 Q152,96 153,94Z" fill="#C2A2FF"/><circle cx="170" cy="70" r="3" fill="#C2A2FF"/><circle cx="178" cy="62" r="2" fill="#C2A2FF"/>'; },
+      hair:function(){ return '<path d="M44,74 Q30,50 52,48 Q48,26 74,34 Q80,14 100,28 Q120,14 126,34 Q152,26 148,48 Q170,50 156,74 Q146,58 128,60 Q114,46 100,56 Q86,46 72,60 Q54,58 44,74Z" fill="#F4F4F4"'+L+'/><path d="M82,124 Q100,116 118,124 Q100,132 82,124Z" fill="#E6E6E6"'+L+'/>'; },
+      table:function(){ var g = ''; [[0,0],[3,0],[0,1],[1,1],[2,1],[3,1],[0,2],[1,2],[2,2],[3,2]].forEach(function(p){ g += '<rect x="'+(152+p[0]*11)+'" y="'+(34+p[1]*11)+'" width="10" height="10" rx="2" fill="'+['#FFB59A','#BFE3FF','#CFEFC8','#E2D4FF'][(p[0]+p[1])%4]+'" stroke="'+INK+'" stroke-width="1.6"/>'; }); return g; }
+    };
+    var FRONT = { glasses:1, crown:1, hair:1 }, BACK = { glow:1, pool:0 };
+    function colors(e){ var c = e.card && e.card.col; if(c) return c; return KCOL[e.kind]; }
+    /* e: GzData の 元素。o.sil: シルエット(まだ ゲット して いない) */
+    function draw(e, o){
+      o = o || {};
+      var c = e.card || {}, col = o.sil ? ['#D6D3DE', '#ECEAF1', '#A9A4B8'] : colors(e), p = !o.sil && c.p, sym = e.sym;
+      var size = sym.length > 1 ? 30 : 36, by = sym === 'Ca' ? 132 : sym === 'N' ? 146 : 144, br = sym === 'Ca' ? 24 : 28;
+      var pr = p && PROPS[p] ? PROPS[p](c) : '';
+      return (p && BACK[p] ? pr : '') + body(sym, e.kind, col[0], c.p) +
+        '<circle cx="100" cy="'+by+'" r="'+br+'" fill="'+col[1]+'"/>' +
+        '<text x="100" y="'+(by + size * 0.36)+'" text-anchor="middle" font-size="'+(sym === 'Ca' ? size - 4 : size)+'" font-weight="900" fill="'+col[2]+'" font-family="ui-rounded, Zen Maru Gothic, sans-serif">'+(o.sil ? '?' : sym)+'</text>' +
+        face(sym === 'N' ? 104 : 90, 22) + (p && !BACK[p] ? pr : '');
+    }
+    function svg(e, o){
+      o = o || {};
+      return '<svg class="gzp'+(o.cls ? ' ' + o.cls : '')+'" viewBox="-6 -6 212 212" role="img" aria-label="'+e.sym+'">' +
+        (o.mini ? '' : '<ellipse class="p-shadow" cx="100" cy="190" rx="56" ry="9" fill="'+INK+'" opacity=".08"/>') +
+        '<g class="p-jump"><g class="p-breathe" style="animation-delay:'+(-Math.random() * 3).toFixed(2)+'s">' + draw(e, o) + '</g></g></svg>';
+    }
+    return { svg:svg, KCOL:KCOL };
+  })();
+
+  /* ===== 元素ずかん: 118の 周期表《しゅうきひょう》と 元素キャラ。へやの クイズに せいかいすると キャラが ずかんに 入る。
+     記録は keisan_gaku.gz{got,seen}(合言葉の 保存に のる)、コインは まなぶ 共通の 1日40 ===== */
+  var Genso = (function(){
+    var KEY = 'keisan_gaku', DAY_CAP = 40, MIX = 10, D = GzData, G = GzDraw, OK_ALL = false;
+    var CARDS = D.CARDS, ROOMS = D.ROOMS;
+    var KIND = { metal:'金属《きんぞく》', non:'金属では ない', semi:'金属と そうで ない ものの あいだ', noble:'だれとも 手を つながない ガス' };
+    function ruby(t){ return String(t).replace(/([0-9]*[一-龥々][0-9一-龥々]*)《([^》]+)》/g, '<ruby>$1<rt>$2</rt></ruby>'); }
+    function plain(t){ return String(t).replace(/《[^》]*》/g, ''); }
+    function rec(){ var s = safeGet(KEY) || {}; s.gz = s.gz || {}; s.gz.got = s.gz.got || {}; s.gz.seen = s.gz.seen || {}; s.rounds = s.rounds || 0; if(!s.day || s.day.d !== todayKey()) s.day = { d:todayKey(), n:0 }; return s; }
+    function shuffle(a){ for(var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+    function inRoom(k){ return CARDS.filter(function(c){ return c.r === k; }); }
+    function gotN(s, k){ return inRoom(k).filter(function(c){ return s.gz.got[c.s]; }).length; }
+    function need(k){ return Math.ceil(inRoom(k).length * 0.8); }
+    /* へやは じゅんばんに ひらく: 前の へやの キャラを 8わり あつめると 次へ */
+    function canGo(s, i){ return OK_ALL || i === 0 || gotN(s, ROOMS[i - 1].k) >= need(ROOMS[i - 1].k); }
+    function el(sym){ return D.BY[sym]; }
+    function nm(e){ return ruby(e.name); }
+
+    var S = null, CUR = null;
+    function show(part){ ['gzTop', 'gzRoom', 'gzPlay', 'gzResult'].forEach(function(id){ $(id).hidden = id !== part; }); showView('genso'); window.scrollTo(0, 0); }
+    function capped(){ return rec().day.n >= DAY_CAP; }
+    function capNote(pre){ return '<div class="gk-cap">'+(pre || '')+'今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ! もんだいは とけるけど、コインは あした また もらえるよ</div>'; }
+    function wallet(){ var s = rec(); return '<div class="gk-wallet"><span class="coin"></span><span>いまの コイン <b class="num">'+getCoins()+'</b></span><span class="gk-bar"><i style="width:'+Math.round(s.day.n / DAY_CAP * 100)+'%"></i></span><span>今日 '+s.day.n+'/'+DAY_CAP+'</span></div>'; }
+    function dots(s, k){ return inRoom(k).map(function(c){ return '<i class="'+(s.gz.got[c.s] ? 'on' : '')+'"></i>'; }).join(''); }
+
+    /* ---- 周期表《しゅうきひょう》: [行, 列](ランタノイド・アクチノイドは 下の 2行) ---- */
+    function pos(z){
+      if(z === 1) return [1, 1]; if(z === 2) return [1, 18];
+      if(z <= 10) return [2, z <= 4 ? z - 2 : z + 8]; if(z <= 18) return [3, z <= 12 ? z - 10 : z];
+      if(z <= 36) return [4, z - 18]; if(z <= 54) return [5, z - 36];
+      if(z <= 56) return [6, z - 54]; if(z <= 71) return [9, z - 54]; if(z <= 86) return [6, z - 68];
+      if(z <= 88) return [7, z - 86]; if(z <= 103) return [10, z - 86]; return [7, z - 100];
+    }
+    function table(s, room){
+      var h = '<div class="gz-pt" role="grid" aria-label="周期表">';
+      D.ALL.forEach(function(e){
+        var p = pos(e.z), got = e.card && s.gz.got[e.sym], here = room && e.card && e.card.r === room;
+        h += '<button class="gz-c k-'+e.kind+(got ? ' got' : '')+(e.card ? ' has' : '')+(here ? ' here' : '')+'" data-z="'+e.z+'" style="grid-row:'+p[0]+';grid-column:'+p[1]+'" aria-label="'+e.z+'ばん '+plain(e.name)+'">' +
+          (got ? G.svg(e, { mini:true }) : '<small>'+e.z+'</small><b>'+e.sym+'</b>') + '</button>';
+      });
+      h += '<span class="gz-lan" style="grid-row:6;grid-column:3">57〜71</span><span class="gz-lan" style="grid-row:7;grid-column:3">89〜103</span><span class="gz-gap" style="grid-row:8;grid-column:1"></span></div>';
+      return h;
+    }
+    function legend(){ return '<div class="gz-leg">' + ['metal', 'non', 'semi', 'noble'].map(function(k){ return '<span><i class="k-'+k+'"></i>'+ruby(KIND[k])+'</span>'; }).join('') + '</div>'; }
+
+    /* ---- トップ ---- */
+    function open(){
+      var s = rec(), all = CARDS.filter(function(c){ return s.gz.got[c.s]; }).length;
+      CUR = null;
+      var h = wallet() + (capped() ? capNote('🎉 ') : '') +
+        '<div class="gz-hero">' + G.svg(el('H'), { cls:'gz-hop' }) + G.svg(el('O'), { cls:'gz-hop' }) + G.svg(el('C'), { cls:'gz-hop' }) +
+        '<p>'+ruby('元素《げんそ》は、ものを つくって いる 小さな つぶの しゅるい。今 見つかって いるのは ぜんぶで 118こ。へやの クイズに せいかいすると、元素キャラが ずかんに 入るよ!')+'</p></div>' +
+        '<div class="gz-count">📗 あつめた キャラ <b>'+all+'</b> / '+CARDS.length+'</div>' +
+        '<div class="gk-menu gz-rooms">' + ROOMS.map(function(r, i){
+          var ok = canGo(s, i), n = gotN(s, r.k), m = inRoom(r.k).length;
+          return '<button class="gk-sub gz-room'+(ok ? '' : ' lock')+'" data-room="'+r.k+'" style="--rc:'+r.c+'"'+(ok ? '' : ' disabled')+'><span class="gk-ico" style="font-size:28px">'+(ok ? r.i : '🔒')+'</span><span><b>'+(i + 1)+'. '+ruby(r.n)+'</b><small>'+(ok ? ruby(r.d) : ruby('前の へやで '+need(ROOMS[i - 1].k)+'人 あつめると ひらくよ'))+'</small><span class="gz-dots">'+dots(s, r.k)+' <em>'+n+'/'+m+'</em></span></span></button>';
+        }).join('') + '</div>' +
+        (all >= 4 || OK_ALL ? '<button class="btn btn-primary gz-mix" data-mix="1">🎲 ひらいた へやを ぜんぶ まぜて クイズ('+MIX+'問)</button>' : '') +
+        '<h3 class="gz-sec">'+ruby('周期表《しゅうきひょう》(元素《げんそ》の じゅうしょ)')+'</h3>' +
+        '<p class="gk-note">'+ruby('元素《げんそ》を 軽《かる》い じゅん(ばんごう じゅん)に、にた なかまが たてに そろうように ならべた 表。マスを タップすると 名前が わかるよ。色の ついた キャラは、あつめた なかま。')+'</p>' +
+        legend() + '<div class="gz-ptw">' + table(s) + '</div>' +
+        '<p class="gk-note gz-small">'+ruby('ヨコに スクロール できるよ。57〜71ばんと 89〜103ばんは、表が 長く なりすぎるので 下に 出して いるよ。')+'</p>';
+      $('gzTop').innerHTML = h;
+      show('gzTop');
+    }
+
+    /* ---- へや: キャラを 見て おぼえて、クイズへ ---- */
+    function room(k){
+      CUR = k; var s = rec(), r = ROOMS.filter(function(x){ return x.k === k; })[0], cs = inRoom(k);
+      var h = wallet() + '<div class="gz-rhead" style="--rc:'+r.c+'"><span class="gz-ri">'+r.i+'</span><span><b>'+ruby(r.n)+'</b><small>'+ruby(r.d)+'</small></span></div>' +
+        '<p class="gk-note">'+ruby('キャラを タップして、まめちしきを 読んでね。クイズで せいかいした キャラが ずかんに 入るよ(✓が つく)。')+'</p>' +
+        '<div class="gz-grid">' + cs.map(function(c){ var e = el(c.s); return '<button class="gz-card'+(s.gz.got[c.s] ? ' got' : '')+(s.gz.seen[c.s] ? ' seen' : '')+'" data-z="'+e.z+'">' + G.svg(e) + '<b>'+nm(e)+'</b><small>'+e.sym+' ・ '+e.z+'ばん</small>'+(s.gz.got[c.s] ? '<span class="gz-ck">✓</span>' : '')+'</button>'; }).join('') + '</div>' +
+        '<button class="btn btn-primary gz-go" data-quiz="'+k+'">'+ruby('クイズに ちょうせん('+cs.length+'問)')+'</button>' +
+        '<h3 class="gz-sec">'+ruby('周期表《しゅうきひょう》の どこに いる?')+'</h3><div class="gz-ptw">' + table(s, k) + '</div>';
+      $('gzRoom').innerHTML = h;
+      show('gzRoom');
+    }
+
+    /* ---- キャラの カード(ずかんの ページ) ---- */
+    function card(z){
+      var e = D.ALL[z - 1], c = e.card, s = rec(), got = c && s.gz.got[e.sym];
+      if(c){ s.gz.seen[e.sym] = 1; safeSet(KEY, s); }
+      var inRoomPage = !$('gzRoom').hidden;
+      var r = c && ROOMS.filter(function(x){ return x.k === c.r; })[0];
+      var vis = c && (got || inRoomPage || OK_ALL);
+      var h = '<div class="gz-sheet" role="dialog" aria-modal="true"><button class="gz-x" data-close="1" aria-label="とじる">×</button>' +
+        '<div class="gz-big">' + G.svg(e, { sil:c && !vis, cls:'gz-tap' }) + '<div class="gz-say" hidden></div></div>' +
+        '<div class="gz-no">No.'+e.z+'　<b class="gz-sym">'+e.sym+'</b></div><h2>'+nm(e)+'</h2>' +
+        '<div class="gz-kind k-'+e.kind+'">'+ruby(KIND[e.kind])+'</div>' +
+        (c ? (vis ? '<p class="gz-fact">'+ruby(c.f)+'</p>' + (got ? '<p class="gz-got">✓ ずかんに 入って いるよ</p>' : '<p class="gz-hint">'+ruby('「'+r.n+'」の クイズで せいかいすると、ずかんに 入るよ。')+'</p>')
+                 : '<p class="gz-hint">'+ruby('この キャラは「'+r.n+'」の へやに いるよ。へやで 会《あ》ってみよう!')+'</p>')
+           : '<p class="gz-hint">'+ruby(e.z >= 104 ? 'とても 重《おも》くて、つくっても 一しゅんで こわれて しまう 元素《げんそ》。まだ わからない ことが 多いよ。' : 'この 元素《げんそ》は、まだ ずかんの キャラに なって いないよ。')+'</p>') +
+        '</div>';
+      var box = $('gzCard'); box.innerHTML = h; box.hidden = false;
+      box._say = vis ? c.y : '';
+    }
+    function hop(svgEl, mood){ if(!svgEl) return; svgEl.classList.remove('hop', 'happy', 'sad'); void svgEl.getBoundingClientRect(); svgEl.classList.add(mood === 'sad' ? 'sad' : 'hop'); if(mood !== 'sad') svgEl.classList.add('happy'); setTimeout(function(){ svgEl.classList.remove('hop', 'sad'); }, 900); setTimeout(function(){ svgEl.classList.remove('happy'); }, 1600); }
+
+    /* ---- クイズ ---- */
+    function pool(s){ var out = []; ROOMS.forEach(function(r, i){ if(canGo(s, i)) out = out.concat(inRoom(r.k)); }); return out; }
+    function makeQ(c, s){
+      var e = el(c.s), roomMates = inRoom(c.r).filter(function(x){ return x !== c; }), others = pool(s).filter(function(x){ return x.r !== c.r; });
+      var t = Math.random(), q;
+      if(t < 0.62 || !c.q.length){
+        var qq = c.q[Math.floor(Math.random() * c.q.length)], ex = qq[1] || [];
+        var cand = shuffle(roomMates.filter(function(x){ return ex.indexOf(x.s) < 0; })).concat(shuffle(others.filter(function(x){ return ex.indexOf(x.s) < 0; })));
+        q = { c:c, text:qq[0], kind:'pic', ch:shuffle([c].concat(cand.slice(0, 3))) };
+      } else {
+        var cand2 = shuffle(roomMates).concat(shuffle(others));
+        q = t < 0.81 ? { c:c, text:'記号《きごう》が「'+e.sym+'」の 元素《げんそ》は?', kind:'name', ch:shuffle([c].concat(cand2.slice(0, 3))) }
+                     : { c:c, text:'「'+e.name+'」の 記号《きごう》は?', kind:'sym', ch:shuffle([c].concat(cand2.slice(0, 3))) };
+      }
+      return q;
+    }
+    function start(k){
+      var s = rec(), list;
+      if(k === '*'){ list = shuffle(pool(s).slice()).slice(0, MIX); }
+      else list = shuffle(inRoom(k).slice());
+      S = { k:k, qs:list.map(function(c){ return makeQ(c, s); }), i:0, ok:0, lock:false, newGot:[] };
+      show('gzPlay');
+      $('gzCapP').innerHTML = capped() ? capNote() : '';
+      ask();
+    }
+    function ask(){
+      var q = S.qs[S.i]; S.lock = false;
+      $('gzProg').innerHTML = S.qs.map(function(x, i){ return '<i class="'+(i < S.i ? (x.res ? 'ok' : 'ng') : i === S.i ? 'now' : '')+'"></i>'; }).join('');
+      $('gzQ').innerHTML = '<span class="gz-qn">'+(S.i + 1)+' / '+S.qs.length+'</span>' + ruby(q.text);
+      $('gzCh').className = 'gk-ch gz-ch' + (q.kind === 'pic' ? ' pic' : '');
+      $('gzCh').innerHTML = q.ch.map(function(c, i){
+        var e = el(c.s);
+        return '<button data-i="'+i+'">' + (q.kind === 'pic' ? G.svg(e, { mini:true }) + '<span>'+nm(e)+'</span>' : q.kind === 'name' ? '<span>'+nm(e)+'</span>' : '<b class="gz-symch">'+e.sym+'</b>') + '</button>';
+      }).join('');
+      $('gzFb').innerHTML = ''; $('gzNextBox').innerHTML = '';
+    }
+    function answer(b){
+      if(S.lock) return; S.lock = true;
+      var q = S.qs[S.i], pick = q.ch[+b.getAttribute('data-i')], ok = pick === q.c, e = el(q.c.s), s = rec();
+      Array.prototype.forEach.call($('gzCh').children, function(x, i){ if(q.ch[i] === q.c) x.classList.add('ok'); else if(x === b) x.classList.add('ng'); x.disabled = true; });
+      q.res = ok;
+      if(ok){ S.ok++; if(!s.gz.got[e.sym]){ s.gz.got[e.sym] = 1; S.newGot.push(e.sym); safeSet(KEY, s); } }
+      $('gzFb').innerHTML = '<div class="gz-fbbox '+(ok ? 'ok' : 'ng')+'">' + G.svg(e, { cls:'gz-fbpet' }) +
+        '<div><b>'+(ok ? (S.newGot.indexOf(e.sym) >= 0 ? '⭕ せいかい! '+nm(e)+'が ずかんに 入ったよ!' : '⭕ せいかい!') : '❌ ざんねん。こたえは「'+nm(e)+'('+e.sym+')」')+'</b>' +
+        '<p>'+ruby(q.c.f)+'</p></div></div>';
+      var pet = $('gzFb').querySelector('.gzp'); setTimeout(function(){ hop(pet, ok ? 'ok' : 'sad'); }, 30);
+      $('gzNextBox').innerHTML = '<button class="btn btn-primary" id="gzNext">'+(S.i + 1 >= S.qs.length ? 'けっかを 見る' : 'つぎへ')+'</button>';
+    }
+    function finish(){
+      var s = rec(), n = S.qs.length, good = S.ok >= Math.ceil(n * 0.8), want = S.ok + (good ? 3 : 0), room0 = Math.max(0, DAY_CAP - s.day.n), got = Math.min(want, room0);
+      var idx = -1; ROOMS.forEach(function(r, i){ if(r.k === S.k) idx = i; });
+      var wasOpen = idx >= 0 && idx + 1 < ROOMS.length ? canGo(rec(), idx + 1) : true;
+      s.day.n += got; s.rounds++; safeSet(KEY, s); if(got > 0) earn(got);
+      var s2 = rec(), nowOpen = idx >= 0 && idx + 1 < ROOMS.length && !OK_ALL && !wasOpen && canGo(s2, idx + 1);
+      var h = '<div class="gz-res"><h2>'+S.ok+' / '+n+' もん せいかい!</h2>' +
+        (S.newGot.length ? '<p class="gz-new">'+ruby('あたらしく ずかんに 入った なかま')+'</p><div class="gz-newrow">' + S.newGot.map(function(sym){ var e = el(sym); return '<span>' + G.svg(e, { cls:'gz-hop' }) + '<b>'+nm(e)+'</b></span>'; }).join('') + '</div>' : '') +
+        (nowOpen ? '<p class="gz-open">🎉 '+ruby('つぎの へや「'+ROOMS[idx + 1].n+'」が ひらいたよ!')+'</p>' : '') +
+        '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン'+(good && got >= want ? '(8割 せいかい +3)' : '')+'</div>' +
+        (got < want ? '<div class="gk-cap">'+(got ? 'これで 今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ!' : '今日の まなぶコインは もう '+DAY_CAP+'こ ぜんぶ もらって いるので、今回は 0コインだよ。')+' コインは あした また もらえるよ</div>' : '') +
+        '<div class="gk-fb">1問 せいかいで 1コイン・今日 '+s2.day.n+'/'+DAY_CAP+'</div>' +
+        '<p class="gz-btns"><button class="btn btn-primary" data-again="1">もう1回</button> ' + (S.k !== '*' ? '<button class="btn btn-ghost" data-room="'+S.k+'">へやに もどる</button> ' : '') + '<button class="btn btn-ghost" data-top="1">ずかんの 表紙へ</button></p></div>';
+      $('gzResult').innerHTML = h; show('gzResult');
+      Array.prototype.forEach.call($('gzResult').querySelectorAll('.gzp'), function(p, i){ setTimeout(function(){ hop(p, 'ok'); }, 300 + i * 180); });
+    }
+
+    var view = $('view-genso');
+    view.addEventListener('click', function(e){
+      var t = e.target;
+      if(t.closest('[data-close]') || t.id === 'gzCard'){ $('gzCard').hidden = true; return; }
+      var tap = t.closest('#gzCard .gz-tap');
+      if(tap){ hop(tap, 'ok'); var say = $('gzCard').querySelector('.gz-say'), y = $('gzCard')._say; if(y && say){ say.innerHTML = ruby(y); say.hidden = false; } return; }
+      var zc = t.closest('[data-z]'); if(zc){ card(+zc.getAttribute('data-z')); return; }
+      var rb = t.closest('[data-room]'); if(rb && !rb.disabled){ room(rb.getAttribute('data-room')); return; }
+      var qb = t.closest('[data-quiz]'); if(qb){ start(qb.getAttribute('data-quiz')); return; }
+      if(t.closest('[data-mix]')){ start('*'); return; }
+      var cb = t.closest('#gzCh button'); if(cb){ answer(cb); return; }
+      if(t.closest('#gzNext')){ S.i++; if(S.i >= S.qs.length) finish(); else ask(); return; }
+      if(t.closest('[data-again]')){ start(S.k); return; }
+      if(t.closest('[data-top]')){ open(); return; }
+      var hp = t.closest('.gz-hop'); if(hp) hop(hp, 'ok');
+    });
+    $('gzBack').addEventListener('click', function(){
+      if(!$('gzCard').hidden){ $('gzCard').hidden = true; return; }
+      if(!$('gzPlay').hidden || !$('gzResult').hidden){ if(S && S.k !== '*') room(S.k); else open(); return; }
+      if(!$('gzRoom').hidden){ open(); return; }
+      showView('gaku'); /* 理科の 島へ もどる */
+    });
+    return { open:open, _cards:CARDS };
   })();
 
   /* ---------- backup / restore ---------- */
