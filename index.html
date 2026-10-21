@@ -1184,6 +1184,19 @@
   .gz-newrow span{ width:84px; } .gz-newrow b{ display:block; font-size:13px; }
   .gz-open{ background:#FFF4D6; border:2px solid #F2B632; border-radius:14px; padding:10px; font-weight:900; }
   .gz-btns{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:14px; }
+  .gz-what{ grid-column:1 / -1; margin-top:8px; }
+  .gz-eye{ background:#fff; border:1.5px solid var(--line); font-size:13px; }
+  .gz-go[disabled]{ opacity:.6; }
+  .gz-tdots{ display:flex; gap:5px; justify-content:center; margin:0 0 10px; }
+  .gz-tdots i{ width:10px; height:10px; border-radius:50%; background:var(--line); } .gz-tdots i.on{ background:#C9B6FF; } .gz-tdots i.now{ background:#8A5BD0; transform:scale(1.3); }
+  .gz-tcard{ background:#FFFDF6; color:#2E2A3D; border:2.5px solid color-mix(in srgb, var(--rc, #8A5BD0) 50%, #eee); border-radius:26px; padding:14px 16px 8px; text-align:center; }
+  .gz-tcard h2{ margin:2px 0 6px; font-size:26px; font-weight:900; }
+  .gz-tsay{ display:inline-block; }
+  .gz-pics{ display:flex; justify-content:center; gap:4px; margin:6px 0; } .gz-pics svg{ width:84px; }
+  .gz-eq{ display:flex; align-items:center; justify-content:center; } .gz-eq span{ font-size:28px; font-weight:900; }
+  .gz-ex{ display:flex; align-items:center; justify-content:center; gap:10px; } .gz-ex span{ text-align:left; font-size:22px; font-weight:900; line-height:1.3; } .gz-ex small{ font-size:11px; color:#6E6880; margin-right:6px; }
+  .gz-mini .gz-pt{ grid-template-columns:repeat(18, 14px); grid-template-rows:repeat(7, 16px) 5px 16px 16px; gap:2px; }
+  .gz-mini .gz-c{ pointer-events:none; border-radius:4px; } .gz-mini .gz-c small, .gz-mini .gz-c b, .gz-mini .gz-lan{ font-size:0; } .gz-mini .gz-c svg{ width:14px; height:14px; } .gz-mini{ padding:6px; display:flex; justify-content:center; }
 </style>
 </head><body>
 <title>けいさんチャレンジ</title>
@@ -3086,6 +3099,7 @@
     </div>
     <div id="gzTop"></div>
     <div id="gzRoom" hidden></div>
+    <div id="gzTour" hidden></div>
     <div id="gzPlay" hidden>
       <div id="gzCapP"></div>
       <div class="gk-prog" id="gzProg"></div>
@@ -14644,6 +14658,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       menu();
       var h = '<button class="gk-sub" data-genso="1"><span class="gk-ico" style="font-size:26px">📗</span><span><b>元素ずかん</b><small>118の 元素の 表と 元素キャラ。クイズで ずかんに あつめよう</small></span></button><button class="gk-sub" data-rika="1"><span class="gk-ico" style="font-size:26px">🔬</span><span><b>理科で 遊ぼう</b><small>体の なかま・元素・電気・植物の じっけん・分子づくり</small></span></button><button class="gk-sub" data-uchu="1"><span class="gk-ico" style="font-size:26px">🔭</span><span><b>宇宙を のぞこう(あそぶ)</b><small>太陽系の ちずと、月の みちかけ。星を タップ!</small></span></button><button class="gk-sub" data-lv="*"><span class="gk-ico" style="font-size:26px">🎲</span><span><b>ぜんぶ まぜる</b><small>すきな ことが きまって いない とき</small></span></button>';
       TOPICS.forEach(function(t){
+        if(t[0] === '元素') return; /* 元素ずかんに まとめた */
         var st = topicStat(t[0]); if(!st.all) return;
         var stars = ''; for(var i = 1; i <= st.cnt; i++) stars += i <= st.rank ? '★' : '☆';
         h += '<button class="gk-sub" data-lv="'+t[0]+'"><span class="gk-ico" style="font-size:26px">'+t[1]+'</span><span><b>'+t[0]+'</b><small>せいかい '+st.n+' / '+st.all+' もん ・ ふかさ '+stars+(st.cnt > 1 && st.rank >= st.cnt ? ' ・ぜんぶ ひらいたよ' : '')+'</small></span></button>';
@@ -14919,10 +14934,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var THEMES = {
       s: { title:'🏝️ 理科の 島', icons:{ '天体':'🪐', '地球':'🌏', '元素':'💎', 'じしゃく':'🧲', '音':'🔔', '電気':'💡', 'もの':'🧪', '体':'🫀', '光':'🔆', '植物':'🌱', 'こん虫':'🐛', '生き物':'🐟', 'ぜんぶ':'🎲' },
         pick:function(){ return list(':scope > .gk-sub[data-lv], :scope > .gk-sub[data-uchu], :scope > .gk-sub[data-rika], :scope > .gk-sub[data-genso]'); },
-        places:[['天体', 50, 9, '#5B6CE0'], ['地球', 80, 20, '#D9654A'], ['元素ずかん', 79, 82, '#8A5BD0', '📗', '元素ずかん'], ['元素', 20, 19, '#9B6BE8'], ['じしゃく', 17, 37, '#7A8796'], ['音', 50, 29, '#E9A21C'], ['電気', 83, 39, '#C9A10C'],
+        places:[['天体', 50, 9, '#5B6CE0'], ['地球', 80, 20, '#D9654A'], ['元素', 20, 19, '#9B6BE8', '📗', '元素ずかん'], ['じしゃく', 17, 37, '#7A8796'], ['音', 50, 29, '#E9A21C'], ['電気', 83, 39, '#C9A10C'],
           ['もの', 52, 48, '#2E9BB5'], ['体', 22, 56, '#E05A7A'], ['光', 86, 60, '#E39B1D'], ['植物', 30, 74, '#3FA34D'], ['こん虫', 63, 70, '#7FAF2A'], ['生き物', 46, 88, '#2F86D9'],
           ['宇宙', 0, 0, '#5B6CE0', '🚀', '宇宙を のぞこう', 'go', 'ロケットで 行く', 'あそびの ページ'], ['理科で', 0, 0, '#2E9B6B', '🔬', '理科で 遊ぼう', 'go', 'けんびきょうで 行く', 'あそびの ページ'], ['ぜんぶ', 20, 95, '#7A8796', '', 'ぜんぶ まぜる', 'side']],
-        roads:[['天体','音'], ['音','元素'], ['音','地球'], ['音','もの'], ['元素','じしゃく'], ['地球','電気'], ['じしゃく','体'], ['電気','光'], ['もの','体'], ['もの','こん虫'], ['体','植物'], ['植物','生き物'], ['こん虫','生き物'], ['光','こん虫'], ['こん虫','元素ずかん']],
+        roads:[['天体','音'], ['音','元素'], ['音','地球'], ['音','もの'], ['元素','じしゃく'], ['地球','電気'], ['じしゃく','体'], ['電気','光'], ['もの','体'], ['もの','こん虫'], ['体','植物'], ['植物','生き物'], ['こん虫','生き物'], ['光','こん虫']],
         bg:function(T){ return svgOpen() +
           '<defs><linearGradient id="isSeaS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fd0f0"/><stop offset="1" stop-color="#3aa2d8"/></linearGradient></defs>' +
           '<rect width="360" height="470" fill="url(#isSeaS)"/>' + waves([[14,60],[300,120],[20,300],[296,430],[150,455]]) +
@@ -16441,7 +16456,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function nm(e){ return ruby(e.name); }
 
     var S = null, CUR = null;
-    function show(part){ ['gzTop', 'gzRoom', 'gzPlay', 'gzResult'].forEach(function(id){ $(id).hidden = id !== part; }); showView('genso'); window.scrollTo(0, 0); }
+    function show(part){ ['gzTop', 'gzRoom', 'gzTour', 'gzPlay', 'gzResult'].forEach(function(id){ $(id).hidden = id !== part; }); showView('genso'); window.scrollTo(0, 0); }
     function capped(){ return rec().day.n >= DAY_CAP; }
     function capNote(pre){ return '<div class="gk-cap">'+(pre || '')+'今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ! もんだいは とけるけど、コインは あした また もらえるよ</div>'; }
     function wallet(){ var s = rec(); return '<div class="gk-wallet"><span class="coin"></span><span>いまの コイン <b class="num">'+getCoins()+'</b></span><span class="gk-bar"><i style="width:'+Math.round(s.day.n / DAY_CAP * 100)+'%"></i></span><span>今日 '+s.day.n+'/'+DAY_CAP+'</span></div>'; }
@@ -16471,9 +16486,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function open(){
       var s = rec(), all = CARDS.filter(function(c){ return s.gz.got[c.s]; }).length;
       CUR = null;
+      if(!s.gz.intro){ intro(0); return; }
       var h = wallet() + (capped() ? capNote('🎉 ') : '') +
         '<div class="gz-hero">' + G.svg(el('H'), { cls:'gz-hop' }) + G.svg(el('O'), { cls:'gz-hop' }) + G.svg(el('C'), { cls:'gz-hop' }) +
-        '<p>'+ruby('元素《げんそ》は、ものを つくって いる 小さな つぶの しゅるい。今 見つかって いるのは ぜんぶで 118こ。へやの クイズに せいかいすると、元素キャラが ずかんに 入るよ!')+'</p></div>' +
+        '<p>'+ruby('元素《げんそ》は、ものを つくって いる 小さな つぶの しゅるい。今 見つかって いるのは ぜんぶで 118こ。へやの クイズに せいかいすると、元素キャラが ずかんに 入るよ!')+'</p><button class="btn btn-ghost gz-what" data-intro="1">'+ruby('📖 元素《げんそ》って なに?(はじめの お話)')+'</button></div>' +
         '<div class="gz-count">📗 あつめた キャラ <b>'+all+'</b> / '+CARDS.length+'</div>' +
         '<div class="gk-menu gz-rooms">' + ROOMS.map(function(r, i){
           var ok = canGo(s, i), n = gotN(s, r.k), m = inRoom(r.k).length;
@@ -16490,14 +16506,50 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     /* ---- へや: キャラを 見て おぼえて、クイズへ ---- */
     function room(k){
-      CUR = k; var s = rec(), r = ROOMS.filter(function(x){ return x.k === k; })[0], cs = inRoom(k);
+      CUR = k; var s = rec(), r = ROOMS.filter(function(x){ return x.k === k; })[0], cs = inRoom(k), left = cs.filter(function(c){ return !s.gz.seen[c.s]; }).length;
       var h = wallet() + '<div class="gz-rhead" style="--rc:'+r.c+'"><span class="gz-ri">'+r.i+'</span><span><b>'+ruby(r.n)+'</b><small>'+ruby(r.d)+'</small></span></div>' +
-        '<p class="gk-note">'+ruby('キャラを タップして、まめちしきを 読んでね。クイズで せいかいした キャラが ずかんに 入るよ(✓が つく)。')+'</p>' +
-        '<div class="gz-grid">' + cs.map(function(c){ var e = el(c.s); return '<button class="gz-card'+(s.gz.got[c.s] ? ' got' : '')+(s.gz.seen[c.s] ? ' seen' : '')+'" data-z="'+e.z+'">' + G.svg(e) + '<b>'+nm(e)+'</b><small>'+e.sym+' ・ '+e.z+'ばん</small>'+(s.gz.got[c.s] ? '<span class="gz-ck">✓</span>' : '')+'</button>'; }).join('') + '</div>' +
-        '<button class="btn btn-primary gz-go" data-quiz="'+k+'">'+ruby('クイズに ちょうせん('+cs.length+'問)')+'</button>' +
+        '<button class="btn btn-primary gz-go" data-tour="'+k+'">'+ruby(left ? '▶ 1人ずつ 会《あ》いに 行こう(お話を 聞く)' : '▶ もう一度 1人ずつ お話を 聞く')+'</button>' +
+        '<p class="gk-note">'+ruby('キャラの お話を ぜんぶ 聞くと、クイズが できるよ。クイズで せいかいした キャラが ずかんに 入るよ(✓が つく)。キャラを タップしても お話が 読めるよ(見た キャラには 👀)。')+'</p>' +
+        '<div class="gz-grid">' + cs.map(function(c){ var e = el(c.s); return '<button class="gz-card'+(s.gz.got[c.s] ? ' got' : '')+(s.gz.seen[c.s] ? ' seen' : '')+'" data-z="'+e.z+'">' + G.svg(e) + '<b>'+nm(e)+'</b><small>'+e.sym+' ・ '+e.z+'ばん</small>'+(s.gz.got[c.s] ? '<span class="gz-ck">✓</span>' : s.gz.seen[c.s] ? '<span class="gz-ck gz-eye">👀</span>' : '')+'</button>'; }).join('') + '</div>' +
+        '<button class="btn btn-primary gz-go" data-quiz="'+k+'"'+(left ? ' disabled' : '')+'>'+ruby(left ? '🔒 あと '+left+'人の お話を 聞くと クイズが できるよ' : 'クイズに ちょうせん('+cs.length+'問)')+'</button>' +
         '<h3 class="gz-sec">'+ruby('周期表《しゅうきひょう》の どこに いる?')+'</h3><div class="gz-ptw">' + table(s, k) + '</div>';
       $('gzRoom').innerHTML = h;
       show('gzRoom');
+    }
+
+    /* ---- 1人ずつ 会う(紙しばい): 大きな キャラ・名前・記号・セリフ・まめちしき ---- */
+    var T = null;
+    function tour(k, i){
+      var cs = inRoom(k), c = cs[i], e = el(c.s), s = rec(), r = ROOMS.filter(function(x){ return x.k === k; })[0];
+      T = { k:k, i:i }; s.gz.seen[c.s] = 1; safeSet(KEY, s);
+      var last = i === cs.length - 1;
+      $('gzTour').innerHTML = '<div class="gz-tdots">' + cs.map(function(x, j){ return '<i class="'+(j < i ? 'on' : j === i ? 'now' : '')+'"></i>'; }).join('') + '</div>' +
+        '<div class="gz-tcard" style="--rc:'+r.c+'"><div class="gz-say gz-tsay">'+ruby(c.y)+'</div>' +
+        '<div class="gz-big">' + G.svg(e, { cls:'gz-tap gz-hop' }) + '</div>' +
+        '<div class="gz-no">'+ruby('ばんごう')+' '+e.z+'　'+ruby('記号《きごう》')+' <b class="gz-sym">'+e.sym+'</b></div><h2>'+nm(e)+'</h2>' +
+        '<div class="gz-kind k-'+e.kind+'">'+ruby(KIND[e.kind])+'</div><p class="gz-fact">'+ruby(c.f)+'</p></div>' +
+        '<p class="gz-btns">' + (i > 0 ? '<button class="btn btn-ghost" data-tstep="-1">← まえ</button> ' : '') +
+        (last ? '<button class="btn btn-primary" data-quiz="'+k+'">'+ruby('ぜんぶ 聞いた! クイズに ちょうせん')+'</button> <button class="btn btn-ghost" data-room="'+k+'">'+ruby('へやに もどる')+'</button>' : '<button class="btn btn-primary" data-tstep="1">つぎの キャラ →</button>') + '</p>';
+      show('gzTour');
+      var pet = $('gzTour').querySelector('.gzp'); setTimeout(function(){ hop(pet, 'ok'); }, 120);
+    }
+    var INTRO = [
+      { t:'まわりの ものは ぜんぶ、目に 見えない ほど 小さな つぶが 集まって できて いるよ。水も、空気も、わたしたちの 体も!', pic:function(){ return pics(['H', 'O', 'C', 'N']); } },
+      { t:'その つぶの しゅるいを「元素《げんそ》」と いうよ。今 見つかって いるのは ぜんぶで 118しゅるい。', pic:function(){ return '<div class="gz-ptw gz-mini">' + table(rec()) + '</div>'; } },
+      { t:'元素は ブロックみたいに 手を つないで くっつくよ。水は、水素《すいそ》 2つと 酸素《さんそ》 1つが つながった もの。', pic:function(){ return '<div class="gz-eq">' + pics(['H', 'O', 'H']) + '<span>= 💧</span></div>'; } },
+      { t:'元素には「名前」と、アルファベットの「記号《きごう》」と、「ばんごう」が あるよ。金《きん》は 79ばん、記号は Au。', pic:function(){ return '<div class="gz-ex">' + pics(['Au']) + '<span><small>ばんごう</small>79<br><small>' + ruby('記号《きごう》') + '</small>Au<br><small>なまえ</small>' + ruby('金《きん》') + '</span></div>'; } },
+      { t:'へやで 元素キャラに 1人ずつ 会《あ》って、お話を 聞こう。ぜんぶ 聞いたら クイズ! せいかいした キャラは ずかんに 入るよ。', pic:function(){ return pics(['He', 'Fe', 'Nh']); } }
+    ];
+    function pics(l){ return '<div class="gz-pics">' + l.map(function(x){ return G.svg(el(x), { cls:'gz-hop' }); }).join('') + '</div>'; }
+    function intro(i){
+      var s = rec(), p = INTRO[i], last = i === INTRO.length - 1;
+      T = { intro:i };
+      if(last){ s.gz.intro = 1; safeSet(KEY, s); }
+      $('gzTour').innerHTML = '<div class="gz-tdots">' + INTRO.map(function(x, j){ return '<i class="'+(j < i ? 'on' : j === i ? 'now' : '')+'"></i>'; }).join('') + '</div>' +
+        '<div class="gz-tcard gz-intro"><h2>'+ruby('元素《げんそ》って なに?')+'</h2>' + p.pic() + '<p class="gz-fact">'+ruby(p.t)+'</p></div>' +
+        '<p class="gz-btns">' + (i > 0 ? '<button class="btn btn-ghost" data-istep="-1">← まえ</button> ' : '') +
+        (last ? '<button class="btn btn-primary" data-top="1">ずかんを ひらく 📗</button>' : '<button class="btn btn-primary" data-istep="1">つぎへ →</button>') + '</p>';
+      show('gzTour');
     }
 
     /* ---- キャラの カード(ずかんの ページ) ---- */
@@ -16593,7 +16645,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(tap){ hop(tap, 'ok'); var say = $('gzCard').querySelector('.gz-say'), y = $('gzCard')._say; if(y && say){ say.innerHTML = ruby(y); say.hidden = false; } return; }
       var zc = t.closest('[data-z]'); if(zc){ card(+zc.getAttribute('data-z')); return; }
       var rb = t.closest('[data-room]'); if(rb && !rb.disabled){ room(rb.getAttribute('data-room')); return; }
-      var qb = t.closest('[data-quiz]'); if(qb){ start(qb.getAttribute('data-quiz')); return; }
+      var tb = t.closest('[data-tour]'); if(tb){ tour(tb.getAttribute('data-tour'), 0); return; }
+      var ts = t.closest('[data-tstep]'); if(ts && T){ tour(T.k, T.i + +ts.getAttribute('data-tstep')); return; }
+      var is = t.closest('[data-istep]'); if(is && T){ intro(T.intro + +is.getAttribute('data-istep')); return; }
+      if(t.closest('[data-intro]')){ intro(0); return; }
+      var qb = t.closest('[data-quiz]'); if(qb && !qb.disabled){ start(qb.getAttribute('data-quiz')); return; }
       if(t.closest('[data-mix]')){ start('*'); return; }
       var cb = t.closest('#gzCh button'); if(cb){ answer(cb); return; }
       if(t.closest('#gzNext')){ S.i++; if(S.i >= S.qs.length) finish(); else ask(); return; }
@@ -16604,6 +16660,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('gzBack').addEventListener('click', function(){
       if(!$('gzCard').hidden){ $('gzCard').hidden = true; return; }
       if(!$('gzPlay').hidden || !$('gzResult').hidden){ if(S && S.k !== '*') room(S.k); else open(); return; }
+      if(!$('gzTour').hidden){ if(T && T.k) room(T.k); else { var s0 = rec(); s0.gz.intro = 1; safeSet(KEY, s0); open(); } return; }
       if(!$('gzRoom').hidden){ open(); return; }
       showView('gaku'); /* 理科の 島へ もどる */
     });
