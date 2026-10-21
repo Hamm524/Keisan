@@ -1003,6 +1003,94 @@
   .gk-menu.has-isle > .gk-note{ text-align:center; }
   @media (prefers-reduced-motion: reduce){ .isle .waves path, .isle-pet.hop svg{ animation:none; } .isle-pet{ transition:none; } }
 </style>
+<style id="ongakuStyle">
+  /* ===== 音楽の 島 ===== */
+  :root{ --sj-n:#8A5BD0; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --sj-n:#C2A2FF; } }
+  :root[data-theme="dark"]{ --sj-n:#C2A2FF; }
+  #subjTabs.subj-tabs{ grid-template-columns:repeat(5, minmax(0, 1fr)); gap:6px; }
+  #subjTabs .sj-ico{ width:38px; height:38px; font-size:22px; }
+  #subjTabs button b{ font-size:13px; }
+  .subj-tabs button[data-s="n"]{ --c:var(--sj-n); }
+  .subj-panel[data-s="n"]{ --c:var(--sj-n); }
+  .subj-panel[data-s="n"] #gakuCards .gk-card:not([data-subj="n"]){ display:none; }
+  .subj-panel:not([data-s="n"]) #gakuCards .gk-card[data-subj="n"]{ display:none; }
+  .subj-panel[data-s="n"] .isle.pv-n{ display:block; }
+  .isle[data-t="n"]{ --is-plate:#8A5BD0; }
+  #view-ongaku .isle{ margin-top:0; }
+  .ok-snd{ text-align:center; font-size:12px; }
+  .ok-st{ display:block; height:auto; margin:0 auto; border-radius:12px; }
+  .ok-fig{ margin:6px auto 8px; text-align:center; overflow-x:auto; }
+  .ok-fig .ok-rh{ display:block; width:min(100%, 260px); height:auto; margin:0 auto; background:#fffdf4; border-radius:12px; }
+  .ok-head{ display:flex; align-items:center; gap:12px; background:var(--surface); border:2px solid color-mix(in srgb, var(--sp) 45%, var(--line)); border-radius:20px; padding:12px 14px; margin-bottom:10px; }
+  .ok-hico{ width:52px; height:52px; flex:none; border-radius:16px; display:grid; place-items:center; font-size:30px; background:color-mix(in srgb, var(--sp) 15%, var(--surface)); }
+  .ok-head b{ display:block; font-size:17px; font-weight:900; }
+  .ok-head small{ display:block; font-size:12px; color:var(--ink-soft); line-height:1.5; }
+  .ok-stars{ color:#e0a400; letter-spacing:1px; font-size:14px; }
+  .ok-go{ display:block; width:100%; margin:4px 0 14px; }
+  .ok-sec{ font-size:15px; font-weight:900; margin:6px 2px 8px; }
+  .ok-ls{ background:var(--surface); border:1.5px solid var(--line); border-radius:18px; padding:12px 14px; margin-bottom:10px; }
+  .ok-ls h4{ margin:0 0 4px; font-size:16px; font-weight:900; }
+  .ok-ls p{ margin:4px 0 6px; font-size:15px; line-height:1.85; }
+  .ok-ls rt, .ok-ex rt, .ok-ch rt, .ok-head rt, .ok-sec rt{ font-size:.5em; font-weight:700; }
+  .ok-lst{ color:#e0a400; font-size:12px; margin-right:6px; letter-spacing:-1px; }
+  .ok-ls.deep{ border-style:dashed; }
+  .ok-play{ border:0; border-radius:999px; background:var(--sj-n); color:#fff; font:inherit; font-weight:900; font-size:14px; padding:8px 16px; cursor:pointer; touch-action:manipulation; }
+  .ok-play.big{ font-size:16px; padding:10px 22px; margin:2px 0 4px; }
+  .gk-q .ok-play:not(.big){ margin-top:6px; }
+  .ok-big{ font-size:64px; line-height:1.2; }
+  .ok-ex{ font-size:14px; font-weight:700; color:var(--ink); margin-top:6px; line-height:1.8; }
+  .ok-ch.pics button{ padding:6px; display:grid; place-items:center; background:#fffdf4; }
+  .ok-ch.pics button svg{ width:100%; max-width:120px; height:auto; display:block; }
+  .ok-ch.pics.one button svg{ max-width:240px; }
+  .ok-ch.pics .ok-solo{ max-width:64px; height:76px; }
+  .ok-ch.pics button.ok{ background:color-mix(in srgb, var(--good) 22%, #fffdf4); } .ok-ch.pics button.ng{ background:color-mix(in srgb, var(--bad) 18%, #fffdf4); }
+  .ok-tbl{ display:grid; grid-template-columns:repeat(7, 1fr); gap:4px; max-width:360px; margin:0 auto; text-align:center; font-weight:900; }
+  .ok-tbl span{ background:color-mix(in srgb, var(--sj-n) 14%, var(--surface)); border-radius:8px; padding:6px 0; font-size:14px; }
+  .ok-tbl b{ background:#fffdf4; color:#222; border:1.5px solid var(--line); border-radius:8px; padding:6px 0; font-size:18px; }
+  .ok-dyn{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  .ok-dyn i{ font-family:Georgia,'Times New Roman',serif; font-weight:800; font-size:28px; background:#fffdf4; color:#222; border-radius:10px; padding:2px 12px; }
+  .ok-dyn.sm i{ font-size:18px; padding:4px 10px; }
+  .ok-mini-kb{ display:grid; grid-template-columns:repeat(8, 1fr); max-width:340px; margin:0 auto; position:relative; }
+  .ok-mini-kb span{ background:#fffdf4; color:#222; border:1.5px solid #bbb; border-radius:0 0 8px 8px; height:84px; display:flex; align-items:flex-end; justify-content:center; padding-bottom:6px; font-size:12px; font-weight:900; }
+  .ok-pstaff{ max-width:300px; margin:0 auto; }
+  .ok-mini-kb i{ position:absolute; top:0; width:7%; height:52px; background:#2b2633; border-radius:0 0 5px 5px; }
+  .ok-pname{ text-align:center; font-size:24px; font-weight:900; margin:6px 0 10px; min-height:34px; }
+  .ok-kb{ position:relative; display:grid; grid-template-columns:repeat(10, 1fr); height:200px; max-width:620px; margin:0 auto 8px; user-select:none; -webkit-user-select:none; touch-action:manipulation; }
+  .ok-kb button{ font:inherit; cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+  .ok-w{ background:#fffdf6; border:1.5px solid #b8b0a4; border-radius:0 0 10px 10px; display:flex; align-items:flex-end; justify-content:center; padding:0 0 10px; color:#3a3340; font-weight:900; font-size:14px; }
+  .ok-kb.nonames .ok-w span{ visibility:hidden; }
+  .ok-b{ position:absolute; top:0; width:6.4%; height:58%; background:#2b2633; border:0; border-radius:0 0 7px 7px; z-index:2; }
+  .ok-w.on{ background:#e6dbff; } .ok-b.on{ background:#6d5bc7; }
+  .ok-w.glow{ background:#fff1a8; box-shadow:inset 0 -6px 0 #ffcf3a; }
+  .ok-tog{ display:block; text-align:center; font-size:13px; font-weight:700; margin:4px 0 12px; }
+  .ok-songs{ display:grid; gap:8px; }
+  .ok-song{ display:flex; align-items:center; gap:8px; background:var(--surface); border:1.5px solid var(--line); border-radius:16px; padding:10px 12px; }
+  .ok-song b{ flex:1; font-size:15px; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .ok-ch.pics button{ color:#222; } }
+  .isle .spot.ok-stop .sp-ico em{ position:absolute; left:-6px; top:-6px; min-width:18px; height:18px; border-radius:9px; background:var(--sp); color:#fff; font-size:11px; font-style:normal; font-weight:900; display:grid; place-items:center; padding:0 3px; }
+  .isle .spot.ok-stop .sp-name{ font-size:10.5px; padding:1px 5px; }
+  .isle .spot.ok-stop.lock .sp-ico{ background:#e9e6ee; filter:grayscale(1); opacity:.8; }
+  .isle .spot.ok-stop.lock .sp-name{ opacity:.7; }
+  .isle .spot.ok-stop.today .sp-ico{ width:54px; height:54px; font-size:28px; animation:okPulse 1.6s ease-in-out infinite; }
+  @keyframes okPulse{ 50%{ box-shadow:0 3px 0 rgba(0,0,0,.18), 0 0 0 7px color-mix(in srgb, #FFC23C 70%, transparent); } }
+  @media (prefers-reduced-motion: reduce){ .isle .spot.ok-stop.today .sp-ico{ animation:none; } }
+  .ok-more.lock .gk-sub{ opacity:.55; cursor:default; }
+  .ok-sec small{ font-size:11px; color:var(--ink-soft); font-weight:700; }
+  .ok-big-p{ font-size:17px !important; font-weight:700; text-align:center; }
+  .ok-ls .ok-play.big{ display:block; margin:6px auto 0; }
+  .ok-qkb{ margin:4px 0; }
+  .ok-qkb .ok-kb{ height:170px; grid-template-columns:repeat(8, 1fr); }
+  .ok-qkb .ok-b{ width:8%; }
+  .ok-qkb .ok-b.ok{ background:color-mix(in srgb, var(--good) 70%, #2b2633); }
+  .ok-qkb .ok-w.ok{ background:color-mix(in srgb, var(--good) 35%, #fffdf6); }
+  .ok-qkb .ok-w.ng, .ok-qkb .ok-b.ng{ background:color-mix(in srgb, var(--bad) 35%, #fffdf6); }
+  .ok-qkb button:disabled{ cursor:default; }
+  .ok-mini-kb span.hl{ background:#fff1a8; }
+  .ok-games{ display:grid; gap:8px; margin:8px 0 12px; }
+  .ok-games .btn{ width:100%; font-size:17px; padding:14px 10px; }
+  .ok-games small{ text-align:center; color:#777; font-weight:700; }
+</style>
 </head><body>
 <title>けいさんチャレンジ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2506,6 +2594,7 @@
       <button role="tab" data-s="j"><span class="sj-ico">国</span><b>国語</b></button>
       <button role="tab" data-s="s"><span class="sj-ico">理</span><b>理科</b></button>
       <button role="tab" data-s="o"><span class="sj-ico">社</span><b>社会</b></button>
+      <button role="tab" data-s="n"><span class="sj-ico">♪</span><b>音楽</b></button>
     </div>
     <div class="subj-panel" id="subjPanel" data-s="m" role="tabpanel">
     <div class="subj-coin" id="subjCoin"></div>
@@ -2878,6 +2967,23 @@
     <h2 class="sec-title">おみやげ<ruby>図鑑<rt>ずかん</rt></ruby></h2>
     <p class="sec-sub">旅行に 行くと、その 県の <ruby>特産品<rt>とくさんひん</rt></ruby>を 1つ 持って 帰ってくるよ。どの 県にも 2つ あるよ。</p>
     <div id="tbBook"></div>
+  </main>
+  <main id="view-ongaku" class="view" hidden>
+    <div class="shop-head">
+      <button class="icon-btn" id="okBack" aria-label="もどる">←</button>
+      <h1 id="okTitle">音楽の 島</h1>
+    </div>
+    <div id="okMap"></div>
+    <div id="okTopic" hidden></div>
+    <div id="okPlay" hidden>
+      <div class="gk-prog" id="okProg"></div>
+      <div class="gk-q" id="okQ"></div>
+      <div class="gk-ch" id="okCh"></div>
+      <div class="gk-fb" id="okFb"></div>
+      <div id="okNextBox" style="text-align:center"></div>
+    </div>
+    <div id="okResult" hidden></div>
+    <div id="okPiano" hidden></div>
   </main>
   <main id="view-gaku" class="view" hidden>
     <div class="shop-head">
@@ -5003,7 +5109,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     speed:{ timerId:null, endAt:0, correct:0, attempted:0, streak:0, maxStreak:0 }
   };
 
-  var views = { gaku:$('view-gaku'), pick:$('view-pick'), setup:$('view-setup'), shop:$('view-shop'), care:$('view-care'), food:$('view-food'), toy:$('view-toy'), mode:$('view-mode'), play:$('view-play'), result:$('view-result'), fish:$('view-fish'), kuri:$('view-kuri'), deci:$('view-deci'), hsl:$('view-hsl'), room:$('view-room'), medal:$('view-medal'), tabi:$('view-tabi') };
+  var views = { gaku:$('view-gaku'), pick:$('view-pick'), setup:$('view-setup'), shop:$('view-shop'), care:$('view-care'), food:$('view-food'), toy:$('view-toy'), mode:$('view-mode'), play:$('view-play'), result:$('view-result'), fish:$('view-fish'), kuri:$('view-kuri'), deci:$('view-deci'), hsl:$('view-hsl'), room:$('view-room'), medal:$('view-medal'), tabi:$('view-tabi'), ongaku:$('view-ongaku') };
   function showView(name){
     Object.keys(views).forEach(function(k){ views[k].hidden = (k!==name); });
     window.scrollTo(0,0);
@@ -5817,6 +5923,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     Subj.render();
     MathIsle.render();
     HomeIsles.render();
+    Ongaku.homeRender();
     Room.card();
     Medal.card();
     Tabi.card();
@@ -13561,15 +13668,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       m: '',
       j: '漢字ドリルの お散歩の 宝物も コインに なるよ。',
       s: '分野を えらんで、★が ふえるほど むずかしく なるよ。しりたい 所から どんどん 先へ!',
-      o: '分野を えらんで、★が ふえるほど むずかしく なるよ。地図で 遊ぼう も あるよ。'
+      o: '分野を えらんで、★が ふえるほど むずかしく なるよ。地図で 遊ぼう も あるよ。',
+      n: '五線譜の 読み方を 見て・聞いて おぼえよう。音が 出るよ。ピアノ ひろばで ひいて みよう。'
     };
     function subjOf(c){
       var t = ((c.querySelector('.gk-ico') || c).textContent || '').trim().charAt(0), d = c.getAttribute('data-sub') || '';
+      if(t === '音' || d === 'n') return 'n';
       if(t === '理' || d === 's') return 's';
       if(t === '社' || d === 'o' || d.indexOf('o:') === 0) return 'o';
       return 'j'; /* 国・漢・文・ローマ字 */
     }
-    function cur(){ var v = null; try{ v = localStorage.getItem(KEY); }catch(e){} return /^[mjso]$/.test(v || '') ? v : 'm'; }
+    function cur(){ var v = null; try{ v = localStorage.getItem(KEY); }catch(e){} return /^[mjson]$/.test(v || '') ? v : 'm'; }
     function render(){
       var k = cur(), p = $('subjPanel'); if(!p) return;
       /* まなぶの カードが どの 教科か: 左の 字(理・国・漢・社 …)で 見分ける。カードの 作りが かわっても 動くように */
@@ -13579,7 +13688,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var g = safeGet('keisan_gaku') || {}, n = g.day && g.day.d === todayKey() ? (g.day.n || 0) : 0;
       $('subjCoin').innerHTML = k === 'm'
         ? '<span class="coin"></span><span>コインは どの 教科も 同じ さいふに たまるよ</span>'
-        : '<span class="coin"></span><span>国語・理科・社会の コイン 今日 <b class="num">'+n+'</b> / '+CAP+'</span><span class="sc-bar"><i style="width:'+Math.min(100, Math.round(n/CAP*100))+'%"></i></span>' + (n >= CAP ? '<span>あした また もらえるよ</span>' : '');
+        : '<span class="coin"></span><span>国語・理科・社会・音楽の コイン 今日 <b class="num">'+n+'</b> / '+CAP+'</span><span class="sc-bar"><i style="width:'+Math.min(100, Math.round(n/CAP*100))+'%"></i></span>' + (n >= CAP ? '<span>あした また もらえるよ</span>' : '');
       $('subjNote').textContent = NOTE[k];
     }
     $('subjTabs').addEventListener('click', function(e){
@@ -14913,6 +15022,940 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       c.querySelector('button').click(); /* その 教科の 島へ(カードの ボタンと 同じ) */
     });
     return { render:homeRender };
+  })();
+
+  /* ===== 音楽: 五線・音符・休符・記号の 絵(SVG)と 音(WebAudio) ===== */
+  var OkDraw = (function(){
+    var INK = '#222', HL = '#E0503C';
+    var NAMES = ['ド', 'レ', 'ミ', 'ファ', 'ソ', 'ラ', 'シ'], SEMI = [0, 2, 4, 5, 7, 9, 11];
+    function mod(a, n){ return ((a % n) + n) % n; }
+    /* d: ドレミの だん(真ん中の ド=0、レ=1 … 上の ド=7、下の シ=-1)。acc: 1=♯ -1=♭ */
+    function nm(d){ return NAMES[mod(d, 7)]; }
+    function midi(d, acc){ return 60 + SEMI[mod(d, 7)] + 12 * Math.floor(d / 7) + (acc || 0); }
+    function yOf(d){ return 80 - d * 5; } /* 第1線(ミ)=70、第5線(ファ)=30 */
+
+    /* ---- 音 ---- */
+    var ac = null, gen = 0;
+    function A(){ try{ ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if(ac.state === 'suspended') ac.resume(); }catch(e){ ac = null; } return ac; }
+    function hz(m){ return 440 * Math.pow(2, (m - 69) / 12); }
+    function tone(m, t, d, v){
+      var c = A(); if(!c) return; t = c.currentTime + 0.04 + (t || 0); d = d || 0.5; v = v == null ? 0.28 : v;
+      var g = c.createGain(); g.connect(c.destination);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.012);
+      g.gain.exponentialRampToValueAtTime(v * 0.5, t + 0.2); g.gain.setTargetAtTime(0.0001, t + Math.max(0.1, d - 0.06), 0.05);
+      /* ひくい 音は 小さな スピーカーで 聞こえにくいので、上の ひびき(倍音)を 強める */
+      (m < 64 ? [[1, 'triangle', 0.8], [2, 'sine', 0.55], [3, 'sine', 0.35], [4, 'sine', 0.2]] : [[1, 'triangle', 1], [2, 'sine', 0.3], [3, 'sine', 0.1]]).forEach(function(h){
+        var o = c.createOscillator(), gg = c.createGain(); o.type = h[1]; o.frequency.value = hz(m) * h[0]; gg.gain.value = h[2];
+        o.connect(gg); gg.connect(g); o.start(t); o.stop(t + d + 0.5);
+      });
+    }
+    function tick(t, strong){
+      var c = A(); if(!c) return; t = c.currentTime + 0.04 + (t || 0);
+      var o = c.createOscillator(), g = c.createGain(); o.type = 'square'; o.frequency.value = strong ? 1760 : 1175;
+      g.gain.setValueAtTime(strong ? 0.12 : 0.06, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+      o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + 0.07);
+    }
+    /* seq: [[midi か null(休み) か [和音], 拍], …]。bpm: 1分に 4分音符 いくつ。o.v 音の 大きさ(1つずつ 変えるなら 3つ目)、o.click 前に 拍を 打つ 数 */
+    function play(seq, bpm, o){
+      o = o || {}; var b = 60 / (bpm || 96), t = 0, my = ++gen;
+      if(o.click){ for(var i = 0; i < o.click; i++){ tick(t, i === 0); t += b; } }
+      seq.forEach(function(x){
+        var dur = x[1] * b, v = x[2] != null ? x[2] : o.v;
+        if(x[0] != null) [].concat(x[0]).forEach(function(m){ tone(m, t, dur * (o.stacc ? 0.35 : 0.8), v); });
+        if(o.beat) tick(t, false);
+        t += dur;
+      });
+      return t;
+    }
+    function chime(ok){ if(ok){ tone(84, 0, 0.12, 0.16); tone(88, 0.09, 0.12, 0.16); tone(91, 0.18, 0.3, 0.16); } else { tone(52, 0, 0.25, 0.16); tone(51, 0.2, 0.35, 0.14); } }
+
+    /* ---- 絵 ---- */
+    function svg(w, inner, h){ h = h || 110; return '<svg class="ok-st" viewBox="0 -12 '+w+' '+h+'" width="'+w+'" role="img" aria-hidden="true" style="width:min(100%,'+Math.round(w*1.9)+'px);height:auto"><rect x="0" y="-12" width="'+w+'" height="'+h+'" rx="12" fill="#fffdf4"/>'+inner+'</svg>'; }
+    function lines(x0, x1, hl){
+      var s = '';
+      for(var i = 1; i <= 5; i++) s += '<line x1="'+x0+'" x2="'+x1+'" y1="'+(80 - i*10)+'" y2="'+(80 - i*10)+'" stroke="'+(hl === i ? HL : '#555')+'" stroke-width="'+(hl === i ? 3 : 1.3)+'"/>';
+      return s;
+    }
+    function gap(x0, x1, i){ return '<rect x="'+x0+'" y="'+(71 - i*10)+'" width="'+(x1 - x0)+'" height="8" rx="2" fill="'+HL+'" opacity=".35"/>'; }
+    function clef(x, col){
+      var c = col || INK;
+      return '<g transform="translate('+(x - 20)+' 0)"><path d="M23.5 62.5 C17 63 16 55 22 54 C30 53 32.5 64 24 67.5 C14 70 8.5 60 14 50 C19.5 40 33 33 30 17 C28.5 7 20 9 20.5 21 L26.5 83 C27.5 91 18 93 16.5 86" fill="none" stroke="'+c+'" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<circle cx="18.5" cy="85" r="3.3" fill="'+c+'"/></g>';
+    }
+    function fclef(x, col){
+      var c = col || INK;
+      return '<g transform="translate('+x+' 0)"><circle cx="-6" cy="42" r="3.6" fill="'+c+'"/><path d="M-9 40 C-9 31 9 30 9 41 C9 53 -2 61 -12 65" fill="none" stroke="'+c+'" stroke-width="2.6" stroke-linecap="round"/>' +
+        '<circle cx="14" cy="36" r="1.9" fill="'+c+'"/><circle cx="14" cy="45" r="1.9" fill="'+c+'"/></g>';
+    }
+    function ledgers(x, d, col){
+      var s = '', c = col || '#555';
+      for(var y = 80; y <= yOf(d); y += 10) s += '<line x1="'+(x - 11)+'" x2="'+(x + 11)+'" y1="'+y+'" y2="'+y+'" stroke="'+c+'" stroke-width="'+(col ? 3 : 1.3)+'"/>';
+      for(var y2 = 20; y2 >= yOf(d); y2 -= 10) s += '<line x1="'+(x - 11)+'" x2="'+(x + 11)+'" y1="'+y2+'" y2="'+y2+'" stroke="'+c+'" stroke-width="'+(col ? 3 : 1.3)+'"/>';
+      return s;
+    }
+    function acc(x, y, k, c){
+      c = c || INK;
+      if(k === 1) return '<g stroke="'+c+'" stroke-linecap="butt"><line x1="'+(x-2.5)+'" x2="'+(x-2.5)+'" y1="'+(y-10)+'" y2="'+(y+9)+'" stroke-width="1.3"/><line x1="'+(x+2.5)+'" x2="'+(x+2.5)+'" y1="'+(y-9)+'" y2="'+(y+10)+'" stroke-width="1.3"/>' +
+        '<line x1="'+(x-6)+'" x2="'+(x+6)+'" y1="'+(y-2)+'" y2="'+(y-5)+'" stroke-width="3"/><line x1="'+(x-6)+'" x2="'+(x+6)+'" y1="'+(y+5)+'" y2="'+(y+2)+'" stroke-width="3"/></g>';
+      if(k === -1) return '<g stroke="'+c+'" fill="none" stroke-linecap="round"><line x1="'+(x-3)+'" x2="'+(x-3)+'" y1="'+(y-15)+'" y2="'+(y+5)+'" stroke-width="1.5"/><path d="M'+(x-3)+' '+(y+5)+' C'+(x+7)+' '+(y-1)+' '+(x+5)+' '+(y-7)+' '+(x-3)+' '+(y-1)+'" stroke-width="2.2"/></g>';
+      return '<g stroke="'+c+'"><line x1="'+(x-3)+'" x2="'+(x-3)+'" y1="'+(y-12)+'" y2="'+(y+5)+'" stroke-width="1.3"/><line x1="'+(x+3)+'" x2="'+(x+3)+'" y1="'+(y-5)+'" y2="'+(y+12)+'" stroke-width="1.3"/>' +
+        '<line x1="'+(x-3)+'" x2="'+(x+3)+'" y1="'+(y-2)+'" y2="'+(y-4)+'" stroke-width="3"/><line x1="'+(x-3)+'" x2="'+(x+3)+'" y1="'+(y+5)+'" y2="'+(y+3)+'" stroke-width="3"/></g>';
+    }
+    function flag(sx, sy, up, n, c){
+      var s = '';
+      for(var i = 0; i < n; i++){
+        var y = up ? sy + i*7 : sy - i*7, k = up ? 1 : -1;
+        s += '<path d="M'+sx+' '+y+' C'+(sx+1)+' '+(y+8*k)+' '+(sx+12)+' '+(y+11*k)+' '+(sx+8)+' '+(y+24*k)+' C'+(sx+10)+' '+(y+14*k)+' '+(sx+4)+' '+(y+11*k)+' '+sx+' '+(y+9*k)+' Z" fill="'+c+'"/>';
+      }
+      return s;
+    }
+    /* 音符: dur w/h/q/e/s、o.dot 付点、o.acc ♯♭♮(1/-1/0)、o.col 色、o.stem 'u'/'d'、o.nostem(はたなし: 連こう用) */
+    function note(x, d, dur, o){
+      o = o || {}; var c = o.col || INK, y = yOf(d), s = ledgers(x, d, o.lcol), up = o.stem ? o.stem === 'u' : d < 6;
+      if(o.acc != null) s += acc(x - 17, y, o.acc, c);
+      if(dur === 'w') s += '<ellipse cx="'+x+'" cy="'+y+'" rx="7.6" ry="5" fill="'+c+'"/><ellipse cx="'+x+'" cy="'+y+'" rx="3.6" ry="2.4" transform="rotate(55 '+x+' '+y+')" fill="#fffdf4"/>';
+      else {
+        s += '<ellipse cx="'+x+'" cy="'+y+'" rx="6.3" ry="4.5" transform="rotate(-22 '+x+' '+y+')" fill="'+c+'"/>';
+        if(dur === 'h') s += '<ellipse cx="'+x+'" cy="'+y+'" rx="4.6" ry="2" transform="rotate(-30 '+x+' '+y+')" fill="#fffdf4"/>';
+        var sx = up ? x + 5.6 : x - 5.6, sy = up ? y - 34 : y + 34;
+        s += '<line x1="'+sx+'" x2="'+sx+'" y1="'+(up ? y - 1 : y + 1)+'" y2="'+sy+'" stroke="'+c+'" stroke-width="1.5"/>';
+        if(!o.nostem && (dur === 'e' || dur === 's')) s += flag(sx, sy, up, dur === 'e' ? 1 : 2, c);
+      }
+      if(o.dot) s += '<circle cx="'+(x + 11)+'" cy="'+(d % 2 === 0 ? y - 4 : y)+'" r="2.1" fill="'+c+'"/>';
+      return s;
+    }
+    function rest(x, dur, o){
+      o = o || {}; var c = o.col || INK, s = '';
+      if(dur === 'w') s = '<rect x="'+(x-7)+'" y="40" width="14" height="5.5" fill="'+c+'"/>';
+      else if(dur === 'h') s = '<rect x="'+(x-7)+'" y="44.5" width="14" height="5.5" fill="'+c+'"/>';
+      else if(dur === 'q') s = '<path d="M'+(x-3)+' 32 L'+(x+3.5)+' 40.5 L'+(x-2)+' 47.5 L'+(x+3.5)+' 55" fill="none" stroke="'+c+'" stroke-width="3.2" stroke-linejoin="bevel"/><path d="M'+(x+3.5)+' 55 C'+(x-5)+' 51 '+(x-6)+' 59 '+x+' 64" fill="none" stroke="'+c+'" stroke-width="2.4" stroke-linecap="round"/>';
+      else if(dur === 'e') s = '<circle cx="'+(x-3)+'" cy="45" r="2.8" fill="'+c+'"/><path d="M'+(x-4)+' 47 C'+(x)+' 49.5 '+(x+3)+' 48 '+(x+5)+' 44 L'+(x-1)+' 63" fill="none" stroke="'+c+'" stroke-width="1.9" stroke-linecap="round"/>';
+      else if(dur === 's') s = '<circle cx="'+(x-2)+'" cy="45" r="2.8" fill="'+c+'"/><circle cx="'+(x-5)+'" cy="54" r="2.8" fill="'+c+'"/><path d="M'+(x-3)+' 47 C'+(x+1)+' 49.5 '+(x+4)+' 48 '+(x+6)+' 44 L'+(x-3)+' 72 M'+(x-6)+' 56 C'+(x-2)+' 58.5 '+(x+1)+' 57 '+(x+3.2)+' 53" fill="none" stroke="'+c+'" stroke-width="1.9" stroke-linecap="round"/>';
+      if(o.dot) s += '<circle cx="'+(x + 10)+'" cy="45" r="2.1" fill="'+c+'"/>';
+      return s;
+    }
+    function bar(x, c){ return '<line x1="'+x+'" x2="'+x+'" y1="30" y2="70" stroke="'+(c || '#444')+'" stroke-width="'+(c ? 3 : 1.5)+'"/>'; }
+    function endBar(x, c){ c = c || '#333'; return '<line x1="'+(x-6)+'" x2="'+(x-6)+'" y1="30" y2="70" stroke="'+c+'" stroke-width="1.5"/><rect x="'+(x-3)+'" y="30" width="4.5" height="40" fill="'+c+'"/>'; }
+    function dblBar(x, c){ c = c || '#333'; return '<line x1="'+(x-4)+'" x2="'+(x-4)+'" y1="30" y2="70" stroke="'+c+'" stroke-width="1.5"/><line x1="'+x+'" x2="'+x+'" y1="30" y2="70" stroke="'+c+'" stroke-width="1.5"/>'; }
+    function repeat(x, end, c){
+      c = c || '#333'; var k = end ? -1 : 1, s = '<rect x="'+(end ? x - 4.5 : x)+'" y="30" width="4.5" height="40" fill="'+c+'"/><line x1="'+(x + 8*k)+'" x2="'+(x + 8*k)+'" y1="30" y2="70" stroke="'+c+'" stroke-width="1.5"/>';
+      return s + '<circle cx="'+(x + 14*k)+'" cy="45" r="2.3" fill="'+c+'"/><circle cx="'+(x + 14*k)+'" cy="55" r="2.3" fill="'+c+'"/>';
+    }
+    function time(x, n, d, c){ var f = ' text-anchor="middle" font-size="22" font-weight="900" font-family="Georgia,\'Times New Roman\',serif" fill="'+(c || INK)+'"'; return '<text x="'+x+'" y="49"'+f+'>'+n+'</text><text x="'+x+'" y="69"'+f+'>'+d+'</text>'; }
+    function word(x, y, t, sz, c){ return '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-size="'+(sz || 22)+'" font-weight="800" font-style="italic" font-family="Georgia,\'Times New Roman\',serif" fill="'+(c || INK)+'">'+t+'</text>'; }
+
+    /* 五線に ト音記号つきで ならべる。list: [['n', d, dur, o], ['r', dur, o], ['bar'], ['end'], ['dbl'], ['time', n, d], ['sp', はば], ['raw', 関数(x)]] */
+    function staff(list, o){
+      o = o || {}; var x = o.noclef ? 16 : 46, body = o.noclef ? '' : clef(22, o.clefCol), step = o.step || 34;
+      list.forEach(function(it){
+        var k = it[0];
+        if(k === 'n'){ var a = it[3] && it[3].acc != null ? 12 : 0; x += a; body += note(x, it[1], it[2], it[3]); x += step + (it[3] && it[3].dot ? 8 : 0); }
+        else if(k === 'r'){ body += rest(x, it[1], it[2]); x += step + (it[2] && it[2].dot ? 8 : 0); }
+        else if(k === 'bar'){ x -= step*0.35; body += bar(x, it[1]); x += step*0.65; }
+        else if(k === 'end'){ x -= step*0.35; body += endBar(x + 6, it[1]); x += 10; }
+        else if(k === 'dbl'){ x -= step*0.35; body += dblBar(x + 3, it[1]); x += step*0.65; }
+        else if(k === 'time'){ body += time(x - 4, it[1], it[2], it[3]); x += 26; }
+        else if(k === 'sp'){ x += it[1]; }
+        else if(k === 'raw'){ body += it[1](x); x += it[2] || 0; }
+      });
+      var w = Math.max(o.w || 0, x + 8);
+      return svg(w, (o.gap ? gap(8, w - 8, o.gap) : '') + lines(8, w - 8, o.hl) + body + (o.over || ''));
+    }
+    /* 五線なしで 音符・休符を 1つだけ(えらぶ ボタン用) */
+    function solo(kind, dur, o){
+      o = o || {}; var w = o.w || 56;
+      var inner = kind === 'r' ? rest(w/2, dur, o) : note(w/2 - (o.dot ? 4 : 0), o.d != null ? o.d : 3, dur, o);
+      if(kind === 'r' && (dur === 'w' || dur === 'h')) inner = '<line x1="'+(w/2-13)+'" x2="'+(w/2+13)+'" y1="'+(dur === 'w' ? 40 : 50)+'" y2="'+(dur === 'w' ? 40 : 50)+'" stroke="#999" stroke-width="1.3"/>' + inner;
+      return '<svg class="ok-solo" viewBox="0 '+(kind === 'r' ? 22 : 8)+' '+w+' '+(kind === 'r' ? 52 : 72)+'" role="img" aria-hidden="true">'+inner+'</svg>';
+    }
+    /* 1行の リズム(五線なし・1本線): pat: ['q','e','e','h', 'R:q' …]。8分は 2つずつ 連こうで つなぐ */
+    function rhythm(pat, o){
+      o = o || {}; var x = 20, s = '', y = 50, d = 3, i = 0, step = 26;
+      s += '<line x1="6" x2="'+(10 + pat.reduce(function(a, p){ return a + (/w|h/.test(p) ? step*1.6 : step); }, 0) + 10)+'" y1="'+(y + 15)+'" y2="'+(y + 15)+'" stroke="#888" stroke-width="1.3"/>';
+      while(i < pat.length){
+        var p = pat[i];
+        if(p.indexOf('R:') === 0){ s += '<g transform="translate(0 '+(y + 15 - 50)+')">'+rest(x, p.slice(2))+'</g>'; x += step; i++; continue; }
+        if(p === 'e' && pat[i+1] === 'e'){
+          s += '<g transform="translate(0 '+(y + 15 - yOf(d))+')">'+note(x, d, 'q', { stem:'u', nostem:true })+note(x + step, d, 'q', { stem:'u', nostem:true })+'</g>';
+          s += '<rect x="'+(x + 4.8)+'" y="'+(y + 15 - 34 - 1)+'" width="'+(step + 1.6)+'" height="5" fill="'+INK+'"/>';
+          x += step*2; i += 2; continue;
+        }
+        var dot = p.charAt(1) === '.';
+        s += '<g transform="translate(0 '+(y + 15 - yOf(d))+')">'+note(x, d, p.charAt(0), { stem:'u', dot:dot })+'</g>';
+        x += (/w|h/.test(p) ? step*1.6 : step) + (dot ? 6 : 0); i++;
+      }
+      return '<svg class="ok-rh" viewBox="0 18 '+(x + 6)+' 58" role="img" aria-hidden="true" style="width:min(100%,'+Math.round((x + 6) * 2.6)+'px)">'+s+'</svg>';
+    }
+    return { nm:nm, midi:midi, yOf:yOf, tone:tone, tick:tick, play:play, chime:chime, A:A, svg:svg, lines:lines, clef:clef, fclef:fclef, note:note, rest:rest, acc:acc,
+      bar:bar, endBar:endBar, dblBar:dblBar, repeat:repeat, time:time, word:word, staff:staff, solo:solo, rhythm:rhythm, HL:HL };
+  })();
+
+  /* ===== 音楽の 問題と 説明(見て・聞いて・クイズ)。漢字《よみ》は ルビ。choices は 文字か SVG ===== */
+  var OkData = (function(){
+    var D = OkDraw, M = D.midi, ITEMS = [], LESS = {};
+    function Q(id, t, dep, o){ o.id = 'u_' + id; o.t = t; o.dep = dep; ITEMS.push(o); }
+    function pickBad(all, a, n){ return all.filter(function(x){ return x !== a; }).slice(0, n || 3); }
+    function S(list, o){ return D.staff(list, o); }
+    function one(d, dur, o){ return S([['sp', 10], ['n', d, dur, o]], { w:130 }); }
+    var NOTE_N = { w:'全音符《ぜんおんぷ》', h:'2分音符《にぶおんぷ》', q:'4分音符《しぶおんぷ》', e:'8分音符《はちぶおんぷ》', s:'16分音符《じゅうろくぶおんぷ》' };
+    var REST_N = { w:'全休符《ぜんきゅうふ》', h:'2分休符《にぶきゅうふ》', q:'4分休符《しぶきゅうふ》', e:'8分休符《はちぶきゅうふ》', s:'16分休符《じゅうろくぶきゅうふ》' };
+    var LINE = ['', '第1線《だいいっせん》', '第2線《だいにせん》', '第3線《だいさんせん》', '第4線《だいよんせん》', '第5線《だいごせん》'];
+    var GAP = ['', '第1間《だいいっかん》', '第2間《だいにかん》', '第3間《だいさんかん》', '第4間《だいよんかん》'];
+    var scale = function(a, b){ var r = []; for(var d = a; d <= b; d++) r.push([M(d), 0.5]); return r; };
+    var mel = function(ds, beats){ return ds.map(function(d, i){ return [d == null ? null : M(d), [].concat(beats)[i] || [].concat(beats)[0]]; }); };
+
+    /* ============ 1. 五線と ト音記号 ============ */
+    LESS.staff = [
+      [1, '五線《ごせん》は 5本の 線', S([['sp', 120]], { noclef:true, w:240 }), '音楽の 楽譜《がくふ》は、5本の 線の 上に かくよ。これを「五線《ごせん》」と いうよ。線は <b>下から</b> 第1線《だいいっせん》・第2線《だいにせん》… と 数えるよ。'],
+      [1, '線と 線の 間《あいだ》も つかう', S([['sp', 120]], { noclef:true, w:240, gap:1 }), '線と 線の 間《あいだ》は「間《かん》」。下から 第1間《だいいっかん》〜第4間《だいよんかん》の 4つ。音符《おんぷ》は 線の 上にも、間《かん》にも かくよ。'],
+      [1, '上に あるほど 高い 音', S([['n', 0, 'q'], ['n', 2, 'q'], ['n', 4, 'q'], ['n', 7, 'q'], ['n', 9, 'q']]), '五線の 上の 方に かいた 音ほど 高い 音、下の 方ほど 低《ひく》い 音。▶ を おして 聞いて みよう。', function(){ D.play(mel([0, 2, 4, 7, 9], 0.6), 100); }],
+      [1, 'ト音《おん》記号《きごう》', S([['sp', 30]], { w:150, clefCol:D.HL }), 'いちばん 左の くるっと した 記号《きごう》が ト音《おん》記号《きごう》。うずまきの まん中が 第2線《だいにせん》に あって、「この 線は ソ だよ」と 教えて くれるよ。'],
+      [1, 'はみ出す 音は 加線《かせん》', S([['n', 0, 'q', { lcol:D.HL }], ['n', 1, 'q'], ['n', 12, 'q', { lcol:D.HL }]]), '五線から はみ出す 音は、短い 線を 足して かくよ。これを「加線《かせん》」と いうよ。下に 加線《かせん》1本で ド、上に 加線《かせん》1本で ラ(加線《かせん》が 玉の まん中を 通るよ)。', function(){ D.play(mel([0, 1, 12], 0.7), 100); }],
+      [2, 'ドレミの 日本の 名前', '<div class="ok-tbl"><span>ド</span><span>レ</span><span>ミ</span><span>ファ</span><span>ソ</span><span>ラ</span><span>シ</span><b>ハ</b><b>ニ</b><b>ホ</b><b>ヘ</b><b>ト</b><b>イ</b><b>ロ</b></div>', 'ドレミは イタリアの 言い方。日本の 言い方では ハ・ニ・ホ・ヘ・ト・イ・ロ。ソは「ト」だから、ソの 場所を 決める 記号《きごう》が ト音《おん》記号《きごう》なんだね。'],
+      [2, 'ヘ音《おん》記号《きごう》', D.svg(150, D.lines(8, 142) + D.fclef(30, D.HL) + D.note(90, 6, 'q', { col:D.HL })) , '低《ひく》い 音を かく ときは ヘ音《おん》記号《きごう》。2つの 点の 間《あいだ》の 線(第4線《だいよんせん》)が ファ(ヘ)だよ。ピアノの 左手の 楽譜《がくふ》で よく 見るよ。'],
+      [3, '大譜表《だいふひょう》', D.svg(170, D.lines(8, 162) + D.clef(22) + '<g transform="translate(0 70)">' + D.lines(8, 162) + D.fclef(30) + '</g><line x1="8" x2="8" y1="30" y2="140" stroke="#333" stroke-width="2"/><path d="M4 30 Q-2 60 4 85 Q-2 110 4 140" fill="none" stroke="#333" stroke-width="2"/>', 175), 'ト音《おん》記号《きごう》の 五線と ヘ音《おん》記号《きごう》の 五線を つないだ 楽譜《がくふ》を「大譜表《だいふひょう》」と いうよ。ピアノの 楽譜《がくふ》は これ。上が 右手、下が 左手。'],
+      [3, 'オクターブ', S([['n', 0, 'h'], ['n', 7, 'h']]), 'ドから ドレミファソラシ と 上がって、8つ目は また ド。この 2つの ドの へだたりを「オクターブ」と いうよ。名前が 同じで、ひびきが よく にて いるね。', function(){ D.play(mel([0, 1, 2, 3, 4, 5, 6, 7], 0.5).concat([[[M(0), M(7)], 1.5]]), 110); }]
+    ];
+    Q('st5', 'staff', 1, { q:'五線《ごせん》の 線は 何本《なんぼん》?', fig:S([['sp', 120]], { noclef:true, w:240 }), a:'5本', bad:['4本', '6本', '3本'], ex:'「五」線だから 5本だよ。' });
+    for(var i = 1; i <= 5; i++) Q('stl' + i, 'staff', 1, { q:'赤い 線は どれ?', fig:S([['sp', 110]], { w:200, hl:i }), a:LINE[i], bad:[1, 2, 3, 4, 5].filter(function(x){ return x !== i; }).sort(function(x, y){ return Math.abs(x - i) - Math.abs(y - i); }).slice(0, 3).map(function(x){ return LINE[x]; }), ex:'線は 下から 数えるよ。' });
+    for(var g = 1; g <= 4; g++) Q('stg' + g, 'staff', 1, { q:'赤い ところは どれ?', fig:S([['sp', 110]], { w:200, gap:g }), a:GAP[g], bad:[1, 2, 3, 4].filter(function(x){ return x !== g; }).map(function(x){ return GAP[x]; }).slice(0, 2).concat([LINE[g]]), ex:'線と 線の 間《あいだ》は「間《かん》」。下から 第1間《だいいっかん》、第2間《だいにかん》… だよ。' });
+    Q('stup', 'staff', 1, { q:'五線の 上の 方に かいた 音は どんな 音?', fig:S([['n', 2, 'q'], ['n', 9, 'q']], { w:150 }), snd:function(){ D.play(mel([2, 9], 1), 90); }, a:'高い 音', bad:['低《ひく》い 音', '長い 音', '大きい 音'], ex:'上に あるほど 高い 音、下に あるほど 低《ひく》い 音だよ。' });
+    Q('stclef', 'staff', 1, { q:'ト音《おん》記号《きごう》は どれ?', a:D.svg(60, D.lines(4, 56) + D.clef(30), 110), bad:[D.svg(60, D.lines(4, 56) + D.fclef(22), 110), D.svg(60, D.lines(4, 56) + D.note(30, 4, 'q'), 110), D.svg(60, D.lines(4, 56) + D.acc(30, 50, 1), 110)], ex:'くるっと うずまきの ある 記号《きごう》が ト音《おん》記号《きごう》だよ。' });
+    Q('stled', 'staff', 1, { q:'ドの 音に ついて いる、赤い 短い 線の 名前は?', fig:S([['n', 0, 'q', { lcol:D.HL }]], { w:120 }), a:'加線《かせん》', bad:['小節線《しょうせつせん》', '終止線《しゅうしせん》', '五線《ごせん》'], ex:'五線から はみ出す 音の ために 足す 線が 加線《かせん》だよ。' });
+    Q('stgaps', 'staff', 1, { q:'五線の「間《かん》」(線と 線の 間《あいだ》)は いくつ ある?', fig:S([['sp', 120]], { noclef:true, w:240 }), a:'4つ', bad:['5つ', '6つ', '3つ'], ex:'5本の 線の 間《あいだ》は 4つだよ。' });
+    Q('stg2', 'staff', 2, { q:'ト音《おん》記号《きごう》の うずまきの まん中は どの 線?', fig:S([['sp', 30]], { w:150, hl:2 }), a:LINE[2], bad:[LINE[1], LINE[3], LINE[4]], ex:'第2線《だいにせん》を くるっと かこむよ。だから 第2線《だいにせん》が ソの 音。' });
+    Q('stgso', 'staff', 2, { q:'ト音《おん》記号《きごう》が きめて いる 第2線《だいにせん》の 音は?', fig:S([['n', 4, 'q', { col:D.HL }]], { w:120 }), snd:function(){ D.tone(M(4), 0, 0.8); }, a:'ソ', bad:['ド', 'ミ', 'ラ'], ex:'「ト」は ソの 日本の 名前。ト音《おん》記号《きごう》は ソの 場所を 教えて くれるよ。' });
+    [['ハ', 'ド'], ['ト', 'ソ'], ['ヘ', 'ファ'], ['イ', 'ラ']].forEach(function(p, k){
+      Q('sthn' + k, 'staff', 2, { q:'日本の 音の 名前で「' + p[0] + '」は ドレミで いうと どれ?', a:p[1], bad:['ド', 'レ', 'ミ', 'ファ', 'ソ', 'ラ', 'シ'].filter(function(x){ return x !== p[1]; }).slice(k, k + 3), ex:'ハ・ニ・ホ・ヘ・ト・イ・ロ = ド・レ・ミ・ファ・ソ・ラ・シ だよ。' });
+    });
+    Q('stf', 'staff', 2, { q:'低《ひく》い 音を かく ときに つかう、この 記号《きごう》は?', fig:D.svg(110, D.lines(8, 102) + D.fclef(40), 110), a:'ヘ音《おん》記号《きごう》', bad:['ト音《おん》記号《きごう》', '休符《きゅうふ》', 'くりかえし 記号《きごう》'], ex:'2つの 点が ある のが ヘ音《おん》記号《きごう》。点の 間《あいだ》の 線が ファ(ヘ)だよ。' });
+    Q('stoct', 'staff', 3, { q:'ドから 上へ ドレミファソラシ… と 数えて、8つ目の 音は?', fig:S([['n', 0, 'q'], ['n', 1, 'q'], ['n', 2, 'q'], ['n', 3, 'q'], ['n', 4, 'q'], ['n', 5, 'q'], ['n', 6, 'q'], ['n', 7, 'q', { col:D.HL }]], { step:26 }), snd:function(){ D.play(scale(0, 7), 110); }, a:'1つ 上の ド', bad:['ラ', 'シ', 'レ'], ex:'8つ目で また ドに もどるよ。2つの ドの へだたりが オクターブ。' });
+    Q('stoct2', 'staff', 3, { q:'ドと 1つ 上の ドの へだたりを 何と いう?', fig:S([['n', 0, 'h'], ['n', 7, 'h']], { w:150 }), snd:function(){ D.play([[M(0), 1], [M(7), 1]], 90); }, a:'オクターブ', bad:['リズム', 'テンポ', 'ハーモニー'], ex:'8つ目の 同じ 名前の 音までが 1オクターブだよ。' });
+    Q('stgrand', 'staff', 3, { q:'ト音《おん》記号《きごう》と ヘ音《おん》記号《きごう》の 五線を つないだ 楽譜《がくふ》を 何と いう?', a:'大譜表《だいふひょう》', bad:['小節《しょうせつ》', '加線《かせん》', '終止線《しゅうしせん》'], ex:'ピアノの 楽譜《がくふ》は 大譜表《だいふひょう》。上が 右手、下が 左手 だよ。' });
+    Q('sta5', 'staff', 3, { q:'ト音《おん》記号《きごう》の 五線で、上に 加線《かせん》を 1本 足して かく この 音は?', fig:one(12, 'q', { col:D.HL }), snd:function(){ D.tone(M(12), 0, 0.8); }, a:'ラ', bad:['ソ', 'シ', 'ド'], ex:'第5線《だいごせん》が ファ、その すぐ 上が ソ、加線《かせん》が 玉の まん中を 通る 音が ラ だよ。' });
+
+    /* ============ 2. 音の 高さ(ドレミ) ============ */
+    LESS.pitch = [
+      [1, 'ドレミファソラシド', S([['n', 0, 'q'], ['n', 1, 'q'], ['n', 2, 'q'], ['n', 3, 'q'], ['n', 4, 'q'], ['n', 5, 'q'], ['n', 6, 'q'], ['n', 7, 'q']], { step:27 }), 'いちばん 下の ドは 加線《かせん》の 上。レは 第1線《だいいっせん》の すぐ 下。そこから 線・間《かん》・線・間《かん》… と 1つずつ 上がって いくよ。▶ で 聞いて みよう。', function(){ D.play(scale(0, 7), 100); }],
+      [1, '線の 音・間《かん》の 音', S([['n', 2, 'q', { col:'#2F86D9' }], ['n', 4, 'q', { col:'#2F86D9' }], ['n', 6, 'q', { col:'#2F86D9' }], ['sp', 10], ['n', 3, 'q', { col:'#E07A12' }], ['n', 5, 'q', { col:'#E07A12' }], ['n', 7, 'q', { col:'#E07A12' }]]), '青は 線の 上の 音 = ミ・ソ・シ。オレンジは 間《かん》の 音 = ファ・ラ・ド。ミ・ソ・シ を おぼえると、となりの 音も すぐ わかるよ。', function(){ D.play(mel([2, 4, 6, null, 3, 5, 7], 0.6), 100); }],
+      [1, 'ピアノの けんばん', '<div class="ok-mini-kb">' + ['ド', 'レ', 'ミ', 'ファ', 'ソ', 'ラ', 'シ', 'ド'].map(function(n){ return '<span>' + n + '</span>'; }).join('') + [1, 2, 4, 5, 6].map(function(k){ return '<i style="left:calc(' + (k * 12.5) + '% - 3.5%)"></i>'; }).join('') + '</div>', '黒い けんばんが 2つ ならんで いる 左が ド。そこから 右へ レ・ミ・ファ・ソ・ラ・シ・ド。島の「ピアノ ひろば」で ひいて みよう!'],
+      [2, 'もっと 低《ひく》い 音', S([['n', -2, 'q'], ['n', -1, 'q'], ['n', 0, 'q']]), '下に 加線《かせん》を 2本 足すと ラ、加線《かせん》の 下に ぶら下がると シ。低《ひく》い ラ・シ・ド だよ。', function(){ D.play(mel([-2, -1, 0], 0.7), 100); }],
+      [2, 'もっと 高い 音', S([['n', 8, 'q'], ['n', 9, 'q'], ['n', 10, 'q'], ['n', 11, 'q'], ['n', 12, 'q']]), '上の ドより 上は レ・ミ・ファ・ソ・ラ。第5線《だいごせん》が ファ、加線《かせん》が 玉の まん中を 通る 音が ラ。', function(){ D.play(scale(7, 12), 100); }],
+      [3, '♯(シャープ)と ♭(フラット)', S([['n', 3, 'q'], ['n', 3, 'q', { acc:1 }], ['sp', 8], ['n', 6, 'q'], ['n', 6, 'q', { acc:-1 }]], { step:38 }), '♯は 半音《はんおん》(ピアノの となりの けんばん 1つ分)上げる。♭は 半音《はんおん》下げる。♮(ナチュラル)は もとの 高さに もどす 記号《きごう》だよ。', function(){ D.play([[M(3), 0.8], [M(3, 1), 0.8], [null, 0.4], [M(6), 0.8], [M(6, -1), 0.8]], 90); }],
+      [3, '調号《ちょうごう》', S([['raw', function(x){ return D.acc(x - 2, 30, 1); }, 18], ['time', 4, 4], ['n', 3, 'q', { col:D.HL }], ['n', 4, 'q'], ['n', 10, 'q', { col:D.HL }], ['n', 7, 'q'], ['end']]), 'ト音《おん》記号《きごう》の すぐ 右に まとめて かいた ♯や♭が 調号《ちょうごう》。ここでは 第5線《だいごせん》(ファ)に ♯が あるから、曲の 中の ファは ぜんぶ 半音《はんおん》上げて ひくよ(赤い 音)。', function(){ D.play([[M(3, 1), 1], [M(4), 1], [M(10, 1), 1], [M(7), 1]], 96); }],
+      [3, '音程《おんてい》(何度《なんど》)', S([['n', 0, 'h'], ['n', 2, 'h'], ['sp', 10], ['n', 0, 'h'], ['n', 4, 'h']]), '2つの 音の へだたりを 音程《おんてい》と いい、「〜度《ど》」で 数えるよ。どちらの 音も 1つと 数えるのが きまり。ド→ミ は ド・レ・ミ で 3度《さんど》、ド→ソ は 5度《ごど》。', function(){ D.play([[M(0), 1], [M(2), 1], [null, 0.5], [M(0), 1], [M(4), 1]], 100); }]
+    ];
+    var NM7 = ['ド', 'レ', 'ミ', 'ファ', 'ソ', 'ラ', 'シ'];
+    function nearNames(d){ var r = []; [1, -1, 2, -2, 3].forEach(function(k){ var n = D.nm(d + k); if(n !== D.nm(d) && r.indexOf(n) < 0) r.push(n); }); return r.slice(0, 3); }
+    function where(d){ var y = d % 2 === 0 ? '線の 上' : '間《かん》'; return 'この 音は ' + D.nm(d) + '。' + (d === 0 ? '下に 加線《かせん》が 1本 つく ドだよ。' : d === 1 ? '第1線《だいいっせん》の すぐ 下に ぶら下がる レだよ。' : d === -1 ? '加線《かせん》の すぐ 下に ぶら下がる シだよ。' : d === 11 ? '第5線《だいごせん》の すぐ 上に のる ソだよ。' : d === -2 ? '加線《かせん》2本の ラだよ。' : d === 12 ? '加線《かせん》が 玉の まん中を 通る ラだよ。' : y + 'の 音だよ。'); }
+    for(var d = 0; d <= 7; d++) (function(d){ Q('pn' + d, 'pitch', 1, { q:'この 音は 何?', fig:one(d, 'q'), post:function(){ D.tone(M(d), 0, 0.8); }, a:D.nm(d), bad:nearNames(d), ex:where(d) }); })(d);
+    [[0, 4], [5, 2], [7, 3], [1, 6]].forEach(function(p, k){
+      Q('phl' + k, 'pitch', 1, { q:'高い 音は どっち?', fig:S([['n', p[0], 'q'], ['sp', 20], ['n', p[1], 'q']], { w:170 }), post:function(){ D.play(mel(p, 0.8), 90); }, a:p[0] > p[1] ? 'ひだり' : 'みぎ', bad:[p[0] > p[1] ? 'みぎ' : 'ひだり'], ex:'五線の 上の 方に ある 音が 高い 音だよ。' });
+    });
+    [-2, -1, 8, 9, 10, 11, 12].forEach(function(d){ Q('pn' + d, 'pitch', 2, { q:'この 音は 何?', fig:one(d, 'q'), post:function(){ D.tone(M(d), 0, 0.8); }, a:D.nm(d), bad:nearNames(d), ex:where(d) }); });
+    [[1, [3, 5, 7]], [3, [1, 5, 2]], [5, [3, 7, 4]], [0, [2, 6, 4]], [6, [4, 8, 5]]].forEach(function(p){
+      var mk = function(d){ return D.svg(80, D.lines(4, 76) + D.note(40, d, 'q'), 110); };
+      Q('pw' + p[0], 'pitch', 2, { q:'ト音《おん》記号《きごう》の 五線で「' + D.nm(p[0]) + '」は どれ?', a:mk(p[0]), bad:p[1].map(mk), post:function(){ D.tone(M(p[0]), 0, 0.8); }, ex:where(p[0]) });
+    });
+    Q('psh', 'pitch', 3, { q:'♯(シャープ)は どんな 記号《きごう》?', fig:S([['sp', 10], ['n', 3, 'q', { acc:1 }]], { w:130 }), post:function(){ D.play([[M(3), 0.7], [M(3, 1), 0.9]], 90); }, a:'半音《はんおん》 上げる', bad:['半音《はんおん》 下げる', 'もとの 高さに もどす', '音を 長く する'], ex:'♯は 半音《はんおん》(となりの けんばん 1つ分)高く するよ。' });
+    Q('pfl', 'pitch', 3, { q:'♭(フラット)は どんな 記号《きごう》?', fig:S([['sp', 10], ['n', 6, 'q', { acc:-1 }]], { w:130 }), post:function(){ D.play([[M(6), 0.7], [M(6, -1), 0.9]], 90); }, a:'半音《はんおん》 下げる', bad:['半音《はんおん》 上げる', 'もとの 高さに もどす', '音を 短く する'], ex:'♭は 半音《はんおん》 低《ひく》く するよ。' });
+    Q('pna', 'pitch', 3, { q:'♮(ナチュラル)は どんな 記号《きごう》?', fig:S([['n', 3, 'q', { acc:1 }], ['n', 3, 'q', { acc:0 }]], { w:190, step:40 }), post:function(){ D.play([[M(3, 1), 0.8], [M(3), 0.8]], 90); }, a:'もとの 高さに もどす', bad:['半音《はんおん》 上げる', '半音《はんおん》 下げる', '1オクターブ 上げる'], ex:'♯や♭を とりけして、もとの 高さに もどすよ。' });
+    Q('pfs', 'pitch', 3, { q:'この 音は?', fig:one(3, 'q', { acc:1 }), post:function(){ D.tone(M(3, 1), 0, 0.8); }, a:'ファ♯', bad:['ファ', 'ソ', 'ミ'], ex:'ファの 間《かん》に ♯が ついて いるから ファ♯だよ。' });
+    Q('pbb', 'pitch', 3, { q:'この 音は?', fig:one(6, 'q', { acc:-1 }), post:function(){ D.tone(M(6, -1), 0, 0.8); }, a:'シ♭', bad:['シ', 'ラ', 'ド'], ex:'第3線《だいさんせん》の シに ♭が ついて いるから シ♭だよ。' });
+    Q('pkey', 'pitch', 3, { q:'ト音《おん》記号《きごう》の すぐ 右に まとめて かく ♯や♭を 何と いう?', fig:S([['raw', function(x){ return D.acc(x - 2, 30, 1); }, 18], ['time', 4, 4], ['sp', 30]], { w:150 }), a:'調号《ちょうごう》', bad:['拍子《ひょうし》記号《きごう》', '強弱《きょうじゃく》記号《きごう》', '音符《おんぷ》'], ex:'調号《ちょうごう》が あると、その 音は 曲の あいだ ずっと ♯や♭で ひくよ。' });
+    Q('pkey2', 'pitch', 3, { q:'赤い ♯の 調号《ちょうごう》が ある とき、曲の 中で いつも 半音《はんおん》 上げて ひく 音は?', fig:S([['raw', function(x){ return D.acc(x - 2, 30, 1, D.HL); }, 18], ['time', 4, 4], ['sp', 30]], { w:150 }), a:'ファ', bad:['ド', 'ソ', 'シ'], ex:'調号《ちょうごう》の ♯は ファの 場所。だから 高い ファも 低《ひく》い ファも ぜんぶ ファ♯ だよ。' });
+    Q('pi3', 'pitch', 3, { q:'ドと ミの 音程《おんてい》は 何度《なんど》?', fig:S([['n', 0, 'h'], ['n', 2, 'h']], { w:150 }), snd:function(){ D.play(mel([0, 2], 1), 90); }, a:'3度《さんど》', bad:['2度《にど》', '4度《よんど》', '5度《ごど》'], ex:'ド・レ・ミ と、どちらの 音も 入れて 数えるから 3度《さんど》。' });
+    Q('pi5', 'pitch', 3, { q:'ドと ソの 音程《おんてい》は 何度《なんど》?', fig:S([['n', 0, 'h'], ['n', 4, 'h']], { w:150 }), snd:function(){ D.play(mel([0, 4], 1), 90); }, a:'5度《ごど》', bad:['4度《よんど》', '3度《さんど》', '6度《ろくど》'], ex:'ド・レ・ミ・ファ・ソ で 5つ。5度《ごど》だよ。' });
+    Q('pi8', 'pitch', 3, { q:'ドと 1つ 上の ドの 音程《おんてい》は 何度《なんど》?', fig:S([['n', 0, 'h'], ['n', 7, 'h']], { w:150 }), snd:function(){ D.play(mel([0, 7], 1), 90); }, a:'8度《はちど》', bad:['7度《ななど》', '1度《いちど》', '6度《ろくど》'], ex:'8度《はちど》=1オクターブ だよ。' });
+
+    /* ============ 3. 音符の 長さ ============ */
+    var notesRow = S([['n', 4, 'w'], ['n', 4, 'h'], ['n', 4, 'q'], ['n', 4, 'e'], ['n', 4, 's']], { step:40 });
+    LESS.note = [
+      [1, '音符《おんぷ》の 名前', notesRow, '左から 全音符《ぜんおんぷ》・2分音符《にぶおんぷ》・4分音符《しぶおんぷ》・8分音符《はちぶおんぷ》・16分音符《じゅうろくぶおんぷ》。右へ 行くほど 短い 音だよ。'],
+      [1, '4分音符《しぶおんぷ》が 1拍《いっぱく》', S([['n', 4, 'q'], ['n', 4, 'q'], ['n', 4, 'q'], ['n', 4, 'q']]), '「タン・タン・タン・タン」。4分音符《しぶおんぷ》1つを 1拍《いっぱく》(手を 1回 たたく 長さ)と して 数えることが 多いよ。▶ で 聞いて 手を たたこう。', function(){ D.play([[M(4), 1], [M(4), 1], [M(4), 1], [M(4), 1]], 90, { beat:true }); }],
+      [1, '長い 音符《おんぷ》', S([['n', 4, 'h'], ['n', 4, 'h'], ['bar'], ['n', 4, 'w']], { w:230 }), '2分音符《にぶおんぷ》は「ター・アン」で 2拍《にはく》。全音符《ぜんおんぷ》は「ター・アン・アン・アン」で 4拍《よんはく》。白い 玉は 長い 音だね。', function(){ D.play([[M(4), 2], [M(4), 2], [M(4), 4]], 100, { beat:true }); }],
+      [1, '短い 音符《おんぷ》', S([['n', 4, 'q'], ['n', 4, 'e'], ['n', 4, 'e'], ['n', 4, 'q'], ['n', 4, 'e'], ['n', 4, 'e']]), '8分音符《はちぶおんぷ》は はたが 1本で、4分音符《しぶおんぷ》の 半分の 長さ。「タタ」と 2つで 1拍《いっぱく》だよ。', function(){ D.play([[M(4), 1], [M(4), 0.5], [M(4), 0.5], [M(4), 1], [M(4), 0.5], [M(4), 0.5]], 90, { beat:false }); }],
+      [2, 'はたと 連《れん》こう', D.rhythm(['e', 'e', 'e', 'e', 'q', 'q']), '8分音符《はちぶおんぷ》が ならぶと、はたの かわりに 太い 横線で つなぐよ。つないでも 長さは 同じ。16分音符《じゅうろくぶおんぷ》は はたが 2本、4つで 1拍《いっぱく》。', function(){ D.play([[M(4), 0.5], [M(4), 0.5], [M(4), 0.5], [M(4), 0.5], [M(4), 1], [M(4), 1]], 90); }],
+      [2, '付点《ふてん》は 半分を たす', S([['n', 4, 'h', { dot:true }], ['n', 4, 'q'], ['bar'], ['n', 4, 'q', { dot:true }], ['n', 4, 'e'], ['n', 4, 'h']], { step:30 }), '音符《おんぷ》の 右の 点が 付点《ふてん》。もとの 長さの 半分を たすよ。付点《ふてん》2分音符《にぶおんぷ》は 2+1で 3拍《さんぱく》、付点《ふてん》4分音符《しぶおんぷ》は 1+0.5で 1拍《いっぱく》半。', function(){ D.play([[M(4), 3], [M(4), 1], [M(4), 1.5], [M(4), 0.5], [M(4), 2]], 100, { beat:false }); }]
+    ];
+    ['w', 'h', 'q', 'e'].forEach(function(k){ Q('nn' + k, 'note', 1, { q:'この 音符《おんぷ》の 名前は?', fig:one(4, k), a:NOTE_N[k], bad:['w', 'h', 'q', 'e'].filter(function(x){ return x !== k; }).map(function(x){ return NOTE_N[x]; }), ex:'全音符《ぜんおんぷ》=白い 玉だけ、2分音符《にぶおんぷ》=白い 玉に ぼう、4分音符《しぶおんぷ》=黒い 玉に ぼう、8分音符《はちぶおんぷ》=はたが 1本。' }); });
+    Q('nlong', 'note', 1, { q:'いちばん 長く のばす 音符《おんぷ》は どれ?', a:D.solo('n', 'w'), bad:[D.solo('n', 'h'), D.solo('n', 'q'), D.solo('n', 'e')], ex:'全音符《ぜんおんぷ》は 4拍《よんはく》。いちばん 長いよ。' });
+    Q('nshort', 'note', 1, { q:'いちばん 短い 音符《おんぷ》は どれ?', a:D.solo('n', 'e'), bad:[D.solo('n', 'h'), D.solo('n', 'q'), D.solo('n', 'w')], ex:'はたが ついた 8分音符《はちぶおんぷ》が いちばん 短いよ。' });
+    Q('nh2', 'note', 1, { q:'2分音符《にぶおんぷ》は、4分音符《しぶおんぷ》 何こ分の 長さ?', fig:S([['n', 4, 'h'], ['sp', 4], ['n', 4, 'q'], ['n', 4, 'q']], { w:190 }), a:'2こ', bad:['1こ', '3こ', '4こ'], ex:'4分音符《しぶおんぷ》=1拍《いっぱく》、2分音符《にぶおんぷ》=2拍《にはく》。' });
+    Q('nw4', 'note', 1, { q:'全音符《ぜんおんぷ》は、4分音符《しぶおんぷ》 何こ分の 長さ?', fig:one(4, 'w'), a:'4こ', bad:['2こ', '3こ', '8こ'], ex:'全音符《ぜんおんぷ》は 4拍《よんはく》。' });
+    Q('nns', 'note', 2, { q:'この 音符《おんぷ》の 名前は?', fig:one(4, 's'), a:NOTE_N.s, bad:[NOTE_N.e, NOTE_N.q, '32分音符《さんじゅうにぶおんぷ》'], ex:'はたが 2本で 16分音符《じゅうろくぶおんぷ》。4つで 1拍《いっぱく》だよ。' });
+    Q('nndh', 'note', 2, { q:'この 音符《おんぷ》の 名前は?', fig:one(4, 'h', { dot:true }), a:'付点《ふてん》2分音符《にぶおんぷ》', bad:[NOTE_N.h, '付点《ふてん》4分音符《しぶおんぷ》', NOTE_N.w], ex:'白い 玉に ぼう、右に 点 → 付点《ふてん》2分音符《にぶおんぷ》。' });
+    Q('ndh3', 'note', 2, { q:'4分音符《しぶおんぷ》を 1拍《いっぱく》と すると、付点《ふてん》2分音符《にぶおんぷ》は 何拍《なんぱく》?', fig:one(4, 'h', { dot:true }), a:'3拍《さんぱく》', bad:['2拍《にはく》', '4拍《よんはく》', '2拍《にはく》半'], ex:'2拍《にはく》+その 半分の 1拍《いっぱく》=3拍《さんぱく》。' });
+    Q('ne', 'note', 2, { q:'4分音符《しぶおんぷ》を 1拍《いっぱく》と すると、8分音符《はちぶおんぷ》は 何拍《なんぱく》?', fig:one(4, 'e'), a:'半拍《はんぱく》(0.5拍《ごはく》)', bad:['1拍《いっぱく》', '2拍《にはく》', '4拍《よんはく》'], ex:'8分音符《はちぶおんぷ》は 4分音符《しぶおんぷ》の 半分。' });
+    Q('ne2', 'note', 2, { q:'8分音符《はちぶおんぷ》 2つで、どの 音符《おんぷ》と 同じ 長さ?', fig:D.rhythm(['e', 'e']), a:NOTE_N.q, bad:[NOTE_N.h, NOTE_N.w, NOTE_N.s], ex:'半拍《はんぱく》+半拍《はんぱく》=1拍《いっぱく》=4分音符《しぶおんぷ》。' });
+    Q('ns4', 'note', 2, { q:'4分音符《しぶおんぷ》 1つは、16分音符《じゅうろくぶおんぷ》 いくつ分?', a:'4つ', bad:['2つ', '8つ', '3つ'], ex:'16分音符《じゅうろくぶおんぷ》は 4分音符《しぶおんぷ》の 4分の1。4つで 1拍《いっぱく》だよ。' });
+    Q('nflag2', 'note', 2, { q:'はたが 2本 ついた 音符《おんぷ》は?', a:NOTE_N.s, bad:[NOTE_N.e, NOTE_N.q, NOTE_N.h], ex:'はた1本=8分、はた2本=16分。' });
+    Q('nbeam', 'note', 2, { q:'8分音符《はちぶおんぷ》が 2つ ならんだ とき、はたの かわりに どう かく?', fig:D.rhythm(['e', 'e', 'e', 'e']), a:'太い 横線で つなぐ', bad:['点を つける', '丸で かこむ', '白い 玉に する'], ex:'太い 横線(連《れん》こう)で つないでも 長さは 同じだよ。' });
+    Q('ndq', 'note', 3, { q:'付点《ふてん》4分音符《しぶおんぷ》は 何拍《なんぱく》?(4分音符《しぶおんぷ》=1拍《いっぱく》)', fig:one(4, 'q', { dot:true }), a:'1拍《いっぱく》半', bad:['1拍《いっぱく》', '2拍《にはく》', '3拍《さんぱく》'], ex:'1拍《いっぱく》+半分の 0.5拍《ごはく》=1.5拍《ごはく》。' });
+    Q('ndot', 'note', 3, { q:'付点《ふてん》は、もとの 音符《おんぷ》に どれだけの 長さを たす?', a:'もとの 長さの 半分', bad:['もとと 同じ 長さ', '1拍《いっぱく》', 'もとの 長さの 2倍《にばい》'], ex:'付点《ふてん》=半分を たす。2分なら +1拍《いっぱく》、4分なら +半拍《はんぱく》。' });
+    Q('nsum1', 'note', 3, { q:'ぜんぶで 何拍《なんぱく》?(4分音符《しぶおんぷ》=1拍《いっぱく》)', fig:S([['n', 4, 'h'], ['n', 4, 'q'], ['n', 4, 'e'], ['n', 4, 'e']], { w:210 }), snd:function(){ D.play([[M(4), 2], [M(4), 1], [M(4), 0.5], [M(4), 0.5]], 90); }, a:'4拍《よんはく》', bad:['3拍《さんぱく》', '5拍《ごはく》', '6拍《ろっぱく》'], ex:'2+1+0.5+0.5=4拍《よんはく》。' });
+    Q('nsum2', 'note', 3, { q:'ぜんぶで 何拍《なんぱく》?(4分音符《しぶおんぷ》=1拍《いっぱく》)', fig:S([['n', 4, 'q', { dot:true }], ['n', 4, 'e'], ['n', 4, 'h', { dot:true }]], { w:210 }), snd:function(){ D.play([[M(4), 1.5], [M(4), 0.5], [M(4), 3]], 90); }, a:'5拍《ごはく》', bad:['4拍《よんはく》', '3拍《さんぱく》', '6拍《ろっぱく》'], ex:'1.5+0.5+3=5拍《ごはく》。' });
+
+    /* ============ 4. 休符 ============ */
+    var restsRow = S([['r', 'w'], ['r', 'h'], ['r', 'q'], ['r', 'e'], ['r', 's']], { step:40 });
+    LESS.rest = [
+      [1, '休符《きゅうふ》は 「休み」の 記号《きごう》', S([['n', 4, 'q'], ['r', 'q'], ['n', 4, 'q'], ['r', 'q']]), '休符《きゅうふ》の ところは 音を 出さずに 休むよ。「タン・ウン・タン・ウン」。休みも 音楽の 大事な 一部。', function(){ D.play([[M(4), 1], [null, 1], [M(4), 1], [null, 1]], 90, { beat:true }); }],
+      [1, '休符《きゅうふ》の 名前', restsRow, '左から 全休符《ぜんきゅうふ》・2分休符《にぶきゅうふ》・4分休符《しぶきゅうふ》・8分休符《はちぶきゅうふ》・16分休符《じゅうろくぶきゅうふ》。音符《おんぷ》と 同じ 長さだけ 休むよ。'],
+      [2, 'ぶら下がる? のっかる?', S([['r', 'w', { col:'#2F86D9' }], ['sp', 20], ['r', 'h', { col:'#E07A12' }]], { w:180 }), '全休符《ぜんきゅうふ》(青)は 第4線《だいよんせん》に ぶら下がる。2分休符《にぶきゅうふ》(オレンジ)は 第3線《だいさんせん》の 上に のっかる。「長く 休む 全休符《ぜんきゅうふ》は 重くて ぶら下がる」と おぼえよう。'],
+      [2, '1小節《いっしょうせつ》 まるごと 休み', S([['time', 3, 4], ['n', 4, 'q'], ['n', 5, 'q'], ['n', 6, 'q'], ['bar'], ['sp', 14], ['r', 'w'], ['sp', 14], ['end']]), '全休符《ぜんきゅうふ》は、どんな 拍子《ひょうし》でも「1小節《いっしょうせつ》 ぜんぶ 休み」の いみで つかうよ。'],
+      [3, '付点《ふてん》休符《きゅうふ》', S([['r', 'q', { dot:true }], ['n', 4, 'e'], ['n', 4, 'h']]), '休符《きゅうふ》にも 付点《ふてん》が つくよ。付点《ふてん》4分休符《しぶきゅうふ》は 1拍《いっぱく》半 休む。', function(){ D.play([[null, 1.5], [M(4), 0.5], [M(4), 2]], 90, { click:4 }); }]
+    ];
+    Q('rwhat', 'rest', 1, { q:'休符《きゅうふ》は どんな 記号《きごう》?', fig:S([['n', 4, 'q'], ['r', 'q', { col:D.HL }], ['n', 4, 'q']], { w:170 }), a:'音を 出さずに 休む', bad:['音を 大きく する', '音を くりかえす', '音を 高く する'], ex:'休符《きゅうふ》の 長さだけ 休むよ。' });
+    ['w', 'h', 'q', 'e'].forEach(function(k){ Q('rn' + k, 'rest', 1, { q:'この 休符《きゅうふ》の 名前は?', fig:S([['r', k]], { w:110 }), a:REST_N[k], bad:['w', 'h', 'q', 'e'].filter(function(x){ return x !== k; }).map(function(x){ return REST_N[x]; }), ex:k === 'w' ? '第4線《だいよんせん》に ぶら下がる 四角は 全休符《ぜんきゅうふ》。' : k === 'h' ? '第3線《だいさんせん》の 上に のっかる 四角は 2分休符《にぶきゅうふ》。' : k === 'q' ? 'ぎざぎざの 形が 4分休符《しぶきゅうふ》。' : '7の ような 形が 8分休符《はちぶきゅうふ》。' }); });
+    Q('rq1', 'rest', 1, { q:'4分休符《しぶきゅうふ》は 何拍《なんぱく》 休む?(4分音符《しぶおんぷ》=1拍《いっぱく》)', fig:S([['r', 'q']], { w:110 }), a:'1拍《いっぱく》', bad:['2拍《にはく》', '半拍《はんぱく》', '4拍《よんはく》'], ex:'4分音符《しぶおんぷ》と 同じ 1拍《いっぱく》 休むよ。' });
+    Q('rhang', 'rest', 2, { q:'第4線《だいよんせん》に ぶら下がって いる 休符《きゅうふ》は どっち?', a:D.solo('r', 'w'), bad:[D.solo('r', 'h')], ex:'全休符《ぜんきゅうふ》は ぶら下がる、2分休符《にぶきゅうふ》は のっかる。' });
+    Q('rh2', 'rest', 2, { q:'2分休符《にぶきゅうふ》は 何拍《なんぱく》 休む?(4分音符《しぶおんぷ》=1拍《いっぱく》)', fig:S([['r', 'h']], { w:110 }), a:'2拍《にはく》', bad:['1拍《いっぱく》', '3拍《さんぱく》', '4拍《よんはく》'], ex:'2分音符《にぶおんぷ》と 同じ 2拍《にはく》。' });
+    Q('rns', 'rest', 2, { q:'この 休符《きゅうふ》の 名前は?', fig:S([['r', 's']], { w:110 }), a:REST_N.s, bad:[REST_N.e, REST_N.q, REST_N.h], ex:'8分休符《はちぶきゅうふ》の 形に 点が もう 1つで 16分休符《じゅうろくぶきゅうふ》。' });
+    Q('re', 'rest', 2, { q:'8分休符《はちぶきゅうふ》は 何拍《なんぱく》 休む?(4分音符《しぶおんぷ》=1拍《いっぱく》)', fig:S([['r', 'e']], { w:110 }), a:'半拍《はんぱく》(0.5拍《ごはく》)', bad:['1拍《いっぱく》', '2拍《にはく》', '4拍《よんはく》'], ex:'8分音符《はちぶおんぷ》と 同じ 半拍《はんぱく》。' });
+    Q('rpair', 'rest', 2, { q:'4分音符《しぶおんぷ》と 同じ 長さの 休符《きゅうふ》は?', fig:one(4, 'q'), a:S([['r', 'q']], { w:90, noclef:true }), bad:[S([['r', 'h']], { w:90, noclef:true }), S([['r', 'e']], { w:90, noclef:true }), S([['r', 'w']], { w:90, noclef:true })], ex:'4分音符《しぶおんぷ》 ↔ 4分休符《しぶきゅうふ》。名前の 数字が 同じだと 長さも 同じ。' });
+    Q('rdq', 'rest', 3, { q:'付点《ふてん》4分休符《しぶきゅうふ》は 何拍《なんぱく》 休む?', fig:S([['r', 'q', { dot:true }]], { w:110 }), a:'1拍《いっぱく》半', bad:['1拍《いっぱく》', '2拍《にはく》', '3拍《さんぱく》'], ex:'1拍《いっぱく》+半拍《はんぱく》=1拍《いっぱく》半。' });
+    Q('rbar', 'rest', 3, { q:'どの 拍子《ひょうし》でも「1小節《いっしょうせつ》 ぜんぶ 休み」に つかう 休符《きゅうふ》は?', a:REST_N.w, bad:[REST_N.h, REST_N.q, REST_N.e], ex:'全休符《ぜんきゅうふ》は 4分の3拍子《さんびょうし》でも 1小節《いっしょうせつ》 休みの いみに なるよ。' });
+    Q('rwhich1', 'rest', 3, { q:'この 小節《しょうせつ》で、音を 出さないのは 何拍目《なんぱくめ》?', fig:S([['time', 4, 4], ['n', 4, 'q'], ['r', 'q'], ['n', 5, 'h'], ['end']]), snd:function(){ D.play([[M(4), 1], [null, 1], [M(5), 2]], 90, { click:4, beat:true }); }, a:'2拍目《にはくめ》', bad:['1拍目《いっぱくめ》', '3拍目《さんぱくめ》', '4拍目《よんはくめ》'], ex:'1拍目《いっぱくめ》が 4分音符《しぶおんぷ》、2拍目《にはくめ》が 4分休符《しぶきゅうふ》、3・4拍目《よんはくめ》が 2分音符《にぶおんぷ》。' });
+    Q('rwhich2', 'rest', 3, { q:'この 小節《しょうせつ》で、音を 出さないのは 何拍目《なんぱくめ》?', fig:S([['time', 3, 4], ['r', 'q'], ['n', 4, 'q'], ['n', 2, 'q'], ['end']]), snd:function(){ D.play([[null, 1], [M(4), 1], [M(2), 1]], 90, { click:3, beat:true }); }, a:'1拍目《いっぱくめ》', bad:['2拍目《にはくめ》', '3拍目《さんぱくめ》', '休みは ない'], ex:'さいしょの 4分休符《しぶきゅうふ》で 1拍《いっぱく》 休んでから 歌い 出すよ。' });
+
+    /* ============ 5. 拍子と 小節 ============ */
+    LESS.beat = [
+      [1, '小節《しょうせつ》と 小節線《しょうせつせん》', S([['n', 2, 'q'], ['n', 3, 'q'], ['n', 4, 'q'], ['n', 5, 'q'], ['bar', D.HL], ['n', 4, 'h'], ['n', 2, 'h'], ['end']], { step:30 }), '楽譜《がくふ》を くぎる たての 線が 小節線《しょうせつせん》(赤)。小節線《しょうせつせん》で くぎられた 1つ分を 小節《しょうせつ》と いうよ。'],
+      [1, '曲の おわりは 終止線《しゅうしせん》', S([['n', 4, 'h'], ['n', 2, 'h'], ['end', D.HL]]), '細い 線と 太い 線の 2本が 終止線《しゅうしせん》。「ここで 曲が おわり」の しるしだよ。'],
+      [1, '拍子《ひょうし》記号《きごう》', S([['time', 4, 4, D.HL], ['n', 4, 'q'], ['n', 4, 'q'], ['n', 4, 'q'], ['n', 4, 'q'], ['end']]), 'ト音《おん》記号《きごう》の 右の 数字が 拍子《ひょうし》記号《きごう》。4分の4拍子《よんびょうし》は「1小節《いっしょうせつ》に 4分音符《しぶおんぷ》が 4つ 分」。', function(){ D.play([[M(4), 1, 0.4], [M(4), 1, 0.2], [M(4), 1, 0.3], [M(4), 1, 0.2]], 96); }],
+      [1, '3拍子《さんびょうし》と 2拍子《にびょうし》', S([['time', 3, 4], ['n', 0, 'q'], ['n', 4, 'q'], ['n', 4, 'q'], ['bar'], ['n', 0, 'q'], ['n', 4, 'q'], ['n', 4, 'q'], ['end']], { step:28 }), '4分の3拍子《さんびょうし》は 1小節《いっしょうせつ》に 4分音符《しぶおんぷ》 3つ分。「ブン・チャッ・チャッ」と ワルツの リズム。2拍子《にびょうし》は「イチ・ニ」と 行進《こうしん》の リズムだよ。', function(){ D.play([[M(0), 1, 0.4], [[M(2), M(4)], 1, 0.16], [[M(2), M(4)], 1, 0.16], [M(0), 1, 0.4], [[M(2), M(4)], 1, 0.16], [[M(2), M(4)], 1, 0.16]], 132); }],
+      [2, '上の 数字・下の 数字', S([['time', 3, 4], ['sp', 10]], { w:120 }), '上の 数字は「1小節《いっしょうせつ》に 何拍《なんぱく》」。下の 数字は「どの 音符《おんぷ》を 1拍《いっぱく》に するか」。4なら 4分音符《しぶおんぷ》、8なら 8分音符《はちぶおんぷ》が 1拍《いっぱく》。'],
+      [2, '強い 拍《はく》・弱い 拍《はく》', S([['time', 4, 4], ['n', 4, 'q', { col:D.HL }], ['n', 4, 'q'], ['n', 4, 'q'], ['n', 4, 'q'], ['bar'], ['n', 4, 'q', { col:D.HL }], ['n', 4, 'q'], ['n', 4, 'q'], ['n', 4, 'q']], { step:26 }), '小節《しょうせつ》の 1拍目《いっぱくめ》は 強い 拍《はく》。4拍子《よんびょうし》なら「強・弱・中・弱」。▶ で 1拍目《いっぱくめ》が 強く 聞こえるよ。', function(){ var s = []; for(var i = 0; i < 8; i++) s.push([M(4), 1, [0.42, 0.13, 0.25, 0.13][i % 4]]); D.play(s, 110); }],
+      [3, 'いろいろな 拍子《ひょうし》', S([['raw', function(x){ return '<text x="'+(x - 4)+'" y="58" text-anchor="middle" font-size="30" font-weight="900" font-family="Georgia,serif" fill="#222">C</text>'; }, 26], ['sp', 10], ['dbl'], ['time', 6, 8], ['n', 4, 'e'], ['n', 4, 'e'], ['n', 4, 'e'], ['n', 4, 'e'], ['n', 4, 'e'], ['n', 4, 'e']], { step:22 }), 'C の 形の 記号《きごう》は 4分の4拍子《よんびょうし》の こと。8分の6拍子《ろくびょうし》は 8分音符《はちぶおんぷ》が 6つで 1小節《いっしょうせつ》。「タタタ・タタタ」と 3つずつ まとまるよ。', function(){ var s = []; for(var i = 0; i < 12; i++) s.push([M(4), 0.5, i % 3 === 0 ? 0.4 : 0.14]); D.play(s, 100); }]
+    ];
+    Q('bbar', 'beat', 1, { q:'楽譜《がくふ》を くぎる、赤い たての 線の 名前は?', fig:S([['n', 2, 'q'], ['n', 4, 'q'], ['bar', D.HL], ['n', 4, 'h']], { w:200 }), a:'小節線《しょうせつせん》', bad:['終止線《しゅうしせん》', '加線《かせん》', '五線《ごせん》'], ex:'たての 1本線が 小節線《しょうせつせん》だよ。' });
+    Q('bend', 'beat', 1, { q:'曲の おわりに ある、細い 線と 太い 線の 名前は?', fig:S([['n', 4, 'h'], ['n', 2, 'h'], ['end', D.HL]], { w:200 }), a:'終止線《しゅうしせん》', bad:['小節線《しょうせつせん》', '加線《かせん》', 'くりかえし 記号《きごう》'], ex:'終止線《しゅうしせん》は「曲の おわり」の しるし。' });
+    Q('bmeas', 'beat', 1, { q:'小節線《しょうせつせん》と 小節線《しょうせつせん》の 間《あいだ》を 何と いう?', a:'小節《しょうせつ》', bad:['五線《ごせん》', '拍子《ひょうし》', '休符《きゅうふ》'], ex:'1つの 区切りが 1小節《いっしょうせつ》だよ。' });
+    [[4, '4つ'], [3, '3つ'], [2, '2つ']].forEach(function(p){
+      Q('bt' + p[0], 'beat', 1, { q:'4分の' + p[0] + '拍子《びょうし》は、1小節《いっしょうせつ》に 4分音符《しぶおんぷ》 いくつ分?', fig:S([['time', p[0], 4], ['sp', 10]], { w:120 }), a:p[1], bad:['2つ', '3つ', '4つ', '6つ'].filter(function(x){ return x !== p[1]; }).slice(0, 3), ex:'上の 数字が 1小節《いっしょうせつ》の 拍《はく》の 数。' + p[0] + 'つ分だよ。' });
+    });
+    Q('btop', 'beat', 2, { q:'拍子《ひょうし》記号《きごう》の 上の 数字は 何を あらわす?', fig:S([['time', 3, 4], ['sp', 10]], { w:120 }), a:'1小節《いっしょうせつ》の 拍《はく》の 数', bad:['曲の 速さ', '音の 高さ', 'くりかえす 回数'], ex:'下の 数字は 1拍《いっぱく》に する 音符《おんぷ》(4=4分音符《しぶおんぷ》)。' });
+    Q('bbot', 'beat', 2, { q:'拍子《ひょうし》記号《きごう》の 下の 数字「4」の いみは?', fig:S([['time', 3, 4], ['sp', 10]], { w:120 }), a:'4分音符《しぶおんぷ》を 1拍《いっぱく》に する', bad:['4小節《よんしょうせつ》で おわる', '4回 くりかえす', '4番まで ある'], ex:'4なら 4分音符《しぶおんぷ》、8なら 8分音符《はちぶおんぷ》が 1拍《いっぱく》。' });
+    var fill = function(id, ts, list, ans, bads, ex){ Q(id, 'beat', 2, { q:'あいて いる ところに 入る 音符《おんぷ》 1つは?', fig:S([['time', ts, 4]].concat(list).concat([['raw', function(x){ return '<rect x="'+(x - 12)+'" y="26" width="'+(ans === 'h' ? 40 : 26)+'" height="48" rx="6" fill="none" stroke="'+D.HL+'" stroke-width="2" stroke-dasharray="4 3"/>'; }, ans === 'h' ? 40 : 28], ['end']])), a:D.solo('n', ans, { dot:false }), bad:bads.map(function(b){ return D.solo('n', b); }), ex:ex }); };
+    fill('bf1', 4, [['n', 4, 'h'], ['n', 4, 'q']], 'q', ['h', 'e', 'w'], '2+1=3拍《さんぱく》。あと 1拍《いっぱく》で 4分音符《しぶおんぷ》。');
+    fill('bf2', 4, [['n', 4, 'q'], ['n', 4, 'q']], 'h', ['q', 'w', 'e'], '1+1=2拍《にはく》。あと 2拍《にはく》で 2分音符《にぶおんぷ》。');
+    fill('bf3', 3, [['n', 4, 'h']], 'q', ['h', 'w', 'e'], '3拍子《さんびょうし》。2拍《にはく》 あるから あと 1拍《いっぱく》。');
+    fill('bf4', 3, [['n', 4, 'q']], 'h', ['q', 'w', 'e'], '3拍子《さんびょうし》。1拍《いっぱく》 あるから あと 2拍《にはく》で 2分音符《にぶおんぷ》。');
+    Q('bwaltz', 'beat', 2, { q:'聞こえた「ブン・チャッ・チャッ」の リズムは 何拍子《なんびょうし》?', fig:'<div class="ok-big">🎵</div>', auto:true, snd:function(){ D.play([[M(-3), 1, 0.4], [[M(2), M(4)], 1, 0.15], [[M(2), M(4)], 1, 0.15], [M(-3), 1, 0.4], [[M(2), M(4)], 1, 0.15], [[M(2), M(4)], 1, 0.15]], 132); }, a:'4分の3拍子《さんびょうし》', bad:['4分の4拍子《よんびょうし》', '4分の2拍子《にびょうし》'], ex:'強・弱・弱 の 3つで くりかえす のが 3拍子《さんびょうし》。ワルツの リズムだよ。' });
+    Q('bstrong', 'beat', 2, { q:'4分の4拍子《よんびょうし》で、いちばん 強い 拍《はく》は?', a:'1拍目《いっぱくめ》', bad:['2拍目《にはくめ》', '4拍目《よんはくめ》', 'ぜんぶ 同じ'], ex:'「強・弱・中・弱」。小節《しょうせつ》の はじめが いちばん 強いよ。' });
+    Q('bc', 'beat', 3, { q:'拍子《ひょうし》記号《きごう》の ところに ある「C」の いみは?', fig:S([['raw', function(x){ return '<text x="'+(x - 4)+'" y="58" text-anchor="middle" font-size="30" font-weight="900" font-family="Georgia,serif" fill="'+D.HL+'">C</text>'; }, 26], ['sp', 10]], { w:120 }), a:'4分の4拍子《よんびょうし》', bad:['4分の3拍子《さんびょうし》', 'ドの 音から', 'くりかえし'], ex:'C は 4分の4拍子《よんびょうし》の べつの かき方だよ。' });
+    Q('b68', 'beat', 3, { q:'8分の6拍子《ろくびょうし》は、1小節《いっしょうせつ》に 8分音符《はちぶおんぷ》 いくつ分?', fig:S([['time', 6, 8], ['sp', 10]], { w:120 }), a:'6つ', bad:['8つ', '3つ', '4つ'], ex:'上の 6が 数、下の 8が 8分音符《はちぶおんぷ》。' });
+    Q('bdbl', 'beat', 3, { q:'細い 線 2本の「複縦線《ふくじゅうせん》」は どんな ところに つかう?', fig:S([['n', 4, 'h'], ['n', 2, 'h'], ['dbl', D.HL], ['n', 4, 'w']], { w:220 }), a:'曲の 区切りや 拍子《ひょうし》が かわる ところ', bad:['曲の いちばん おわり', '1小節《いっしょうせつ》ごと', '音を 高く する ところ'], cols:1, ex:'曲の おわりは 終止線《しゅうしせん》(細い+太い)。複縦線《ふくじゅうせん》は 区切りの しるしだよ。' });
+    Q('bsum', 'beat', 3, { q:'4分の4拍子《よんびょうし》で 正しい 小節《しょうせつ》は どれ?', a:D.rhythm(['h', 'q', 'e', 'e']), bad:[D.rhythm(['h', 'h', 'q']), D.rhythm(['q', 'q', 'q']), D.rhythm(['w', 'q'])], ex:'2+1+0.5+0.5=4拍《よんはく》。ほかは 5拍《ごはく》・3拍《さんぱく》・5拍《ごはく》で 合わないよ。' });
+
+    /* ============ 6. いろいろな 記号 ============ */
+    var dyn = function(t, sz){ return D.svg(150, D.word(75, 58, t, sz || 34), 90); };
+    var hair = function(cres){ return D.svg(170, '<path d="'+(cres ? 'M20 50 L150 36 M20 50 L150 64' : 'M20 36 L150 50 M20 64 L150 50')+'" stroke="#222" stroke-width="2.4" fill="none" stroke-linecap="round"/>', 90); };
+    var vol = function(v){ return function(){ D.play(mel([0, 2, 4, 7], 0.6).map(function(x){ return [x[0], x[1], v]; }), 110); }; };
+    var ramp = function(a, b){ return function(){ var s = []; for(var i = 0; i < 8; i++) s.push([M(4), 0.5, a + (b - a) * i / 7]); D.play(s, 110); }; };
+    LESS.sign = [
+      [1, '強弱《きょうじゃく》記号《きごう》', '<div class="ok-dyn"><i>pp</i><i>p</i><i>mp</i><i>mf</i><i>f</i><i>ff</i></div>', 'p(ピアノ)= 弱く、f(フォルテ)= 強く。m(メゾ)が つくと「少し」。pp は とても 弱く、ff は とても 強く。▶ で p と f を くらべよう。', function(){ D.play(mel([0, 2, 4, 7], 0.6).map(function(x){ return [x[0], x[1], 0.06]; }).concat([[null, 0.6]]).concat(mel([0, 2, 4, 7], 0.6).map(function(x){ return [x[0], x[1], 0.42]; })), 110); }],
+      [1, 'だんだん 強く・だんだん 弱く', hair(true) + hair(false), '<(クレシェンド)は だんだん 強く、>(デクレシェンド)は だんだん 弱く。広がる 方へ 大きく なるよ。', function(){ var s = []; for(var i = 0; i < 8; i++) s.push([M(4), 0.5, 0.04 + 0.4 * i / 7]); for(var j = 0; j < 8; j++) s.push([M(4), 0.5, 0.44 - 0.4 * j / 7]); D.play(s, 120); }],
+      [2, 'くりかえし 記号《きごう》', D.svg(240, D.lines(8, 232) + D.repeat(20) + D.note(60, 2, 'q') + D.note(95, 4, 'q') + D.note(130, 6, 'q') + D.note(165, 7, 'q') + D.repeat(215, true), 110), '「‖:」から「:‖」までを もう1回 くりかえすよ。', function(){ D.play(mel([2, 4, 6, 7, 2, 4, 6, 7], 0.6), 110); }],
+      [2, 'スタッカート・アクセント', S([['n', 4, 'q'], ['raw', function(x){ return '<circle cx="'+(x - 34)+'" cy="71" r="2.4" fill="#222"/>'; }], ['n', 4, 'q'], ['raw', function(x){ return '<circle cx="'+(x - 34)+'" cy="71" r="2.4" fill="#222"/>'; }], ['sp', 10], ['n', 4, 'q'], ['raw', function(x){ return '<path d="M'+(x - 40)+' 72 L'+(x - 28)+' 76 L'+(x - 40)+' 80" stroke="#222" stroke-width="2" fill="none"/>'; }], ['n', 4, 'q']]), '玉の 上や 下の 点は スタッカート「短く 切って」。> は アクセント「その 音を 目立たせて」。', function(){ D.play([[M(4), 1], [M(4), 1]], 100, { stacc:true }); setTimeout(function(){ D.play([[M(4), 1, 0.45], [M(4), 1, 0.15]], 100); }, 1400); }],
+      [2, 'タイと スラー', S([['n', 4, 'h'], ['n', 4, 'h'], ['raw', function(x){ return '<path d="M'+(x - 61)+' 66 Q'+(x - 50)+' 76 '+(x - 39)+' 66" stroke="#2F86D9" stroke-width="2.4" fill="none"/>'; }], ['sp', 14], ['n', 2, 'q'], ['n', 3, 'q'], ['n', 4, 'q'], ['raw', function(x){ return '<path d="M'+(x - 100)+' 82 Q'+(x - 66)+' 96 '+(x - 32)+' 74" stroke="#E07A12" stroke-width="2.4" fill="none"/>'; }]]), '同じ 高さの 音を つなぐ 線が タイ(青)。1つの 長い 音に して ひくよ。ちがう 高さの 音を つなぐ 線は スラー(オレンジ)。なめらかに つなげて。', function(){ D.play([[M(4), 4], [null, 0.5], [M(2), 1], [M(3), 1], [M(4), 1]], 110); }],
+      [2, 'フェルマータ', S([['n', 4, 'q'], ['n', 5, 'q'], ['n', 7, 'h'], ['raw', function(x){ return '<path d="M'+(x - 46)+' 16 Q'+(x - 34)+' 2 '+(x - 22)+' 16" stroke="#222" stroke-width="2.6" fill="none"/><circle cx="'+(x - 34)+'" cy="13" r="2.4" fill="#222"/>'; }], ['end']]), '目の ような 記号《きごう》が フェルマータ。その 音や 休符《きゅうふ》を ほどよく のばすよ。', function(){ D.play([[M(4), 1], [M(5), 1], [M(7), 4]], 100); }],
+      [3, '速さの ことば', '<div class="ok-dyn sm"><i>Allegro</i><i>Moderato</i><i>Andante</i><i>rit.</i><i>a tempo</i></div>', 'アレグロ=速く、モデラート=中くらいの 速さで、アンダンテ=歩くような 速さで。rit.(リタルダンド)は だんだん おそく、a tempo(ア テンポ)は もとの 速さで。'],
+      [3, '♩=60 の いみ', D.svg(160, D.note(50, 4, 'q') + '<text x="96" y="66" text-anchor="middle" font-size="26" font-weight="900" fill="#222">= 60</text>', 110), '「1分間に 4分音符《しぶおんぷ》を 60 打つ 速さ」。時計の 秒と 同じ 速さだよ。数が 大きいほど 速い。', function(){ var s = []; for(var i = 0; i < 4; i++) s.push([M(4), 1]); D.play(s, 60); }],
+      [3, 'D.C. と Fine', S([['n', 2, 'q'], ['n', 4, 'q'], ['dbl'], ['raw', function(x){ return D.word(x - 19, 94, 'Fine', 15); }], ['n', 6, 'q'], ['n', 7, 'q'], ['dbl'], ['raw', function(x){ return D.word(x - 19, 94, 'D.C.', 15); }]], { w:250 }), 'D.C.(ダ・カーポ)は「はじめに もどる」、Fine(フィーネ)は「おわり」。D.C. で もどって、Fine で おわるよ。']
+    ];
+    [['pp', 'とても 弱く', 0.04], ['p', '弱く', 0.08], ['mp', '少し 弱く', 0.15], ['mf', '少し 強く', 0.25], ['f', '強く', 0.36], ['ff', 'とても 強く', 0.48]].forEach(function(p, k){
+      var all = ['とても 弱く', '弱く', '少し 弱く', '少し 強く', '強く', 'とても 強く'];
+      Q('sd' + p[0], 'sign', 1, { q:'この 記号《きごう》の いみは?', fig:dyn(p[0]), post:vol(p[2]), a:p[1], bad:[all[k ^ 1], all[(k + 2) % 6], all[(k + 4) % 6]].filter(function(x){ return x !== p[1]; }).slice(0, 3), ex:'p=弱く・f=強く。m=少し、2つ ならぶと「とても」。' });
+    });
+    Q('scres', 'sign', 1, { q:'この 記号《きごう》(クレシェンド)の いみは?', fig:hair(true), post:ramp(0.04, 0.45), a:'だんだん 強く', bad:['だんだん 弱く', 'だんだん 速く', 'だんだん 高く'], ex:'口が 広がる 方へ だんだん 強く するよ。' });
+    Q('sdecr', 'sign', 1, { q:'この 記号《きごう》(デクレシェンド)の いみは?', fig:hair(false), post:ramp(0.45, 0.04), a:'だんだん 弱く', bad:['だんだん 強く', 'だんだん おそく', 'だんだん 低《ひく》く'], ex:'口が せまく なる 方へ だんだん 弱く するよ。' });
+    Q('sweak', 'sign', 1, { q:'いちばん 弱いのは どれ?', a:dyn('pp', 28), bad:[dyn('p', 28), dyn('mp', 28), dyn('mf', 28)], ex:'pp(ピアニッシモ)は とても 弱く。' });
+    Q('srep', 'sign', 2, { q:'この 記号《きごう》の いみは?', fig:D.svg(200, D.lines(8, 192) + D.repeat(20) + D.note(70, 4, 'q') + D.note(120, 5, 'q') + D.repeat(178, true), 110), a:'くりかえす', bad:['おわる', 'だんだん 強く', '休む'], ex:'‖: から :‖ までを くりかえすよ。' });
+    Q('sstac', 'sign', 2, { q:'玉の 上や 下の 点(スタッカート)の いみは?', fig:S([['n', 4, 'q'], ['raw', function(x){ return '<circle cx="'+(x - 34)+'" cy="71" r="2.4" fill="'+D.HL+'"/>'; }], ['n', 4, 'q'], ['raw', function(x){ return '<circle cx="'+(x - 34)+'" cy="71" r="2.4" fill="'+D.HL+'"/>'; }]], { w:160 }), post:function(){ D.play([[M(4), 1], [M(4), 1]], 100, { stacc:true }); }, a:'短く 切って', bad:['長く のばして', '強く', 'くりかえして'], ex:'スタッカートは 音を 短く 切るよ。付点《ふてん》(右の 点)と まちがえないでね。' });
+    Q('stie', 'sign', 2, { q:'同じ 高さの 音を つなぐ この 線の 名前は?', fig:S([['n', 4, 'h'], ['n', 4, 'h'], ['raw', function(x){ return '<path d="M'+(x - 61)+' 66 Q'+(x - 50)+' 76 '+(x - 39)+' 66" stroke="'+D.HL+'" stroke-width="2.4" fill="none"/>'; }]], { w:170 }), post:function(){ D.play([[M(4), 4]], 110); }, a:'タイ', bad:['スラー', 'クレシェンド', 'フェルマータ'], ex:'タイで つないだ 音は 1つの 長い 音に なるよ。' });
+    Q('sslur', 'sign', 2, { q:'ちがう 高さの 音を つなぐ この 線(スラー)の いみは?', fig:S([['n', 2, 'q'], ['n', 3, 'q'], ['n', 4, 'q'], ['raw', function(x){ return '<path d="M'+(x - 100)+' 82 Q'+(x - 66)+' 96 '+(x - 32)+' 74" stroke="'+D.HL+'" stroke-width="2.4" fill="none"/>'; }]], { w:170 }), post:function(){ D.play(mel([2, 3, 4], 0.9), 100); }, a:'なめらかに つなげて', bad:['1つの 長い 音に', '短く 切って', 'くりかえして'], ex:'スラーは なめらかに。同じ 高さを つなぐ タイと くらべよう。' });
+    Q('sferm', 'sign', 2, { q:'この 記号《きごう》(フェルマータ)の いみは?', fig:S([['n', 7, 'h'], ['raw', function(x){ return '<path d="M'+(x - 46)+' 16 Q'+(x - 34)+' 2 '+(x - 22)+' 16" stroke="'+D.HL+'" stroke-width="2.6" fill="none"/><circle cx="'+(x - 34)+'" cy="13" r="2.4" fill="'+D.HL+'"/>'; }]], { w:120 }), a:'ほどよく のばす', bad:['すぐ 止める', '速く する', '弱く する'], ex:'フェルマータの 音は、ほどよく のばすよ。' });
+    Q('sacc', 'sign', 2, { post:function(){ D.play([[M(4), 1, 0.45], [M(4), 1, 0.15]], 100); }, q:'音符《おんぷ》に ついた「>」(アクセント)の いみは?', fig:S([['n', 4, 'q'], ['raw', function(x){ return '<path d="M'+(x - 40)+' 72 L'+(x - 28)+' 76 L'+(x - 40)+' 80" stroke="'+D.HL+'" stroke-width="2" fill="none"/>'; }]], { w:110 }), a:'その 音を 目立たせて', bad:['だんだん 弱く', '音を 下げて', 'その 音は 休む'], ex:'アクセントの 音は 目立たせて 強めに。' });
+    Q('stvs', 'sign', 2, { q:'タイと スラー。同じ 高さの 音を つなぐのは?', a:'タイ', bad:['スラー'], ex:'同じ 高さ=タイ、ちがう 高さ=スラー。' });
+    [['Allegro', '速く', ['ゆっくり', '歩くような 速さで', 'だんだん おそく']], ['Andante', '歩くような 速さで', ['速く', 'とても 速く', 'だんだん 速く']], ['Moderato', '中くらいの 速さで', ['とても ゆっくり', '速く', 'もとの 速さで']], ['rit.', 'だんだん おそく', ['だんだん 速く', 'だんだん 強く', 'もとの 速さで']], ['a tempo', 'もとの 速さで', ['だんだん おそく', '速く', 'はじめに もどる']]].forEach(function(p, k){
+      Q('sv' + k, 'sign', 3, { q:'「' + p[0] + '」の いみは?', fig:dyn(p[0], 26), a:p[1], bad:p[2], ex:'アレグロ=速く・モデラート=中くらい・アンダンテ=歩く 速さ・rit.=だんだん おそく・a tempo=もとの 速さ。' });
+    });
+    Q('smm', 'sign', 3, { q:'「♩=60」の いみは?', fig:D.svg(160, D.note(50, 4, 'q') + '<text x="96" y="66" text-anchor="middle" font-size="26" font-weight="900" fill="#222">= 60</text>', 110), post:function(){ var s = []; for(var i = 0; i < 4; i++) s.push([M(4), 1]); D.play(s, 60); }, a:'1分間に 4分音符《しぶおんぷ》を 60 打つ 速さ', bad:['4分音符《しぶおんぷ》を 60回 くりかえす', '60小節《ろくじゅっしょうせつ》ある', '60秒で 曲が おわる'], cols:1, ex:'1秒に 1つの 速さ。数が 大きいほど 速いよ。' });
+    Q('sdc', 'sign', 3, { q:'「D.C.(ダ・カーポ)」の いみは?', fig:dyn('D.C.', 30), a:'はじめに もどる', bad:['おわり', 'だんだん 強く', 'くりかえさない'], ex:'D.C. で はじめに もどって、Fine で おわるよ。' });
+    Q('sfine', 'sign', 3, { q:'「Fine(フィーネ)」の いみは?', fig:dyn('Fine', 30), a:'おわり', bad:['はじめに もどる', 'もとの 速さで', '強く'], ex:'Fine は イタリア語《ご》で「おわり」。' });
+
+    /* ============ 7. 耳で きく ============ */
+    var EAR_FIG = '<div class="ok-big">👂</div>';
+    LESS.ear = [
+      [1, '高い・低《ひく》い を 聞きわける', S([['n', 0, 'q'], ['n', 4, 'q'], ['sp', 10], ['n', 7, 'q'], ['n', 2, 'q']]), '前の 音より あとの 音が 高いか 低《ひく》いか、よく 聞いて みよう。▶ で ド→ソ(上がる)、上の ド→ミ(下がる)。', function(){ D.play([[M(0), 0.8], [M(4), 0.8], [null, 0.6], [M(7), 0.8], [M(2), 0.8]], 100); }],
+      [2, 'ドを 聞いてから あてる', S([['n', 0, 'q', { col:'#2F86D9' }], ['n', 4, 'q']]), '先に ド(青)を 聞いて、つぎの 音が ドから いくつ 上か 考えよう。ドレミを 心の 中で 歌うと わかりやすいよ。', function(){ D.play([[M(0), 1], [M(4), 1]], 90); }],
+      [3, '明るい ひびき・暗い ひびき', S([['raw', function(x){ return D.note(x, 0, 'w') + D.note(x, 2, 'w') + D.note(x, 4, 'w'); }, 40], ['sp', 10], ['raw', function(x){ return D.note(x, 0, 'w') + D.note(x, 2, 'w', { acc:-1 }) + D.note(x, 4, 'w'); }, 40]]), 'ド・ミ・ソを いっしょに 鳴らすと 明るい ひびき(長調《ちょうちょう》の 和音《わおん》)。ミを ♭に すると 暗い ひびき(短調《たんちょう》の 和音《わおん》)。', function(){ D.play([[[M(0), M(2), M(4)], 2], [null, 0.5], [[M(0), M(2, -1), M(4)], 2]], 90); }]
+    ];
+    var EN = function(d){ return d === 7 ? '上の ド' : D.nm(d); };
+    [[0, 4, '高い'], [5, 2, '低《ひく》い'], [2, 2, '同じ'], [7, 0, '低《ひく》い'], [1, 3, '高い'], [4, 4, '同じ'], [3, 7, '高い'], [6, 5, '低《ひく》い']].forEach(function(p, k){
+      Q('ehl' + k, 'ear', 1, { q:'あとの 音は、前の 音より 高い? 低《ひく》い? 同じ?', fig:EAR_FIG, auto:true, snd:function(){ D.play([[M(p[0]), 1], [M(p[1]), 1]], 80); }, a:p[2], bad:['高い', '低《ひく》い', '同じ'].filter(function(x){ return x !== p[2]; }), ex:'前は ' + EN(p[0]) + '、あとは ' + EN(p[1]) + (p[0] === p[1] ? '。同じ 音だよ。' : p[1] > p[0] ? '。上がったね。' : '。下がったね。') });
+    });
+    Q('eup', 'ear', 1, { q:'音は だんだん 上がった? 下がった?', fig:EAR_FIG, auto:true, snd:function(){ D.play(scale(0, 5), 120); }, a:'上がった', bad:['下がった'], ex:'ド・レ・ミ・ファ・ソ・ラ と 上がったよ。' });
+    Q('edn', 'ear', 1, { q:'音は だんだん 上がった? 下がった?', fig:EAR_FIG, auto:true, snd:function(){ D.play(scale(2, 7).reverse(), 120); }, a:'下がった', bad:['上がった'], ex:'ド・シ・ラ・ソ・ファ・ミ と 下がったよ。' });
+    Q('elong', 'ear', 1, { q:'長い 音は 1つ目と 2つ目の どっち?', fig:EAR_FIG, auto:true, snd:function(){ D.play([[M(4), 0.5], [null, 0.5], [M(4), 2]], 90); }, a:'2つ目', bad:['1つ目'], ex:'2つ目が 長く のびて いたね。' });
+    Q('elong2', 'ear', 1, { q:'長い 音は 1つ目と 2つ目の どっち?', fig:EAR_FIG, auto:true, snd:function(){ D.play([[M(2), 2], [null, 0.5], [M(2), 0.5]], 90); }, a:'1つ目', bad:['2つ目'], ex:'1つ目が 長く のびて いたね。' });
+    [2, 3, 4, 5, 6, 7, 1].forEach(function(d){
+      Q('ewh' + d, 'ear', 2, { q:'さいしょの 音は ド。つぎに 鳴った 音は?', fig:S([['n', 0, 'q', { col:'#2F86D9' }], ['raw', function(x){ return '<text x="'+x+'" y="62" text-anchor="middle" font-size="30" font-weight="900" fill="'+D.HL+'">?</text>'; }, 30]], { w:140 }), auto:true, snd:function(){ D.play([[M(0), 1], [null, 0.3], [M(d), 1.2]], 90); }, a:D.nm(d) + (d === 7 ? '(上の ド)' : ''), bad:nearNames(d), ex:'ド・レ・ミ… と 歌うと ' + (d === 7 ? '上の ド' : D.nm(d)) + 'だよ。' });
+    });
+    [[['q', 'q', 'h'], [['h', 'q', 'q'], ['q', 'q', 'q', 'q'], ['w']]], [['h', 'h'], [['q', 'q', 'h'], ['w'], ['q', 'h', 'q']]], [['q', 'e', 'e', 'q', 'q'], [['q', 'q', 'e', 'e', 'q'], ['q', 'q', 'q', 'q'], ['e', 'e', 'q', 'h']]], [['h.', 'q'], [['q', 'h.'], ['h', 'h'], ['q', 'q', 'h']]], [['e', 'e', 'e', 'e', 'h'], [['h', 'e', 'e', 'e', 'e'], ['q', 'q', 'h'], ['e', 'e', 'q', 'h']]]].forEach(function(p, k){
+      var bt = { w:4, h:2, 'h.':3, q:1, e:0.5 };
+      Q('erh' + k, 'ear', 3, { q:'聞こえた リズムは どれ?(はじめに カチカチと 4つ 数えるよ)', fig:EAR_FIG, auto:true, snd:function(){ D.play(p[0].map(function(x){ return [M(4), bt[x]]; }), 88, { click:4 }); }, a:D.rhythm(p[0]), bad:p[1].map(function(r){ return D.rhythm(r); }), cols:1, ex:'カチカチの あと、長い 音・短い 音の じゅんばんを 聞きとろう。' });
+    });
+    Q('emaj', 'ear', 3, { q:'この ひびきは 明るい? 暗い?', fig:EAR_FIG, auto:true, snd:function(){ D.play([[[M(0), M(2), M(4)], 2.5]], 90); }, a:'明るい', bad:['暗い'], ex:'ド・ミ・ソの 明るい ひびき(長調《ちょうちょう》の 和音《わおん》)。' });
+    Q('emin', 'ear', 3, { q:'この ひびきは 明るい? 暗い?', fig:EAR_FIG, auto:true, snd:function(){ D.play([[[M(5), M(7), M(9)], 2.5]], 90); }, a:'暗い', bad:['明るい'], ex:'ラ・ド・ミの 暗い ひびき(短調《たんちょう》の 和音《わおん》)。' });
+
+    return { ITEMS:ITEMS, LESS:LESS };
+  })();
+
+  /* ===== 音楽の 道: 小学生が 楽譜《がくふ》を 読めるように 順番に すすむ 13の 場所。漢字《よみ》は ルビ ===== */
+  var OkRoad = (function(){
+    var D = OkDraw, M = D.midi;
+    function sh(a){ for(var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+    function S(list, o){ return D.staff(list, o); }
+    function one(d, dur, o){ return S([['sp', 10], ['n', d, dur || 'q', o]], { w:130 }); }
+    function take(a, n){ return sh(a.slice()).slice(0, n); }
+    var NM = function(d){ return (d >= 7 ? '上の ' : '') + D.nm(d); };
+    var EAR = '<div class="ok-big">👂</div>';
+    var kbPic = function(lab, hl){ return '<div class="ok-mini-kb">' + ['ド', 'レ', 'ミ', 'ファ', 'ソ', 'ラ', 'シ', 'ド'].map(function(n, i){ return '<span' + (hl && hl.indexOf(i) >= 0 ? ' class="hl"' : '') + '>' + (lab ? n : '') + '</span>'; }).join('') + [1, 2, 4, 5, 6].map(function(k){ return '<i style="left:calc(' + (k * 12.5) + '% - 3.5%)"></i>'; }).join('') + '</div>'; };
+    /* 五線の どこに あるか(d: ド=0) */
+    var LN = ['', '第1線《だいいっせん》', '第2線《だいにせん》', '第3線《だいさんせん》', '第4線《だいよんせん》', '第5線《だいごせん》'];
+    var GP = ['', '第1間《だいいっかん》', '第2間《だいにかん》', '第3間《だいさんかん》', '第4間《だいよんかん》'];
+    function where(d){ return d === 0 ? '下の 加線《かせん》' : d === 1 ? '第1線《だいいっせん》の すぐ 下' : d === 11 ? '第5線《だいごせん》の すぐ 上' : d === 12 ? '上の 加線《かせん》' : d % 2 === 0 ? LN[d / 2] : GP[(d - 1) / 2]; }
+    function names(d, lo, hi){ var r = []; [1, -1, 2, -2, 3, -3].forEach(function(k){ var x = d + k; if(x >= lo && x <= hi && r.length < 3) r.push(NM(x)); }); return r; }
+    function noteQ(d, lo, hi, kb){
+      var snd = function(){ D.tone(M(d), 0, 0.8); }, ex = NM(d) + 'は ' + where(d) + 'に かくよ。';
+      if(kb) return { q:'この 音を けんばんで ひいてね', fig:one(d), kb:true, kd:[d], post:snd, ex:ex };
+      return { q:'この 音の 名前は?', fig:one(d), a:NM(d), bad:names(d, lo, hi), post:snd, ex:ex };
+    }
+    /* 「どこに かく?」 */
+    function whereQ(d, lo, hi){ var o = [d - 1, d + 1, d + 2, d - 2].filter(function(x){ return x >= lo && x <= hi; }).slice(0, 2);
+      return { q:NM(d) + 'の 音は どこに かく?', fig:S([['sp', 60]], { w:180 }), a:where(d), bad:o.map(where), cols:1, ex:NM(d) + 'は ' + where(d) + '。' }; }
+    var BT = { q:1, h:2, w:4, e:0.5, 'h.':3 };
+    function rplay(p){ return function(){ D.play(p.map(function(x){ return x.indexOf('R:') === 0 ? [null, BT[x.slice(2)]] : [M(4), BT[x]]; }), 90, { click:4, beat:true }); }; }
+    function earR(p, bad, ex){ return { q:'聞《き》こえた リズムは どれ?', fig:EAR, auto:true, snd:rplay(p), a:D.rhythm(p), bad:bad.map(function(b){ return D.rhythm(b); }), cols:1, ex:ex }; }
+    var NN = { q:'4分音符《しぶおんぷ》', h:'2分音符《にぶおんぷ》', w:'全音符《ぜんおんぷ》', 'h.':'付点《ふてん》2分音符《にぶおんぷ》', e:'8分音符《はちぶおんぷ》' };
+    var RN = { q:'4分休符《しぶきゅうふ》', h:'2分休符《にぶきゅうふ》', w:'全休符《ぜんきゅうふ》', e:'8分休符《はちぶきゅうふ》' };
+    var HK = { q:'1拍《いっぱく》', h:'2拍《にはく》', 'h.':'3拍《さんぱく》', w:'4拍《よんはく》', e:'半拍《はんぱく》' };
+    function npic(k){ return k === 'h.' ? D.solo('n', 'h', { dot:true }) : D.solo('n', k); }
+    function big(t, sz){ return D.svg(150, D.word(75, 62, t, sz || 40), 90); }
+    function vol(v1, v2){ return function(){ D.play([[M(4), 1, v1], [null, 0.4], [M(4), 1, v2]], 90); }; }
+    var ALL8 = function(){ var s = []; for(var d = 0; d <= 7; d++) s.push([M(d), 0.5]); return s; };
+    var TIE = function(x){ return '<path d="M'+(x - 61)+' 66 Q'+(x - 50)+' 76 '+(x - 39)+' 66" stroke="#2F86D9" stroke-width="2.4" fill="none"/>'; };
+    var SLUR = function(x){ return '<path d="M'+(x - 92)+' 80 Q'+(x - 58)+' 96 '+(x - 26)+' 70" stroke="#E07A12" stroke-width="2.4" fill="none"/>'; };
+    var CRES = '<path d="M15 40 L105 26 M15 40 L105 54" stroke="#222" stroke-width="2.6" fill="none"/>', DECR = '<path d="M15 26 L105 40 L15 54" stroke="#222" stroke-width="2.6" fill="none"/>';
+
+    var STEPS = [
+      { k:'r1', n:'五線《ごせん》と ト音記号《おんきごう》', s:'五線', i:'🎼', x:14, y:74,
+        teach:[[S([['sp', 120]], { noclef:true, w:240 }), '楽譜《がくふ》は 5本の 線の 上に かくよ。これが「五線《ごせん》」。線は <b>下から</b> 第1線《だいいっせん》・第2線《だいにせん》… 第5線《だいごせん》と 数えるよ。'],
+          [S([['sp', 120]], { noclef:true, w:240, gap:1 }), '線と 線の 間《あいだ》は「間《かん》」。下から 第1間《だいいっかん》〜第4間《だいよんかん》。音符《おんぷ》は 線が 玉の まん中を 通る 所にも、間《かん》にも かくよ。'],
+          [S([['n', 0, 'q'], ['n', 2, 'q'], ['n', 4, 'q'], ['n', 7, 'q'], ['n', 9, 'q']]), '上の 方に かいた 音ほど 高い 音、下の 方ほど 低《ひく》い 音。左の くるっと した 記号《きごう》は「ト音記号《おんきごう》」。うずまきの まん中が 第2線《だいにせん》だよ。', function(){ D.play([[M(0), 0.6], [M(2), 0.6], [M(4), 0.6], [M(7), 0.6], [M(9), 0.6]], 100); }]],
+        quiz:function(){
+          var q = [{ q:'五線《ごせん》の 線は 何本《なんぼん》?', fig:S([['sp', 120]], { noclef:true, w:240 }), a:'5本', bad:['4本', '6本'], ex:'「五」線だから 5本。' },
+            { q:'五線の 間《かん》は いくつ ある?', fig:S([['sp', 120]], { noclef:true, w:240 }), a:'4つ', bad:['5つ', '3つ'], ex:'5本の 線の 間《あいだ》は 4つ。' },
+            { q:'ト音記号《おんきごう》は どれ?', a:D.svg(60, D.lines(4, 56) + D.clef(30), 110), bad:[D.svg(60, D.lines(4, 56) + D.fclef(22), 110), D.svg(60, D.lines(4, 56) + D.note(30, 4, 'q'), 110)], ex:'くるっと うずまきの ある 記号《きごう》が ト音記号《おんきごう》。' }];
+          var l = 1 + Math.floor(Math.random() * 5), g = 1 + Math.floor(Math.random() * 4);
+          q.push({ q:'赤い 線は 第《だい》何線《なんせん》?', fig:S([['sp', 110]], { w:200, hl:l }), a:LN[l], bad:[1, 2, 3, 4, 5].filter(function(x){ return x !== l; }).sort(function(x, y){ return Math.abs(x - l) - Math.abs(y - l); }).slice(0, 2).map(function(x){ return LN[x]; }), ex:'線は 下から 数えるよ。' });
+          q.push({ q:'赤い ところは どこ?', fig:S([['sp', 110]], { w:200, gap:g }), a:GP[g], bad:[GP[g === 4 ? 3 : g + 1], LN[g]], ex:'線と 線の 間《あいだ》は「間《かん》」。下から 数えるよ。' });
+          take([[0, 7], [9, 2], [3, 8], [6, 1], [1, 5], [8, 4]], 3).forEach(function(p){ q.push({ q:'高い 音は どっち?', fig:S([['n', p[0], 'q', { col:'#2F86D9' }], ['sp', 20], ['n', p[1], 'q', { col:'#E07A12' }]], { w:170 }), a:p[0] > p[1] ? '青' : 'オレンジ', bad:[p[0] > p[1] ? 'オレンジ' : '青'], post:function(){ D.play([[M(p[0]), 0.8], [M(p[1]), 0.8]], 90); }, ex:'上に ある 方が 高い 音。' }); });
+          return sh(q); } },
+      { k:'r2', n:'けんばんと ドレミ', s:'けんばん', i:'🎹', x:33, y:77,
+        teach:[[kbPic(true, [0, 7]), '黒い けんばんが 2つ ならんで いる ところの すぐ 左の 白い けんばんが ド。そこから 右へ ド・レ・ミ・ファ・ソ・ラ・シ・ド。8つ目で また ドに もどるよ。', function(){ D.play(ALL8(), 100); }]],
+        quiz:function(){
+          var q = take([1, 2, 3, 4, 5, 6], 5).map(function(d){ return { q:'「' + D.nm(d) + '」を ひいてね', kb:true, kd:[d], ex:'ドから ド・レ・ミ… と 数えると ' + D.nm(d) + 'は ' + (d + 1) + 'つ目。' }; });
+          q.push({ q:'ドを ひいてね(2つ あるよ。どちらでも OK)', kb:true, kd:[0, 7], ex:'黒い 2つの すぐ 左が ド。' });
+          q.push({ q:'ドから 数えて 5つ目の 音は?', fig:kbPic(true), a:'ソ', bad:['ファ', 'ラ', 'ミ'], ex:'ド・レ・ミ・ファ・ソ。5つ目は ソ。' });
+          q.push({ q:'ミの すぐ 右の 白い けんばんは?', fig:kbPic(false, [2]), a:'ファ', bad:['ソ', 'レ', 'ド'], ex:'ミと ファの 間《あいだ》には 黒い けんばんが ないよ。' });
+          return q; } },
+      { k:'r3', n:'ド・レ・ミ・ファ', s:'ド〜ファ', i:'🍡', x:53, y:74,
+        teach:[[S([['n', 0, 'q', { lcol:D.HL }], ['n', 1, 'q'], ['n', 2, 'q'], ['n', 3, 'q']]), 'ドは 五線の 下に はみ出すので、短い 線を 1本 足して かくよ。この 線を「加線《かせん》」と いうよ。レは 第1線《だいいっせん》の すぐ 下、ミは 第1線《だいいっせん》、ファは 第1間《だいいっかん》。', function(){ D.play([[M(0), 0.7], [M(1), 0.7], [M(2), 0.7], [M(3), 0.9]], 96); }],
+          [kbPic(true, [0]), '五線の この ドは、ピアノの まん中あたりに ある ド。「まん中の ド」と よぶよ。', function(){ D.tone(M(0), 0, 1); }]],
+        quiz:function(){ var q = [0, 1, 2, 3, 1, 3].map(function(d, i){ return noteQ(d, 0, 4, i >= 4); });
+          q.push(whereQ(2, 0, 4)); q.push(whereQ(3, 0, 4));
+          return sh(q); } },
+      { k:'r4', n:'ソ・ラ・シ・ド', s:'ソ〜ド', i:'🎵', x:74, y:76,
+        teach:[[S([['n', 4, 'q', { col:'#E07A12' }], ['n', 5, 'q', { col:'#E07A12' }], ['n', 6, 'q', { col:'#E07A12' }], ['n', 7, 'q', { col:'#E07A12' }]]), 'ソは 第2線《だいにせん》(ト音記号《おんきごう》の うずまきの 線)、ラは 第2間《だいにかん》、シは 第3線《だいさんせん》、上の ドは 第3間《だいさんかん》。シから 上は ぼうが 下向《したむ》きに なるよ。', function(){ D.play(ALL8().slice(4), 100); }]],
+        quiz:function(){ var q = [4, 5, 6, 7, 5, 6].map(function(d, i){ return noteQ(d, 0, 7, i >= 4); });
+          q.push(whereQ(4, 0, 7)); q.push(whereQ(6, 0, 7));
+          return sh(q); } },
+      { k:'r5', n:'上の レ・ミ・ファ・ソ', s:'上の音', i:'🎶', x:82, y:60,
+        teach:[[S([['n', 7, 'q'], ['n', 8, 'q', { col:'#E07A12' }], ['n', 9, 'q', { col:'#E07A12' }], ['n', 10, 'q', { col:'#E07A12' }], ['n', 11, 'q', { col:'#E07A12' }]]), '上の ドから さらに 上へ。上の レは 第4線《だいよんせん》、上の ミは 第4間《だいよんかん》、上の ファは 第5線《だいごせん》、上の ソは 第5線《だいごせん》の すぐ 上。リコーダーで よく つかう 音だよ。', function(){ D.play([[M(7), 0.6], [M(8), 0.6], [M(9), 0.6], [M(10), 0.6], [M(11), 0.9]], 100); }]],
+        quiz:function(){ var q = [8, 9, 10, 11, 8, 10].map(function(d){ return noteQ(d, 6, 11); });
+          q.push(whereQ(9, 6, 11)); q.push(whereQ(10, 6, 11));
+          return sh(q); } },
+      { k:'r6', n:'楽譜《がくふ》を 読もう', s:'読もう', i:'🌈', x:62, y:58,
+        teach:[[S([['n', 2, 'q'], ['n', 4, 'q'], ['n', 6, 'q'], ['n', 8, 'q'], ['n', 10, 'q']], { step:30 }), 'ミ・ソ・シ・上の レ・上の ファは 線が 玉の まん中を 通る 音。そう おぼえると 早く 読めるよ。わからない ときは 近くの 知って いる 音から 数えよう。', function(){ D.play([2, 4, 6, 8, 10].map(function(d){ return [M(d), 0.5]; }), 100); }]],
+        quiz:function(){ var q = take([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 7).map(function(d, i){ return noteQ(d, 0, 11, i < 2 && d <= 7); });
+          var MEL = [[[0, 1, 2], 'ド・レ・ミ'], [[4, 5, 4], 'ソ・ラ・ソ'], [[2, 3, 4], 'ミ・ファ・ソ'], [[7, 6, 5], '上の ド・シ・ラ']], mel = take(MEL, 1)[0];
+          var opts = take(MEL.map(function(m){ return m[1]; }).filter(function(x){ return x !== mel[1]; }), 2);
+          q.push({ q:'この 3つの 音を 読もう', fig:S(mel[0].map(function(d){ return ['n', d, 'q']; }), { w:170 }), a:mel[1], bad:opts, cols:1, post:function(){ D.play(mel[0].map(function(d){ return [M(d), 0.8]; }), 100); }, ex:mel[1] + '。' });
+          return q; } },
+      { k:'r7', n:'音符《おんぷ》の 長さ', s:'音符', i:'👏', x:42, y:60,
+        teach:[[D.rhythm(['q', 'q', 'h']), '音の 長さは「拍《はく》」で 数えるよ。4分音符《しぶおんぷ》(黒い 玉に ぼう)は 1拍《いっぱく》、2分音符《にぶおんぷ》(白い 玉に ぼう)は 2拍《にはく》。手を たたく ときは 4分音符《しぶおんぷ》を「タン」、2分音符《にぶおんぷ》を「ター」と 言うよ。▶ に 合わせて 手を たたこう。', function(){ D.play([[M(4), 1], [M(4), 1], [M(4), 2]], 90, { click:4, beat:true }); }],
+          [D.rhythm(['h.', 'q']), '玉の 右に 点が つくと、その 音符《おんぷ》の 半分の 長さが 足されるよ。付点《ふてん》2分音符《にぶおんぷ》は 2+1で 3拍《さんぱく》。', function(){ D.play([[M(4), 3], [M(4), 1]], 90, { click:4, beat:true }); }],
+          [D.rhythm(['w']), 'ぼうの ない 白い 玉は 全音符《ぜんおんぷ》。4拍《よんはく》 ずっと のばすよ。', function(){ D.play([[M(4), 4]], 90, { click:4, beat:true }); }]],
+        quiz:function(){ var ks = ['q', 'h', 'h.', 'w'], q = [];
+          take(ks, 3).forEach(function(k){ q.push({ q:'この 音符《おんぷ》の 名前は?', fig:npic(k), a:NN[k], bad:ks.filter(function(x){ return x !== k; }).map(function(x){ return NN[x]; }), cols:1, ex:NN[k] + '。' }); });
+          take(ks, 3).forEach(function(k){ q.push({ q:'何拍《なんぱく》 のばす?', fig:npic(k), a:HK[k], bad:ks.filter(function(x){ return x !== k; }).map(function(x){ return HK[x]; }), post:function(){ D.play([[M(4), BT[k]]], 90, { click:4, beat:true }); }, ex:NN[k] + 'は ' + HK[k] + '。' }); });
+          q.push({ q:'4分音符《しぶおんぷ》 いくつ 分で 全音符《ぜんおんぷ》 1つに なる?', fig:npic('w'), a:'4つ', bad:['2つ', '3つ'], ex:'1拍《いっぱく》が 4つで 4拍《よんはく》。' });
+          q.push(earR(['q', 'q', 'h'], [['h', 'q', 'q'], ['q', 'h', 'q']], '1拍《いっぱく》・1拍《いっぱく》・2拍《にはく》 だったね。'));
+          return q; } },
+      { k:'r8', n:'8分音符《はちぶおんぷ》', s:'8分音符', i:'🐾', x:22, y:57,
+        teach:[[D.rhythm(['e', 'e', 'e', 'e']), '8分音符《はちぶおんぷ》は 半拍《はんぱく》。2つで 4分音符《しぶおんぷ》 1つ分。2つ 続く ときは「はた」の かわりに よこ線で つなぐよ。「タタ」と 早く 2回。', function(){ D.play([[M(4), 0.5], [M(4), 0.5], [M(4), 0.5], [M(4), 0.5]], 90, { click:4, beat:true }); }],
+          [D.solo('n', 'e'), '1つだけの ときは、ぼうに「はた」が つくよ。', function(){ D.tone(M(4), 0, 0.3); }]],
+        quiz:function(){ var q = [
+            { q:'この 音符《おんぷ》の 名前は?', fig:D.solo('n', 'e'), a:NN.e, bad:[NN.q, NN.h], cols:1, ex:'はたが 1つ ついた 音符《おんぷ》が 8分音符《はちぶおんぷ》。' },
+            { q:'8分音符《はちぶおんぷ》 2つで、どの 音符《おんぷ》 1つ分?', fig:D.rhythm(['e', 'e']), a:NN.q, bad:[NN.h, NN.w], cols:1, ex:'半拍《はんぱく》+半拍《はんぱく》=1拍《いっぱく》。' },
+            { q:'ぜんぶで 4拍《よんはく》に なるのは どれ?', a:D.rhythm(['e', 'e', 'q', 'h']), bad:[D.rhythm(['e', 'e', 'q', 'q']), D.rhythm(['q', 'h', 'h'])], cols:1, ex:'タタ(1拍《いっぱく》)+1+2で 4拍《よんはく》。' },
+            { q:'8分音符《はちぶおんぷ》 いくつで 2分音符《にぶおんぷ》 1つ分?', fig:D.solo('n', 'h'), a:'4つ', bad:['2つ', '8つ'], ex:'2分音符《にぶおんぷ》は 2拍《にはく》。半拍《はんぱく》が 4つ。' },
+            { q:'ぜんぶで 何拍《なんぱく》?', fig:D.rhythm(['e', 'e', 'e', 'e', 'q']), a:'3拍《さんぱく》', bad:['5拍《ごはく》', '2拍《にはく》'], ex:'タタ・タタで 2拍《にはく》、4分音符《しぶおんぷ》で 1拍《いっぱく》。あわせて 3拍《さんぱく》。' }];
+          q.push(earR(['q', 'e', 'e', 'q', 'q'], [['q', 'q', 'q', 'q'], ['e', 'e', 'q', 'q', 'q']], 'タン・タタ・タン・タン だったね。'));
+          q.push(earR(['e', 'e', 'e', 'e', 'h'], [['q', 'q', 'h'], ['e', 'e', 'q', 'h']], 'タタ・タタ・ター だったね。'));
+          q.push(earR(['q', 'q', 'e', 'e', 'q'], [['e', 'e', 'q', 'q', 'q'], ['q', 'q', 'q', 'q']], 'タン・タン・タタ・タン だったね。'));
+          return sh(q); } },
+      { k:'r9', n:'休符《きゅうふ》', s:'休符', i:'💤', x:14, y:44,
+        teach:[[D.rhythm(['q', 'R:q', 'q', 'R:q']), '音を 出さずに 休む 記号《きごう》が「休符《きゅうふ》」。4分休符《しぶきゅうふ》は 1拍《いっぱく》 休むよ。', function(){ D.play([[M(4), 1], [null, 1], [M(4), 1], [null, 1]], 90, { click:4, beat:true }); }],
+          [D.solo('r', 'h') + D.solo('r', 'w'), '線の 上に のる 四角が 2分休符《にぶきゅうふ》(2拍《にはく》 休む)、線から ぶら下がる 四角が 全休符《ぜんきゅうふ》(4拍《よんはく》 休む)。のって いるのが 2分《にぶ》、ぶら下がって いるのが 全《ぜん》だよ。']],
+        quiz:function(){ var ks = ['q', 'h', 'w'], q = [];
+          ks.forEach(function(k){ q.push({ q:'この 休符《きゅうふ》の 名前は?', fig:D.solo('r', k), a:RN[k], bad:ks.filter(function(x){ return x !== k; }).map(function(x){ return RN[x]; }), cols:1, ex:RN[k] + '。' }); });
+          q.push({ q:'2分休符《にぶきゅうふ》は 何拍《なんぱく》 休む?', fig:D.solo('r', 'h'), a:'2拍《にはく》', bad:['1拍《いっぱく》', '4拍《よんはく》'], ex:'2分休符《にぶきゅうふ》は 2分音符《にぶおんぷ》と 同じ 2拍《にはく》。' });
+          q.push({ q:'4分音符《しぶおんぷ》と 同じ 長さの 休符《きゅうふ》は?', fig:D.solo('n', 'q'), a:D.solo('r', 'q'), bad:[D.solo('r', 'h'), D.solo('r', 'w')], ex:'1拍《いっぱく》 休むのは 4分休符《しぶきゅうふ》。' });
+          q.push(earR(['q', 'R:q', 'q', 'q'], [['q', 'q', 'q', 'q'], ['q', 'q', 'R:q', 'q']], 'タン・(休み)・タン・タン。2拍目《にはくめ》が 休み。'));
+          q.push(earR(['q', 'q', 'q', 'R:q'], [['R:q', 'q', 'q', 'q'], ['q', 'q', 'q', 'q']], 'タン・タン・タン・(休み)。さいごが 休み。'));
+          return sh(q); } },
+      { k:'r10', n:'拍子《ひょうし》と 小節《しょうせつ》', s:'拍子', i:'🚪', x:34, y:42,
+        teach:[[S([['time', 4, 4], ['n', 4, 'q'], ['n', 4, 'q'], ['n', 4, 'q'], ['n', 4, 'q'], ['bar', D.HL], ['n', 4, 'h'], ['n', 4, 'h'], ['end']], { step:28 }), 'たての 線「小節線《しょうせつせん》」で くぎった 1つ 1つが「小節《しょうせつ》」。さいごの ふとい 線は「終止線《しゅうしせん》」で、曲の おわり。', function(){ var s = []; for(var i = 0; i < 4; i++) s.push([M(4), 1, i ? 0.15 : 0.4]); s.push([M(4), 2, 0.4], [M(4), 2, 0.2]); D.play(s, 96); }],
+          [S([['time', 3, 4], ['n', 4, 'q'], ['n', 4, 'q'], ['n', 4, 'q'], ['bar'], ['n', 4, 'h', { dot:true }], ['end']], { step:30 }), 'はじめの 数字は「拍子記号《ひょうしきごう》」。下の 4は「4分音符《しぶおんぷ》で 数える」、上の 数字は「1小節《いっしょうせつ》に 何拍《なんぱく》」。4分《よんぶん》の4拍子《よんびょうし》は 4拍《よんはく》、4分《よんぶん》の3拍子《さんびょうし》は 3拍《さんぱく》(ワルツ)、4分《よんぶん》の2拍子《にびょうし》は 2拍《にはく》(行進曲《こうしんきょく》)。', function(){ var s = []; for(var j = 0; j < 2; j++) for(var i = 0; i < 3; i++) s.push([M(4), 1, i ? 0.12 : 0.4]); D.play(s, 110); }]],
+        quiz:function(){ var rm = function(x){ return '<rect x="'+(x - 12)+'" y="26" width="26" height="48" rx="6" fill="none" stroke="'+D.HL+'" stroke-width="2" stroke-dasharray="4 3"/>'; };
+          return sh([{ q:'4分《よんぶん》の3拍子《さんびょうし》は、1小節《いっしょうせつ》に 何拍《なんぱく》?', fig:S([['time', 3, 4], ['sp', 60]], { w:150 }), a:'3拍《さんぱく》', bad:['4拍《よんはく》', '2拍《にはく》'], ex:'上の 数字が 1小節《いっしょうせつ》の 拍《はく》の 数。' },
+            { q:'4分《よんぶん》の2拍子《にびょうし》は、1小節《いっしょうせつ》に 何拍《なんぱく》?', fig:S([['time', 2, 4], ['sp', 60]], { w:150 }), a:'2拍《にはく》', bad:['4拍《よんはく》', '3拍《さんぱく》'], ex:'上の 数字が 2だから 2拍《にはく》。' },
+            { q:'あいて いる ところに 入るのは?', fig:S([['time', 4, 4], ['n', 4, 'h'], ['n', 4, 'q'], ['raw', rm, 28], ['end']]), a:D.solo('n', 'q'), bad:[D.solo('n', 'h'), D.solo('n', 'w')], ex:'2+1で 3拍《さんぱく》。あと 1拍《いっぱく》。' },
+            { q:'あいて いる ところに 入るのは?', fig:S([['time', 3, 4], ['n', 4, 'q'], ['raw', rm, 30], ['end']]), a:D.solo('n', 'h'), bad:[D.solo('n', 'q'), D.solo('n', 'w')], ex:'3拍子《さんびょうし》で 1拍《いっぱく》 あるから、あと 2拍《にはく》。' },
+            { q:'4分《よんぶん》の4拍子《よんびょうし》の 1小節《いっしょうせつ》に ぴったり 入るのは?', a:D.rhythm(['h', 'q', 'q']), bad:[D.rhythm(['h', 'h', 'q']), D.rhythm(['q', 'q', 'q'])], cols:1, ex:'2+1+1で 4拍《よんはく》。' },
+            { q:'小節《しょうせつ》を くぎる たての 線の 名前は?', fig:S([['n', 4, 'q'], ['n', 4, 'q'], ['bar', D.HL], ['n', 4, 'h']], { w:200 }), a:'小節線《しょうせつせん》', bad:['終止線《しゅうしせん》', '加線《かせん》'], ex:'小節《しょうせつ》を くぎるのは 小節線《しょうせつせん》。' },
+            { q:'曲の おわりに かく 線は?', a:D.svg(60, D.lines(4, 56) + D.endBar(40), 110), bad:[D.svg(60, D.lines(4, 56) + D.bar(30), 110), D.svg(60, D.lines(4, 56) + D.repeat(40, true), 110)], ex:'細《ほそ》い 線と ふとい 線の 終止線《しゅうしせん》で おわり。' },
+            { q:'何小節《なんしょうせつ》 ある?', fig:S([['time', 4, 4], ['n', 2, 'h'], ['n', 4, 'h'], ['bar'], ['n', 5, 'w'], ['bar'], ['n', 4, 'q'], ['n', 4, 'q'], ['n', 2, 'h'], ['end']], { step:26 }), a:'3小節《さんしょうせつ》', bad:['2小節《にしょうせつ》', '4小節《よんしょうせつ》'], ex:'線で くぎられた へやが 3つ。' }]); } },
+      { k:'r11', n:'シャープと フラット', s:'♯と♭', i:'⚫', x:56, y:42,
+        teach:[[S([['n', 3, 'q', { acc:1 }], ['sp', 10], ['n', 6, 'q', { acc:-1 }]], { w:190 }), '♯(シャープ)は「半音《はんおん》 上げる」、♭(フラット)は「半音《はんおん》 下げる」 記号《きごう》。半音《はんおん》は となりの けんばんへ 1つ うつる ことだよ。'],
+          [kbPic(true, [3, 6]), 'ファ♯は 色の ついた ファの すぐ 右の 黒い けんばん。シ♭は 色の ついた シの すぐ 左の 黒い けんばん。', function(){ D.play([[M(3), 0.8], [M(3, 1), 0.8], [null, 0.4], [M(6), 0.8], [M(6, -1), 0.8]], 90); }]],
+        quiz:function(){ var bk = function(q, d, ex){ return { q:q, kb:true, kd:[], kbk:[d], ex:ex }; };
+          return sh([bk('ファ♯(シャープ)を ひいてね', 3, 'ファの すぐ 右の 黒い けんばん。'), bk('ド♯(シャープ)を ひいてね', 0, 'ドの すぐ 右の 黒い けんばん。'),
+            bk('シ♭(フラット)を ひいてね', 5, 'シの すぐ 左の 黒い けんばん。'), bk('ミ♭(フラット)を ひいてね', 1, 'ミの すぐ 左の 黒い けんばん。'),
+            { q:'♯(シャープ)の いみは?', fig:D.svg(80, D.acc(40, 50, 1), 90), a:'半音《はんおん》 上げる', bad:['半音《はんおん》 下げる', 'もとに もどす'], ex:'♯は 半音《はんおん》 上げる。' },
+            { q:'♭(フラット)の いみは?', fig:D.svg(80, D.acc(40, 55, -1), 90), a:'半音《はんおん》 下げる', bad:['半音《はんおん》 上げる', 'もとに もどす'], ex:'♭は 半音《はんおん》 下げる。' },
+            { q:'♮(ナチュラル)の いみは?', fig:D.svg(80, D.acc(40, 50, 0), 90), a:'もとに もどす', bad:['半音《はんおん》 上げる', '半音《はんおん》 下げる'], ex:'♮は ♯や ♭を 取って、もとの 高さに もどすよ。' },
+            { q:'この 音は?', fig:one(3, 'q', { acc:1 }), a:'ファ♯', bad:['ファ♭', 'ソ♯'], post:function(){ D.tone(M(3, 1), 0, 0.8); }, ex:'第1間《だいいっかん》の ファに ♯で ファ♯。' }]); } },
+      { k:'r12', n:'強弱記号《きょうじゃくきごう》', s:'強弱', i:'📢', x:46, y:26,
+        teach:[['<div class="ok-dyn"><i>pp</i><i>p</i><i>mp</i><i>mf</i><i>f</i><i>ff</i></div>', 'p(ピアノ)は 弱く、f(フォルテ)は 強く。m(メゾ)が つくと「少し」、2つ ならぶと「とても」。pp(ピアニッシモ)=とても 弱く、mp(メゾピアノ)=少し 弱く、mf(メゾフォルテ)=少し 強く、ff(フォルティッシモ)=とても 強く。', function(){ var a = [[M(0), 0.5], [M(2), 0.5], [M(4), 1]]; D.play(a.map(function(x){ return [x[0], x[1], 0.42]; }).concat([[null, 0.6]]).concat(a.map(function(x){ return [x[0], x[1], 0.06]; })), 100); }],
+          [D.svg(240, '<g>' + CRES + '</g><g transform="translate(120 0)">' + DECR + '</g>', 80), '広がる 形(クレシェンド)は だんだん 強く、せまく なる 形(デクレシェンド)は だんだん 弱く。', function(){ var s = []; for(var i = 0; i < 6; i++) s.push([M(4), 0.5, 0.05 + i * 0.07]); s.push([null, 1]); for(var j = 5; j >= 0; j--) s.push([M(4), 0.5, 0.05 + j * 0.07]); D.play(s, 110); }]],
+        quiz:function(){ var all = ['とても 弱く', '弱く', '少し 弱く', '少し 強く', '強く', 'とても 強く'], q = [];
+          take([['pp', 0], ['p', 1], ['mp', 2], ['mf', 3], ['f', 4], ['ff', 5]], 4).forEach(function(p){ var c = [p[1] ^ 1, 5 - p[1], (p[1] + 2) % 6, (p[1] + 3) % 6].filter(function(x, i, a){ return x !== p[1] && a.indexOf(x) === i; }).slice(0, 2);
+            q.push({ q:'この 記号《きごう》の いみは?', fig:big(p[0]), a:all[p[1]], bad:c.map(function(x){ return all[x]; }), ex:'p=弱く、f=強く、m=少し、2つで とても。' }); });
+          q.push({ q:'2つ目の 音は、1つ目より 強い? 弱い?', fig:EAR, auto:true, snd:vol(0.06, 0.42), a:'強い', bad:['弱い'], ex:'2つ目が 大きな 音だったね。' });
+          q.push({ q:'2つ目の 音は、1つ目より 強い? 弱い?', fig:EAR, auto:true, snd:vol(0.42, 0.05), a:'弱い', bad:['強い'], ex:'2つ目は 小さな 音だったね。' });
+          q.push({ q:'「だんだん 強く」の 記号《きごう》は?', a:D.svg(120, CRES, 80), bad:[D.svg(120, DECR, 80)], ex:'広がって いく 方が だんだん 強く(クレシェンド)。' });
+          q.push({ q:'いちばん 弱いのは どれ?', a:'pp', bad:['p', 'mp', 'mf'], ex:'pが 2つの pp は とても 弱く。' });
+          return sh(q); } },
+      { k:'r13', n:'いろいろな 記号《きごう》', s:'記号', i:'🏁', x:28, y:16,
+        teach:[[D.svg(240, D.lines(8, 232) + D.repeat(20) + D.note(60, 2, 'q') + D.note(95, 4, 'q') + D.note(130, 6, 'q') + D.note(165, 7, 'q') + D.repeat(215, true), 110), '「くりかえし 記号《きごう》」。点の ついた 2つの 記号《きごう》の 間《あいだ》を もう 1回 えんそう するよ。'],
+          [S([['n', 4, 'h'], ['n', 4, 'h'], ['raw', TIE], ['sp', 14], ['n', 2, 'q'], ['n', 3, 'q'], ['n', 4, 'q'], ['raw', SLUR]], { w:250 }), '同じ 高さの 音を つなぐ 弧《こ》は「タイ」(1つの 長い 音に する)。ちがう 高さの 音を つなぐ 弧《こ》は「スラー」(なめらかに つなげて)。'],
+          [S([['n', 4, 'q'], ['n', 5, 'q'], ['n', 7, 'h'], ['raw', function(x){ return '<path d="M'+(x - 46)+' 16 Q'+(x - 34)+' 2 '+(x - 22)+' 16" stroke="#222" stroke-width="2.6" fill="none"/><circle cx="'+(x - 34)+'" cy="13" r="2.4" fill="#222"/>'; }]], { w:200 }), 'おわんを ふせたような 記号《きごう》は「フェルマータ」。その 音を ほどよく のばすよ。']],
+        quiz:function(){ var rep = D.svg(70, D.lines(4, 66) + D.repeat(10) + D.repeat(60, true), 110);
+          var ferm = D.svg(70, D.lines(4, 66) + D.note(35, 4, 'q') + '<path d="M23 16 Q35 2 47 16" stroke="#222" stroke-width="2.6" fill="none"/><circle cx="35" cy="13" r="2.4" fill="#222"/>', 110);
+          var tie = S([['n', 4, 'h'], ['n', 4, 'h'], ['raw', TIE]], { w:150 }), slur = S([['n', 2, 'q'], ['n', 3, 'q'], ['n', 4, 'q'], ['raw', SLUR]], { w:170 });
+          return sh([{ q:'くりかえし 記号《きごう》は どれ?', a:rep, bad:[ferm, D.svg(70, D.lines(4, 66) + D.endBar(50), 110)], ex:'点の ついた ふとい 線が くりかえし 記号《きごう》。' },
+            { q:'この 記号《きごう》の 名前は?', fig:ferm, a:'フェルマータ', bad:['スラー', 'タイ'], ex:'ほどよく のばす フェルマータ。' },
+            { q:'青い 弧《こ》の 名前は?', fig:tie, a:'タイ', bad:['スラー', 'フェルマータ'], ex:'同じ 高さを つなぐのは タイ。' },
+            { q:'オレンジの 弧《こ》の 名前は?', fig:slur, a:'スラー', bad:['タイ', 'フェルマータ'], ex:'ちがう 高さを つなぐのは スラー。' },
+            { q:'タイで つないだ 2分音符《にぶおんぷ》 2つは、何拍《なんぱく》 のばす?', fig:tie, a:'4拍《よんはく》', bad:['2拍《にはく》', '3拍《さんぱく》'], post:function(){ D.play([[M(4), 4]], 90, { click:4, beat:true }); }, ex:'2+2で 4拍《よんはく》。1つの 長い 音に なるよ。' },
+            { q:'くりかえし 記号《きごう》の 間《あいだ》は、ぜんぶで 何回 えんそう する?', fig:rep, a:'2回', bad:['1回', '3回'], ex:'もう 1回 くりかえすから 2回。' }]); } }
+    ];
+    /* 練習ゲーム: 音符あて(見て 名前を えらぶ・けんばん)と 耳で きく(高い/低い・音の 名前・リズム・強弱) */
+    function drillNotes(){ var q = [], ds = take([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 2, 4, 6], 10);
+      ds.forEach(function(d, i){ q.push(noteQ(d, 0, 11, i % 3 === 2 && d <= 7)); }); return q; }
+    function drillEar(){
+      var q = [];
+      take([[67, 60], [60, 72], [79, 64], [62, 81], [76, 59], [57, 74]], 3).forEach(function(p){ var up = p[1] > p[0];
+        q.push({ q:'2つ目の 音は、1つ目より 高い? 低《ひく》い?', fig:EAR, auto:true, snd:function(){ D.play([[p[0], 1], [null, 0.4], [p[1], 1]], 90); }, a:up ? '高い' : '低《ひく》い', bad:[up ? '低《ひく》い' : '高い'], ex:up ? '2つ目の 方が 高かったね。' : '2つ目の 方が 低《ひく》かったね。' }); });
+      take([0, 1, 2, 3, 4, 5, 6, 7], 3).forEach(function(d){
+        q.push({ q:'聞《き》こえた 音の 名前は? (まず ドを 聞くよ)', fig:EAR, auto:true, snd:function(){ D.play([[M(0), 0.8], [null, 0.4], [M(d), 1]], 90); }, a:NM(d), bad:names(d, 0, 7), ex:'ドの 次に 聞こえたのは ' + NM(d) + '。' }); });
+      q.push(earR(['q', 'e', 'e', 'q', 'q'], [['q', 'q', 'q', 'q'], ['e', 'e', 'q', 'q', 'q']], 'タン・タタ・タン・タン だったね。'));
+      q.push(earR(['q', 'R:q', 'q', 'q'], [['q', 'q', 'q', 'q'], ['q', 'q', 'R:q', 'q']], 'タン・(休み)・タン・タン だったね。'));
+      return sh(q);
+    }
+    /* けんばんで あてる: 楽譜《がくふ》を 見て ひく・聞《き》いて ひく・♯《シャープ》の 音を 黒い けんばんで */
+    function drillKeys(){
+      var q = [];
+      take([0, 1, 2, 3, 4, 5, 6, 7], 4).forEach(function(d){ q.push({ q:'この 音を けんばんで ひいてね', fig:one(d), kb:true, kd:[d], post:function(){ D.tone(M(d), 0, 0.8); }, ex:NM(d) + 'は ' + where(d) + '。' }); });
+      take([1, 2, 3, 4, 5, 6, 7], 4).forEach(function(d){ q.push({ q:'まず ドが 鳴《な》るよ。次に 聞《き》こえた 音を けんばんで ひいてね', fig:EAR, auto:true, snd:function(){ D.play([[M(0), 0.8], [null, 0.4], [M(d), 1]], 90); }, kb:true, kd:[d], ex:'ドの 次に 聞《き》こえたのは ' + NM(d) + '。' }); });
+      take([[0, 'ド'], [3, 'ファ'], [4, 'ソ']], 2).forEach(function(p){ q.push({ q:'この 音を けんばんで ひいてね', fig:one(p[0], 'q', { acc:1 }), kb:true, kd:[], kbk:[p[0]], post:function(){ D.tone(M(p[0], 1), 0, 0.8); }, ex:p[1] + '♯は ' + p[1] + 'の すぐ 右の 黒い けんばん。' }); });
+      return sh(q);
+    }
+    return { STEPS:STEPS, drillNotes:drillNotes, drillEar:drillEar, drillKeys:drillKeys };
+  })();
+
+  /* ===== 音楽の 島: 五線譜の 読み方を 見て・聞いて・クイズ。記録は keisan_gaku.u、コインは まなぶ 共通(1日20) ===== */
+  var Ongaku = (function(){
+    var D = OkDraw, KEY = 'keisan_gaku', DAY_CAP = 40, ROUND = 10, ITEMS = OkData.ITEMS, LESS = OkData.LESS;
+    var TOPICS = [
+      { k:'staff', n:'五線と ト音記号', p:'五線の みなと', i:'🎼', d:'ヘ音記号・大譜表・オクターブ・日本の 音の 名前', x:22, y:15, c:'#3D7BE0' },
+      { k:'pitch', n:'ドレミ(音の 高さ)', p:'ドレミの 丘', i:'🎵', d:'低い・高い 音・♯♭・調号・音程', x:56, y:31, c:'#D9446A' },
+      { k:'note', n:'音符の 長さ', p:'音符の 森', i:'🎶', d:'はたと 連こう・付点・長さの けいさん', x:22, y:40, c:'#3F9B5A' },
+      { k:'rest', n:'休符', p:'休符の いずみ', i:'💤', d:'休符の 形の ちがい・全休符・付点休符', x:76, y:50, c:'#2E9BB5' },
+      { k:'beat', n:'拍子と 小節', p:'拍子の 時計台', i:'🥁', d:'上の 数字と 下の 数字・強い 拍・いろいろな 拍子', x:32, y:62, c:'#E07A12' },
+      { k:'sign', n:'いろいろな 記号', p:'記号の お城', i:'🏰', d:'スタッカート・速さの ことば・D.C.・くりかえし', x:74, y:71, c:'#8A5BD0' },
+      { k:'ear', n:'耳で きく', p:'耳の どうくつ', i:'👂', d:'ドを 聞いて 音あて・明るい ひびき・暗い ひびき', x:42, y:81, c:'#C9A10C' }
+    ];
+    /* 音楽の 道(はじめての 子は ここを 順番に)。くわしい 7分野は 道を おえると ひらく。OK_ALL は おためし版で ぜんぶ ひらく ため */
+    var STEPS = OkRoad.STEPS, OK_ALL = false;
+    function ur(s){ return Math.min(STEPS.length, (s || rec()).ur || 0); }
+    function canGo(i){ return OK_ALL || i <= ur(); }
+    function posOf(k){ for(var i = 0; i < STEPS.length; i++) if(STEPS[i].k === k) return STEPS[i]; return null; }
+    /* 「もっと くわしく」は 道で 習う ★1を はぶいて、★2から(★2→★1、★3→★2) */
+    var BY = {}; TOPICS.forEach(function(t){ BY[t.k] = ITEMS.filter(function(e){ return e.t === t.k && e.dep >= 2; }).map(function(e){ var c = {}; for(var x in e) c[x] = e[x]; c.dep = e.dep - 1; return c; });
+      LESS[t.k] = (LESS[t.k] || []).filter(function(l){ return l[0] >= 2; }).map(function(l){ var c = l.slice(); c[0] = l[0] - 1; return c; }); });
+    function tp(k){ for(var i = 0; i < TOPICS.length; i++) if(TOPICS[i].k === k) return TOPICS[i]; return null; }
+    function plain(t){ return String(t).replace(/《[^》]*》/g, ''); }
+    function ruby(t){ return String(t).replace(/([0-9]*[一-龥々][0-9一-龥々]*)《([^》]+)》/g, '<ruby>$1<rt>$2</rt></ruby>'); }
+    function rec(){ var s = safeGet(KEY) || {}; s.u = s.u || {}; s.rounds = s.rounds || 0; if(!s.day || s.day.d !== todayKey()) s.day = { d:todayKey(), n:0 }; return s; }
+    function okd(m, e){ return m[e.id] && m[e.id].ok > 0; }
+    function shuffle(a){ for(var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+    /* 分野の いまの ふかさ: 前の ふかさを 8わり せいかいすると つぎが ひらく(社会と 同じ) */
+    function depth(m, k){
+      var L = BY[k], deps = [], cur = 0;
+      L.forEach(function(e){ if(deps.indexOf(e.dep) < 0) deps.push(e.dep); }); deps.sort();
+      for(var i = 0; i < deps.length; i++){
+        cur = deps[i];
+        var g = L.filter(function(e){ return e.dep === cur; }), done = g.filter(function(e){ return okd(m, e); }).length;
+        if(done < Math.ceil(g.length * 0.8)) break;
+      }
+      return { cur:cur, deps:deps };
+    }
+    function stars(m, k){ var d = depth(m, k), h = ''; d.deps.forEach(function(x){ h += x <= d.cur ? '★' : '☆'; }); return h; }
+    function count(m, k){ return BY[k].filter(function(e){ return okd(m, e); }).length; }
+    function pick(m, k){
+      var d = depth(m, k).cur, pool = BY[k].filter(function(e){ return e.dep <= d; });
+      var fresh = shuffle(pool.filter(function(e){ return e.dep === d && !okd(m, e); })).slice(0, 6);
+      var rest = pool.filter(function(e){ return fresh.indexOf(e) < 0; }).map(function(e){ var r = m[e.id] || { ok:0, ng:0 }; return { e:e, v:r.ok - r.ng * 2 + Math.random() * 2.5 }; });
+      rest.sort(function(a, b){ return a.v - b.v; });
+      return shuffle(fresh.concat(rest.slice(0, Math.max(0, ROUND - fresh.length)).map(function(x){ return x.e; })));
+    }
+    function petHTML(){ try{ var a = activePet(); return a ? Pet.svg(a.sp, a.lv) : ''; }catch(e){ return ''; } }
+    function lastSpot(v){ try{ if(v) localStorage.setItem('kapp_isle_n', v); return localStorage.getItem('kapp_isle_n') || ''; }catch(e){ return ''; } }
+
+    /* ---- 島の 絵: グランドピアノの 形の 島。手前の 浜が けんばん ---- */
+    function bg(){
+      var W = 3.6, H = 4.7;
+      var kb = ''; for(var i = 0; i < 14; i++) kb += '<rect x="'+(40 + i*20)+'" y="392" width="20" height="44" fill="#fffdf6" stroke="#cfc6b8" stroke-width="1.2"/>';
+      [0, 1, 3, 4, 5, 7, 8, 10, 11, 12].forEach(function(i){ kb += '<rect x="'+(40 + i*20 + 13)+'" y="392" width="13" height="27" rx="2" fill="#2b2633"/>'; });
+      var notes = [[300, 60, 0], [330, 130, 1], [20, 250, 0], [326, 330, 1]].map(function(n){ return '<g transform="translate('+n[0]+' '+n[1]+')" fill="#fff" opacity=".75"><ellipse cx="0" cy="14" rx="6" ry="4.4" transform="rotate(-22 0 14)"/><rect x="4.6" y="-10" width="1.8" height="24"/>' + (n[2] ? '<path d="M6.4 -10 C7 -2 16 0 13 10 C14 2 10 0 6.4 -1Z"/>' : '') + '</g>'; }).join('');
+      var roads = 'M180 450 ' + STEPS.map(function(t){ return 'L'+(t.x * W)+' '+(t.y * H); }).join(' ');
+      return '<svg class="isle-bg" viewBox="0 0 360 470" preserveAspectRatio="none" aria-hidden="true">' +
+        '<defs><linearGradient id="isSeaN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9a8f2"/><stop offset="1" stop-color="#6d5bc7"/></linearGradient></defs>' +
+        '<rect width="360" height="470" fill="url(#isSeaN)"/>' +
+        '<g class="waves" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.5" stroke-linecap="round"><path d="M250 30 q8 -6 16 0 t16 0"/><path d="M14 150 q8 -6 16 0 t16 0"/><path d="M300 250 q8 -6 16 0 t16 0"/><path d="M10 420 q8 -6 16 0 t16 0"/><path d="M200 455 q8 -6 16 0 t16 0"/></g>' +
+        /* 五線の 虹(海の 上を わたる 5本の 線) */
+        '<g fill="none" stroke-width="2.2" stroke-linecap="round" opacity=".85">' + ['#ff8fa3', '#ffc76b', '#fff27a', '#8fe39a', '#8fc8ff'].map(function(c, i){ return '<path d="M190 '+(110 - i*7)+' Q270 '+(10 - i*7)+' 352 '+(96 - i*7)+'" stroke="'+c+'"/>'; }).join('') + '</g>' + notes +
+        /* ピアノの 島(ふちの 砂浜 → 緑) */
+        '<path d="M30 398 L30 66 Q30 26 82 24 Q140 26 160 74 Q186 136 252 164 Q334 196 332 286 L332 398 Z" fill="#f4dfa6"/>' +
+        '<path d="M42 392 L42 70 Q42 38 84 36 Q132 38 150 80 Q176 146 246 176 Q320 206 320 288 L320 392 Z" fill="#8ccf6a"/>' +
+        /* 森・いずみ・丘・お城・時計台・どうくつ・みなと */
+        '<g fill="#3d8f45">' + [[110, 95], [124, 84], [136, 98], [56, 104]].map(function(t){ return '<circle cx="'+t[0]+'" cy="'+t[1]+'" r="11"/>'; }).join('') + '</g>' +
+        '<ellipse cx="274" cy="248" rx="30" ry="15" fill="#7fd0f0"/><ellipse cx="270" cy="244" rx="12" ry="4" fill="#fff" opacity=".6"/>' +
+        '<path d="M150 170 Q200 108 250 172 Z" fill="#78b85a"/>' +
+        '<path d="M236 330 v-26 h10 v8 h8 v-8 h10 v8 h8 v-8 h10 v26 z" fill="#d8cfe8" stroke="#8a7ab0" stroke-width="1.5"/><path d="M246 304 l9 -12 l9 12z" fill="#8A5BD0"/>' +
+        '<rect x="104" y="270" width="18" height="34" fill="#e8c69a" stroke="#a0723f" stroke-width="1.5"/><circle cx="113" cy="278" r="6" fill="#fff" stroke="#a0723f" stroke-width="1.5"/>' +
+        '<path d="M130 384 Q150 350 172 384 Z" fill="#7a6f66"/><path d="M142 384 Q151 368 160 384Z" fill="#3b3540"/>' +
+        '<path d="M44 82 h26 v6 h-26z" fill="#a0723f"/>' +
+        '<path d="'+roads+'" fill="none" stroke="#fff6d8" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"/>' +
+        kb + '</svg>';
+    }
+    function isle(home){
+      var s = rec(), map = document.createElement('div');
+      map.className = 'isle' + (home ? ' pv pv-n' : ''); map.setAttribute('data-t', 'n');
+      map.innerHTML = bg() + '<div class="isle-title">🎹 音楽の 島</div>';
+      var u = ur(s);
+      STEPS.forEach(function(t, i){
+        var b = document.createElement('button'); b.type = 'button';
+        b.className = 'spot ok-stop small' + (i < u ? ' done' : i === u ? ' today' : ' lock');
+        b.style.left = t.x + '%'; b.style.top = t.y + '%'; b.style.setProperty('--sp', i <= u ? '#8A5BD0' : '#9a96a3');
+        b.innerHTML = '<span class="sp-ico">'+t.i+'<em>'+(i + 1)+'</em></span>' + (i === u || home ? '' : '') + '<span class="sp-name">'+t.s+'</span>';
+        b.setAttribute('aria-label', (i + 1) + 'ばん ' + plain(t.n) + (i < u ? '(クリア)' : i === u ? '(いまの 場所)' : '(まだ ひらいて いない)'));
+        b.setAttribute('data-ok', t.k);
+        map.appendChild(b);
+      });
+      var pb = document.createElement('button'); pb.type = 'button'; pb.className = 'spot sp-side'; pb.setAttribute('data-ok', 'piano');
+      pb.style.left = '50%'; pb.style.top = '96%'; pb.style.setProperty('--sp', '#2b2633');
+      pb.innerHTML = '<span class="sp-ico">🎹</span><span class="sp-name">ピアノ ひろば</span>';
+      map.appendChild(pb);
+      var pet = document.createElement('div'); pet.className = 'isle-pet'; pet.innerHTML = petHTML();
+      var lt = STEPS[Math.min(u, STEPS.length - 1)]; pet.style.left = lt.x + '%'; pet.style.top = (lt.y - 4) + '%';
+      map.appendChild(pet);
+      return map;
+    }
+    var going = false;
+    function walk(map, k, then){
+      var t = posOf(k), pet = map.querySelector('.isle-pet'), still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(t) lastSpot(k);
+      if(!pet || still || going){ then(); return; }
+      pet.style.left = (t ? t.x : 50) + '%'; pet.style.top = ((t ? t.y : 96) - 4) + '%';
+      pet.classList.remove('hop'); void pet.offsetWidth; pet.classList.add('hop');
+      going = true; setTimeout(function(){ going = false; then(); }, 480);
+    }
+
+    /* ---- 画面 ---- */
+    var S = null, CUR = null;
+    function show(part){ ['okMap', 'okTopic', 'okPlay', 'okResult', 'okPiano'].forEach(function(id){ $(id).hidden = id !== part; }); showView('ongaku'); }
+    function capNote(id, pre){ return '<div class="gk-cap"'+(id ? ' id="'+id+'"' : '')+'>'+(pre || '')+'今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ! もんだいは とけるけど、コインは あした また もらえるよ</div>'; }
+    function capped(){ return rec().day.n >= DAY_CAP; }
+    function wallet(){ var s = rec(); return '<span class="coin"></span><span>いまの コイン <b class="num">'+getCoins()+'</b></span><span class="gk-bar"><i style="width:'+Math.round(s.day.n/DAY_CAP*100)+'%"></i></span><span>今日 '+s.day.n+'/'+DAY_CAP+'</span>'; }
+    function open(k){
+      $('okTitle').textContent = '音楽の 島';
+      var s = rec(), u = ur(s), all = OK_ALL || u >= STEPS.length;
+      var box = $('okMap'); box.innerHTML = '<div class="gk-wallet">'+wallet()+'</div>' + (capped() ? capNote('okCapM', '🎉 ') : '') + '<p class="gk-note" style="text-align:center">'+(all ? '道を ぜんぶ クリアしたね! 下の「もっと くわしく」で ふかく 学ぼう。' : '1ばんから じゅんばんに すすもう。いまは '+(u + 1)+'ばん「'+ruby(STEPS[Math.min(u, STEPS.length - 1)].n)+'」')+'</p>';
+      var gameOk = OK_ALL || u >= 6;
+      box.insertAdjacentHTML('beforeend', ruby('<div class="ok-games"><button class="btn btn-primary" data-drill="notes"'+(gameOk ? '' : ' disabled')+'>🎼 音符《おんぷ》あて クイズ</button><button class="btn btn-primary" data-drill="keys"'+(gameOk ? '' : ' disabled')+'>🎹 けんばんで あてる クイズ</button><button class="btn btn-primary" data-drill="ear"'+(gameOk ? '' : ' disabled')+'>👂 耳《みみ》で 聞《き》く クイズ</button>'+(gameOk ? '' : '<small>6ばんを クリアすると あそべるよ</small>')+'</div>'));
+      box.appendChild(isle(false));
+      box.insertAdjacentHTML('beforeend', '<h3 class="ok-sec">もっと くわしく'+(all ? '' : ' <small>(道を ぜんぶ クリアすると ひらくよ)</small>')+'</h3><div class="gk-menu ok-more'+(all ? '' : ' lock')+'">' + TOPICS.map(function(t){
+        return '<button class="gk-sub" data-topic="'+t.k+'"'+(all ? '' : ' disabled')+'><span style="font-size:28px">'+(all ? t.i : '🔒')+'</span><span><b>'+ruby(t.n)+' <small style="display:inline;color:#e0a400;letter-spacing:1px">'+stars(s.u, t.k)+'</small></b><small>'+t.d+'</small></span></button>'; }).join('') + '</div>');
+      box.insertAdjacentHTML('beforeend', '<p class="gk-note ok-snd">🔈 音が 出るよ。聞こえない ときは 音量《おんりょう》と マナーモードを たしかめてね。</p>'.replace(/([0-9]*[一-龥々][0-9一-龥々]*)《([^》]+)》/g, '<ruby>$1<rt>$2</rt></ruby>'));
+      show('okMap');
+      if(k) setTimeout(function(){ var b = box.querySelector('.isle [data-ok="'+k+'"]'); if(b) b.click(); }, 250);
+    }
+    function topic(k){
+      CUR = k; var t = tp(k), s = rec(), L = LESS[k] || [], dep = depth(s.u, k).cur, nq = Math.min(ROUND, BY[k].filter(function(e){ return e.dep <= dep; }).length);
+      $('okTitle').textContent = t.p;
+      var h = '<div class="ok-head" style="--sp:'+t.c+'"><span class="ok-hico">'+t.i+'</span><span><b>'+ruby(t.n)+' <span class="ok-stars">'+stars(s.u, k)+'</span></b><small>'+t.d+'・せいかい '+count(s.u, k)+'/'+BY[k].length+'</small></span></div>' +
+        '<button class="btn btn-primary ok-go" data-go="1">クイズに ちょうせん('+nq+'問)</button>' +
+        '<h3 class="ok-sec">見て・聞いて おぼえよう</h3>';
+      L.forEach(function(l, i){
+        var lock = l[0] > dep;
+        h += '<section class="ok-ls'+(lock ? ' deep' : '')+'"><h4><span class="ok-lst">'+['', '★', '★★', '★★★'][l[0]]+'</span>'+ruby(l[1])+'</h4><div class="ok-fig">'+l[2]+'</div><p>'+ruby(l[3])+'</p>' + (l[4] ? '<button class="ok-play" data-li="'+i+'">▶ きく</button>' : '') + '</section>';
+      });
+      h += '<button class="btn btn-primary ok-go" data-go="1">クイズに ちょうせん('+nq+'問)</button>';
+      $('okTopic').innerHTML = h;
+      show('okTopic');
+    }
+    var STEP = null;
+    function step(i){
+      STEP = i; CUR = null; var t = STEPS[i], u = ur();
+      $('okTitle').textContent = (i + 1) + 'ばん ' + plain(t.n);
+      var h = '<div class="ok-head" style="--sp:#8A5BD0"><span class="ok-hico">'+t.i+'</span><span><b>'+(i + 1)+'ばん '+ruby(t.n)+'</b><small>'+(i < u ? 'クリア ずみ 🚩 なんかい やっても いいよ' : 'よく 見て、きいてから やって みよう')+'</small></span></div>';
+      t.teach.forEach(function(l, j){ h += '<section class="ok-ls"><div class="ok-fig">'+l[0]+'</div><p class="ok-big-p">'+ruby(l[1])+'</p>' + (l[2] ? '<button class="ok-play big" data-ti="'+j+'">▶ きく</button>' : '') + '</section>'; });
+      h += '<button class="btn btn-primary ok-go" data-road="1">やって みよう!</button>';
+      $('okTopic').innerHTML = h;
+      show('okTopic');
+    }
+    function startRoad(i){
+      S = { road:i, qs:STEPS[i].quiz(), i:0, ok:0, res:[] };
+      show('okPlay'); capP(); ask();
+    }
+    function startDrill(kind){
+      S = { drill:kind, qs:(kind === 'ear' ? OkRoad.drillEar() : kind === 'keys' ? OkRoad.drillKeys() : OkRoad.drillNotes()), i:0, ok:0, res:[] };
+      show('okPlay'); capP(); ask();
+    }
+    function start(k){
+      var s = rec(), d0 = depth(s.u, k).cur;
+      S = { k:k, qs:pick(s.u, k), i:0, ok:0, res:[], d0:d0 };
+      if(!S.qs.length) return;
+      show('okPlay'); capP(); ask();
+    }
+    function capP(){ var o = $('okCapP'); if(o) o.remove(); if(capped()) $('okProg').insertAdjacentHTML('beforebegin', capNote('okCapP')); }
+    function ask(){
+      var e = S.qs[S.i], t = S.drill ? { n:{ ear:'耳《みみ》で 聞《き》く クイズ', keys:'けんばんで あてる クイズ' }[S.drill] || '音符《おんぷ》あて クイズ' } : S.road != null ? { n:(S.road + 1) + 'ばん ' + STEPS[S.road].n } : tp(S.k);
+      S.lock = false;
+      $('okProg').innerHTML = S.qs.map(function(x, i){ return '<i class="'+(S.res[i] || '')+'"></i>'; }).join('');
+      var fig = typeof e.fig === 'function' ? e.fig() : (e.fig || '');
+      $('okQ').innerHTML = '<div class="gk-tag">'+ruby(t.n)+' '+(['', '★', '★★', '★★★'][e.dep] || '')+'</div>' + (fig ? '<div class="ok-fig">'+fig+'</div>' : '') +
+        (e.snd ? '<button class="ok-play big" data-snd="1">▶ '+(e.auto ? 'もう 1回 きく' : 'きく')+'</button>' : '') + '<div class="gk-text">'+ruby(e.q)+'</div>';
+      $('okFb').className = 'gk-fb'; $('okFb').innerHTML = ''; $('okNextBox').innerHTML = '';
+      if(e.kb){
+        $('okCh').className = 'ok-qkb';
+        $('okCh').innerHTML = '<div class="ok-kb nonames">' + [0, 1, 2, 3, 4, 5, 6, 7].map(function(d){ return '<button class="ok-w" data-d="'+d+'"><span>'+NMK(d)+'</span></button>'; }).join('') +
+          [0, 1, 3, 4, 5].map(function(d){ return '<button class="ok-b" data-d="'+d+'" data-acc="1" style="left:calc('+((d + 1) * 12.5)+'% - 4%)"></button>'; }).join('') + '</div>';
+        if(e.auto && e.snd) e.snd();
+        return;
+      }
+      var ch = shuffle([e.a].concat(e.bad));
+      S.ans = ch.indexOf(e.a);
+      var svgc = String(e.a).charAt(0) === '<';
+      $('okCh').className = 'gk-ch ok-ch' + (e.cols === 1 || (svgc && /ok-rh/.test(e.a)) ? ' one' : '') + (svgc ? ' pics' : '') + (ch.length === 2 ? ' two' : '');
+      $('okCh').innerHTML = ch.map(function(c, i){ return '<button data-i="'+i+'">'+(svgc ? c : ruby(c))+'</button>'; }).join('');
+      $('okFb').className = 'gk-fb'; $('okFb').innerHTML = ''; $('okNextBox').innerHTML = '';
+      if(e.auto && e.snd) e.snd();
+    }
+    function NMK(d){ return D.nm(d); }
+    function answer(b){
+      if(S.lock) return; S.lock = true;
+      var e = S.qs[S.i], ok, s = rec();
+      if(e.kb){
+        var kd = +b.getAttribute('data-d'), acc = b.hasAttribute('data-acc');
+        D.tone(D.midi(kd, acc ? 1 : 0), 0, 0.6);
+        var hit = function(isB, d){ return (isB ? e.kbk || [] : e.kd || []).indexOf(d) >= 0; }; /* kbk: 黒い けんばん(その d の ♯)が 正かい */
+        ok = hit(acc, kd);
+        Array.prototype.forEach.call($('okCh').querySelectorAll('button'), function(x){ if(hit(x.hasAttribute('data-acc'), +x.getAttribute('data-d'))) x.classList.add('ok'); else if(x === b) x.classList.add('ng'); x.disabled = true; });
+        $('okCh').querySelector('.ok-kb').classList.remove('nonames');
+      } else {
+        var i = +b.getAttribute('data-i'); ok = i === S.ans;
+        Array.prototype.forEach.call($('okCh').children, function(x, j){ if(j === S.ans) x.classList.add('ok'); else if(x === b) x.classList.add('ng'); x.disabled = true; });
+      }
+      if(e.id){ var r = s.u[e.id] || { ok:0, ng:0 }; if(ok) r.ok++; else r.ng++; s.u[e.id] = r; safeSet(KEY, s); }
+      if(ok) S.ok++;
+      S.res[S.i] = ok ? 'ok' : 'ng';
+      $('okProg').children[S.i].className = S.res[S.i];
+      $('okFb').className = 'gk-fb ' + (ok ? 'ok' : 'ng');
+      $('okFb').innerHTML = (ok ? 'せいかい!' : 'ざんねん…') + '<div class="ok-ex">'+ruby(e.ex || '')+'</div>';
+      if(e.post) setTimeout(e.post, ok ? 450 : 200); else setTimeout(function(){ D.chime(ok); }, e.kb ? 450 : 0);
+      if(e.post && !e.snd) $('okQ').insertAdjacentHTML('beforeend', '<button class="ok-play" data-snd="1">▶ もう 1回 きく</button>');
+      $('okNextBox').innerHTML = '<button class="btn btn-primary" id="okNext">'+(S.i + 1 >= S.qs.length ? 'けっかを 見る' : 'つぎへ')+'</button>';
+    }
+    function finish(){
+      var s = rec(), want = S.ok + (S.ok >= Math.ceil(S.qs.length * 0.8) ? 3 : 0), room = Math.max(0, DAY_CAP - s.day.n), got = Math.min(want, room);
+      var pass = S.ok >= Math.ceil(S.qs.length * 0.8);
+      if(S.road != null){
+        var opened = pass && S.road === ur(s); if(opened) s.ur = S.road + 1;
+        s.day.n += got; s.rounds++; safeSet(KEY, s); if(got > 0) earn(got);
+        var last = S.road + 1 >= STEPS.length;
+        $('okResult').innerHTML = '<div class="gk-res"><div class="gk-big">'+S.ok+' / '+S.qs.length+'</div>' +
+          (pass ? '<p>やったね! '+(S.road + 1)+'ばん「'+ruby(STEPS[S.road].n)+'」 クリア 🚩</p>' + (opened && !last ? '<div class="kk-up">つぎの 場所が ひらいたよ!</div>' : '') + (opened && last ? '<div class="kk-up">🎉 音楽の 道を ぜんぶ クリア! 「もっと くわしく」が ひらいたよ</div>' : '')
+            : '<p>あと すこし! '+Math.ceil(S.qs.length * 0.8)+'もん せいかいで つぎへ すすめるよ。もう いちど 見て、きいてから やって みよう。</p>') +
+          (got < want ? '<div class="gk-cap">'+(got ? 'これで 今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ!' : '今日の まなぶコインは もう '+DAY_CAP+'こ ぜんぶ もらって いるので、今回は 0コインだよ。')+' コインは あした また もらえるよ</div>' : '') +
+          '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン' + '</div>' +
+          (pass && !last ? '<button class="btn btn-primary" id="okNextStep">つぎの 場所へ</button> ' : '<button class="btn btn-primary" id="okAgain">もう1回</button> ') +
+          '<button class="btn btn-ghost" id="okToStep">見て・きいて</button> <button class="btn btn-ghost" id="okToMap">島に もどる</button></div>';
+        show('okResult');
+        if(pass) D.play([[M0(0), 0.25], [M0(2), 0.25], [M0(4), 0.25], [M0(7), 0.75]], 120);
+        return;
+      }
+      if(S.drill){
+        s.day.n += got; s.rounds++; safeSet(KEY, s); if(got > 0) earn(got);
+        $('okResult').innerHTML = '<div class="gk-res"><div class="gk-big">'+S.ok+' / '+S.qs.length+'</div><p>'+(S.ok >= Math.ceil(S.qs.length * 0.8) ? 'すごい! よく できたね 🎉' : 'もう 1回 やって みよう!')+'</p>' +
+          (got < want ? '<div class="gk-cap">'+(got ? 'これで 今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ!' : '今日の まなぶコインは もう '+DAY_CAP+'こ ぜんぶ もらって いるので、今回は 0コインだよ。')+' コインは あした また もらえるよ</div>' : '') +
+          '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン</div><div class="gk-fb">1問 せいかいで 1コイン・今日 '+s.day.n+'/'+DAY_CAP+'</div>' +
+          '<button class="btn btn-primary" id="okAgain">もう1回</button> <button class="btn btn-ghost" id="okToMap">島に もどる</button></div>';
+        show('okResult'); if(S.ok >= Math.ceil(S.qs.length * 0.8)) D.play([[M0(0), 0.25], [M0(2), 0.25], [M0(4), 0.25], [M0(7), 0.75]], 120);
+        return;
+      }
+      s.day.n += got; s.rounds++; safeSet(KEY, s);
+      if(got > 0) earn(got);
+      var d1 = depth(s.u, S.k).cur, t = tp(S.k);
+      $('okResult').innerHTML = '<div class="gk-res"><div class="gk-big">'+S.ok+' / '+S.qs.length+'</div><p>'+ruby(t.n)+'の クイズ おわり!</p>' +
+        (d1 > S.d0 ? '<div class="kk-up">すごい! ★が ふえて、もっと ふかい もんだいが ひらいたよ</div>' : '') +
+        (got < want ? '<div class="gk-cap">'+(got ? 'これで 今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ!' : '今日の まなぶコインは もう '+DAY_CAP+'こ ぜんぶ もらって いるので、今回は 0コインだよ。')+' コインは あした また もらえるよ</div>' : '') +
+          '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン' + (S.ok >= Math.ceil(S.qs.length * 0.8) ? '(8割 せいかい +3)' : '') + '</div>' +
+        '<div class="gk-fb">1問 せいかいで 1コイン・今日 '+s.day.n+'/'+DAY_CAP+'</div>' +
+        '<button class="btn btn-primary" id="okAgain">もう1回</button> <button class="btn btn-ghost" id="okToTopic">見て・聞いて</button> <button class="btn btn-ghost" id="okToMap">島に もどる</button></div>';
+      show('okResult');
+      if(S.ok >= Math.ceil(S.qs.length * 0.8)) D.play([[M0(0), 0.25], [M0(2), 0.25], [M0(4), 0.25], [M0(7), 0.75]], 120);
+    }
+    function M0(d){ return D.midi(d); }
+
+    /* ---- ピアノ ひろば: けんばんを ひくと 五線に 音が 出る。おてほんの 曲を まねして ひける ---- */
+    var KB = []; for(var d = 0; d <= 9; d++) KB.push(d);
+    var BLACK = { 0:1, 1:1, 3:1, 4:1, 5:1, 7:1, 8:1 };
+    var SONGS = [
+      { n:'ドレミの かいだん', s:[0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1, 0], b:[1] },
+      { n:'きらきら星', s:[0, 0, 4, 4, 5, 5, 4, 3, 3, 2, 2, 1, 1, 0], b:[1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2] },
+      { n:'かえるの 合唱', s:[0, 1, 2, 3, 2, 1, 0, 2, 3, 4, 5, 4, 3, 2], b:[1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2] }
+    ];
+    var P = { names:true, song:null, pos:0 };
+    function piano(){
+      $('okTitle').textContent = 'ピアノ ひろば';
+      var keys = KB.map(function(d){ return '<button class="ok-w" data-m="'+D.midi(d)+'" data-d="'+d+'"><span>'+D.nm(d)+'</span></button>'; }).join('');
+      var blk = KB.filter(function(d){ return BLACK[d] && d < 9; }).map(function(d){ return '<button class="ok-b" data-m="'+D.midi(d, 1)+'" data-d="'+d+'" data-acc="1" style="left:calc('+((d + 1) * 10)+'% - 3.2%)"></button>'; }).join('');
+      $('okPiano').innerHTML = '<div class="ok-pstaff" id="okPStaff"></div><div class="ok-pname" id="okPName">けんばんを おしてね</div>' +
+        '<div class="ok-kb'+(P.names ? '' : ' nonames')+'" id="okKb">'+keys+blk+'</div>' +
+        '<label class="ok-tog"><input type="checkbox" id="okNames"'+(P.names ? ' checked' : '')+'> けんばんに ドレミを 出す</label>' +
+        '<h3 class="ok-sec">まねして ひこう</h3><p class="gk-note">▶ で おてほんを 聞いてから、光る けんばんを じゅんばんに おしてね。</p>' +
+        '<div class="ok-songs">'+SONGS.map(function(s, i){ return '<div class="ok-song"><b>'+ruby(s.n)+'</b><button class="ok-play" data-sp="'+i+'">▶ おてほん</button><button class="ok-play" data-sg="'+i+'">🎹 ひく</button></div>'; }).join('')+'</div>';
+      drawP(null);
+      show('okPiano');
+    }
+    function drawP(d, acc){
+      $('okPStaff').innerHTML = d == null ? D.staff([['sp', 40]], { w:150 }) : D.staff([['n', d, 'q', acc ? { acc:1, col:'#8A5BD0' } : { col:'#8A5BD0' }]], { w:150 });
+      if(d != null) $('okPName').textContent = acc ? D.nm(d) + '♯ (' + D.nm(d + 1) + '♭)' : D.nm(d) + (d === 7 ? '(上の ド)' : d > 7 ? '(上の ' + D.nm(d) + ')' : '');
+    }
+    function glow(){
+      Array.prototype.forEach.call(document.querySelectorAll('#okKb .glow'), function(x){ x.classList.remove('glow'); });
+      if(!P.song) return;
+      var d = P.song.s[P.pos], k = document.querySelector('#okKb .ok-w[data-d="'+d+'"]'); if(k) k.classList.add('glow');
+    }
+    function press(k){
+      var m = +k.getAttribute('data-m'), d = +k.getAttribute('data-d'), acc = k.hasAttribute('data-acc');
+      D.tone(m, 0, 0.7); drawP(d, acc);
+      k.classList.add('on'); setTimeout(function(){ k.classList.remove('on'); }, 180);
+      if(P.song && !acc){
+        if(d === P.song.s[P.pos]){ P.pos++; if(P.pos >= P.song.s.length){ P.song = null; glow(); $('okPName').textContent = 'さいごまで ひけたね! 🎉'; setTimeout(function(){ D.chime(true); }, 500); return; } }
+        glow();
+      }
+    }
+    function songSeq(s){ return s.s.map(function(d, i){ return [D.midi(d), s.b[i] || s.b[0]]; }); }
+
+    /* ---- イベント ---- */
+    var view = $('view-ongaku');
+    view.addEventListener('click', function(e){
+      var t = e.target, sp = t.closest('.isle .spot');
+      if(sp && !$('okMap').hidden){
+        var k = sp.getAttribute('data-ok'), si = STEPS.indexOf(posOf(k));
+        if(!canGo(si)){ toast('まだ ひらいて いないよ。'+(ur() + 1)+'ばんから じゅんばんに すすもう'); return; }
+        walk(sp.closest('.isle'), k, function(){ if(k === 'piano') piano(); else step(si); }); return;
+      }
+      var dr = t.closest('[data-drill]'); if(dr){ startDrill(dr.getAttribute('data-drill')); return; }
+      var tb = t.closest('[data-topic]'); if(tb){ topic(tb.getAttribute('data-topic')); return; }
+      if(t.closest('[data-road]')){ startRoad(STEP); return; }
+      var ti = t.closest('[data-ti]'); if(ti){ var tl = STEPS[STEP].teach[+ti.getAttribute('data-ti')]; if(tl && tl[2]) tl[2](); return; }
+      if(t.closest('#okNextStep')){ open(STEPS[S.road + 1].k); return; }
+      if(t.closest('#okToStep')){ step(S.road); return; }
+      if(t.closest('[data-go]')){ start(CUR); return; }
+      var li = t.closest('[data-li]'); if(li){ var l = LESS[CUR][+li.getAttribute('data-li')]; if(l && l[4]) l[4](); return; }
+      if(t.closest('[data-snd]')){ var q = S && S.qs[S.i]; if(q && q.snd) q.snd(); else if(q && q.post) q.post(); return; }
+      var cb = t.closest('#okCh button'); if(cb){ answer(cb); return; }
+      if(t.closest('#okNext')){ S.i++; if(S.i >= S.qs.length) finish(); else ask(); return; }
+      if(t.closest('#okAgain')){ if(S.drill){ startDrill(S.drill); return; } if(S.road != null) startRoad(S.road); else start(S.k); return; }
+      if(t.closest('#okToTopic')){ topic(S.k); return; }
+      if(t.closest('#okToMap')){ open(); return; }
+      var pk = t.closest('#okKb button'); if(pk){ press(pk); return; }
+      var ps = t.closest('[data-sp]'); if(ps){ D.play(songSeq(SONGS[+ps.getAttribute('data-sp')]), 108); return; }
+      var pg = t.closest('[data-sg]'); if(pg){ P.song = SONGS[+pg.getAttribute('data-sg')]; P.pos = 0; glow(); $('okPName').textContent = '光る けんばんを おしてね'; D.A(); return; }
+    });
+    view.addEventListener('change', function(e){ if(e.target.id === 'okNames'){ P.names = e.target.checked; $('okKb').classList.toggle('nonames', !P.names); } });
+    /* けんばんは 指を おいた しゅんかんに 鳴らす(タップの おくれを なくす) */
+    view.addEventListener('pointerdown', function(e){ var pk = e.target.closest('#okKb button'); if(pk){ e.preventDefault(); press(pk); pk._pd = Date.now(); } });
+    view.addEventListener('click', function(e){ var pk = e.target.closest('#okKb button'); if(pk && pk._pd && Date.now() - pk._pd < 800){ e.stopImmediatePropagation(); } }, true);
+    $('okBack').addEventListener('click', function(){
+      if(!$('okPlay').hidden || !$('okResult').hidden){ if(S && S.road != null) step(S.road); else if(CUR) topic(CUR); else open(); return; }
+      if(!$('okTopic').hidden || !$('okPiano').hidden){ P.song = null; open(); return; }
+      goHome();
+    });
+
+    /* ---- ホーム: 音楽タブの カードと 見本の 島 ---- */
+    function cardHTML(){
+      var s = rec();
+      return '<section class="gk-card" data-sub="n" data-subj="n"><span class="gk-ico" style="background:var(--sj-n)">音</span><span class="fc-text"><b>音楽</b>音楽の 道を じゅんばんに・いま '+Math.min(ur(s) + 1, STEPS.length)+'/'+STEPS.length+'ばん</span><button class="fc-go" id="okOpen" style="background:var(--sj-n)">ひらく</button></section>';
+    }
+    function homeRender(){
+      var panel = $('subjPanel'), anchor = $('gakuCards'); if(!panel || !anchor) return;
+      Array.prototype.forEach.call(panel.querySelectorAll('.isle.pv-n'), function(x){ x.remove(); });
+      var c = anchor.querySelector('[data-sub="n"]');
+      if(!c){ anchor.insertAdjacentHTML('beforeend', cardHTML()); c = anchor.lastElementChild; }
+      c.classList.add('pv-card');
+      anchor.parentNode.insertBefore(isle(true), anchor);
+      panel.classList.add('has-pv');
+    }
+    document.addEventListener('click', function(e){
+      if(e.target.closest('#okOpen')){ open(); return; }
+      var m = e.target.closest('.isle.pv-n'); if(!m) return;
+      var b = e.target.closest('.spot'), k = b && b.getAttribute('data-ok');
+      var si = b ? STEPS.indexOf(posOf(k)) : -1;
+      if(b && k !== 'piano' && !canGo(si)){ open(); return; }
+      if(b) walk(m, k, function(){ open(k); }); else open();
+    });
+    return { open:open, cardHTML:cardHTML, homeRender:homeRender, _items:ITEMS, _steps:STEPS };
   })();
 
   /* ---------- backup / restore ---------- */
