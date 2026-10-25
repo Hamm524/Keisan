@@ -5640,7 +5640,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var ro = rec100Op(), shelf = '<div class="md-shelf" role="radiogroup" aria-label="100問の しゅるい">';
     SINGLE_OPS.concat(['mix']).forEach(function(o){
       var tp = Medal.topOf(o);
-      shelf += '<button class="md-shelf-c'+(o===op ? ' on' : '')+(tp ? ' got' : '')+'" data-op100="'+o+'" role="radio" aria-checked="'+(o===op)+'">' + (rec100Open() && o===ro ? '<em>おすすめ</em>' : '') +
+      shelf += '<button class="md-shelf-c'+(o===op ? ' on' : '')+(tp ? ' has' : '')+'" data-op100="'+o+'" role="radio" aria-checked="'+(o===op)+'">' + (rec100Open() && o===ro ? '<em>おすすめ</em>' : '') +
         Medal.svg(tp) + '<b>'+Medal.sym(o)+'</b></button>';
     });
     shelf += '</div>';
