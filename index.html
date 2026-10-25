@@ -187,7 +187,7 @@
   .hl-c.dim{ opacity:.35; }
   .hl-c.in.cur{ animation:hl-pulse 1.3s ease-in-out infinite; }
   @keyframes hl-pulse{ 50%{ box-shadow:0 0 0 5px color-mix(in srgb, var(--live) 22%, transparent); } }
-  .hl-c.in.empty{ border:2px dashed var(--line); }
+  .hl-c.in.empty{ border:2px dashed var(--line); } .hl-c.in.empty{ cursor:pointer; }
   .hl-c.in.cur{ border:2.5px solid var(--live); background:color-mix(in srgb, var(--live) 10%, var(--surface)); }
   .hl-c.in.ok{ color:var(--live); }
   .hl-c.in.fade{ opacity:.28; }
@@ -10756,7 +10756,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(hl[c.id]) cls += ' hl';
         else if(st && c.id !== curId && (c.kind !== 'in' || H.vals[c.id] != null)) cls += ' dim';
         if(st && st.from === c.id) cls += ' from';
-        h += '<span class="'+cls+'"'+(c.id === curId ? ' id="hlCur"' : '')+' style="grid-row:'+(c.r+1)+';grid-column:'+(c.c+1)+'">'+txt+'</span>';
+        h += '<span class="'+cls+'"'+(c.id === curId ? ' id="hlCur"' : '')+(c.kind === 'in' ? ' data-cid="'+c.id+'"' : '')+' style="grid-row:'+(c.r+1)+';grid-column:'+(c.c+1)+'">'+txt+'</span>';
       });
       return (st ? '<div class="hl-tip" id="hlTip" aria-live="polite"></div>' : '')+'<div class="hl-grid num '+P.op+'" style="grid-template-columns:repeat('+P.cols+',1.05em);grid-template-rows:'+rows.join(' ')+'">'+h+'</div>';
     }
@@ -10849,8 +10849,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var head = '<span class="tp-step">'+(P.op === 'div' ? '①②③④'.charAt(st.chip)+' ' : '')+P.chips[st.chip]+'</span>';
       var body = H.msg ? '<span class="tp-bad">'+H.msg+'</span>' : guided ? st.tip : st.chip === 0 && P.op === 'div' ? 'こたえの 数を ここに' : 'ここに 書こう';
       if(guided && st.help) body += '<span class="hl-dan">'+st.help+'</span>';
-      if(!H.msg && memoUse() && st.chip < 2 && H.ci === 0) body += '<small class="tp-more">かけ算メモで '+P.d+' × □ を 計算できるよ</small>';
-      if(!H.msg && st.cells.length > 1 && H.ci > 0) body += '<small class="tp-more">つづけて '+(P.byId[st.cells[H.ci]].c < P.byId[st.cells[H.ci-1]].c ? '左' : 'となり')+'も</small>';
+      if(!H.msg && memoUse() && st.chip < 2 && !st.cells.some(function(id){ return H.vals[id] != null; })) body += '<small class="tp-more">かけ算メモで '+P.d+' × □ を 計算できるよ</small>';
+      if(!H.msg && st.cells.length > 1 && st.cells.some(function(id){ return H.vals[id] != null; })) body += '<small class="tp-more">のこりの □も 書こう</small>';
       tip.innerHTML = head+'<span class="tp-body">'+body+'</span>';
       tip.className = 'hl-tip'+(H.msg ? ' bad' : '');
       wrap.style.paddingBottom = ''; wrap.style.paddingTop = '';
@@ -10896,12 +10896,19 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var need = y+th - (grid.offsetTop+grid.offsetHeight) + 8;
       if(need > 0) wrap.style.paddingBottom = need+'px';
     }
+    /* この だんの 中で、いまの マスの つぎに 空いている マス(なければ -1) */
+    function nextFree(st, from){
+      var n = st.cells.length, i;
+      for(i=1;i<=n;i++){ var j = (from+i) % n; if(H.vals[st.cells[j]] == null) return j; }
+      return -1;
+    }
     function press(v){
       if(!H || H.done || H.locked) return;
       var st = curStep(), id = st.cells[H.ci], c = H.plan.byId[id];
       if(v === c.v){
-        H.vals[id] = v; H.justId = id; H.ci++; H.cellMiss = 0; H.msg = '';
-        if(H.ci >= st.cells.length){
+        H.vals[id] = v; H.justId = id; H.cellMiss = 0; H.msg = '';
+        H.ci = nextFree(st, H.ci);   /* まだ 空いている マスへ(タップで えらんだ 順でも OK) */
+        if(H.ci < 0){
           if(st.fade) st.fade.forEach(function(f){ H.faded[f] = 1; });
           H.si++; H.ci = 0;
           var nx = curStep();
@@ -10927,7 +10934,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       drawMaru($('hlCardBox'));
       Pet.cheer($('hlPet'));
     }
+    /* 今の だんの 空いている マスを タップすると、そこから 書ける */
     $('hlGrid').addEventListener('click', function(e){
+      var cc = e.target.closest('[data-cid]');
+      if(cc && H && !H.done && !H.locked){
+        var st0 = curStep(), k = st0 ? st0.cells.indexOf(cc.getAttribute('data-cid')) : -1;
+        if(k >= 0 && H.vals[st0.cells[k]] == null && k !== H.ci){ H.ci = k; H.msg = ''; render(); return; }
+      }
       if(H && H.memo && H.memo.sel){ H.memo.sel = null; renderMemo(); }   /* ひっさんに もどる */
       var b = e.target.closest('[data-dk]'); if(b) press(+b.getAttribute('data-dk'));
     });
