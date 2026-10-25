@@ -16320,6 +16320,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   });
 })();
 </script>
+<script>
+/* 漢字ドリルへの リンクに この 合言葉を つける。ホーム画面の アプリと Safari では 保存場所が 別なので、
+   合言葉を わたさないと 漢字の 記録が 2つに 分かれてしまう(漢字ドリルは 合言葉が ちがえば 記録を 合わせて こちらに そろえる) */
+document.addEventListener('click', function(e){
+  var a = e.target.closest && e.target.closest('a[href^="https://hamm524.github.io/Kanji/"]');
+  if(!a || /[#&]t=/.test(location.hash || '')) return;
+  var c = null; try{ c = localStorage.getItem('kapp_code'); }catch(err){}
+  if(!c || !/^[a-z2-9]{10}$/.test(c)) return;
+  a.href = 'https://hamm524.github.io/Kanji/?k=' + c;
+}, true);
+</script>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});</script>
 
 </body></html>
