@@ -2324,16 +2324,19 @@
   .st.is-cur > .weekend.rec{ border:3px solid var(--gold-deep); background:linear-gradient(170deg, color-mix(in srgb, var(--gold) 16%, var(--surface)), var(--surface) 60%); box-shadow:0 14px 30px -18px var(--gold-deep); }
   .rec-h{ font-size:21px; font-weight:900; margin:0; line-height:1.3; }
   .rec-sub{ font-size:12px; color:var(--ink-soft); font-weight:700; margin:2px 0 10px; line-height:1.55; }
-  .rec-pick{ display:block; width:100%; text-align:left; border:2px solid var(--gold-deep); background:color-mix(in srgb, var(--gold) 22%, var(--surface)); border-radius:14px; padding:8px 12px; margin:0 0 10px; font:inherit; font-size:14px; color:var(--ink); cursor:pointer; }
-  .rec-pick b{ color:var(--gold-deep); font-weight:900; }
-  .rec-pick span{ display:block; font-size:12px; color:var(--ink-soft); }
-  .md-shelf-h{ font-size:12px; font-weight:900; color:var(--ink-soft); margin:0 0 4px; }
+  .rec-go{ margin:2px 0 6px; }
+  .rec-meta{ font-size:12px; color:var(--ink-soft); font-weight:700; text-align:center; margin:0 0 8px; }
+  .rec-meta b{ color:var(--gold-deep); font-weight:900; }
+  .rec-more{ border-top:1.5px dashed var(--line); padding-top:6px; }
+  .rec-more summary{ cursor:pointer; font-size:13px; font-weight:900; color:var(--ink-soft); padding:6px 2px; list-style:none; }
+  .rec-more summary::-webkit-details-marker{ display:none; }
+  .rec-more summary::after{ content:' ▾'; }
+  .rec-more[open] summary::after{ content:' ▴'; }
   .md-shelf{ display:flex; gap:6px; margin-bottom:10px; }
   .md-shelf-c{ position:relative; flex:1; border:2px solid var(--line); background:var(--surface); border-radius:14px; padding:6px 2px 4px; display:flex; flex-direction:column; align-items:center; gap:1px; font:inherit; color:var(--ink-soft); cursor:pointer; }
   .md-shelf-c.on{ border-color:var(--gold-deep); }
   .md-shelf-c .md-svg{ width:30px; height:38px; }
   .md-shelf-c b{ font-family:'Fredoka',sans-serif; font-size:17px; color:var(--ink); }
-  .md-shelf-c small{ font-size:10.5px; }
   .md-shelf-c em{ position:absolute; top:-8px; left:50%; transform:translateX(-50%); font-style:normal; font-size:10px; font-weight:900; background:var(--gold-deep); color:#fff; border-radius:8px; padding:1px 6px; white-space:nowrap; }
   .rec-ops{ display:flex; gap:6px; margin-bottom:10px; }
   .rec-ops button{ flex:1; border:2px solid var(--line); background:var(--surface); border-radius:12px; padding:4px 0; font-family:'Fredoka',sans-serif; font-weight:600; font-size:18px; color:var(--ink-soft); cursor:pointer; }
@@ -5634,21 +5637,21 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     op = state.homeOp || op || 'add';
     var name = op==='mix' ? '混ぜて' : OP_META[op].label;
     var best = best100(op), hist = log100(op).slice(-7), h = '';
-    var ro = rec100Op(), shelf = '<div class="md-shelf" role="list">';
-    SINGLE_OPS.forEach(function(o){
+    var ro = rec100Op(), shelf = '<div class="md-shelf" role="radiogroup" aria-label="100問の しゅるい">';
+    SINGLE_OPS.concat(['mix']).forEach(function(o){
       var tp = Medal.topOf(o);
-      shelf += '<button class="md-shelf-c'+(o===op ? ' on' : '')+(tp ? ' got' : '')+'" data-op100="'+o+'" role="listitem">' + (rec100Open() && o===ro ? '<em>おすすめ</em>' : '') +
-        Medal.svg(tp) + '<b>'+OP_META[o].symbol+'</b><small>'+(tp ? Medal.RANKS[tp].name : 'まだ ないよ')+'</small></button>';
+      shelf += '<button class="md-shelf-c'+(o===op ? ' on' : '')+(tp ? ' got' : '')+'" data-op100="'+o+'" role="radio" aria-checked="'+(o===op)+'">' + (rec100Open() && o===ro ? '<em>おすすめ</em>' : '') +
+        Medal.svg(tp) + '<b>'+Medal.sym(o)+'</b></button>';
     });
     shelf += '</div>';
-    h += '<span class="cur-tag">ここから やろう!</span><h3 class="rec-h">100問 <ruby>記録<rt>きろく</rt></ruby></h3>' +
-      (rec100Open() ? '<button class="rec-pick" data-op100="'+ro+'">⭐ きょうの おすすめは <b>'+OP_META[ro].label+'</b>の 100問!<span>やると ＋'+REC100_BONUS+'コイン</span></button>' : '') +
-      '<div class="md-shelf-h">メダルの たな</div>' + shelf +
-      '<p class="rec-sub">'+name+'を 100問('+(op==='mix' ? '九九と 2桁 ± 1桁まで' : EASY100[op].desc)+')。何回でも 挑戦して メダルを あつめよう!</p>'+Medal.ladder(op)+'<div class="rec-ops">';
-    SINGLE_OPS.concat(['mix']).forEach(function(o){
-      h += '<button data-op100="'+o+'" aria-pressed="'+(o===op)+'">'+(o==='mix' ? 'M' : OP_META[o].symbol)+'</button>';
-    });
-    h += '</div><div class="rec-graph"><div class="rg-head">'+name+'の 自己ベスト<span class="num">'+(best ? fmtClock(best.ms) : '－')+'</span></div>';
+    var P = coinPlan100(op), recNow = rec100Open() && op === ro;
+    /* 上から: タイトル → しゅるい → 始めるボタン(いつも 画面の 上の ほう) → くわしく(たたんでおく) */
+    h += '<span class="cur-tag">ここから やろう!</span><h3 class="rec-h">100問 <ruby>記録<rt>きろく</rt></ruby></h3>' + shelf +
+      '<button class="rec-go" id="weekendBtn">'+name+'の 100問に 挑戦!</button>' +
+      '<p class="rec-meta">'+(recNow ? '⭐ きょうの おすすめ(＋'+REC100_BONUS+'コイン)<br>' : (rec100Open() ? '⭐ おすすめは '+OP_META[ro].label+'(＋'+REC100_BONUS+'コイン)<br>' : ''))+(best ? '自己ベスト <b class="num">'+fmtClock(best.ms)+'</b>・' : '')+'コイン 最大 <b class="num">'+P.max+'</b></p>' +
+      '<details class="rec-more" id="recMore"'+(state.w100Det ? ' open' : '')+'><summary>メダル・コイン・きろくを みる</summary>' +
+      '<p class="rec-sub">'+name+'を 100問('+(op==='mix' ? '九九と 2桁 ± 1桁まで' : EASY100[op].desc)+')。何回でも 挑戦して メダルを あつめよう!</p>'+Medal.ladder(op)+
+      '<div class="rec-graph"><div class="rg-head">'+name+'の 自己ベスト<span class="num">'+(best ? fmtClock(best.ms) : '－')+'</span></div>';
     if(hist.length){
       var mx = Math.max.apply(null, hist.map(function(e){ return e.ms; })), mn = Math.min.apply(null, hist.map(function(e){ return e.ms; }));
       h += '<div class="rg-bars">';
@@ -5658,11 +5661,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       });
       h += '</div><div class="rg-empty" style="padding:4px 0 0;text-align:left">速いほど 高く なるよ。</div>';
     }else h += '<div class="rg-empty">まだ 記録が ないよ。<br>1回目が 自己ベストに なるよ!</div>';
-    h += '</div>' + coinPlanHTML(op) +
-      '<button class="rec-go" id="weekendBtn">100問に 挑戦する</button>';
+    h += '</div>' + coinPlanHTML(op) + '</details>';
     c.className = 'weekend rec';
     c.innerHTML = h;
     $('weekendBtn').onclick = function(){ startPrint(op, WEEKEND_N, 'weekend'); };
+    $('recMore').addEventListener('toggle', function(){ state.w100Det = this.open; });
   }
   $('weekendCard').addEventListener('click', function(e){
     var b = e.target.closest('[data-op100]'); if(!b) return;
