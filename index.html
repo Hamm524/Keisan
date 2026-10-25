@@ -2335,6 +2335,7 @@
   .cp100-note{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin-top:6px; line-height:1.55; }
   .sheets{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:4px; }
   .sheets-t{ font-weight:900; font-size:14px; }
+  .sheets-say{ flex:1; font-weight:900; font-size:14px; color:var(--op-mul); text-align:right; }
   .sheets-d{ display:flex; gap:6px; }
   .sheets-d i{ width:22px; height:28px; border-radius:5px; border:2.5px solid #D9C7A8; background:#fff; }
   .sheets-d i.on{ background:var(--op-mul); border-color:var(--op-mul); }
@@ -5747,7 +5748,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var a2 = activePet(), rp = $('roadPet'), rbb = $('roadBubble'), cs = $('st'+(cur+1));
     if(!rp.firstChild) Pet.mount(rp, a2.sp, a2.lv);
     if(rp.parentNode !== cs){ cs.insertBefore(rbb, cs.firstChild); cs.insertBefore(rp, cs.firstChild); }
-    rbb.textContent = ['まずは プリント '+Math.min(sheetsToday(), DAILY_SHEETS)+'/'+DAILY_SHEETS+'枚!', 'ボスに 挑もう!', '100問に 挑戦!'][cur];
+    rbb.innerHTML = [sheetsSay(sheetsToday()), 'ボスに 挑もう!', '100問に 挑戦!'][cur];
     $('goalText').textContent = '全部 おわると 今日の 花丸!(＋'+ALLCLEAR_BONUS+'コイン)';
   }
   function rb(t){ return String(t).replace(/桁/g, '<ruby>桁<rt>けた</rt></ruby>'); }
@@ -5787,7 +5788,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         sd += '<b class="chip'+(k < sn ? ' on' : (k === sn ? ' now' : ''))+'" style="--c:var('+OP_META[po].color+')"><span class="cs">'+OP_META[po].symbol+'</span>'+(k < sn ? '<small>✓</small>' : '')+'</b>';
       }else sd += '<i class="on"></i>';
     }
-    $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">今日の プリント <b class="num">'+Math.min(sn, DAILY_SHEETS)+'/'+DAILY_SHEETS+'</b>枚</span><span class="sheets-d'+(sn < DAILY_SHEETS ? ' wide' : '')+'">'+sd+'</span></div>' +
+    $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">今日の プリント</span><span class="sheets-say">'+sheetsSay(sn)+'</span><span class="sheets-d'+(sn < DAILY_SHEETS ? ' wide' : '')+'">'+sd+'</span></div>' +
       '<span class="sz-next">1枚 '+SHEET_N+'問。'+(sn >= DAILY_SHEETS ? '5枚 できたよ!もっと やっても OK' : 'あと <b>'+(DAILY_SHEETS - sn)+'枚</b>で 今日の プリントが クリア!')+'</span>' +
       '<button type="button" class="gset" id="gSet">⚙ おうちの人の 設定(学年: 小' + pgrade() + ')</button>';
     renderWeekend(rec);
@@ -8090,6 +8091,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     say('とび級、がんばろう!');
   }
 
+  /* 今日のプリントの進み具合を 分数(1/5)でなく 言葉で: 「2枚 おわったよ!」「つぎは 3枚目!」 */
+  function sheetsSay(n){
+    n = Math.max(0, n);
+    if(n >= DAILY_SHEETS) return DAILY_SHEETS+'枚 ぜんぶ できたよ!';
+    if(n === 0) return 'これから <b class="num">1</b>枚目を はじめるよ!';
+    return '<b class="num">'+n+'</b>枚 おわったよ!つぎは <b class="num">'+(n+1)+'</b>枚目!';
+  }
+
   function renderDots(){
     var wrap = $('dots'); wrap.innerHTML = '';
     if(state.print && state.print.kind==='weekend'){ rocketCount(wrap); return; }   /* 100問: のこりが 多く 見えて しんどいので、のこり10問まで 進み具合は 出さない */
@@ -8805,9 +8814,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(state.print && state.print.kind === 'daily' && assignedMode()){
       var no = nextSheetOp(), nm = OP_META[no];
       $('retryBtn').className = 'btn btn-primary';
-      $('retryBtn').textContent = '次の プリント('+(sheetsToday() + 1)+'/'+DAILY_SHEETS+'枚)';
+      $('retryBtn').textContent = '次の プリント('+(sheetsToday() + 1)+'枚目)';
       $('retryBtn').onclick = function(){ state.homeOp = no; startPrint(no, printSize(), 'daily'); };
-      note.innerHTML = '今日の プリント <b class="num">'+sheetsToday()+'/'+DAILY_SHEETS+'</b>枚 終わり!この 調子で 次の プリントも やろう!';
+      note.innerHTML = '<b class="num">'+sheetsToday()+'</b>枚 おわったよ!この 調子で 次の プリントも やろう!';
       note.hidden = false; ops.hidden = true;
       return;
     }
