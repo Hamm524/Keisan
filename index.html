@@ -168,6 +168,18 @@
   .hl-chips span.on{ background:var(--live); color:#fff; }
   .hl-chips i{ font-style:normal; color:var(--ink-soft); font-size:11px; }
   .hl-gridwrap{ position:relative; max-width:100%; padding:4px 0; align-self:stretch; }
+  .hl-work{ align-self:stretch; display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-start; gap:10px 14px; }
+  .hl-work .hl-gridwrap{ flex:1 1 240px; }
+  /* わる数が 2けた以上: よこで かけ算の ひっさんを する メモ */
+  .hl-memo{ flex:0 0 auto; border:2px dashed var(--line); border-radius:14px; padding:6px 10px 8px; background:var(--surface); text-align:center; }
+  .hl-memo.on{ border-color:var(--live); border-style:solid; }
+  .hl-memo .mm-h{ display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:12px; font-weight:900; color:var(--ink-soft); }
+  .hl-memo .mm-clr{ border:none; background:var(--surface-2); color:var(--ink-soft); font:inherit; font-size:11.5px; padding:3px 8px; border-radius:8px; cursor:pointer; }
+  .hl-memo .hl-grid{ font-size:clamp(22px, 6.4vw, 30px); margin-top:4px; }
+  .hl-memo .hl-c.in{ cursor:pointer; }
+  .hl-memo .mm-st{ display:block; min-height:1.3em; margin-top:3px; font-size:12.5px; font-weight:700; color:var(--ink-soft); }
+  .hl-memo .mm-st.ok{ color:var(--good); }
+  .hl-memo .mm-st.bad{ color:var(--bad); }
   .hl-grid{ display:grid; width:max-content; margin:0 auto; font-size:clamp(28px, 8.4vw, 40px); line-height:1; font-weight:600; }
   .hl-c{ display:flex; align-items:center; justify-content:center; position:relative; border-radius:9px; margin:1px; min-height:1.1em; }
   .hl-c.op{ color:var(--live); }
@@ -175,7 +187,7 @@
   .hl-c.dim{ opacity:.35; }
   .hl-c.in.cur{ animation:hl-pulse 1.3s ease-in-out infinite; }
   @keyframes hl-pulse{ 50%{ box-shadow:0 0 0 5px color-mix(in srgb, var(--live) 22%, transparent); } }
-  .hl-c.in.empty{ border:2px dashed var(--line); }
+  .hl-c.in.empty{ border:2px dashed var(--line); } .hl-c.in.empty{ cursor:pointer; }
   .hl-c.in.cur{ border:2.5px solid var(--live); background:color-mix(in srgb, var(--live) 10%, var(--surface)); }
   .hl-c.in.ok{ color:var(--live); }
   .hl-c.in.fade{ opacity:.28; }
@@ -2879,7 +2891,10 @@
           <div class="fish-pet" id="hlPet"></div>
           <p class="hl-q num" id="hlQ"></p>
           <div class="hl-chips" id="hlChips"></div>
-          <div class="hl-gridwrap" id="hlGrid"></div>
+          <div class="hl-work">
+            <div class="hl-gridwrap" id="hlGrid"></div>
+            <div class="hl-memo" id="hlMemo" hidden></div>
+          </div>
         </div>
         <div class="hl-pad" id="hlPad">
           <button class="key num" data-k="1">1</button>
@@ -10413,7 +10428,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           var dT = Math.floor(d/10), cT = Math.floor(cur/10), est = Math.max(1, Math.min(9, Math.floor(cT/dT)));
           tSay = B(cur+' ÷ '+d)+': '+d+' を '+(dT*10)+'、'+cur+' を '+(cT*10)+' と みて 見当を つけよう。'+cT+' ÷ '+dT+' → '+B(est)+' くらい。<br>'+d+' × '+est+' = '+(d*est)+(d*est > cur ? '。大きすぎたら 1 へらそう。' : '。のこりが '+d+' より 大きければ 1 ふやそう。');
         }
-        step(P, { chip:0, cells:[qid], hl:curIds.concat(dvIds), say:pre+tSay, tip:'<small class="tp-mean">たてる = こたえの 数を 上に 書くこと</small>'+(qd === 0 ? B(cur)+' の 中に '+B(d)+' は 1つも 入らない。<br>上に '+B('0')+' を 書こう' : B(d)+' × いくつ なら '+B(cur)+' を こえない?'), help:qd === 0 ? '' : dan(d, cur, qd),
+        step(P, { chip:0, cells:[qid], cur:cur, hl:curIds.concat(dvIds), say:pre+tSay, tip:'<small class="tp-mean">たてる = こたえの 数を 上に 書くこと</small>'+(qd === 0 ? B(cur)+' の 中に '+B(d)+' は 1つも 入らない。<br>上に '+B('0')+' を 書こう' : B(d)+' × いくつ なら '+B(cur)+' を こえない?'), help:qd === 0 ? '' : dan(d, cur, qd),
           wrong:(function(cur, qd){ return function(v){
             var x = d*v;
             if(v > qd) return d+' × '+v+' = '+x+' で、'+cur+' より 大きいよ。ひけないね。もっと 小さい 数に しよう。';
@@ -10423,7 +10438,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(qd > 0){
           var p = qd*d, pd = digs(p), pr = row+1, pIds = [];
           pd.forEach(function(v, t){ var id = 'p'+pos+'_'+t; cell(P, pr, X(pos)-(pd.length-1)+t, v, 'in', id); pIds.push(id); });
-          step(P, { chip:1, cells:pIds, hl:dvIds.concat([qid]), tip:B(d+' × '+qd+' = ?'), say:B(d+' × '+qd)+' を 計算して、'+cur+' の 下に 書こう(右はしを そろえる)。', ans:p,
+          /* 2けたの こたえは 一の位(右)から 書く(ひき算と おなじ 向き) */
+          step(P, { chip:1, cells:pIds.slice().reverse(), hl:dvIds.concat([qid]), tip:B(d+' × '+qd+' = ?'), say:B(d+' × '+qd)+' を 計算して、'+cur+' の 下に 書こう(右はしを そろえる)。', ans:p,
             wrong:(function(a){ return function(){ return d+' × '+a+' を もういちど 計算してみよう。'; }; })(qd) });
           rem = cur - p;
           var leftCol = Math.min(P.byId[curIds[0]].c, P.byId[pIds[0]].c);
@@ -10431,7 +10447,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           P.rowKind[pr+1] = 'line';
           var rd = digs(rem), rIds = [], rr = pr+2;
           rd.forEach(function(v, t){ var id = 'r'+pos+'_'+t; cell(P, rr, X(pos)-(rd.length-1)+t, v, 'in', id); rIds.push(id); });
-          step(P, { chip:2, cells:rIds, hl:curIds.concat(pIds), tip:B(cur+' − '+p+' = ?'), say:B(cur+' − '+p)+' を 計算しよう。', ans:rem,
+          step(P, { chip:2, cells:rIds.slice().reverse(), hl:curIds.concat(pIds), tip:B(cur+' − '+p+' = ?'), say:B(cur+' − '+p)+' を 計算しよう。', ans:rem,
             wrong:(function(c, p){ return function(){ return c+' − '+p+' を もういちど 計算してみよう。'; }; })(cur, p) });
           row = rr; curIds = rIds.slice();
         }else{
@@ -10631,7 +10647,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       else{ do{ q = gen(H.id); tries++; }while(H.used[q.N+'/'+q.d] && tries < 30); H.used[q.N+'/'+q.d] = 1; }
       H.q = q;
       H.plan = q.op === 'div' ? planDiv(q.N, q.d, true) : planMul(q.N, q.d, true);
-      H.si = 0; H.ci = 0; H.vals = {}; H.miss = 0; H.cellMiss = 0; H.hint = false; H.done = false; H.msg = ''; H.msgCls = '';
+      H.si = 0; H.ci = 0; H.vals = {}; H.miss = 0; H.cellMiss = 0; H.hint = false; H.done = false; H.msg = ''; H.msgCls = ''; H.soft = false;
       H.cleared = {}; H.faded = {};
       Array.prototype.forEach.call(document.querySelectorAll('#hlCardBox .dc-maru'), function(m){ m.remove(); });
       render();
@@ -10640,6 +10656,79 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function cellVisible(c){
       if(H.cleared[c.id]) return false;
       return c.kind !== 'in' || c.step <= H.si;
+    }
+    /* ---- かけ算メモ(わる数が 2けた以上の とき、たてる数 × わる数 を よこで ひっさん) ---- */
+    function memoUse(){ return !!H && !H.done && H.plan.op === 'div' && H.plan.d >= 10; }
+    function memoGet(){
+      var P = H.plan, L = String(P.d).length;
+      if(!H.memo || H.memo.q !== P){
+        H.memo = { q:P, L:L, m:'', c:[], a:[], sel:null, lastA:L };
+        for(var i=0;i<L-1;i++) H.memo.c.push('');
+        for(var j=0;j<=L;j++) H.memo.a.push('');
+      }
+      return H.memo;
+    }
+    function memoCheck(M){
+      if(M.m === '') return null;
+      var ps = String(H.plan.d * +M.m), W = M.L+1, n = ps.length;
+      var right = M.a.slice(W-n), left = M.a.slice(0, W-n);
+      if(right.some(function(x){ return x === ''; })) return null;
+      return right.join('') === ps && left.every(function(x){ return x === ''; }) ? 'ok' : 'bad';
+    }
+    function renderMemo(){
+      var box = $('hlMemo'); if(!box) return;
+      box.hidden = !memoUse();
+      if(box.hidden) return;
+      var M = memoGet(), ds = String(H.plan.d), L = M.L, W = L+1, h = '';
+      function c(r, col, v, sel, attr, small){
+        var cls = 'hl-c in '+(v !== '' ? 'ok' : sel ? 'cur' : 'empty')+(sel && v !== '' ? ' cur' : '')+(small ? ' small' : '');
+        return '<span class="'+cls+'" '+attr+' style="grid-row:'+r+';grid-column:'+col+'">'+v+'</span>';
+      }
+      var S = M.sel || {};
+      for(var i=0;i<L-1;i++) h += c(1, i+2, M.c[i], S.t === 'c' && S.i === i, 'data-mm="c'+i+'"', true);
+      for(var j=0;j<L;j++) h += '<span class="hl-c" style="grid-row:2;grid-column:'+(j+2)+'">'+ds[j]+'</span>';
+      h += '<span class="hl-c op" style="grid-row:3;grid-column:1">×</span>';
+      h += c(3, W, M.m, S.t === 'm', 'data-mm="m"');
+      h += '<i class="hl-line" style="grid-row:4;grid-column:1 / '+(W+1)+'"></i>';
+      for(var k=0;k<W;k++) h += c(5, k+1, M.a[k], S.t === 'a' && S.i === k, 'data-mm="a'+k+'"');
+      var st = '', sc = '', ck = memoCheck(M), cs = curStep();
+      if(ck === 'ok'){
+        var p = H.plan.d * +M.m;
+        st = '✓ '+ds+' × '+M.m+' = '+p; sc = 'ok';
+        if(cs && cs.chip === 0 && cs.cur != null) st += p > cs.cur ? '<br>'+cs.cur+' より 大きい。ひけないね' : '<br>'+cs.cur+' から ひくと のこり '+(cs.cur-p);
+      }else if(ck === 'bad'){ st = 'あれ? もういちど 計算してみよう'; sc = 'bad'; }
+      else if(M.m === '') st = '□を タップして 数を 入れよう';
+      else st = 'こたえは 一の位(右)から';
+      box.className = 'hl-memo'+(M.sel ? ' on' : '');
+      box.innerHTML = '<div class="mm-h"><span>かけ算メモ</span><button class="mm-clr" data-mm="clr">けす</button></div>' +
+        '<div class="hl-grid num" style="grid-template-columns:repeat('+W+',1.05em);grid-template-rows:.75em 1.22em 1.22em 7px 1.22em">'+h+'</div>' +
+        '<span class="mm-st '+sc+'">'+st+'</span>';
+    }
+    function memoTap(k){
+      var M = memoGet();
+      if(k === 'clr'){ H.memo = null; memoGet().sel = { t:'m' }; }
+      else if(k === 'm') M.sel = { t:'m' };
+      else if(k[0] === 'a'){ M.sel = { t:'a', i:+k.slice(1) }; M.lastA = M.sel.i; }
+      else if(k[0] === 'c') M.sel = (M.sel && M.sel.t === 'c' && M.sel.i === +k.slice(1)) ? null : { t:'c', i:+k.slice(1) };
+      renderMemo();
+    }
+    function memoPress(v){
+      var M = memoGet(), S = M.sel, W = M.L+1;
+      if(S.t === 'm'){ M.m = String(v); M.a = M.a.map(function(){ return ''; }); M.c = M.c.map(function(){ return ''; }); M.sel = { t:'a', i:W-1 }; M.lastA = W-1; }
+      else if(S.t === 'c'){ M.c[S.i] = String(v); M.sel = M.lastA != null && M.lastA < W && M.a[M.lastA] === '' ? { t:'a', i:M.lastA } : null; }
+      else{
+        M.a[S.i] = String(v);   /* 一の位から 左へ */
+        M.sel = S.i > 0 ? { t:'a', i:S.i-1 } : null; M.lastA = S.i-1;
+        var ck = memoCheck(M);
+        if(ck === 'ok') M.sel = null;
+      }
+      renderMemo();
+    }
+    /* 数字キー: メモを えらんで いる ときは メモへ、それ いがいは ひっさんへ */
+    function key(v){
+      if(!H || H.done || H.locked) return;
+      if(memoUse() && H.memo && H.memo.sel){ memoPress(v); return; }
+      press(v);
     }
     function gridHTML(){
       var P = H.plan, st = curStep(), hl = {}, curId = st ? st.cells[H.ci] : null;
@@ -10667,7 +10756,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(hl[c.id]) cls += ' hl';
         else if(st && c.id !== curId && (c.kind !== 'in' || H.vals[c.id] != null)) cls += ' dim';
         if(st && st.from === c.id) cls += ' from';
-        h += '<span class="'+cls+'"'+(c.id === curId ? ' id="hlCur"' : '')+' style="grid-row:'+(c.r+1)+';grid-column:'+(c.c+1)+'">'+txt+'</span>';
+        h += '<span class="'+cls+'"'+(c.id === curId ? ' id="hlCur"' : '')+(c.kind === 'in' ? ' data-cid="'+c.id+'"' : '')+' style="grid-row:'+(c.r+1)+';grid-column:'+(c.c+1)+'">'+txt+'</span>';
       });
       return (st ? '<div class="hl-tip" id="hlTip" aria-live="polite"></div>' : '')+'<div class="hl-grid num '+P.op+'" style="grid-template-columns:repeat('+P.cols+',1.05em);grid-template-rows:'+rows.join(' ')+'">'+h+'</div>';
     }
@@ -10735,6 +10824,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('hlChips').innerHTML = P.chips.map(function(c, i){ return '<span class="'+(st && st.chip === i ? 'on' : '')+'">'+c+'</span>'; }).join(P.op === 'div' ? '<i>→</i>' : '<i>・</i>');
       $('hlChips').hidden = H.done;
       $('hlGrid').innerHTML = gridHTML();
+      renderMemo();
       renderBk();
       var say = '';
       if(H.done){
@@ -10759,9 +10849,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var head = '<span class="tp-step">'+(P.op === 'div' ? '①②③④'.charAt(st.chip)+' ' : '')+P.chips[st.chip]+'</span>';
       var body = H.msg ? '<span class="tp-bad">'+H.msg+'</span>' : guided ? st.tip : st.chip === 0 && P.op === 'div' ? 'こたえの 数を ここに' : 'ここに 書こう';
       if(guided && st.help) body += '<span class="hl-dan">'+st.help+'</span>';
-      if(!H.msg && st.cells.length > 1 && H.ci > 0) body += '<small class="tp-more">つづけて となりも</small>';
+      if(!H.msg && memoUse() && st.chip < 2 && !st.cells.some(function(id){ return H.vals[id] != null; })) body += '<small class="tp-more">かけ算メモで '+P.d+' × □ を 計算できるよ</small>';
+      if(!H.msg && st.cells.length > 1 && st.cells.some(function(id){ return H.vals[id] != null; })) body += '<small class="tp-more">のこりの □も 書こう</small>';
       tip.innerHTML = head+'<span class="tp-body">'+body+'</span>';
-      tip.className = 'hl-tip'+(H.msg ? ' bad' : '');
+      tip.className = 'hl-tip'+(H.msg && !H.soft ? ' bad' : '');
       wrap.style.paddingBottom = ''; wrap.style.paddingTop = '';
       var grid = wrap.querySelector('.hl-grid'), W = wrap.clientWidth;
       tip.style.maxWidth = Math.min(W >= 500 ? 230 : 164, W-8)+'px';
@@ -10805,12 +10896,19 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var need = y+th - (grid.offsetTop+grid.offsetHeight) + 8;
       if(need > 0) wrap.style.paddingBottom = need+'px';
     }
+    /* この だんの 中で、いまの マスの つぎに 空いている マス(なければ -1) */
+    function nextFree(st, from){
+      var n = st.cells.length, i;
+      for(i=1;i<=n;i++){ var j = (from+i) % n; if(H.vals[st.cells[j]] == null) return j; }
+      return -1;
+    }
     function press(v){
       if(!H || H.done || H.locked) return;
       var st = curStep(), id = st.cells[H.ci], c = H.plan.byId[id];
       if(v === c.v){
-        H.vals[id] = v; H.justId = id; H.ci++; H.cellMiss = 0; H.msg = '';
-        if(H.ci >= st.cells.length){
+        H.vals[id] = v; H.justId = id; H.cellMiss = 0; H.msg = ''; H.soft = false;
+        H.ci = nextFree(st, H.ci);   /* まだ 空いている マスへ(タップで えらんだ 順でも OK) */
+        if(H.ci < 0){
           if(st.fade) st.fade.forEach(function(f){ H.faded[f] = 1; });
           H.si++; H.ci = 0;
           var nx = curStep();
@@ -10820,9 +10918,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         render();
         return;
       }
-      H.miss++; H.cellMiss++; H.shake = true;
+      H.cellMiss++;
       var m = st.wrong ? st.wrong(v, H.ci) : 'もういちど!';
-      if(H.cellMiss >= 2) m += '<br>こたえは <b>'+c.v+'</b> だよ。';
+      if(H.cellMiss < 2){
+        /* 1回目は まちがえて タップしただけかも: ミスに 数えず、赤くも ふるわせも しない */
+        H.soft = true; H.msg = '<small>あれ? これで あってるかな。</small><br>'+m;
+        render();
+        return;
+      }
+      H.miss++; H.shake = true; H.soft = false;
+      m += '<br>こたえは <b>'+c.v+'</b> だよ。';
       H.msg = m; H.msgCls = 'hl-bad';
       Pet.oops($('hlPet'));
       render();
@@ -10836,8 +10941,18 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       drawMaru($('hlCardBox'));
       Pet.cheer($('hlPet'));
     }
-    $('hlGrid').addEventListener('click', function(e){ var b = e.target.closest('[data-dk]'); if(b) press(+b.getAttribute('data-dk')); });
-    $('hlPad').addEventListener('click', function(e){ var b = e.target.closest('[data-k]'); if(b) press(+b.getAttribute('data-k')); });
+    /* 今の だんの 空いている マスを タップすると、そこから 書ける */
+    $('hlGrid').addEventListener('click', function(e){
+      var cc = e.target.closest('[data-cid]');
+      if(cc && H && !H.done && !H.locked){
+        var st0 = curStep(), k = st0 ? st0.cells.indexOf(cc.getAttribute('data-cid')) : -1;
+        if(k >= 0 && H.vals[st0.cells[k]] == null && k !== H.ci){ H.ci = k; H.msg = ''; H.soft = false; H.cellMiss = 0; render(); return; }
+      }
+      if(H && H.memo && H.memo.sel){ H.memo.sel = null; renderMemo(); }   /* ひっさんに もどる */
+      var b = e.target.closest('[data-dk]'); if(b) press(+b.getAttribute('data-dk'));
+    });
+    $('hlMemo').addEventListener('click', function(e){ var b = e.target.closest('[data-mm]'); if(b && memoUse()) memoTap(b.getAttribute('data-mm')); });
+    $('hlPad').addEventListener('click', function(e){ var b = e.target.closest('[data-k]'); if(b) key(+b.getAttribute('data-k')); });
     $('hlNext').addEventListener('click', function(){ if(!H || !H.done) return; H.i++; nextQ(); });
     $('hlHintBtn').addEventListener('click', function(){ if(!H || H.done) return; H.hint = true; H.msg = ''; render(); });
     $('hlVizBtn').addEventListener('click', function(){ if(!H) return; H.viz = !H.viz; renderBk(); });
@@ -10904,7 +11019,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---- キーボード ---- */
     document.addEventListener('keydown', function(e){
       if(views.hsl.hidden || $('hlPlay').hidden || !$('modal').hidden || !H) return;
-      if(e.key >= '0' && e.key <= '9') press(+e.key);
+      if(e.key >= '0' && e.key <= '9') key(+e.key);
       else if(e.key === 'Enter' && H.done){ e.preventDefault(); H.i++; nextQ(); }
     });
 
