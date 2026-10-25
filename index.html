@@ -5631,10 +5631,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     h += '</ul><div class="cp100-note">'+(P.again ? '今日の 1回目の コインは もう もらったよ。2回目からは メダルや 自己ベストで コインを 増やそう!' : '2回目からは「100問 解けたら」が 10分の1に なるよ。メダルの コインは 1日'+Medal.RUN_MAX+'回まで 毎回 もらえるよ。')+'</div></div>';
     return h;
   }
+  function op100(){ return state.w100Op || (rec100Open() ? rec100Op() : (state.homeOp || 'add')); }
   function renderWeekend(op){
     var c = $('weekendCard');
     c.hidden = false;
-    op = state.homeOp || op || 'add';
+    /* 最初に えらばれて いるのは「きょうの おすすめ」(まだ ボーナスを もらっていない 日)。自分で えらんだら それを つづける */
+    op = op100();
     var name = op==='mix' ? '混ぜて' : OP_META[op].label;
     var best = best100(op), hist = log100(op).slice(-7), h = '';
     var ro = rec100Op(), shelf = '<div class="md-shelf" role="radiogroup" aria-label="100問の しゅるい">';
@@ -5669,10 +5671,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   $('weekendCard').addEventListener('click', function(e){
     var b = e.target.closest('[data-op100]'); if(!b) return;
-    state.homeOp = b.getAttribute('data-op100'); state.review = null;
-    safeSet('keisan_last_op', state.homeOp);
-    setLive(state.homeOp);
-    renderTabs(state.homeOp, recommendOp()); renderToday(state.homeOp); renderKuriCard(); renderRoad();
+    state.w100Op = b.getAttribute('data-op100');   /* 100問の しゅるいだけ かえる(プリントの しゅるいは そのまま) */
+    renderWeekend();
   });
   function dayState(){
     var t = todayKey();
@@ -5735,7 +5735,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function renderRoad(){
     var d = dayState(), done = [d.p, d.c, d.w], cur = done.indexOf(false);
     var road = $('road'), ac = $('allClear'), card = $('todayCard');
-    var n = getStamps(), best = best100(state.homeOp || 'add');
+    var n = getStamps(), best = best100(op100());
     if(ac.contains(card)) $('st1').appendChild(card);
     if(ac.contains($('weekendCard'))) $('st3').appendChild($('weekendCard'));
     if(cur < 0){
@@ -5747,7 +5747,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<div class="steps3"><span><i style="background:var(--op-mul)">✓</i>プリント</span><span><i style="background:var(--boss)">✓</i>挑戦</span><span><i style="background:var(--gold-deep)">✓</i>100問</span></div>' +
         '<div class="rw"><div class="big"><b>＋'+ALLCLEAR_BONUS+'</b><small>ボーナス コイン</small></div><div><b>'+sc+'日</b><small>🔥 連続</small></div><div><b>'+(n % STAMP_PER_CARD || (n ? STAMP_PER_CARD : 0))+'/'+STAMP_PER_CARD+'</b><small>★ スタンプ</small></div></div></div>' +
         '<div class="again"><div><b>もう1枚 やる?</b><small>今日の プリントは 何枚でも OK</small></div><button id="againBtn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button></div><div id="againSlot"></div>' +
-        '<div class="again"><div><b>100問 もう1回?</b><small>メダルを とると コイン!最大 '+coinPlan100(state.homeOp || 'add').max+'コイン</small></div><button id="again100" style="background:var(--gold-deep);box-shadow:0 4px 0 color-mix(in srgb, var(--gold-deep) 60%, #000)">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button></div><div id="again100Slot"></div>' +
+        '<div class="again"><div><b>100問 もう1回?</b><small>メダルを とると コイン!最大 '+coinPlan100(op100()).max+'コイン</small></div><button id="again100" style="background:var(--gold-deep);box-shadow:0 4px 0 color-mix(in srgb, var(--gold-deep) 60%, #000)">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button></div><div id="again100Slot"></div>' +
         '<p class="bye">明日も また 会おうね。明日は 新しい ボスが 来るよ!</p>';
       Pet.mount($('heroPet'), a.sp, a.lv);
       var sv = $('heroPet').querySelector('svg'); if(sv) sv.classList.add('happy');
@@ -5782,7 +5782,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('pin'+(i+1)).textContent = done[i] ? '✓' : (i+1);
     }
     var wait = cur === 0 ? 'プリントの あとで' : '挑戦の あとで';
-    var name = (state.homeOp && state.homeOp !== 'mix') ? OP_META[state.homeOp].label : '混ぜて';
+    var name = op100() !== 'mix' ? OP_META[op100()].label : '混ぜて';
     $('row1').innerHTML = done[0] ? '<span class="sr-t"><b>プリント '+DAILY_SHEETS+'枚 できた!</b>今日の 練習は 何枚でも OK</span><button class="sr-btn" id="row1Btn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button>' : '';
     if($('row1Btn')) $('row1Btn').onclick = function(){ state.printOpen = !state.printOpen; renderRoad(); };
     $('row2').innerHTML = done[1]
@@ -5791,7 +5791,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if($('row2Btn')) $('row2Btn').onclick = showStampInfo;
     var w100Btn = function(){ state.w100Open = !state.w100Open; renderRoad(); };
     $('row3').innerHTML = done[2]
-      ? '<span class="sr-t"><b>100問 <ruby>記録<rt>記録</rt></ruby> できた!</b>もう1回で 最大 '+coinPlan100(state.homeOp || 'add').max+'コイン(メダルで もらえるよ)</span><button class="sr-btn" id="row3Btn">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button>'
+      ? '<span class="sr-t"><b>100問 <ruby>記録<rt>記録</rt></ruby> できた!</b>もう1回で 最大 '+coinPlan100(op100()).max+'コイン(メダルで もらえるよ)</span><button class="sr-btn" id="row3Btn">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button>'
       : '<span class="sr-t"><b>100問 <ruby>記録<rt>記録</rt></ruby></b>'+(cur === 0 ? '🔒 プリントを '+DAILY_SHEETS+'枚 やると 開く' : name+'を 100問')+'</span><span class="sr-r">自己ベスト<strong class="num">'+(best ? fmtClock(best.ms) : '－')+'</strong></span>';
     if($('row3Btn')) $('row3Btn').onclick = w100Btn;
     // the partner stands at the step to do now
