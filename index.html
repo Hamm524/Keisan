@@ -5644,7 +5644,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     h += '</ul><div class="cp100-note">'+(P.again ? '今日の 1回目の コインは もう もらったよ。2回目からは メダルや 自己ベストで コインを 増やそう!' : '2回目からは「100問 解けたら」が 10分の1に なるよ。メダルの コインは 1日'+Medal.RUN_MAX+'回まで 毎回 もらえるよ。')+'</div></div>';
     return h;
   }
-  function op100(){ return state.w100Op || (rec100Open() ? rec100Op() : (state.homeOp || 'add')); }
+  function op100(){ return state.w100Op || rec100Op(); }   /* さいしょは いつも おすすめ(コインを もらった あとも、つぎに ひさしぶりの 計算) */
   /* 「ミックスへの道」: × ÷ それぞれの 目標(正解 MIX100_ACC% 以上・MIX100_MS 以内) */
   function mixPathHTML(){
     var row = function(o){
@@ -5663,7 +5663,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var ro = rec100Op(), shelf = '<div class="md-shelf" role="radiogroup" aria-label="100問の しゅるい">';
     SINGLE_OPS.concat(['mix']).forEach(function(o){
       var tp = Medal.topOf(o), lock = o === 'mix' && !mixOpen();
-      shelf += '<button class="md-shelf-c'+(o===op ? ' on' : '')+(tp ? ' has' : '')+(lock ? ' lock' : '')+'" data-op100="'+o+'" role="radio" aria-checked="'+(o===op)+'"'+(lock ? ' aria-disabled="true"' : '')+'>' + (rec100Open() && o===ro ? '<em>おすすめ</em>' : '') +
+      shelf += '<button class="md-shelf-c'+(o===op ? ' on' : '')+(tp ? ' has' : '')+(lock ? ' lock' : '')+'" data-op100="'+o+'" role="radio" aria-checked="'+(o===op)+'"'+(lock ? ' aria-disabled="true"' : '')+'>' + (o===ro ? '<em>おすすめ</em>' : '') +
         Medal.svg(lock ? 0 : tp) + '<b>'+(lock ? '🔒' : Medal.sym(o))+'</b></button>';
     });
     shelf += '</div>';
@@ -5671,7 +5671,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* 上から: タイトル → しゅるい → 始めるボタン(いつも 画面の 上の ほう) → くわしく(たたんでおく) */
     h += '<span class="cur-tag">ここから やろう!</span><h3 class="rec-h">100問 <ruby>記録<rt>きろく</rt></ruby></h3>' + shelf +
       '<button class="rec-go" id="weekendBtn">'+name+'の 100問に 挑戦!</button>' +
-      '<p class="rec-meta">'+(recNow ? '⭐ きょうの おすすめ(＋'+REC100_BONUS+'コイン)<br>' : (rec100Open() ? '⭐ おすすめは '+opName100(ro)+'(＋'+REC100_BONUS+'コイン)<br>' : ''))+(best ? '自己ベスト <b class="num">'+fmtClock(best.ms)+'</b>・' : '')+'コイン 最大 <b class="num">'+P.max+'</b>'+(mixOpen() ? '' : '<br>🔒 ミックスは ×と÷の 目標クリアで ひらくよ')+'</p>' +
+      '<p class="rec-meta">'+(recNow ? '⭐ きょうの おすすめ(＋'+REC100_BONUS+'コイン)<br>' : (op === ro ? '⭐ おすすめ(コインは 今日 もう もらったよ)<br>' : (rec100Open() ? '⭐ おすすめは '+opName100(ro)+'(＋'+REC100_BONUS+'コイン)<br>' : '')))+(best ? '自己ベスト <b class="num">'+fmtClock(best.ms)+'</b>・' : '')+'コイン 最大 <b class="num">'+P.max+'</b>'+(mixOpen() ? '' : '<br>🔒 ミックスは ×と÷の 目標クリアで ひらくよ')+'</p>' +
       '<details class="rec-more" id="recMore"'+(state.w100Det ? ' open' : '')+'><summary>メダル・コイン・きろくを みる</summary>' + mixPathHTML() +
       '<p class="rec-sub">'+name+'を 100問('+(op==='mix' ? '九九と 2桁 ± 1桁まで' : EASY100[op].desc)+')。何回でも 挑戦して メダルを あつめよう!</p>'+Medal.ladder(op)+
       '<div class="rec-graph"><div class="rg-head">'+name+'の 自己ベスト<span class="num">'+(best ? fmtClock(best.ms) : '－')+'</span></div>';
