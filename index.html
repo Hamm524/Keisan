@@ -168,6 +168,18 @@
   .hl-chips span.on{ background:var(--live); color:#fff; }
   .hl-chips i{ font-style:normal; color:var(--ink-soft); font-size:11px; }
   .hl-gridwrap{ position:relative; max-width:100%; padding:4px 0; align-self:stretch; }
+  .hl-work{ align-self:stretch; display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-start; gap:10px 14px; }
+  .hl-work .hl-gridwrap{ flex:1 1 240px; }
+  /* わる数が 2けた以上: よこで かけ算の ひっさんを する メモ */
+  .hl-memo{ flex:0 0 auto; border:2px dashed var(--line); border-radius:14px; padding:6px 10px 8px; background:var(--surface); text-align:center; }
+  .hl-memo.on{ border-color:var(--live); border-style:solid; }
+  .hl-memo .mm-h{ display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:12px; font-weight:900; color:var(--ink-soft); }
+  .hl-memo .mm-clr{ border:none; background:var(--surface-2); color:var(--ink-soft); font:inherit; font-size:11.5px; padding:3px 8px; border-radius:8px; cursor:pointer; }
+  .hl-memo .hl-grid{ font-size:clamp(22px, 6.4vw, 30px); margin-top:4px; }
+  .hl-memo .hl-c.in{ cursor:pointer; }
+  .hl-memo .mm-st{ display:block; min-height:1.3em; margin-top:3px; font-size:12.5px; font-weight:700; color:var(--ink-soft); }
+  .hl-memo .mm-st.ok{ color:var(--good); }
+  .hl-memo .mm-st.bad{ color:var(--bad); }
   .hl-grid{ display:grid; width:max-content; margin:0 auto; font-size:clamp(28px, 8.4vw, 40px); line-height:1; font-weight:600; }
   .hl-c{ display:flex; align-items:center; justify-content:center; position:relative; border-radius:9px; margin:1px; min-height:1.1em; }
   .hl-c.op{ color:var(--live); }
@@ -175,7 +187,7 @@
   .hl-c.dim{ opacity:.35; }
   .hl-c.in.cur{ animation:hl-pulse 1.3s ease-in-out infinite; }
   @keyframes hl-pulse{ 50%{ box-shadow:0 0 0 5px color-mix(in srgb, var(--live) 22%, transparent); } }
-  .hl-c.in.empty{ border:2px dashed var(--line); }
+  .hl-c.in.empty{ border:2px dashed var(--line); } .hl-c.in.empty{ cursor:pointer; }
   .hl-c.in.cur{ border:2.5px solid var(--live); background:color-mix(in srgb, var(--live) 10%, var(--surface)); }
   .hl-c.in.ok{ color:var(--live); }
   .hl-c.in.fade{ opacity:.28; }
@@ -956,6 +968,14 @@
   /* ===== 教科の 島(分野えらび) ===== */
   .isle{ --is-plate:#2E9B57; position:relative; width:100%; max-width:560px; margin:4px auto 12px; aspect-ratio:360/470; border-radius:26px; overflow:hidden; box-shadow:0 6px 0 color-mix(in srgb, var(--is-plate) 40%, transparent); }
   .isle[data-t="o"]{ --is-plate:#E07A12; } .isle[data-t="j"]{ --is-plate:#D9446A; }
+  .kw-card{ display:grid; gap:10px; text-align:left; }
+  .kw-top{ font-size:12px; font-weight:900; color:var(--ink-soft); text-align:center; } .kw-top small{ display:block; font-size:12px; font-weight:700; margin-top:2px; }
+  .kw-e{ font-size:56px; line-height:1; text-align:center; }
+  .kw-w{ font-size:26px; font-weight:900; text-align:center; color:var(--ink); }
+  .kw-row{ display:flex; gap:8px; align-items:baseline; font-size:16px; line-height:1.7; }
+  .kw-row b{ flex:none; font-size:12px; color:#fff; background:var(--op-div); border-radius:8px; padding:1px 8px; }
+  .kw-tip{ font-size:13.5px; line-height:1.7; color:var(--ink-soft); background:var(--surface-2); border-radius:12px; padding:8px 10px; }
+  .isle[data-t="j"]{ aspect-ratio:360/580; }
   .isle > svg.isle-bg{ position:absolute; inset:0; width:100%; height:100%; display:block; }
   .isle .waves path{ animation:isleWave 4s ease-in-out infinite; }
   .isle .waves path:nth-child(2n){ animation-delay:-2s; }
@@ -2429,6 +2449,28 @@
   .st.is-cur > .weekend.rec{ border:3px solid var(--gold-deep); background:linear-gradient(170deg, color-mix(in srgb, var(--gold) 16%, var(--surface)), var(--surface) 60%); box-shadow:0 14px 30px -18px var(--gold-deep); }
   .rec-h{ font-size:21px; font-weight:900; margin:0; line-height:1.3; }
   .rec-sub{ font-size:12px; color:var(--ink-soft); font-weight:700; margin:2px 0 10px; line-height:1.55; }
+  .md-shelf-c.lock{ opacity:.55; cursor:default; }
+  .mix-path{ font-size:12px; color:var(--ink-soft); font-weight:700; line-height:1.55; background:var(--surface); border:1.5px solid var(--line); border-radius:14px; padding:8px 10px; margin:4px 0 8px; }
+  .mix-path b{ display:block; font-size:13px; color:var(--ink); font-weight:900; }
+  .mix-path .mp-done{ color:var(--good); font-weight:900; }
+  .mp-row{ display:flex; gap:8px; margin-top:4px; }
+  .mp-i{ flex:1; display:flex; align-items:center; gap:6px; font-size:12px; }
+  .mp-i i{ font-style:normal; width:24px; height:24px; border-radius:50%; background:var(--line); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-weight:900; }
+  .mp-i.ok i{ background:var(--good); color:#fff; }
+  .rec-go{ margin:2px 0 6px; }
+  .rec-meta{ font-size:12px; color:var(--ink-soft); font-weight:700; text-align:center; margin:0 0 8px; }
+  .rec-meta b{ color:var(--gold-deep); font-weight:900; }
+  .rec-more{ border-top:1.5px dashed var(--line); padding-top:6px; }
+  .rec-more summary{ cursor:pointer; font-size:13px; font-weight:900; color:var(--ink-soft); padding:6px 2px; list-style:none; }
+  .rec-more summary::-webkit-details-marker{ display:none; }
+  .rec-more summary::after{ content:' ▾'; }
+  .rec-more[open] summary::after{ content:' ▴'; }
+  .md-shelf{ display:flex; gap:6px; margin-bottom:10px; }
+  .md-shelf-c{ position:relative; flex:1; border:2px solid var(--line); background:var(--surface); border-radius:14px; padding:6px 2px 4px; display:flex; flex-direction:column; align-items:center; gap:1px; font:inherit; color:var(--ink-soft); cursor:pointer; }
+  .md-shelf-c.on{ border-color:var(--gold-deep); }
+  .md-shelf-c .md-svg{ width:30px; height:38px; }
+  .md-shelf-c b{ font-family:'Fredoka',sans-serif; font-size:17px; color:var(--ink); }
+  .md-shelf-c em{ position:absolute; top:-8px; left:50%; transform:translateX(-50%); font-style:normal; font-size:10px; font-weight:900; background:var(--gold-deep); color:#fff; border-radius:8px; padding:1px 6px; white-space:nowrap; }
   .rec-ops{ display:flex; gap:6px; margin-bottom:10px; }
   .rec-ops button{ flex:1; border:2px solid var(--line); background:var(--surface); border-radius:12px; padding:4px 0; font-family:'Fredoka',sans-serif; font-weight:600; font-size:18px; color:var(--ink-soft); cursor:pointer; }
   .rec-ops button[aria-pressed="true"]{ border-color:var(--gold-deep); color:var(--gold-deep); }
@@ -2452,6 +2494,7 @@
   .cp100-note{ font-size:11.5px; color:var(--ink-soft); font-weight:700; margin-top:6px; line-height:1.55; }
   .sheets{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:4px; }
   .sheets-t{ font-weight:900; font-size:14px; }
+  .sheets-say{ flex:1; font-weight:900; font-size:14px; color:var(--op-mul); text-align:right; }
   .sheets-d{ display:flex; gap:6px; }
   .sheets-d i{ width:22px; height:28px; border-radius:5px; border:2.5px solid #D9C7A8; background:#fff; }
   .sheets-d i.on{ background:var(--op-mul); border-color:var(--op-mul); }
@@ -2995,7 +3038,10 @@
           <div class="fish-pet" id="hlPet"></div>
           <p class="hl-q num" id="hlQ"></p>
           <div class="hl-chips" id="hlChips"></div>
-          <div class="hl-gridwrap" id="hlGrid"></div>
+          <div class="hl-work">
+            <div class="hl-gridwrap" id="hlGrid"></div>
+            <div class="hl-memo" id="hlMemo" hidden></div>
+          </div>
         </div>
         <div class="hl-pad" id="hlPad">
           <button class="key num" data-k="1">1</button>
@@ -5695,6 +5741,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     log100(op).forEach(function(e){ if(e.ok/e.n*100 >= WEEKEND_ACC && (!b || e.ms < b.ms)) b = e; });
     return b;
   }
+  /* きょうの おすすめ: 100問を いちばん ながく やっていない 計算(同じなら ÷ － ＋ × の じゅん)。やって 正解80%で コイン ＋REC100_BONUS(1日1回) */
+  var REC100_BONUS = 10;
+  /* ミックスの 解放: ×と÷の 100問を それぞれ 正解 MIX100_ACC% 以上・MIX100_MS 以内で 1回 クリア(前に ミックスを やっていた 人は そのまま ひらく) */
+  var MIX100_ACC = 95, MIX100_MS = 300000;
+  function clear100(op){ return log100(op).some(function(e){ return e.ok/e.n*100 >= MIX100_ACC && e.ms <= MIX100_MS; }); }
+  function mixOpen(){ return (clear100('mul') && clear100('div')) || log100('mix').length > 0; }
+  function opName100(o){ return o === 'mix' ? 'ミックス' : OP_META[o].label; }
+  function rec100Op(){
+    var best = null, bd = null;
+    (mixOpen() ? ['mix','div','sub','add','mul'] : ['div','sub','add','mul']).forEach(function(o){
+      var l = log100(o), d = l.length ? l[l.length-1].d : '';
+      if(bd === null || d < bd){ bd = d; best = o; }
+    });
+    return best;
+  }
+  function rec100Open(){ return safeGet('keisan_rec100') !== todayKey(); }
   function fmtClock(ms){ var t = Math.round(ms/1000), m = Math.floor(t/60), x = t%60; return m+':'+(x<10?'0':'')+x; }
   /* 100問の コインの もらい方(始める前に 見せる)。finishAccuracy と 同じ 計算 */
   function base100(op){
@@ -5704,6 +5766,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   function coinPlan100(op){
     var R = Medal.RANKS, tp = Medal.topOf(op), rows = [], again = weekendDone();
+    if(rec100Open() && op === rec100Op()) rows.push({ l:'きょうの おすすめ('+opName100(op)+')', s:'正解 '+WEEKEND_ACC+'% 以上で 1日1回', n:REC100_BONUS, v:REC100_BONUS });
     rows.push({ l:'100問 解けたら', s: again ? '今日 2回目からは 10分の1' : '今日 1回目', n:base100(op), v:base100(op) });
     if(!again) rows.push({ l:'正解 '+WEEKEND_ACC+'% 以上', s:'1日1回', n:WEEKEND_BONUS, v:WEEKEND_BONUS });
     rows.push({ l:'一発正解 90%で ＋'+BONUS_GREAT+'・全部で ＋'+(BONUS_PERFECT+2), s:'めあて '+fmtSec(printTarget(op, WEEKEND_N))+' 以内で さらに ＋'+BONUS_FAST, n:BONUS_PERFECT+2+BONUS_FAST, v:'＋'+(BONUS_PERFECT+2+BONUS_FAST)+'まで' });
@@ -5725,18 +5788,37 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     h += '</ul><div class="cp100-note">'+(P.again ? '今日の 1回目の コインは もう もらったよ。2回目からは メダルや 自己ベストで コインを 増やそう!' : '2回目からは「100問 解けたら」が 10分の1に なるよ。メダルの コインは 1日'+Medal.RUN_MAX+'回まで 毎回 もらえるよ。')+'</div></div>';
     return h;
   }
+  function op100(){ return state.w100Op || rec100Op(); }   /* さいしょは いつも おすすめ(コインを もらった あとも、つぎに ひさしぶりの 計算) */
+  /* 「ミックスへの道」: × ÷ それぞれの 目標(正解 MIX100_ACC% 以上・MIX100_MS 以内) */
+  function mixPathHTML(){
+    var row = function(o){
+      var ok = clear100(o), b = best100(o);
+      return '<span class="mp-i'+(ok ? ' ok' : '')+'"><i>'+(ok ? '✓' : OP_META[o].symbol)+'</i>'+OP_META[o].symbol+(b ? ' ベスト '+fmtClock(b.ms) : '')+'</span>';
+    };
+    return '<div class="mix-path"><b>ミックスへの道</b>' + (mixOpen() ? '<span class="mp-done">ひらいたよ! 「ミックス」を えらべるよ</span>' : '<span>× と ÷ の 100問を 正解 '+MIX100_ACC+'% 以上・'+fmtClock(MIX100_MS)+' 以内で クリア</span><div class="mp-row">'+row('mul')+row('div')+'</div>') + '</div>';
+  }
   function renderWeekend(op){
     var c = $('weekendCard');
     c.hidden = false;
-    op = state.homeOp || op || 'add';
-    var name = op==='mix' ? '混ぜて' : OP_META[op].label;
+    /* 最初に えらばれて いるのは「きょうの おすすめ」(まだ ボーナスを もらっていない 日)。自分で えらんだら それを つづける */
+    op = op100();
+    var name = opName100(op);
     var best = best100(op), hist = log100(op).slice(-7), h = '';
-    h += '<span class="cur-tag">ここから やろう!</span><h3 class="rec-h">100問 <ruby>記録<rt>きろく</rt></ruby></h3>' +
-      '<p class="rec-sub">'+name+'を 100問('+(op==='mix' ? '九九と 2桁 ± 1桁まで' : EASY100[op].desc)+')。何回でも 挑戦して メダルを あつめよう!</p>'+Medal.ladder(op)+'<div class="rec-ops">';
+    var ro = rec100Op(), shelf = '<div class="md-shelf" role="radiogroup" aria-label="100問の しゅるい">';
     SINGLE_OPS.concat(['mix']).forEach(function(o){
-      h += '<button data-op100="'+o+'" aria-pressed="'+(o===op)+'">'+(o==='mix' ? 'M' : OP_META[o].symbol)+'</button>';
+      var tp = Medal.topOf(o), lock = o === 'mix' && !mixOpen();
+      shelf += '<button class="md-shelf-c'+(o===op ? ' on' : '')+(tp ? ' has' : '')+(lock ? ' lock' : '')+'" data-op100="'+o+'" role="radio" aria-checked="'+(o===op)+'"'+(lock ? ' aria-disabled="true"' : '')+'>' + (o===ro ? '<em>おすすめ</em>' : '') +
+        Medal.svg(lock ? 0 : tp) + '<b>'+(lock ? '🔒' : Medal.sym(o))+'</b></button>';
     });
-    h += '</div><div class="rec-graph"><div class="rg-head">'+name+'の 自己ベスト<span class="num">'+(best ? fmtClock(best.ms) : '－')+'</span></div>';
+    shelf += '</div>';
+    var P = coinPlan100(op), recNow = rec100Open() && op === ro;
+    /* 上から: タイトル → しゅるい → 始めるボタン(いつも 画面の 上の ほう) → くわしく(たたんでおく) */
+    h += '<span class="cur-tag">ここから やろう!</span><h3 class="rec-h">100問 <ruby>記録<rt>きろく</rt></ruby></h3>' + shelf +
+      '<button class="rec-go" id="weekendBtn">'+name+'の 100問に 挑戦!</button>' +
+      '<p class="rec-meta">'+(recNow ? '⭐ きょうの おすすめ(＋'+REC100_BONUS+'コイン)<br>' : (op === ro ? '⭐ おすすめ(コインは 今日 もう もらったよ)<br>' : (rec100Open() ? '⭐ おすすめは '+opName100(ro)+'(＋'+REC100_BONUS+'コイン)<br>' : '')))+(best ? '自己ベスト <b class="num">'+fmtClock(best.ms)+'</b>・' : '')+'コイン 最大 <b class="num">'+P.max+'</b>'+(mixOpen() ? '' : '<br>🔒 ミックスは ×と÷の 目標クリアで ひらくよ')+'</p>' +
+      '<details class="rec-more" id="recMore"'+(state.w100Det ? ' open' : '')+'><summary>メダル・コイン・きろくを みる</summary>' + mixPathHTML() +
+      '<p class="rec-sub">'+name+'を 100問('+(op==='mix' ? '九九と 2桁 ± 1桁まで' : EASY100[op].desc)+')。何回でも 挑戦して メダルを あつめよう!</p>'+Medal.ladder(op)+
+      '<div class="rec-graph"><div class="rg-head">'+name+'の 自己ベスト<span class="num">'+(best ? fmtClock(best.ms) : '－')+'</span></div>';
     if(hist.length){
       var mx = Math.max.apply(null, hist.map(function(e){ return e.ms; })), mn = Math.min.apply(null, hist.map(function(e){ return e.ms; }));
       h += '<div class="rg-bars">';
@@ -5746,18 +5828,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       });
       h += '</div><div class="rg-empty" style="padding:4px 0 0;text-align:left">速いほど 高く なるよ。</div>';
     }else h += '<div class="rg-empty">まだ 記録が ないよ。<br>1回目が 自己ベストに なるよ!</div>';
-    h += '</div>' + coinPlanHTML(op) +
-      '<button class="rec-go" id="weekendBtn">100問に 挑戦する</button>';
+    h += '</div>' + coinPlanHTML(op) + '</details>';
     c.className = 'weekend rec';
     c.innerHTML = h;
     $('weekendBtn').onclick = function(){ startPrint(op, WEEKEND_N, 'weekend'); };
+    $('recMore').addEventListener('toggle', function(){ state.w100Det = this.open; });
   }
   $('weekendCard').addEventListener('click', function(e){
-    var b = e.target.closest('[data-op100]'); if(!b) return;
-    state.homeOp = b.getAttribute('data-op100'); state.review = null;
-    safeSet('keisan_last_op', state.homeOp);
-    setLive(state.homeOp);
-    renderTabs(state.homeOp, recommendOp()); renderToday(state.homeOp); renderKuriCard(); renderRoad();
+    var b = e.target.closest('[data-op100]'); if(!b || b.classList.contains('lock')) return;
+    state.w100Op = b.getAttribute('data-op100');   /* 100問の しゅるいだけ かえる(プリントの しゅるいは そのまま) */
+    renderWeekend();
   });
   function dayState(){
     var t = todayKey();
@@ -5820,7 +5900,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function renderRoad(){
     var d = dayState(), done = [d.p, d.c, d.w], cur = done.indexOf(false);
     var road = $('road'), ac = $('allClear'), card = $('todayCard');
-    var n = getStamps(), best = best100(state.homeOp || 'add');
+    var n = getStamps(), best = best100(op100());
     if(ac.contains(card)) $('st1').appendChild(card);
     if(ac.contains($('weekendCard'))) $('st3').appendChild($('weekendCard'));
     if(cur < 0){
@@ -5832,7 +5912,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<div class="steps3"><span><i style="background:var(--op-mul)">✓</i>プリント</span><span><i style="background:var(--boss)">✓</i>挑戦</span><span><i style="background:var(--gold-deep)">✓</i>100問</span></div>' +
         '<div class="rw"><div class="big"><b>＋'+ALLCLEAR_BONUS+'</b><small>ボーナス コイン</small></div><div><b>'+sc+'日</b><small>🔥 連続</small></div><div><b>'+(n % STAMP_PER_CARD || (n ? STAMP_PER_CARD : 0))+'/'+STAMP_PER_CARD+'</b><small>★ スタンプ</small></div></div></div>' +
         '<div class="again"><div><b>もう1枚 やる?</b><small>今日の プリントは 何枚でも OK</small></div><button id="againBtn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button></div><div id="againSlot"></div>' +
-        '<div class="again"><div><b>100問 もう1回?</b><small>メダルを とると コイン!最大 '+coinPlan100(state.homeOp || 'add').max+'コイン</small></div><button id="again100" style="background:var(--gold-deep);box-shadow:0 4px 0 color-mix(in srgb, var(--gold-deep) 60%, #000)">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button></div><div id="again100Slot"></div>' +
+        '<div class="again"><div><b>100問 もう1回?</b><small>メダルを とると コイン!最大 '+coinPlan100(op100()).max+'コイン</small></div><button id="again100" style="background:var(--gold-deep);box-shadow:0 4px 0 color-mix(in srgb, var(--gold-deep) 60%, #000)">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button></div><div id="again100Slot"></div>' +
         '<p class="bye">明日も また 会おうね。明日は 新しい ボスが 来るよ!</p>';
       Pet.mount($('heroPet'), a.sp, a.lv);
       var sv = $('heroPet').querySelector('svg'); if(sv) sv.classList.add('happy');
@@ -5867,7 +5947,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('pin'+(i+1)).textContent = done[i] ? '✓' : (i+1);
     }
     var wait = cur === 0 ? 'プリントの あとで' : '挑戦の あとで';
-    var name = (state.homeOp && state.homeOp !== 'mix') ? OP_META[state.homeOp].label : '混ぜて';
+    var name = op100() !== 'mix' ? OP_META[op100()].label : '混ぜて';
     $('row1').innerHTML = done[0] ? '<span class="sr-t"><b>プリント '+DAILY_SHEETS+'枚 できた!</b>今日の 練習は 何枚でも OK</span><button class="sr-btn" id="row1Btn">'+(state.printOpen ? '閉じる' : 'もう1枚')+'</button>' : '';
     if($('row1Btn')) $('row1Btn').onclick = function(){ state.printOpen = !state.printOpen; renderRoad(); };
     $('row2').innerHTML = done[1]
@@ -5876,14 +5956,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if($('row2Btn')) $('row2Btn').onclick = showStampInfo;
     var w100Btn = function(){ state.w100Open = !state.w100Open; renderRoad(); };
     $('row3').innerHTML = done[2]
-      ? '<span class="sr-t"><b>100問 <ruby>記録<rt>記録</rt></ruby> できた!</b>もう1回で 最大 '+coinPlan100(state.homeOp || 'add').max+'コイン(メダルで もらえるよ)</span><button class="sr-btn" id="row3Btn">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button>'
+      ? '<span class="sr-t"><b>100問 <ruby>記録<rt>記録</rt></ruby> できた!</b>もう1回で 最大 '+coinPlan100(op100()).max+'コイン(メダルで もらえるよ)</span><button class="sr-btn" id="row3Btn">'+(state.w100Open ? '閉じる' : 'もう1回')+'</button>'
       : '<span class="sr-t"><b>100問 <ruby>記録<rt>記録</rt></ruby></b>'+(cur === 0 ? '🔒 プリントを '+DAILY_SHEETS+'枚 やると 開く' : name+'を 100問')+'</span><span class="sr-r">自己ベスト<strong class="num">'+(best ? fmtClock(best.ms) : '－')+'</strong></span>';
     if($('row3Btn')) $('row3Btn').onclick = w100Btn;
     // the partner stands at the step to do now
     var a2 = activePet(), rp = $('roadPet'), rbb = $('roadBubble'), cs = $('st'+(cur+1));
     if(!rp.firstChild) Pet.mount(rp, a2.sp, a2.lv);
     if(rp.parentNode !== cs){ cs.insertBefore(rbb, cs.firstChild); cs.insertBefore(rp, cs.firstChild); }
-    rbb.textContent = ['まずは プリント '+Math.min(sheetsToday(), DAILY_SHEETS)+'/'+DAILY_SHEETS+'枚!', 'ボスに 挑もう!', '100問に 挑戦!'][cur];
+    rbb.innerHTML = [sheetsSay(sheetsToday()), 'ボスに 挑もう!', '100問に 挑戦!'][cur];
     $('goalText').textContent = '全部 おわると 今日の 花丸!(＋'+ALLCLEAR_BONUS+'コイン)';
   }
   function rb(t){ return String(t).replace(/桁/g, '<ruby>桁<rt>けた</rt></ruby>'); }
@@ -5923,7 +6003,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         sd += '<b class="chip'+(k < sn ? ' on' : (k === sn ? ' now' : ''))+'" style="--c:var('+OP_META[po].color+')"><span class="cs">'+OP_META[po].symbol+'</span>'+(k < sn ? '<small>✓</small>' : '')+'</b>';
       }else sd += '<i class="on"></i>';
     }
-    $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">今日の プリント <b class="num">'+Math.min(sn, DAILY_SHEETS)+'/'+DAILY_SHEETS+'</b>枚</span><span class="sheets-d'+(sn < DAILY_SHEETS ? ' wide' : '')+'">'+sd+'</span></div>' +
+    $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">今日の プリント</span><span class="sheets-say">'+sheetsSay(sn)+'</span><span class="sheets-d'+(sn < DAILY_SHEETS ? ' wide' : '')+'">'+sd+'</span></div>' +
       '<span class="sz-next">1枚 '+SHEET_N+'問。'+(sn >= DAILY_SHEETS ? '5枚 できたよ!もっと やっても OK' : 'あと <b>'+(DAILY_SHEETS - sn)+'枚</b>で 今日の プリントが クリア!')+'</span>' +
       '<button type="button" class="gset" id="gSet">⚙ おうちの人の 設定(学年: 小' + pgrade() + ')</button>';
     renderWeekend(rec);
@@ -8226,6 +8306,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     say('とび級、がんばろう!');
   }
 
+  /* 今日のプリントの進み具合を 分数(1/5)でなく 言葉で: 「2枚 おわったよ!」「つぎは 3枚目!」 */
+  function sheetsSay(n){
+    n = Math.max(0, n);
+    if(n >= DAILY_SHEETS) return DAILY_SHEETS+'枚 ぜんぶ できたよ!';
+    if(n === 0) return 'これから <b class="num">1</b>枚目を はじめるよ!';
+    return '<b class="num">'+n+'</b>枚 おわったよ!つぎは <b class="num">'+(n+1)+'</b>枚目!';
+  }
+
   function renderDots(){
     var wrap = $('dots'); wrap.innerHTML = '';
     if(state.print && state.print.kind==='weekend'){ rocketCount(wrap); return; }   /* 100問: のこりが 多く 見えて しんどいので、のこり10問まで 進み具合は 出さない */
@@ -8616,6 +8704,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(pr){
       var log = printLog();
       var prevBest100 = pr.kind === 'weekend' ? best100(state.op) : null;
+      var recBefore = pr.kind === 'weekend' ? rec100Op() : null, recOpen = rec100Open(), mixWas = mixOpen();
       var entry = { d:todayKey(), op:state.op, n:N, ok:firstTry, ms:elapsed, pass:passed, k:pr.kind };
       if(isReview) entry.rv = pr.lv;
       var volBefore = todayVolume();
@@ -8664,6 +8753,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(pr && pr.kind==='weekend' && accuracy >= WEEKEND_ACC && !weekendDone()){
       safeSet('keisan_weekend', weekendKey());
       bonuses.push({ label:'毎日100問チャレンジ', n:WEEKEND_BONUS });
+    }
+    if(pr && pr.kind==='weekend' && !mixWas && mixOpen()){
+      banners.push({ type:'level', title:'ミックス 100問が ひらいた!', text:'× と ÷ の 100問を クリア!＋－×÷が まざった 100問に 挑戦できるよ。' });
+    }
+    if(pr && pr.kind==='weekend' && accuracy >= WEEKEND_ACC && recOpen && state.op === recBefore){
+      safeSet('keisan_rec100', todayKey());
+      bonuses.push({ label:'きょうの おすすめ('+opName100(state.op)+')', n:REC100_BONUS });
     }
     if(pr && pr.kind==='weekend' && accuracy >= WEEKEND_ACC && prevBest100 && elapsed < prevBest100.ms){
       bonuses.push({ label:'100問 自己ベスト 更新', n:BEST100_BONUS });
@@ -8941,9 +9037,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(state.print && state.print.kind === 'daily' && assignedMode()){
       var no = nextSheetOp(), nm = OP_META[no];
       $('retryBtn').className = 'btn btn-primary';
-      $('retryBtn').textContent = '次の プリント('+(sheetsToday() + 1)+'/'+DAILY_SHEETS+'枚)';
+      $('retryBtn').textContent = '次の プリント('+(sheetsToday() + 1)+'枚目)';
       $('retryBtn').onclick = function(){ state.homeOp = no; startPrint(no, printSize(), 'daily'); };
-      note.innerHTML = '今日の プリント <b class="num">'+sheetsToday()+'/'+DAILY_SHEETS+'</b>枚 終わり!この 調子で 次の プリントも やろう!';
+      note.innerHTML = '<b class="num">'+sheetsToday()+'</b>枚 おわったよ!この 調子で 次の プリントも やろう!';
       note.hidden = false; ops.hidden = true;
       return;
     }
@@ -10540,7 +10636,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           var dT = Math.floor(d/10), cT = Math.floor(cur/10), est = Math.max(1, Math.min(9, Math.floor(cT/dT)));
           tSay = B(cur+' ÷ '+d)+': '+d+' を '+(dT*10)+'、'+cur+' を '+(cT*10)+' と みて 見当を つけよう。'+cT+' ÷ '+dT+' → '+B(est)+' くらい。<br>'+d+' × '+est+' = '+(d*est)+(d*est > cur ? '。大きすぎたら 1 へらそう。' : '。のこりが '+d+' より 大きければ 1 ふやそう。');
         }
-        step(P, { chip:0, cells:[qid], hl:curIds.concat(dvIds), say:pre+tSay, tip:'<small class="tp-mean">たてる = こたえの 数を 上に 書くこと</small>'+(qd === 0 ? B(cur)+' の 中に '+B(d)+' は 1つも 入らない。<br>上に '+B('0')+' を 書こう' : B(d)+' × いくつ なら '+B(cur)+' を こえない?'), help:qd === 0 ? '' : dan(d, cur, qd),
+        step(P, { chip:0, cells:[qid], cur:cur, hl:curIds.concat(dvIds), say:pre+tSay, tip:'<small class="tp-mean">たてる = こたえの 数を 上に 書くこと</small>'+(qd === 0 ? B(cur)+' の 中に '+B(d)+' は 1つも 入らない。<br>上に '+B('0')+' を 書こう' : B(d)+' × いくつ なら '+B(cur)+' を こえない?'), help:qd === 0 ? '' : dan(d, cur, qd),
           wrong:(function(cur, qd){ return function(v){
             var x = d*v;
             if(v > qd) return d+' × '+v+' = '+x+' で、'+cur+' より 大きいよ。ひけないね。もっと 小さい 数に しよう。';
@@ -10550,7 +10646,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(qd > 0){
           var p = qd*d, pd = digs(p), pr = row+1, pIds = [];
           pd.forEach(function(v, t){ var id = 'p'+pos+'_'+t; cell(P, pr, X(pos)-(pd.length-1)+t, v, 'in', id); pIds.push(id); });
-          step(P, { chip:1, cells:pIds, hl:dvIds.concat([qid]), tip:B(d+' × '+qd+' = ?'), say:B(d+' × '+qd)+' を 計算して、'+cur+' の 下に 書こう(右はしを そろえる)。', ans:p,
+          /* 2けたの こたえは 一の位(右)から 書く(ひき算と おなじ 向き) */
+          step(P, { chip:1, cells:pIds.slice().reverse(), hl:dvIds.concat([qid]), tip:B(d+' × '+qd+' = ?'), say:B(d+' × '+qd)+' を 計算して、'+cur+' の 下に 書こう(右はしを そろえる)。', ans:p,
             wrong:(function(a){ return function(){ return d+' × '+a+' を もういちど 計算してみよう。'; }; })(qd) });
           rem = cur - p;
           var leftCol = Math.min(P.byId[curIds[0]].c, P.byId[pIds[0]].c);
@@ -10558,7 +10655,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           P.rowKind[pr+1] = 'line';
           var rd = digs(rem), rIds = [], rr = pr+2;
           rd.forEach(function(v, t){ var id = 'r'+pos+'_'+t; cell(P, rr, X(pos)-(rd.length-1)+t, v, 'in', id); rIds.push(id); });
-          step(P, { chip:2, cells:rIds, hl:curIds.concat(pIds), tip:B(cur+' − '+p+' = ?'), say:B(cur+' − '+p)+' を 計算しよう。', ans:rem,
+          step(P, { chip:2, cells:rIds.slice().reverse(), hl:curIds.concat(pIds), tip:B(cur+' − '+p+' = ?'), say:B(cur+' − '+p)+' を 計算しよう。', ans:rem,
             wrong:(function(c, p){ return function(){ return c+' − '+p+' を もういちど 計算してみよう。'; }; })(cur, p) });
           row = rr; curIds = rIds.slice();
         }else{
@@ -10758,7 +10855,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       else{ do{ q = gen(H.id); tries++; }while(H.used[q.N+'/'+q.d] && tries < 30); H.used[q.N+'/'+q.d] = 1; }
       H.q = q;
       H.plan = q.op === 'div' ? planDiv(q.N, q.d, true) : planMul(q.N, q.d, true);
-      H.si = 0; H.ci = 0; H.vals = {}; H.miss = 0; H.cellMiss = 0; H.hint = false; H.done = false; H.msg = ''; H.msgCls = '';
+      H.si = 0; H.ci = 0; H.vals = {}; H.miss = 0; H.cellMiss = 0; H.hint = false; H.done = false; H.msg = ''; H.msgCls = ''; H.soft = false;
       H.cleared = {}; H.faded = {};
       Array.prototype.forEach.call(document.querySelectorAll('#hlCardBox .dc-maru'), function(m){ m.remove(); });
       render();
@@ -10767,6 +10864,79 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function cellVisible(c){
       if(H.cleared[c.id]) return false;
       return c.kind !== 'in' || c.step <= H.si;
+    }
+    /* ---- かけ算メモ(わる数が 2けた以上の とき、たてる数 × わる数 を よこで ひっさん) ---- */
+    function memoUse(){ return !!H && !H.done && H.plan.op === 'div' && H.plan.d >= 10; }
+    function memoGet(){
+      var P = H.plan, L = String(P.d).length;
+      if(!H.memo || H.memo.q !== P){
+        H.memo = { q:P, L:L, m:'', c:[], a:[], sel:null, lastA:L };
+        for(var i=0;i<L-1;i++) H.memo.c.push('');
+        for(var j=0;j<=L;j++) H.memo.a.push('');
+      }
+      return H.memo;
+    }
+    function memoCheck(M){
+      if(M.m === '') return null;
+      var ps = String(H.plan.d * +M.m), W = M.L+1, n = ps.length;
+      var right = M.a.slice(W-n), left = M.a.slice(0, W-n);
+      if(right.some(function(x){ return x === ''; })) return null;
+      return right.join('') === ps && left.every(function(x){ return x === ''; }) ? 'ok' : 'bad';
+    }
+    function renderMemo(){
+      var box = $('hlMemo'); if(!box) return;
+      box.hidden = !memoUse();
+      if(box.hidden) return;
+      var M = memoGet(), ds = String(H.plan.d), L = M.L, W = L+1, h = '';
+      function c(r, col, v, sel, attr, small){
+        var cls = 'hl-c in '+(v !== '' ? 'ok' : sel ? 'cur' : 'empty')+(sel && v !== '' ? ' cur' : '')+(small ? ' small' : '');
+        return '<span class="'+cls+'" '+attr+' style="grid-row:'+r+';grid-column:'+col+'">'+v+'</span>';
+      }
+      var S = M.sel || {};
+      for(var i=0;i<L-1;i++) h += c(1, i+2, M.c[i], S.t === 'c' && S.i === i, 'data-mm="c'+i+'"', true);
+      for(var j=0;j<L;j++) h += '<span class="hl-c" style="grid-row:2;grid-column:'+(j+2)+'">'+ds[j]+'</span>';
+      h += '<span class="hl-c op" style="grid-row:3;grid-column:1">×</span>';
+      h += c(3, W, M.m, S.t === 'm', 'data-mm="m"');
+      h += '<i class="hl-line" style="grid-row:4;grid-column:1 / '+(W+1)+'"></i>';
+      for(var k=0;k<W;k++) h += c(5, k+1, M.a[k], S.t === 'a' && S.i === k, 'data-mm="a'+k+'"');
+      var st = '', sc = '', ck = memoCheck(M), cs = curStep();
+      if(ck === 'ok'){
+        var p = H.plan.d * +M.m;
+        st = '✓ '+ds+' × '+M.m+' = '+p; sc = 'ok';
+        if(cs && cs.chip === 0 && cs.cur != null) st += p > cs.cur ? '<br>'+cs.cur+' より 大きい。ひけないね' : '<br>'+cs.cur+' から ひくと のこり '+(cs.cur-p);
+      }else if(ck === 'bad'){ st = 'あれ? もういちど 計算してみよう'; sc = 'bad'; }
+      else if(M.m === '') st = '□を タップして 数を 入れよう';
+      else st = 'こたえは 一の位(右)から';
+      box.className = 'hl-memo'+(M.sel ? ' on' : '');
+      box.innerHTML = '<div class="mm-h"><span>かけ算メモ</span><button class="mm-clr" data-mm="clr">けす</button></div>' +
+        '<div class="hl-grid num" style="grid-template-columns:repeat('+W+',1.05em);grid-template-rows:.75em 1.22em 1.22em 7px 1.22em">'+h+'</div>' +
+        '<span class="mm-st '+sc+'">'+st+'</span>';
+    }
+    function memoTap(k){
+      var M = memoGet();
+      if(k === 'clr'){ H.memo = null; memoGet().sel = { t:'m' }; }
+      else if(k === 'm') M.sel = { t:'m' };
+      else if(k[0] === 'a'){ M.sel = { t:'a', i:+k.slice(1) }; M.lastA = M.sel.i; }
+      else if(k[0] === 'c') M.sel = (M.sel && M.sel.t === 'c' && M.sel.i === +k.slice(1)) ? null : { t:'c', i:+k.slice(1) };
+      renderMemo();
+    }
+    function memoPress(v){
+      var M = memoGet(), S = M.sel, W = M.L+1;
+      if(S.t === 'm'){ M.m = String(v); M.a = M.a.map(function(){ return ''; }); M.c = M.c.map(function(){ return ''; }); M.sel = { t:'a', i:W-1 }; M.lastA = W-1; }
+      else if(S.t === 'c'){ M.c[S.i] = String(v); M.sel = M.lastA != null && M.lastA < W && M.a[M.lastA] === '' ? { t:'a', i:M.lastA } : null; }
+      else{
+        M.a[S.i] = String(v);   /* 一の位から 左へ */
+        M.sel = S.i > 0 ? { t:'a', i:S.i-1 } : null; M.lastA = S.i-1;
+        var ck = memoCheck(M);
+        if(ck === 'ok') M.sel = null;
+      }
+      renderMemo();
+    }
+    /* 数字キー: メモを えらんで いる ときは メモへ、それ いがいは ひっさんへ */
+    function key(v){
+      if(!H || H.done || H.locked) return;
+      if(memoUse() && H.memo && H.memo.sel){ memoPress(v); return; }
+      press(v);
     }
     function gridHTML(){
       var P = H.plan, st = curStep(), hl = {}, curId = st ? st.cells[H.ci] : null;
@@ -10794,7 +10964,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(hl[c.id]) cls += ' hl';
         else if(st && c.id !== curId && (c.kind !== 'in' || H.vals[c.id] != null)) cls += ' dim';
         if(st && st.from === c.id) cls += ' from';
-        h += '<span class="'+cls+'"'+(c.id === curId ? ' id="hlCur"' : '')+' style="grid-row:'+(c.r+1)+';grid-column:'+(c.c+1)+'">'+txt+'</span>';
+        h += '<span class="'+cls+'"'+(c.id === curId ? ' id="hlCur"' : '')+(c.kind === 'in' ? ' data-cid="'+c.id+'"' : '')+' style="grid-row:'+(c.r+1)+';grid-column:'+(c.c+1)+'">'+txt+'</span>';
       });
       return (st ? '<div class="hl-tip" id="hlTip" aria-live="polite"></div>' : '')+'<div class="hl-grid num '+P.op+'" style="grid-template-columns:repeat('+P.cols+',1.05em);grid-template-rows:'+rows.join(' ')+'">'+h+'</div>';
     }
@@ -10862,6 +11032,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('hlChips').innerHTML = P.chips.map(function(c, i){ return '<span class="'+(st && st.chip === i ? 'on' : '')+'">'+c+'</span>'; }).join(P.op === 'div' ? '<i>→</i>' : '<i>・</i>');
       $('hlChips').hidden = H.done;
       $('hlGrid').innerHTML = gridHTML();
+      renderMemo();
       renderBk();
       var say = '';
       if(H.done){
@@ -10886,9 +11057,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var head = '<span class="tp-step">'+(P.op === 'div' ? '①②③④'.charAt(st.chip)+' ' : '')+P.chips[st.chip]+'</span>';
       var body = H.msg ? '<span class="tp-bad">'+H.msg+'</span>' : guided ? st.tip : st.chip === 0 && P.op === 'div' ? 'こたえの 数を ここに' : 'ここに 書こう';
       if(guided && st.help) body += '<span class="hl-dan">'+st.help+'</span>';
-      if(!H.msg && st.cells.length > 1 && H.ci > 0) body += '<small class="tp-more">つづけて となりも</small>';
+      if(!H.msg && memoUse() && st.chip < 2 && !st.cells.some(function(id){ return H.vals[id] != null; })) body += '<small class="tp-more">かけ算メモで '+P.d+' × □ を 計算できるよ</small>';
+      if(!H.msg && st.cells.length > 1 && st.cells.some(function(id){ return H.vals[id] != null; })) body += '<small class="tp-more">のこりの □も 書こう</small>';
       tip.innerHTML = head+'<span class="tp-body">'+body+'</span>';
-      tip.className = 'hl-tip'+(H.msg ? ' bad' : '');
+      tip.className = 'hl-tip'+(H.msg && !H.soft ? ' bad' : '');
       wrap.style.paddingBottom = ''; wrap.style.paddingTop = '';
       var grid = wrap.querySelector('.hl-grid'), W = wrap.clientWidth;
       tip.style.maxWidth = Math.min(W >= 500 ? 230 : 164, W-8)+'px';
@@ -10932,12 +11104,19 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var need = y+th - (grid.offsetTop+grid.offsetHeight) + 8;
       if(need > 0) wrap.style.paddingBottom = need+'px';
     }
+    /* この だんの 中で、いまの マスの つぎに 空いている マス(なければ -1) */
+    function nextFree(st, from){
+      var n = st.cells.length, i;
+      for(i=1;i<=n;i++){ var j = (from+i) % n; if(H.vals[st.cells[j]] == null) return j; }
+      return -1;
+    }
     function press(v){
       if(!H || H.done || H.locked) return;
       var st = curStep(), id = st.cells[H.ci], c = H.plan.byId[id];
       if(v === c.v){
-        H.vals[id] = v; H.justId = id; H.ci++; H.cellMiss = 0; H.msg = '';
-        if(H.ci >= st.cells.length){
+        H.vals[id] = v; H.justId = id; H.cellMiss = 0; H.msg = ''; H.soft = false;
+        H.ci = nextFree(st, H.ci);   /* まだ 空いている マスへ(タップで えらんだ 順でも OK) */
+        if(H.ci < 0){
           if(st.fade) st.fade.forEach(function(f){ H.faded[f] = 1; });
           H.si++; H.ci = 0;
           var nx = curStep();
@@ -10947,9 +11126,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         render();
         return;
       }
-      H.miss++; H.cellMiss++; H.shake = true;
+      H.cellMiss++;
       var m = st.wrong ? st.wrong(v, H.ci) : 'もういちど!';
-      if(H.cellMiss >= 2) m += '<br>こたえは <b>'+c.v+'</b> だよ。';
+      if(H.cellMiss < 2){
+        /* 1回目は まちがえて タップしただけかも: ミスに 数えず、赤くも ふるわせも しない */
+        H.soft = true; H.msg = '<small>あれ? これで あってるかな。</small><br>'+m;
+        render();
+        return;
+      }
+      H.miss++; H.shake = true; H.soft = false;
+      m += '<br>こたえは <b>'+c.v+'</b> だよ。';
       H.msg = m; H.msgCls = 'hl-bad';
       Pet.oops($('hlPet'));
       render();
@@ -10963,8 +11149,18 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       drawMaru($('hlCardBox'));
       Pet.cheer($('hlPet'));
     }
-    $('hlGrid').addEventListener('click', function(e){ var b = e.target.closest('[data-dk]'); if(b) press(+b.getAttribute('data-dk')); });
-    $('hlPad').addEventListener('click', function(e){ var b = e.target.closest('[data-k]'); if(b) press(+b.getAttribute('data-k')); });
+    /* 今の だんの 空いている マスを タップすると、そこから 書ける */
+    $('hlGrid').addEventListener('click', function(e){
+      var cc = e.target.closest('[data-cid]');
+      if(cc && H && !H.done && !H.locked){
+        var st0 = curStep(), k = st0 ? st0.cells.indexOf(cc.getAttribute('data-cid')) : -1;
+        if(k >= 0 && H.vals[st0.cells[k]] == null && k !== H.ci){ H.ci = k; H.msg = ''; H.soft = false; H.cellMiss = 0; render(); return; }
+      }
+      if(H && H.memo && H.memo.sel){ H.memo.sel = null; renderMemo(); }   /* ひっさんに もどる */
+      var b = e.target.closest('[data-dk]'); if(b) press(+b.getAttribute('data-dk'));
+    });
+    $('hlMemo').addEventListener('click', function(e){ var b = e.target.closest('[data-mm]'); if(b && memoUse()) memoTap(b.getAttribute('data-mm')); });
+    $('hlPad').addEventListener('click', function(e){ var b = e.target.closest('[data-k]'); if(b) key(+b.getAttribute('data-k')); });
     $('hlNext').addEventListener('click', function(){ if(!H || !H.done) return; H.i++; nextQ(); });
     $('hlHintBtn').addEventListener('click', function(){ if(!H || H.done) return; H.hint = true; H.msg = ''; render(); });
     $('hlVizBtn').addEventListener('click', function(){ if(!H) return; H.viz = !H.viz; renderBk(); });
@@ -11031,7 +11227,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---- キーボード ---- */
     document.addEventListener('keydown', function(e){
       if(views.hsl.hidden || $('hlPlay').hidden || !$('modal').hidden || !H) return;
-      if(e.key >= '0' && e.key <= '9') press(+e.key);
+      if(e.key >= '0' && e.key <= '9') key(+e.key);
       else if(e.key === 'Enter' && H.done){ e.preventDefault(); H.i++; nextQ(); }
     });
 
@@ -13287,7 +13483,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('mdBack').addEventListener('click', function(){ goHome(); });
 
     function runsLeft(){ var m = data(); return RUN_MAX - ((m.day && m.day.d === todayKey()) ? m.day.n : 0); }
-    return { topOf:function(op){ return top(data(), op); }, runsLeft:runsLeft, RUN_MAX:RUN_MAX, sym:sym, tick:tick, award:award, result:result, ladder:ladder, card:card, open:open, rankOf:rankOf, RANKS:RANKS, TROPHIES:TROPHIES, OPS4:OPS4 };
+    return { svg:medalSVG, topOf:function(op){ return top(data(), op); }, runsLeft:runsLeft, RUN_MAX:RUN_MAX, sym:sym, tick:tick, award:award, result:result, ladder:ladder, card:card, open:open, rankOf:rankOf, RANKS:RANKS, TROPHIES:TROPHIES, OPS4:OPS4 };
   })();
 
   /* ---------- 相棒の 旅行(行き先の 名所と おみやげの 特産品) ---------- */
@@ -14195,7 +14391,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
        やさしい(lv1)→ふかい(lv3)の じゅんに 出す。S.lv = 分野の ばんごう+1。記録 keisan_gaku.kt[sub] = いまの 分野(1から) */
     var KLV = { j:KOKU.topics, b:BUN.topics, r:ROMA.topics };
     function kCur(s, sub){ s.kt = s.kt || {}; return s.kt[sub] || 1; }
-    function kAll(sub){ return sub === 'j' ? KOKU.qs.map(function(e, i){ return { id:'j'+i, tp:e.tp || 0 }; }) : sub === 'b' ? BUNQ : ROMAQ; }
+    function kAll(sub){ return sub === 'j' ? KOKU.qs.map(function(e, i){ return { id:'j'+i, tp:e.tp || 0 }; }) : sub === 'b' ? BUNQ : sub === 'w' ? WORDQ : ROMAQ; }
     function kCnt(s, sub, t){ var m = s[sub] || {}, a = kAll(sub).filter(function(e){ return e.tp === t - 1; }); return { n:a.filter(function(e){ return m[e.id] && m[e.id].ok > 0; }).length, all:a.length }; }
     function kSum(s, sub){ var m = s[sub] || {}, a = kAll(sub); return a.filter(function(e){ return m[e.id] && m[e.id].ok > 0; }).length + '/' + a.length; }
     function kPick(list, map, n){
@@ -14286,6 +14482,1515 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }else{ q.a = e.a; q.bad = e.bad; q.html = '<div class="gk-text">'+KRB(kesc(e.q))+'</div>'; q.say = '答えは「'+e.a+'」。'+KPL(e.why); }
       return q;
     });
+    /* ことば(慣用句): 4択。tp=分野(体・動物・しぜん・気持ち・しごと)、lv=ふかさ */
+    var WORD = {
+ "topics": [
+  "体の ことば",
+  "動物・しぜんの ことば",
+  "気持ち・ようすの ことば",
+  "しごと・くらしの ことば"
+ ],
+ "items": [
+  {
+   "k": "ch",
+   "q": "「手を かす」の 意味は?",
+   "a": "人の しごとを てつだう",
+   "bad": [
+    "人に 手を さわらせる",
+    "自分の 手を 休める",
+    "人と 手を つなぐ"
+   ],
+   "why": "「手を かす」は てつだう こと。「手を かして ください」は「てつだって ください」。",
+   "lv": 1,
+   "tp": 0,
+   "w": "手を かす",
+   "m": "人の しごとを てつだう",
+   "e": "🤝",
+   "ex": "重い 荷物を 持つ おばあさんに 手を かした。"
+  },
+  {
+   "k": "ch",
+   "q": "「耳が いたい」の 意味は?",
+   "a": "言われた ことが 本当で、聞くのが つらい",
+   "bad": [
+    "耳の びょうきで いたい",
+    "小さな 音まで よく 聞こえる",
+    "よろこんで 聞く"
+   ],
+   "why": "自分の よわい ところを つかれて、聞くのが つらい ことを「耳が いたい」と 言うよ。",
+   "lv": 1,
+   "tp": 0,
+   "w": "耳が いたい",
+   "m": "言われた ことが 本当で、聞くのが つらい",
+   "e": "👂",
+   "ex": "いつも ねぼうする ぼくは、「早く ねなさい」と 言われると 耳が いたい。"
+  },
+  {
+   "k": "ch",
+   "q": "「目を 丸く する」の 意味は?",
+   "a": "とても おどろく",
+   "bad": [
+    "目を 大きく あけて ねる",
+    "目が わるく なる",
+    "うれしくて 笑《わら》う"
+   ],
+   "why": "おどろいた とき、目が 丸く 大きく なるね。",
+   "lv": 1,
+   "tp": 0,
+   "w": "目を 丸く する",
+   "m": "とても おどろく",
+   "e": "😲",
+   "ex": "大きな ケーキを 見て、妹は 目を 丸く した。"
+  },
+  {
+   "k": "ch",
+   "q": "「顔が 広い」の 意味は?",
+   "a": "知り合いが 多い",
+   "bad": [
+    "顔が 大きい",
+    "はずかしがりやだ",
+    "おこりっぽい"
+   ],
+   "why": "いろいろな 人と 知り合いな ことを「顔が 広い」と 言うよ。",
+   "lv": 1,
+   "tp": 0,
+   "w": "顔が 広い",
+   "m": "知り合いが 多い",
+   "e": "🙋",
+   "ex": "お父さんは 町の 人と 知り合いで、顔が 広い。"
+  },
+  {
+   "k": "ch",
+   "q": "「口が かたい」の 意味は?",
+   "a": "ひみつを ほかの 人に 話さない",
+   "bad": [
+    "口が かたくて 食べられない",
+    "おしゃべりで よく 話す",
+    "口ぐせが わるい"
+   ],
+   "why": "言っては いけない ことを 人に 話さない 人を「口が かたい」と 言うよ。",
+   "lv": 1,
+   "tp": 0,
+   "w": "口が かたい",
+   "m": "ひみつを ほかの 人に 話さない",
+   "e": "🤐",
+   "ex": "口が かたい 友だちに だけ、ひみつを 話した。"
+  },
+  {
+   "k": "ch",
+   "q": "「鼻が 高い」の 意味は?",
+   "a": "じまんに 思う",
+   "bad": [
+    "鼻が 大きい",
+    "かぜを ひく",
+    "はずかしがる"
+   ],
+   "why": "じまんに 思うと、むねを はって 顔が 上を むくね。その ようすを「鼻が 高い」と 言うよ。",
+   "lv": 1,
+   "tp": 0,
+   "w": "鼻が 高い",
+   "m": "じまんに 思う",
+   "e": "👃",
+   "ex": "弟が 一等に なって、ぼくも 鼻が 高い。"
+  },
+  {
+   "k": "ch",
+   "q": "「首を ひねる」の 意味は?",
+   "a": "ふしぎに 思って 考える",
+   "bad": [
+    "首の 体そうを する",
+    "「いいね」と さんせいする",
+    "首を 回して あたりを 見る"
+   ],
+   "why": "わからない ことや 変《へん》だと 思う ことが あって、首を かたむけて 考える 様子だよ。",
+   "lv": 1,
+   "tp": 0,
+   "w": "首を ひねる",
+   "m": "ふしぎに 思って 考える",
+   "e": "🤔",
+   "ex": "むずかしい なぞなぞに、みんな 首を ひねった。"
+  },
+  {
+   "k": "ch",
+   "q": "「肩《かた》を 落とす」の 意味は?",
+   "a": "がっかりして 元気が なくなる",
+   "bad": [
+    "かたの 力を ぬく",
+    "重い 荷物を おろす",
+    "おこって 大声を 出す"
+   ],
+   "why": "がっかりすると 肩《かた》が 下がるね。そこから「肩《かた》を 落とす」と 言うよ。",
+   "lv": 1,
+   "tp": 0,
+   "w": "肩《かた》を 落とす",
+   "m": "がっかりして 元気が なくなる",
+   "e": "😞",
+   "ex": "しあいに まけて、肩《かた》を 落として 帰った。"
+  },
+  {
+   "k": "ch",
+   "q": "「腹《はら》を 立てる」の 意味は?",
+   "a": "おこる",
+   "bad": [
+    "おなかが すく",
+    "おなかを こわす",
+    "うれしく なる"
+   ],
+   "why": "おこる ことを「腹《はら》を 立てる」と 言うよ。",
+   "lv": 1,
+   "tp": 0,
+   "w": "腹《はら》を 立てる",
+   "m": "おこる",
+   "e": "😠",
+   "ex": "おもちゃを こわされて、弟は 腹《はら》を 立てた。"
+  },
+  {
+   "k": "ch",
+   "q": "「足が ぼうに なる」の 意味は?",
+   "a": "ずっと 歩いたり 立ったり して、足が つかれる",
+   "bad": [
+    "足が ぼうの ように 細く なる",
+    "足を ぼうで たたく",
+    "まっすぐ 立てる"
+   ],
+   "why": "つかれて 足が ぼうの ように かたく なる ことだよ。",
+   "lv": 2,
+   "tp": 0,
+   "w": "足が ぼうに なる",
+   "m": "ずっと 歩いたり 立ったり して、足が つかれる",
+   "e": "🦵",
+   "ex": "一日中 歩いて、足が ぼうに なった。"
+  },
+  {
+   "k": "ch",
+   "q": "「手が たりない」の 意味は?",
+   "a": "人数が たりなくて いそがしい",
+   "bad": [
+    "手が みじかい",
+    "手ぶくろが たりない",
+    "手が よごれて いる"
+   ],
+   "why": "仕事に くらべて 人が 少ない とき、「手が たりない」と 言うよ。",
+   "lv": 2,
+   "tp": 0,
+   "w": "手が たりない",
+   "m": "人数が たりなくて いそがしい",
+   "e": "🙌",
+   "ex": "お店が こんで いて、手が たりない。"
+  },
+  {
+   "k": "ch",
+   "q": "「耳を すます」の 意味は?",
+   "a": "注意して よく 聞く",
+   "bad": [
+    "耳を きれいに そうじする",
+    "耳を ふさぐ",
+    "大きな 声で 話す"
+   ],
+   "why": "小さな 音も 聞きのがさないように、気持ちを 集中して 聞く ことだよ。",
+   "lv": 2,
+   "tp": 0,
+   "w": "耳を すます",
+   "m": "注意して よく 聞く",
+   "e": "🎧",
+   "ex": "耳を すますと、虫の 声が 聞こえた。"
+  },
+  {
+   "k": "ch",
+   "q": "「お店が こんで、毎日 目が 回る。」の「目が 回る」は どんな 意味?",
+   "a": "とても いそがしい",
+   "bad": [
+    "ねむくて 目を とじる",
+    "目の まえで ものが 回る",
+    "目が わるく なる"
+   ],
+   "why": "目が 回る ほど いそがしい、という ことだよ。",
+   "lv": 2,
+   "tp": 0,
+   "w": "目が 回る",
+   "m": "とても いそがしい",
+   "e": "😵",
+   "ex": "引っこしの 日は、目が 回る いそがしさだった。"
+  },
+  {
+   "k": "ch",
+   "q": "「口を 出す」の 意味は?",
+   "a": "人の ことに 横から 意見《いけん》を 言う",
+   "bad": [
+    "口を 大きく あける",
+    "ものを 口に 入れる",
+    "口を とじて 話さない"
+   ],
+   "why": "関係《かんけい》の ない 人が 横から 話に 入る ことを「口を 出す」と 言うよ。",
+   "lv": 2,
+   "tp": 0,
+   "w": "口を 出す",
+   "m": "人の ことに 横から 意見《いけん》を 言う",
+   "e": "🗣️",
+   "ex": "兄たちの 話に 口を 出したら、おこられた。"
+  },
+  {
+   "k": "ch",
+   "q": "「首を 長く して 待つ」の 意味は?",
+   "a": "今か今かと 楽しみに 待つ",
+   "bad": [
+    "首が 長い 人を 待つ",
+    "あきらめて ねて しまう",
+    "首を ぐるぐる 回して 待つ"
+   ],
+   "why": "早く 来ないかと、首を のばして 待つ 様子から 来た ことばだよ。",
+   "lv": 2,
+   "tp": 0,
+   "w": "首を 長く して 待つ",
+   "m": "今か今かと 楽しみに 待つ",
+   "e": "🦒",
+   "ex": "夏休みを 首を 長く して 待って いる。"
+  },
+  {
+   "k": "ch",
+   "q": "「歯が 立たない」の 意味は?",
+   "a": "あいてが 強くて かなわない",
+   "bad": [
+    "歯が 生えて こない",
+    "歯を みがかない",
+    "歯が いたい"
+   ],
+   "why": "かたくて かめない 食べ物のように、力が ちがいすぎて どうにも ならない ことだよ。",
+   "lv": 2,
+   "tp": 0,
+   "w": "歯が 立たない",
+   "m": "あいてが 強くて かなわない",
+   "e": "🦷",
+   "ex": "強い チームに、まったく 歯が 立たなかった。"
+  },
+  {
+   "k": "ch",
+   "q": "「顔に どろを ぬる」の 意味は?",
+   "a": "人に はじを かかせる",
+   "bad": [
+    "顔を あらう",
+    "どろ あそびを する",
+    "顔を かくして にげる"
+   ],
+   "why": "その 人の 名よを きずつけ、はじを かかせる ことを 言うよ。",
+   "lv": 2,
+   "tp": 0,
+   "w": "顔に どろを ぬる",
+   "m": "人に はじを かかせる",
+   "e": "🫣",
+   "ex": "おせわに なった 先生の 顔に どろを ぬる ような ことは しない。"
+  },
+  {
+   "k": "ch",
+   "q": "「腕《うで》を みがく」の 意味は?",
+   "a": "うまく なる ために れんしゅうする",
+   "bad": [
+    "うでを きれいに あらう",
+    "うで時計を みがく",
+    "うでずもうを する"
+   ],
+   "why": "ぎじゅつを 上げる ために、れんしゅうを つづける ことだよ。",
+   "lv": 2,
+   "tp": 0,
+   "w": "腕《うで》を みがく",
+   "m": "うまく なる ために れんしゅうする",
+   "e": "💪",
+   "ex": "サッカー選手《せんしゅ》に なる ために、毎日 腕《うで》を みがく。"
+  },
+  {
+   "k": "ch",
+   "q": "「頭が 上がらない」の 使い方が 正しい 文は どれ?",
+   "a": "小さい ときから せわに なった おじさんには、今でも 頭が 上がらない。",
+   "bad": [
+    "しけんで 百点を とって、頭が 上がらない。",
+    "おなかが すいて、頭が 上がらない。",
+    "うれしくて 頭が 上がらないほど 笑《わら》った。"
+   ],
+   "why": "せわに なった ことが あって、あいてに 強く 言えない 気持ちを「頭が 上がらない」と 言うよ。",
+   "lv": 3,
+   "tp": 0,
+   "w": "頭が 上がらない",
+   "m": "せわに なって いて、あいてに 強く 言えない",
+   "e": "🙇",
+   "ex": "いつも 助《たす》けて くれる 姉には、頭が 上がらない。"
+  },
+  {
+   "k": "ch",
+   "q": "「足を ひっぱる」の 意味は?",
+   "a": "人の じゃまに なって、うまく いかなく する",
+   "bad": [
+    "人を はげまして おうえんする",
+    "人と いっしょに 走る",
+    "自分の 足を 休ませる"
+   ],
+   "why": "みんなが がんばって いる ときに、じゃまに なって しまう ことだよ。",
+   "lv": 3,
+   "tp": 0,
+   "w": "足を ひっぱる",
+   "m": "人の じゃまに なって、うまく いかなく する",
+   "e": "🪢",
+   "ex": "リレーで みんなの 足を ひっぱらないように 練習《れんしゅう》した。"
+  },
+  {
+   "k": "ch",
+   "q": "「口が すべる」の 意味は?",
+   "a": "言う つもりの ない ことを うっかり 言う",
+   "bad": [
+    "ゆかで 足が すべる",
+    "口を 大きく あける",
+    "ことばが つっかえる"
+   ],
+   "why": "うっかり ほんねや ひみつを 言って しまう ことだよ。",
+   "lv": 3,
+   "tp": 0,
+   "w": "口が すべる",
+   "m": "言う つもりの ない ことを うっかり 言う",
+   "e": "😮",
+   "ex": "つい 口が すべって、プレゼントの ことを 言って しまった。"
+  },
+  {
+   "k": "ch",
+   "q": "「目を 光らせる」の 意味は?",
+   "a": "きびしく 見はる",
+   "bad": [
+    "目に ライトを あてる",
+    "目を かがやかせて よろこぶ",
+    "目を つぶって ねむる"
+   ],
+   "why": "悪い ことを させない ように、あちこち 注意して 見る ことだよ。",
+   "lv": 3,
+   "tp": 0,
+   "w": "目を 光らせる",
+   "m": "きびしく 見はる",
+   "e": "👀",
+   "ex": "いたずらを しないように、先生が 目を 光らせて いる。"
+  },
+  {
+   "k": "ch",
+   "q": "「のどから 手が 出る」の 意味は?",
+   "a": "ほしくて たまらない",
+   "bad": [
+    "のどが いたくて 苦しい",
+    "のどに ものが つまる",
+    "手が すごく 長い"
+   ],
+   "why": "手を のばして とりたいほど ほしがる 気持ちを あらわすよ。",
+   "lv": 3,
+   "tp": 0,
+   "w": "のどから 手が 出る",
+   "m": "ほしくて たまらない",
+   "e": "🤤",
+   "ex": "のどから 手が 出る ほど、新しい ゲームが ほしい。"
+  },
+  {
+   "k": "ch",
+   "q": "「この しごとは、一人では 手に あまる。」の「手に あまる」は どんな 意味?",
+   "a": "自分の 力では どうにも ならない",
+   "bad": [
+    "手の 上に のせられる",
+    "手が あまって ひまだ",
+    "とても かんたんだ"
+   ],
+   "why": "自分の 力 以上《いじょう》で、あつかいきれない ことだよ。",
+   "lv": 3,
+   "tp": 0,
+   "w": "手に あまる",
+   "m": "自分の 力では どうにも ならない",
+   "e": "😥",
+   "ex": "子犬 三びきの 世話は、ぼく 一人では 手に あまる。"
+  },
+  {
+   "k": "ch",
+   "q": "「ねこの 手も かりたい」の 意味は?",
+   "a": "とても いそがしくて、だれでも いいから てつだって ほしい",
+   "bad": [
+    "ねこが 大すきで たまらない",
+    "手が 小さくて こまる",
+    "ねこに あそんで ほしい"
+   ],
+   "why": "役に 立たない ねこの 手まで かりたいほど いそがしい、という ことだよ。",
+   "lv": 1,
+   "tp": 1,
+   "w": "ねこの 手も かりたい",
+   "m": "とても いそがしくて、だれでも いいから てつだって ほしい",
+   "e": "🐱",
+   "ex": "お祭《まつ》りの じゅんびで、ねこの 手も かりたい。"
+  },
+  {
+   "k": "ch",
+   "q": "「馬が 合う」の 意味は?",
+   "a": "気が 合って なかよく できる",
+   "bad": [
+    "馬に のるのが うまい",
+    "馬の 世話が 好《す》きだ",
+    "きょうそうに 勝つ"
+   ],
+   "why": "馬と のる 人の 息が ぴったり 合う ことから 来た 言い方だよ。",
+   "lv": 1,
+   "tp": 1,
+   "w": "馬が 合う",
+   "m": "気が 合って なかよく できる",
+   "e": "🐴",
+   "ex": "あの 子とは 馬が 合うので、いつも いっしょに 遊ぶ。"
+  },
+  {
+   "k": "ch",
+   "q": "「ねこを かぶる」の 意味は?",
+   "a": "本当の 性《せい》かくを かくして おとなしそうに する",
+   "bad": [
+    "ねこの ぼうしを かぶる",
+    "ねこを 大事にする",
+    "ねこのように すばやく 動く"
+   ],
+   "why": "ねこが おとなしく 見える ことから、おとなしい ふりを する ことを 言うよ。",
+   "lv": 1,
+   "tp": 1,
+   "w": "ねこを かぶる",
+   "m": "本当の 性《せい》かくを かくして おとなしそうに する",
+   "e": "🐈",
+   "ex": "弟は お客《きゃく》さんの 前では ねこを かぶって いる。"
+  },
+  {
+   "k": "ch",
+   "q": "「すずめの 涙《なみだ》」の 意味は?",
+   "a": "ほんの 少し",
+   "bad": [
+    "とても 大きな 悲しみ",
+    "大雨",
+    "おおきな 水たまり"
+   ],
+   "why": "小さな すずめの 涙《なみだ》は ほんの 少し、という ことから 来たよ。「すずめの 涙《なみだ》ほどの お金」のように 使うよ。",
+   "lv": 1,
+   "tp": 1,
+   "w": "すずめの 涙《なみだ》",
+   "m": "ほんの 少し",
+   "e": "🐦",
+   "ex": "おこづかいは、すずめの 涙《なみだ》ほどしか ない。"
+  },
+  {
+   "k": "ch",
+   "q": "「水に 流す」の 意味は?",
+   "a": "前の もめごとを なかった ことに する",
+   "bad": [
+    "水を ながして そうじする",
+    "おぼれてしまう",
+    "おふろの 水を ぬく"
+   ],
+   "why": "けんかや しっぱいを 水で 流すように、なかった ことに する ことだよ。",
+   "lv": 1,
+   "tp": 1,
+   "w": "水に 流す",
+   "m": "前の もめごとを なかった ことに する",
+   "e": "🌊",
+   "ex": "きのうの けんかは 水に 流して、なかなおりした。"
+  },
+  {
+   "k": "ch",
+   "q": "「うなぎのぼり」の 意味は?",
+   "a": "いきおいよく どんどん 上がる",
+   "bad": [
+    "ゆっくり 下がる",
+    "川を 下って いく",
+    "ぐるぐる 回る"
+   ],
+   "why": "うなぎが 水の 中を ぐんぐん のぼる ように、物の ねだんや 人気が ぐんぐん 上がる ときに 使うよ。",
+   "lv": 2,
+   "tp": 1,
+   "w": "うなぎのぼり",
+   "m": "いきおいよく どんどん 上がる",
+   "e": "📈",
+   "ex": "あの パン屋《や》の 人気は うなぎのぼりだ。"
+  },
+  {
+   "k": "ch",
+   "q": "「とらの 子」の 意味は?",
+   "a": "大切に して 手ばなさない もの(とくに お金)",
+   "bad": [
+    "とらの 赤ちゃん",
+    "こわい 人",
+    "とても 強い 人"
+   ],
+   "why": "とらが 子どもを 大事に する ことから、大切に して 人に 見せない ものを「とらの 子」と 言うよ。",
+   "lv": 2,
+   "tp": 1,
+   "w": "とらの 子",
+   "m": "大切に して 手ばなさない もの(とくに お金)",
+   "e": "🐯",
+   "ex": "とらの 子の おこづかいを、引き出しに 大事に しまった。"
+  },
+  {
+   "k": "ch",
+   "q": "「火の 車」の 意味は?",
+   "a": "お金が なくて、くらしが とても 苦しい",
+   "bad": [
+    "火事で 車が もえる",
+    "火を つかう 料理《りょうり》",
+    "とても いきおいが ある"
+   ],
+   "why": "悪い ことを した 人を、火の もえる 車で じごくへ はこぶ、という 話から 来た ことばだよ。",
+   "lv": 2,
+   "tp": 1,
+   "w": "火の 車",
+   "m": "お金が なくて、くらしが とても 苦しい",
+   "e": "🔥",
+   "ex": "お店が はやらず、家の くらしは 火の 車だ。"
+  },
+  {
+   "k": "ch",
+   "q": "「波に 乗る」の 意味は?",
+   "a": "いきおいに のって、うまく 進む",
+   "bad": [
+    "海で さかなを つる",
+    "波の 音を 聞く",
+    "船に よう"
+   ],
+   "why": "うまく いく いきおいに のる ことを 言うよ。「ブームの 波に 乗る」。",
+   "lv": 2,
+   "tp": 1,
+   "w": "波に 乗る",
+   "m": "いきおいに のって、うまく 進む",
+   "e": "🏄",
+   "ex": "一点 とってから、チームは 波に 乗った。"
+  },
+  {
+   "k": "ch",
+   "q": "「ねこの ひたい」の 意味は?",
+   "a": "とても せまい ばしょ",
+   "bad": [
+    "ひたいが 広い",
+    "ねこが ふえる",
+    "ひたいを ぶつける"
+   ],
+   "why": "ねこの ひたいは とても せまいので、せまい ばしょの たとえに 使うよ。「ねこの ひたいほどの 庭《にわ》」。",
+   "lv": 2,
+   "tp": 1,
+   "w": "ねこの ひたい",
+   "m": "とても せまい ばしょ",
+   "e": "🐾",
+   "ex": "ねこの ひたいほどの 庭《にわ》に、花を うえた。"
+  },
+  {
+   "k": "ch",
+   "q": "「たぬき寝《ね》入り」の 意味は?",
+   "a": "ねた ふりを する",
+   "bad": [
+    "ぐっすり ねむる",
+    "いびきを かく",
+    "ゆめを 見る"
+   ],
+   "why": "たぬきは おどろくと 気絶《きぜつ》して ねたように 見える、と 言われた ことから 来たよ。",
+   "lv": 2,
+   "tp": 1,
+   "w": "たぬき寝《ね》入り",
+   "m": "ねた ふりを する",
+   "e": "🦝",
+   "ex": "手つだいを たのまれそうで、たぬき寝《ね》入りを した。"
+  },
+  {
+   "k": "ch",
+   "q": "「しっぽを 出す」の 意味は?",
+   "a": "かくして いた ことが ばれる",
+   "bad": [
+    "しっぽを ふって 犬を よぶ",
+    "しっぽの 長さを はかる",
+    "しっぽを おしゃれに する"
+   ],
+   "why": "ばけた どうぶつが しっぽを 出して しまう 話から、正体や ひみつが ばれる ことを 言うよ。",
+   "lv": 2,
+   "tp": 1,
+   "w": "しっぽを 出す",
+   "m": "かくして いた ことが ばれる",
+   "e": "🦊",
+   "ex": "うそを ついて いた 人が、とうとう しっぽを 出した。"
+  },
+  {
+   "k": "ch",
+   "q": "「羽を のばす」の 意味は?",
+   "a": "のびのびと 自由に すごす",
+   "bad": [
+    "羽を 洗《あら》う",
+    "鳥の えさを 買う",
+    "高い 木に のぼる"
+   ],
+   "why": "きゅうくつな ことから はなれて、自由に のんびり する ことだよ。",
+   "lv": 2,
+   "tp": 1,
+   "w": "羽を のばす",
+   "m": "のびのびと 自由に すごす",
+   "e": "🕊️",
+   "ex": "夏休みは いなかで 羽を のばした。"
+  },
+  {
+   "k": "ch",
+   "q": "「鳥肌《とりはだ》が 立つ」の 意味は?",
+   "a": "さむさや こわさ、かんどうで、はだに ぶつぶつが できる",
+   "bad": [
+    "鳥が 肌《はだ》に とまる",
+    "さむくて 鳥を 見る",
+    "とりにくを 食べすぎる"
+   ],
+   "why": "さむい とき、おそろしい とき、かんどうした ときに、はだが 鳥の はだのように ぶつぶつ する ことだよ。",
+   "lv": 2,
+   "tp": 1,
+   "w": "鳥肌《とりはだ》が 立つ",
+   "m": "さむさや こわさ、かんどうで、はだに ぶつぶつが できる",
+   "e": "🐔",
+   "ex": "こわい 話を 聞いて、鳥肌《とりはだ》が 立った。"
+  },
+  {
+   "k": "ch",
+   "q": "「鶴《つる》の 一声」の 意味は?",
+   "a": "力の ある 人の 一言で すべてが きまる",
+   "bad": [
+    "つるの 鳴き声が 美しい",
+    "声が 大きい",
+    "しずかな 声で 話す"
+   ],
+   "why": "みんなの 意見《いけん》が まとまらない ときに、えらい 人の 一言で きまる ことを 言うよ。",
+   "lv": 3,
+   "tp": 1,
+   "w": "鶴《つる》の 一声",
+   "m": "力の ある 人の 一言で すべてが きまる",
+   "e": "📢",
+   "ex": "校長《こうちょう》先生の 鶴《つる》の 一声で、遠足《えんそく》の 行き先が きまった。"
+  },
+  {
+   "k": "ch",
+   "q": "「虫が いい」の 意味は?",
+   "a": "自分に つごうの いい ことばかり 考える",
+   "bad": [
+    "虫が たくさん いる",
+    "虫が 苦手だ",
+    "虫を つかまえるのが うまい"
+   ],
+   "why": "人の ことを 考えず、自分勝手な 言い分を「虫が いい」と 言うよ。「虫の いい 話」。",
+   "lv": 3,
+   "tp": 1,
+   "w": "虫が いい",
+   "m": "自分に つごうの いい ことばかり 考える",
+   "e": "🐛",
+   "ex": "そうじを しないで おかしだけ もらうなんて、虫が いい。"
+  },
+  {
+   "k": "ch",
+   "q": "「虫が 知らせる」の 意味は?",
+   "a": "よくない ことが おこりそうな 気が する",
+   "bad": [
+    "虫が ないて 季節《きせつ》を 教える",
+    "虫の しゅるいが わかる",
+    "虫に さされて かゆい"
+   ],
+   "why": "はっきりした わけは ないのに、いやな 予感が する ことだよ。",
+   "lv": 3,
+   "tp": 1,
+   "w": "虫が 知らせる",
+   "m": "よくない ことが おこりそうな 気が する",
+   "e": "🦗",
+   "ex": "虫が 知らせたのか、かさを 持って 出たら 雨が ふった。"
+  },
+  {
+   "k": "ch",
+   "q": "「きつねに つままれる」の 意味は?",
+   "a": "思いがけない ことで、わけが わからずに ぼんやりする",
+   "bad": [
+    "きつねに かまれる",
+    "きつねを つかまえる",
+    "きつねの 絵を かく"
+   ],
+   "why": "きつねに だまされた ように、何が 何だか わからなくなる ことだよ。",
+   "lv": 3,
+   "tp": 1,
+   "w": "きつねに つままれる",
+   "m": "思いがけない ことで、わけが わからずに ぼんやりする",
+   "e": "🌀",
+   "ex": "さっきまで あった ボールが 消《き》えて、きつねに つままれた ようだ。"
+  },
+  {
+   "k": "ch",
+   "q": "「花を 持たせる」の 意味は?",
+   "a": "相手を 立てて 手がらや 名よを ゆずる",
+   "bad": [
+    "花を 手に 持つ",
+    "花を かざる",
+    "花を 植える"
+   ],
+   "why": "自分が 手がらを とれる ときに、わざと あいてに ゆずって 立てる ことだよ。",
+   "lv": 3,
+   "tp": 1,
+   "w": "花を 持たせる",
+   "m": "相手を 立てて 手がらや 名よを ゆずる",
+   "e": "💐",
+   "ex": "兄は 弟に 花を 持たせて、わざと まけて あげた。"
+  },
+  {
+   "k": "ch",
+   "q": "「雲を つかむような 話」の 意味は?",
+   "a": "はっきりしなくて つかみどころの ない 話",
+   "bad": [
+    "空の 高い ところの 話",
+    "雲の 形の 話",
+    "ふわふわ やわらかい 話"
+   ],
+   "why": "雲は つかもうとしても つかめないので、あいまいな 話に たとえるよ。",
+   "lv": 3,
+   "tp": 1,
+   "w": "雲を つかむような 話",
+   "m": "はっきりしなくて つかみどころの ない 話",
+   "e": "☁️",
+   "ex": "どこに あるかも わからない 宝《たから》を さがすなんて、雲を つかむような 話だ。"
+  },
+  {
+   "k": "ch",
+   "q": "「風の たより」の 意味は?",
+   "a": "どこからともなく 聞こえて くる うわさ",
+   "bad": [
+    "風の 強い 日の 手紙",
+    "風向きを しらせる 道具",
+    "風の ない 日の 音"
+   ],
+   "why": "どこからか 風に ふかれて 来たような うわさや 知らせの ことだよ。",
+   "lv": 3,
+   "tp": 1,
+   "w": "風の たより",
+   "m": "どこからともなく 聞こえて くる うわさ",
+   "e": "🍃",
+   "ex": "風の たよりに、昔《むかし》の 友だちが 元気だと 聞いた。"
+  },
+  {
+   "k": "ch",
+   "q": "「気が 合う」の 意味は?",
+   "a": "考え方や 感じ方が にて いて、なかよく できる",
+   "bad": [
+    "そっくりな 顔を して いる",
+    "同じ 場所に いる",
+    "いつも けんかを する"
+   ],
+   "why": "話や 好《この》みが 合って なかよく できる ことだよ。",
+   "lv": 1,
+   "tp": 2,
+   "w": "気が 合う",
+   "m": "考え方や 感じ方が にて いて、なかよく できる",
+   "e": "😊",
+   "ex": "となりの 席《せき》の 子と 気が 合う。"
+  },
+  {
+   "k": "ch",
+   "q": "「気が 重い」の 意味は?",
+   "a": "いやな ことが あって、気持ちが しずむ",
+   "bad": [
+    "体が 重く 感じる",
+    "重い 荷物を 持って いる",
+    "とても 元気だ"
+   ],
+   "why": "いやな ことが あって、気持ちが しずむ ことだよ。",
+   "lv": 1,
+   "tp": 2,
+   "w": "気が 重い",
+   "m": "いやな ことが あって、気持ちが しずむ",
+   "e": "😣",
+   "ex": "あしたの 発表《はっぴょう》を 思うと 気が 重い。"
+  },
+  {
+   "k": "ch",
+   "q": "「胸《むね》が おどる」の 意味は?",
+   "a": "うれしくて わくわくする",
+   "bad": [
+    "胸《むね》が いたくて 苦しい",
+    "おどりが 好《す》きだ",
+    "おどろいて 目を 回す"
+   ],
+   "why": "たのしみで、心臓《しんぞう》が おどるように わくわくする ことだよ。",
+   "lv": 1,
+   "tp": 2,
+   "w": "胸《むね》が おどる",
+   "m": "うれしくて わくわくする",
+   "e": "💓",
+   "ex": "あしたの 遠足《えんそく》を 思うと 胸《むね》が おどる。"
+  },
+  {
+   "k": "ch",
+   "q": "「肩《かた》の 荷が おりる」の 意味は?",
+   "a": "責任《せきにん》や 心配《しんぱい》ごとが なくなって ほっと する",
+   "bad": [
+    "かたに のせた 荷物を 持つ",
+    "かたが 痛《いた》い",
+    "かたを たたいて もらう"
+   ],
+   "why": "せおっていた 重い 責任《せきにん》が なくなって、気が らくに なる ことだよ。",
+   "lv": 1,
+   "tp": 2,
+   "w": "肩《かた》の 荷が おりる",
+   "m": "責任《せきにん》や 心配《しんぱい》ごとが なくなって ほっと する",
+   "e": "🎒",
+   "ex": "発表《はっぴょう》が 終わって、肩《かた》の 荷が おりた。"
+  },
+  {
+   "k": "ch",
+   "q": "「気が 気でない」の 意味は?",
+   "a": "心配で おちつかない",
+   "bad": [
+    "とても 元気だ",
+    "気が 強い",
+    "気持ちが 落ち着く"
+   ],
+   "why": "心配な ことが あって、他の ことが 手に つかない ことだよ。",
+   "lv": 2,
+   "tp": 2,
+   "w": "気が 気でない",
+   "m": "心配で おちつかない",
+   "e": "😰",
+   "ex": "犬が まいごに なって、気が 気でない。"
+  },
+  {
+   "k": "ch",
+   "q": "「気が ぬける」の 意味は?",
+   "a": "きんちょうが とけて ぼんやりする",
+   "bad": [
+    "気もちが 強く なる",
+    "おこりっぽく なる",
+    "やる気に あふれる"
+   ],
+   "why": "がんばった あとなどに、ほっとして 力が ぬける 様子だよ。",
+   "lv": 2,
+   "tp": 2,
+   "w": "気が ぬける",
+   "m": "きんちょうが とけて ぼんやりする",
+   "e": "😮‍💨",
+   "ex": "しあいが 終わって、気が ぬけた。"
+  },
+  {
+   "k": "ch",
+   "q": "「ほっぺたが 落ちる」の 意味は?",
+   "a": "とても おいしい",
+   "bad": [
+    "ほっぺたを けがする",
+    "ほっぺたが くすぐったい",
+    "つかれて ねむい"
+   ],
+   "why": "おいしくて ほっぺたが 落ちそうに なる、という たとえだよ。",
+   "lv": 2,
+   "tp": 2,
+   "w": "ほっぺたが 落ちる",
+   "m": "とても おいしい",
+   "e": "😋",
+   "ex": "おばあちゃんの カレーは、ほっぺたが 落ちる ほど おいしい。"
+  },
+  {
+   "k": "ch",
+   "q": "「気が 引ける」の 意味は?",
+   "a": "えんりょする 気持ちが あって、したい ことが しにくい",
+   "bad": [
+    "気が 強く なる",
+    "気持ちが ひきしまる",
+    "うれしくて たまらない"
+   ],
+   "why": "ひけめや えんりょが あって、やりにくいと 思う 気持ちだよ。",
+   "lv": 2,
+   "tp": 2,
+   "w": "気が 引ける",
+   "m": "えんりょする 気持ちが あって、したい ことが しにくい",
+   "e": "😅",
+   "ex": "何回も おかわりを するのは、気が 引ける。"
+  },
+  {
+   "k": "ch",
+   "q": "「息を のむ」の 意味は?",
+   "a": "おどろきや きんちょうで 一しゅん 息を とめる",
+   "bad": [
+    "水を いっきに 飲む",
+    "大きく 息を はく",
+    "息が 切れる"
+   ],
+   "why": "きれいな けしきや 大事な 場面で、はっとして 息《いき》を とめる ことだよ。",
+   "lv": 2,
+   "tp": 2,
+   "w": "息を のむ",
+   "m": "おどろきや きんちょうで 一しゅん 息を とめる",
+   "e": "🌄",
+   "ex": "山の 上から 見た けしきに、息を のんだ。"
+  },
+  {
+   "k": "ch",
+   "q": "「目が 点に なる」の 意味は?",
+   "a": "ひどく おどろいて ぽかんと する",
+   "bad": [
+    "目に ごみが 入る",
+    "目が よく 見える",
+    "目を とじて ねむる"
+   ],
+   "why": "あまりに おどろいて、目が 点のように なる 様子だよ。",
+   "lv": 2,
+   "tp": 2,
+   "w": "目が 点に なる",
+   "m": "ひどく おどろいて ぽかんと する",
+   "e": "😶",
+   "ex": "おもちゃの ねだんを 聞いて、目が 点に なった。"
+  },
+  {
+   "k": "ch",
+   "q": "「あたまに 来る」の 意味は?",
+   "a": "とても おこる",
+   "bad": [
+    "あたまが ずきずきする",
+    "あたまを ぶつける",
+    "あたまが かしこく なる"
+   ],
+   "why": "はらが 立って、かっと なる ことだよ。",
+   "lv": 2,
+   "tp": 2,
+   "w": "あたまに 来る",
+   "m": "とても おこる",
+   "e": "💢",
+   "ex": "なんども いたずらされて、あたまに 来た。"
+  },
+  {
+   "k": "ch",
+   "q": "「あたまを 冷《ひ》やす」の 意味は?",
+   "a": "気持ちを おちつける",
+   "bad": [
+    "氷で あたまを 冷《ひ》やして ねる",
+    "かぜを ひく",
+    "つめたい 飲み物を 飲む"
+   ],
+   "why": "かっと なった 気持ちを しずめて 落ち着く ことだよ。",
+   "lv": 2,
+   "tp": 2,
+   "w": "あたまを 冷《ひ》やす",
+   "m": "気持ちを おちつける",
+   "e": "🧊",
+   "ex": "けんかの あと、あたまを 冷《ひ》やして から 話した。"
+  },
+  {
+   "k": "ch",
+   "q": "「あいた 口が ふさがらない」の 意味は?",
+   "a": "あきれて ことばが 出ない",
+   "bad": [
+    "口の けがが なおらない",
+    "大きな 口で 食べる",
+    "口が かわいて いる"
+   ],
+   "why": "ひどくて、あきれて 口が あいたままに なる ことだよ。",
+   "lv": 3,
+   "tp": 2,
+   "w": "あいた 口が ふさがらない",
+   "m": "あきれて ことばが 出ない",
+   "e": "😦",
+   "ex": "あまりの わがままに、あいた 口が ふさがらない。"
+  },
+  {
+   "k": "ch",
+   "q": "「身が 入る」の 意味は?",
+   "a": "夢中《むちゅう》に なって 本気で とりくむ",
+   "bad": [
+    "体に 物が 入る",
+    "身じたくが できる",
+    "おなかが すく"
+   ],
+   "why": "いっしょうけんめい 取りくむ ことだよ。「べんきょうに 身が 入らない」は、集中できない ことだよ。",
+   "lv": 3,
+   "tp": 2,
+   "w": "身が 入る",
+   "m": "夢中《むちゅう》に なって 本気で とりくむ",
+   "e": "📚",
+   "ex": "好《す》きな 理科なので、べんきょうに 身が 入る。"
+  },
+  {
+   "k": "ch",
+   "q": "「心を 鬼《おに》に する」の 意味は?",
+   "a": "かわいそうだが、あえて きびしく する",
+   "bad": [
+    "おにの めんを かぶる",
+    "おにごっこを する",
+    "こわがる"
+   ],
+   "why": "あいてのためを 思って、つらくても きびしい たいどを とる ことだよ。",
+   "lv": 3,
+   "tp": 2,
+   "w": "心を 鬼《おに》に する",
+   "m": "かわいそうだが、あえて きびしく する",
+   "e": "👹",
+   "ex": "母は 心を 鬼《おに》に して、ゲームを とり上げた。"
+  },
+  {
+   "k": "ch",
+   "q": "「肩《かた》を 持つ」の 意味は?",
+   "a": "一方の 味方を する",
+   "bad": [
+    "かたを たたく",
+    "おんぶする",
+    "肩《かた》に 荷物を のせる"
+   ],
+   "why": "けんかなどで、一方の 味方を する ことだよ。",
+   "lv": 3,
+   "tp": 2,
+   "w": "肩《かた》を 持つ",
+   "m": "一方の 味方を する",
+   "e": "🛡️",
+   "ex": "けんかの とき、おばあちゃんは いつも 妹の 肩《かた》を 持つ。"
+  },
+  {
+   "k": "ch",
+   "q": "「腹《はら》を くくる」の 意味は?",
+   "a": "かくごを きめる",
+   "bad": [
+    "おなかを しばる",
+    "ものを 食べる",
+    "腹《はら》が 立つ"
+   ],
+   "why": "どんな ことが あっても にげないと、かくごを きめる ことだよ。",
+   "lv": 3,
+   "tp": 2,
+   "w": "腹《はら》を くくる",
+   "m": "かくごを きめる",
+   "e": "😤",
+   "ex": "腹《はら》を くくって、高い とびばこに ちょうせんした。"
+  },
+  {
+   "k": "ch",
+   "q": "「話に 花が さく」の 意味は?",
+   "a": "楽しく 話が もり上がる",
+   "bad": [
+    "話の 中に 花が 出てくる",
+    "花の 話ばかりする",
+    "話が 終わる"
+   ],
+   "why": "花が さいたように、話が 楽しく はなやかに なる ことだよ。",
+   "lv": 1,
+   "tp": 3,
+   "w": "話に 花が さく",
+   "m": "楽しく 話が もり上がる",
+   "e": "🌸",
+   "ex": "ひさしぶりに 会って、話に 花が さいた。"
+  },
+  {
+   "k": "ch",
+   "q": "「油を 売る」の 意味は?",
+   "a": "しごとの とちゅうで むだ話を して なまける",
+   "bad": [
+    "油を 高く 売る",
+    "あげものを 作る",
+    "お金を かせぐ"
+   ],
+   "why": "むかし、油売りが お客《きゃく》さんと ゆっくり 話しながら 売った ことから 来た 言い方だよ。",
+   "lv": 1,
+   "tp": 3,
+   "w": "油を 売る",
+   "m": "しごとの とちゅうで むだ話を して なまける",
+   "e": "🛢️",
+   "ex": "おつかいの とちゅうで 油を 売って いたら、しかられた。"
+  },
+  {
+   "k": "ch",
+   "q": "「手を ぬく」の 意味は?",
+   "a": "やるべき ことを ていねいに しない",
+   "bad": [
+    "手を あらう",
+    "手を 休めて ひと息つく",
+    "手ぶくろを はずす"
+   ],
+   "why": "ていねいに やる べき ところを、らくを して すます ことだよ。",
+   "lv": 1,
+   "tp": 3,
+   "w": "手を ぬく",
+   "m": "やるべき ことを ていねいに しない",
+   "e": "🫳",
+   "ex": "そうじの 手を ぬいたら、すぐに ばれた。"
+  },
+  {
+   "k": "ch",
+   "q": "「さじを 投げる」の 意味は?",
+   "a": "見こみが ないと あきらめる",
+   "bad": [
+    "さじを きれいに 洗《あら》う",
+    "さじを 遠くに かざる",
+    "さじで すくって 食べる"
+   ],
+   "why": "むかし、医者が 薬を まぜる さじを 投げて、手当てを あきらめた ことから 来たよ。",
+   "lv": 2,
+   "tp": 3,
+   "w": "さじを 投げる",
+   "m": "見こみが ないと あきらめる",
+   "e": "🥄",
+   "ex": "むずかしすぎる パズルに、とうとう さじを 投げた。"
+  },
+  {
+   "k": "ch",
+   "q": "「白紙に もどす」の 意味は?",
+   "a": "今までの ことを なかった ことにして もう一度 考える",
+   "bad": [
+    "白い 紙に もどす",
+    "いらない 紙を すてる",
+    "字を うつす"
+   ],
+   "why": "何も かいていない 紙に もどすように、最初《さいしょ》に もどす ことだよ。",
+   "lv": 2,
+   "tp": 3,
+   "w": "白紙に もどす",
+   "m": "今までの ことを なかった ことにして もう一度 考える",
+   "e": "📄",
+   "ex": "雨で、遠足《えんそく》の 計画を 白紙に もどした。"
+  },
+  {
+   "k": "ch",
+   "q": "「大目に 見る」の 意味は?",
+   "a": "小さな しっぱいは とがめない",
+   "bad": [
+    "目を 大きく して 見る",
+    "ほかの 人より よく 見る",
+    "目を 閉《と》じて ねる"
+   ],
+   "why": "小さな ミスは きびしく しからず、ゆるしてあげる ことだよ。",
+   "lv": 2,
+   "tp": 3,
+   "w": "大目に 見る",
+   "m": "小さな しっぱいは とがめない",
+   "e": "😌",
+   "ex": "一回だけの わすれものは、大目に 見て もらった。"
+  },
+  {
+   "k": "ch",
+   "q": "「相づちを 打つ」の 意味は?",
+   "a": "相手の 話に あわせて うなずいたり 返事を したりする",
+   "bad": [
+    "太鼓《たいこ》を 打つ",
+    "言い争《あらそ》いを する",
+    "話に 反対する"
+   ],
+   "why": "「うん」「そうだね」と 返事を して、話を 聞いて いる ことを 示《しめ》す ことだよ。",
+   "lv": 2,
+   "tp": 3,
+   "w": "相づちを 打つ",
+   "m": "相手の 話に あわせて うなずいたり 返事を したりする",
+   "e": "🙂",
+   "ex": "友だちの 話に「うん、うん」と 相づちを 打った。"
+  },
+  {
+   "k": "ch",
+   "q": "「朝めし前」の 意味は?",
+   "a": "とても かんたんな こと",
+   "bad": [
+    "朝ごはんの 前の 時間",
+    "朝早く おきる こと",
+    "とても むずかしい こと"
+   ],
+   "why": "朝ごはんの 前でも できるほど かんたん、という たとえだよ。",
+   "lv": 2,
+   "tp": 3,
+   "w": "朝めし前",
+   "m": "とても かんたんな こと",
+   "e": "🍙",
+   "ex": "こんな かんたんな 計算は 朝めし前だ。"
+  },
+  {
+   "k": "ch",
+   "q": "「幕《まく》を 開ける」の 意味は?",
+   "a": "物事が はじまる",
+   "bad": [
+    "カーテンを あける",
+    "舞台《ぶたい》を そうじする",
+    "会が 終わる"
+   ],
+   "why": "げきの 幕《まく》が 開いて はじまる ことから、物事が はじまる ことを 言うよ。",
+   "lv": 2,
+   "tp": 3,
+   "w": "幕《まく》を 開ける",
+   "m": "物事が はじまる",
+   "e": "🎭",
+   "ex": "いよいよ 運動会《うんどうかい》が 幕《まく》を 開けた。"
+  },
+  {
+   "k": "ch",
+   "q": "「しりに 火が つく」の 意味は?",
+   "a": "さしせまって あわてる",
+   "bad": [
+    "おしりが あつい",
+    "火を つけるのが うまい",
+    "のんびり おちつく"
+   ],
+   "why": "しりに 火が ついたように、時間が なくて あわてる ことだよ。",
+   "lv": 2,
+   "tp": 3,
+   "w": "しりに 火が つく",
+   "m": "さしせまって あわてる",
+   "e": "🏃",
+   "ex": "夏休みが あと 二日なのに しゅくだいが 終わらず、しりに 火が ついた。"
+  },
+  {
+   "k": "ch",
+   "q": "「ピリオドを 打つ」の 意味は?",
+   "a": "物事を 終わりに する",
+   "bad": [
+    "文に 点を 打つ",
+    "新しく はじめる",
+    "くり返す"
+   ],
+   "why": "文の 終わりに ピリオドを 打つ ことから、終わりに する ことを 言うよ。",
+   "lv": 2,
+   "tp": 3,
+   "w": "ピリオドを 打つ",
+   "m": "物事を 終わりに する",
+   "e": "⏹️",
+   "ex": "長い 旅《たび》に ピリオドを 打って、家に 帰った。"
+  },
+  {
+   "k": "ch",
+   "q": "「板に つく」の 意味は?",
+   "a": "けいけんを つんで、様子が ぴったり 合ってくる",
+   "bad": [
+    "板に ものが くっつく",
+    "板の 上を 歩く",
+    "板を ゆかに しく"
+   ],
+   "why": "役者が ぶたいに なれて、ぴったり 合ってくる ことから 来たよ。「先生ぶりが 板に ついてきた」。",
+   "lv": 3,
+   "tp": 3,
+   "w": "板に つく",
+   "m": "けいけんを つんで、様子が ぴったり 合ってくる",
+   "e": "👨‍🍳",
+   "ex": "毎日 お店に 立つ うちに、エプロンすがたが 板に ついた。"
+  },
+  {
+   "k": "ch",
+   "q": "「棒《ぼう》に ふる」の 意味は?",
+   "a": "せっかくの ものを むだに する",
+   "bad": [
+    "棒《ぼう》を ふりまわす",
+    "棒《ぼう》を 手に 持つ",
+    "棒《ぼう》で たたく"
+   ],
+   "why": "せっかく 重ねた どりょくや チャンスを、むだに して しまう ことだよ。",
+   "lv": 3,
+   "tp": 3,
+   "w": "棒《ぼう》に ふる",
+   "m": "せっかくの ものを むだに する",
+   "e": "💸",
+   "ex": "ねぼうして、せっかくの チャンスを 棒《ぼう》に ふった。"
+  },
+  {
+   "k": "ch",
+   "q": "「一目《いちもく》 置《お》く」の 意味は?",
+   "a": "相手を すぐれて いると 認《みと》めて うやまう",
+   "bad": [
+    "一つの 目を とじる",
+    "目を 一つ 置《お》く",
+    "一回 見る"
+   ],
+   "why": "いごで 弱い 人が 先に 石を 置《お》く ことから、あいてを すぐれていると 認《みと》める ことを 言うよ。",
+   "lv": 3,
+   "tp": 3,
+   "w": "一目《いちもく》 置《お》く",
+   "m": "相手を すぐれて いると 認《みと》めて うやまう",
+   "e": "⚫",
+   "ex": "クラスの みんなが、なわとび名人の ゆうきくんに 一目《いちもく》 置《お》いて いる。"
+  },
+  {
+   "k": "ch",
+   "q": "「的《まと》を 射《い》る」の 意味は?",
+   "a": "大事な ところを うまく とらえる",
+   "bad": [
+    "弓で まとを うつ 練習《れんしゅう》",
+    "ことばを 聞きのがす",
+    "目標《もくひょう》を わすれる"
+   ],
+   "why": "弓《ゆみ》の 的《まと》に 当たるように、物事の 大事な ところを ぴたりと おさえる ことだよ。",
+   "lv": 3,
+   "tp": 3,
+   "w": "的《まと》を 射《い》る",
+   "m": "大事な ところを うまく とらえる",
+   "e": "🎯",
+   "ex": "先生の 意見《いけん》は 的《まと》を 射《い》て いる。"
+  },
+  {
+   "k": "ch",
+   "q": "「口火を 切る」の 意味は?",
+   "a": "最初《さいしょ》に 話しはじめる",
+   "bad": [
+    "口を 開けて 火を ふく",
+    "会話を やめる",
+    "大声で さけぶ"
+   ],
+   "why": "はじまりの きっかけを 作る ことだよ。「会議《かいぎ》で 口火を 切る」。",
+   "lv": 3,
+   "tp": 3,
+   "w": "口火を 切る",
+   "m": "最初《さいしょ》に 話しはじめる",
+   "e": "🧨",
+   "ex": "学級会《がっきゅうかい》で、まず ぼくが 口火を 切った。"
+  },
+  {
+   "k": "ch",
+   "q": "「水を さす」の 意味は?",
+   "a": "うまく いって いる ことを じゃまする",
+   "bad": [
+    "花に 水を やる",
+    "水を 飲む",
+    "水を ふやす"
+   ],
+   "why": "もり上がっている ところに、じゃまを いれる ことだよ。",
+   "lv": 3,
+   "tp": 3,
+   "w": "水を さす",
+   "m": "うまく いって いる ことを じゃまする",
+   "e": "💦",
+   "ex": "楽しい 話に 水を さすような ことを 言わないで。"
+  },
+  {
+   "k": "ch",
+   "q": "「お茶を にごす」の 意味は?",
+   "a": "その場しのぎで ごまかす",
+   "bad": [
+    "お茶に 砂糖《さとう》を 入れる",
+    "お茶を こぼす",
+    "お茶を おいしく いれる"
+   ],
+   "why": "はっきり 言わずに、その場だけ うまく ごまかす ことだよ。",
+   "lv": 3,
+   "tp": 3,
+   "w": "お茶を にごす",
+   "m": "その場しのぎで ごまかす",
+   "e": "🍵",
+   "ex": "聞かれて こまった 兄は、わらって お茶を にごした。"
+  },
+  {
+   "k": "ch",
+   "q": "「しのぎを けずる」の 意味は?",
+   "a": "はげしく あらそう",
+   "bad": [
+    "刀を みがく",
+    "けずりくずを 集める",
+    "ざっそうを かる"
+   ],
+   "why": "刀の 「しのぎ」が けずれる ほど はげしく 戦《たたか》う、という ところから 来たよ。",
+   "lv": 3,
+   "tp": 3,
+   "w": "しのぎを けずる",
+   "m": "はげしく あらそう",
+   "e": "⚔️",
+   "ex": "二つの チームが、ゆうしょうを めざして しのぎを けずる。"
+  },
+  {
+   "k": "ch",
+   "q": "「図に のる」の 意味は?",
+   "a": "調子に のって つけ上がる",
+   "bad": [
+    "絵に のる",
+    "図かんを 読む",
+    "地図を 見て 行く"
+   ],
+   "why": "うまく いった ことで、いい 気になって いばる ことだよ。",
+   "lv": 3,
+   "tp": 3,
+   "w": "図に のる",
+   "m": "調子に のって つけ上がる",
+   "e": "😎",
+   "ex": "ほめられて 図に のって いたら、しっぱいした。"
+  },
+  {
+   "k": "ch",
+   "q": "「根も 葉も ない」の 意味は?",
+   "a": "本当だと いえる わけが 少しも ない",
+   "bad": [
+    "草花の 世話を しない",
+    "木が かれて いる",
+    "植物が そだたない"
+   ],
+   "why": "まったくの うそや でたらめな うわさを「根も 葉も ない うわさ」と 言うよ。",
+   "lv": 3,
+   "tp": 3,
+   "w": "根も 葉も ない",
+   "m": "本当だと いえる わけが 少しも ない",
+   "e": "🌿",
+   "ex": "根も 葉も ない うわさを 信《しん》じては いけない。"
+  },
+  {
+   "k": "ch",
+   "q": "「とても はずかしい」ことを「顔から (　　)が 出る」と 言うよ。\n(　　)に 入る ものは どれ?",
+   "a": "火",
+   "bad": [
+    "水",
+    "風",
+    "雲"
+   ],
+   "why": "はずかしくて 顔が まっ赤に なり、火が 出そうな ことから「顔から 火が 出る」と 言うよ。",
+   "lv": 2,
+   "tp": 0,
+   "w": "顔から 火が 出る",
+   "m": "とても はずかしい",
+   "e": "😳",
+   "ex": "みんなの 前で ころんで、顔から 火が 出た。"
+  },
+  {
+   "k": "ch",
+   "q": "「ひどく かんしんする」ことを「(　　)を 巻《ま》く」と 言うよ。\n(　　)に 入る 体の ぶぶんは どれ?",
+   "a": "舌《した》",
+   "bad": [
+    "手",
+    "足",
+    "目"
+   ],
+   "why": "あまりに すごくて ことばも 出ないほど おどろき、かんしんする ことから「舌《した》を 巻《ま》く」と 言うよ。",
+   "lv": 3,
+   "tp": 0,
+   "w": "舌《した》を 巻《ま》く",
+   "m": "ひどく かんしんする",
+   "e": "😯",
+   "ex": "名人の わざに、みんな 舌《した》を 巻《ま》いた。"
+  },
+  {
+   "k": "ch",
+   "q": "「思いがけない 知らせ」を「寝《ね》(　　)に 水」と 言うよ。\n(　　)に 入る 体の ぶぶんは どれ?",
+   "a": "耳",
+   "bad": [
+    "目",
+    "鼻",
+    "口"
+   ],
+   "why": "ねて いる とき、きゅうに 耳に 水が 入る ような おどろきから「寝《ね》耳に 水」と 言うよ。",
+   "lv": 3,
+   "tp": 0,
+   "w": "寝《ね》耳に 水",
+   "m": "思いがけない 知らせに おどろく",
+   "e": "💧",
+   "ex": "急《きゅう》に 引っこすと 聞いて、寝《ね》耳に 水の 話だった。"
+  }
+ ]
+};
+    TITLES.w = 'ことば'; ROUNDS.w = 8; NAMES.w = '国語・ことば'; KLV.w = WORD.topics;
+    var WORDQ = WORD.items.map(function(e, i){
+      return { id:'w'+i, map:'w', tag:'ことば', lv:e.lv || 1, tp:e.tp || 0, a:e.a, bad:e.bad,
+        html:'<div class="gk-text kk-sent">'+KRB(kesc(e.q)).replace(/\n/g, '<br>')+'</div>', say:'答えは「'+KPL(e.a)+'」。'+KPL(e.why),
+        w:e.w, m:e.m, em:e.e, ex:e.ex, why:e.why };
+    });
+    /* 1回 = まだ 見て いない カード 4まい(やさしい 順)を 読む → その 4つの 問題 + 見た ことの ある 慣用句の ふくしゅう(にがて順)。見て いない 慣用句は 問題に 出さない。記録 keisan_gaku.wc{id:1} */
+    function kwPick(s, tp){
+      var seen = s.wc || {}, m = s.w || {}, list = WORDQ.filter(function(e){ return e.tp === tp; });
+      var fresh = shuffle(list.filter(function(e){ return !seen[e.id]; })).sort(function(a, b){ return a.lv - b.lv; }).slice(0, 4);
+      var sc = function(e){ var r = m[e.id]; return r ? r.ok - r.ng : -0.5; };
+      var old = shuffle(list.filter(function(e){ return seen[e.id]; })).sort(function(a, b){ return sc(a) - sc(b); });
+      return { cards:fresh, qs:fresh.concat(old.slice(0, fresh.length ? 4 : 8)) };
+    }
+    function kwCard(){
+      var c = S.cards[S.ci], n = S.cards.length;
+      $('gkProg').innerHTML = S.cards.map(function(_, i){ return '<i class="'+(i < S.ci ? 'ok' : '')+'"></i>'; }).join('');
+      $('gkQ').innerHTML = '<div class="kw-card"><div class="kw-top">ことばカード '+(S.ci+1)+' / '+n+(S.ci === 0 ? '<small>まず 読んで おぼえよう。そのあと 問題が 出るよ</small>' : '')+'</div>' +
+        '<div class="kw-e" aria-hidden="true">'+c.em+'</div><div class="kw-w">'+KRB(c.w)+'</div>' +
+        '<div class="kw-row"><b>いみ</b><span>'+KRB(c.m)+'</span></div><div class="kw-row"><b>れい</b><span>'+KRB(c.ex)+'</span></div><div class="kw-tip">💡 '+KRB(c.why)+'</div></div>';
+      $('gkCh').innerHTML = ''; $('gkFb').textContent = ''; $('gkFb').className = 'gk-fb';
+      $('gkNextBox').innerHTML = '<button class="btn btn-primary" id="kwNext">'+(S.ci+1 < n ? 'つぎの カード' : 'もんだいに ちょうせん!')+'</button>';
+    }
+    /* 結果の ボタン: ことばは「もう1回」だと 同じ 問題に 見えるので、つぎに 何が 出るかを 書く */
+    function kAgainLabel(s){
+      if(S.sub !== 'w') return 'もう1回';
+      var seen = s.wc || {}, n = WORDQ.filter(function(e){ return e.tp === S.lv - 1 && !seen[e.id]; }).length;
+      return n ? 'つぎの ことばカード('+Math.min(4, n)+'まい)' : 'ふくしゅうの もんだい';
+    }
+    document.addEventListener('click', function(e){
+      if(!e.target.closest('#kwNext') || !S || !S.cards) return;
+      S.ci++;
+      if(S.ci < S.cards.length){ kwCard(); return; }
+      var s = get(); s.wc = s.wc || {}; S.cards.forEach(function(c){ s.wc[c.id] = 1; }); put(s);
+      S.cards = null; ask();
+    });
     /* tap・ord・type の 問題を gkQ の 下に 出す。答えが きまったら done(えらんだ 文字列)。q.a と 同じなら せいかい */
     function kxRender(q, done){
       var ch = $('gkCh'); ch.innerHTML = '';
@@ -14346,7 +16051,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }
     }
     document.addEventListener('click', function(e){ if(e.target.closest('#gakuCards [data-kmenu]')) menu(); });
-    function get(){ var s = safeGet(KEY) || {}; s.s = s.s || {}; s.j = s.j || {}; s.b = s.b || {}; s.r = s.r || {}; s.o = s.o || {}; s.rounds = s.rounds || 0; if(!s.day || s.day.d !== todayKey()) s.day = { d:todayKey(), n:0 }; return s; }
+    function get(){ var s = safeGet(KEY) || {}; s.s = s.s || {}; s.j = s.j || {}; s.b = s.b || {}; s.r = s.r || {}; s.w = s.w || {}; s.o = s.o || {}; s.rounds = s.rounds || 0; if(!s.day || s.day.d !== todayKey()) s.day = { d:todayKey(), n:0 }; return s; }
     function put(s){ safeSet(KEY, s); }
     function rnd(n){ return Math.floor(Math.random()*n); }
     function shuffle(a){ for(var i = a.length-1; i > 0; i--){ var j = rnd(i+1), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
@@ -14694,7 +16399,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var jn = Object.keys(s.j).filter(function(x){ return s.j[x].ok > 0; }).length;
       c.innerHTML = '<section class="gk-card"><span class="gk-ico k">漢</span><span class="fc-text"><b>漢字ドリル</b>書き順と 宝探し・お散歩の 宝物が コインに</span><a class="fc-go" href="'+KANJI_URL+'" target="_blank" rel="noopener" style="text-decoration:none">ひらく</a></section>' +
         '<section class="gk-card" data-sub="s"><span class="gk-ico s">理</span><span class="fc-text"><b>理科（すきな ぶんやで）</b>もんだい '+sn+'/'+SCI.length+' こ せいかい</span><button class="fc-go" data-sub="s" style="background:var(--op-sub)">れんしゅう</button></section>' +
-        '<section class="gk-card" data-kmenu="1"><span class="gk-ico" style="background:var(--op-div)">国</span><span class="fc-text"><b>国語</b>読解 '+kSum(s,'j')+'・文の組み立て '+kSum(s,'b')+'・ローマ字 '+kSum(s,'r')+'(すきな 分野を えらんで ふかく)</span><button class="fc-go" data-kmenu="1" style="background:var(--op-div)">えらぶ</button></section>' +
+        '<section class="gk-card" data-kmenu="1"><span class="gk-ico" style="background:var(--op-div)">国</span><span class="fc-text"><b>国語</b>読解 '+kSum(s,'j')+'・文の組み立て '+kSum(s,'b')+'・ローマ字 '+kSum(s,'r')+'・ことば '+kSum(s,'w')+'(すきな 分野を えらんで ふかく)</span><button class="fc-go" data-kmenu="1" style="background:var(--op-div)">えらぶ</button></section>' +
         '<section class="gk-card"><span class="gk-ico" style="background:var(--op-add)">社</span><span class="fc-text"><b>社会</b>すきな 分野を えらんで 深めよう・せいかい '+SOC.filter(function(e){ return okd(s.o, e); }).length+'/'+SOC.length+'</span><button class="fc-go" id="gkSocOpen" style="background:var(--op-add)">えらぶ</button></section>';
     }
     function menu(){
@@ -14709,6 +16414,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<div class="gk-sub" data-sub="j" role="button"><span class="gk-ico" style="font-size:30px">国</span><span><b>国語・読解</b><small>短い 文を 読んで、聞かれている ことを つかまえよう(物語・せつめい文・日記・手紙・お知らせ・<ruby>俳句<rt>はいく</rt></ruby>)</small>'+kChips('j')+'</span></div>' +
         '<div class="gk-sub" data-sub="b" role="button"><span class="gk-ico" style="font-size:30px">文</span><span><b>国語・文の組み立て</b><small><ruby>主語<rt>しゅご</rt></ruby>と <ruby>述語<rt>じゅつご</rt></ruby>・くわしく する ことば・つなぎ言葉・<ruby>敬語<rt>けいご</rt></ruby>・ならべかえ</small>'+kChips('b')+'</span></div>' +
         '<div class="gk-sub" data-sub="r" role="button"><span class="gk-ico" style="font-size:24px">Aa</span><span><b>ローマ字</b><small>ローマ字を 読む・書く・パソコンで 打って みる</small>'+kChips('r')+'</span></div>' +
+        '<div class="gk-sub" data-sub="w" role="button"><span class="gk-ico" style="font-size:30px">句</span><span><b>国語・ことば</b><small><ruby>慣用句<rt>かんようく</rt></ruby>(「手を かす」「馬が 合う」など)の 意味と 使い方</small>'+kChips('w')+'</span></div>' +
         '<div class="gk-note" style="margin:6px 0 0"><b>社会</b> すきな 分野を えらんで 深めよう。★を 8わり せいかいすると、もっと 深い 問題が まざるよ</div>' + SOC_TOPICS.map(function(t){
           var k = 'o:'+t.k, L = SOCL[k], done = L.filter(function(e){ return okd(s.o, e); }).length;
           return '<button class="gk-sub" data-sub="'+k+'"><span style="font-size:30px">'+t.i+'</span><span><b>'+t.n+' <small style="display:inline;color:#e0a400;letter-spacing:1px">'+stars(s.o, k)+'</small></b><small>'+t.d+'・せいかい '+done+'/'+L.length+'</small></span></button>';
@@ -14720,19 +16426,21 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       lv = lv || '*';
       var SCI = sub === 's' ? topicPool(lv) : SCI_ALL; /* この中だけ えらんだ ぶんやの もんだい */
       var s = get(), qs;
-      if(sub === 'b' || sub === 'r') qs = kPick((sub === 'b' ? BUNQ : ROMAQ).filter(function(e){ return e.tp === lv - 1; }), s[sub], ROUNDS[sub]);
+      var kw = sub === 'w' ? kwPick(s, lv - 1) : null;
+      if(kw) qs = kw.qs;
+      else if(sub === 'b' || sub === 'r') qs = kPick((sub === 'b' ? BUNQ : ROMAQ).filter(function(e){ return e.tp === lv - 1; }), s[sub], ROUNDS[sub]);
       else if(sub === 'j'){
         var all = KOKU.qs.map(function(e, i){ return kokuQ(e, i); });
         qs = kPick(all.filter(function(e){ return e.tp === lv - 1; }), s.j, ROUNDS.j);
       }else if(SOCL[sub]) qs = topicPick(s.o, sub).map(socQ);
       else qs = pickSet(SCI, s.s, function(e){ return e.id; }, ROUNDS.s).map(sciQ);
-      S = { lv:lv, d0:sub === 's' ? depthOf(lv) : 0, sub:sub, qs:shuffle(qs), i:0, ok:0, res:[], step:0 };
+      S = { lv:lv, d0:sub === 's' ? depthOf(lv) : 0, sub:sub, qs:shuffle(qs), i:0, ok:0, res:[], step:0, cards:kw && kw.cards.length ? kw.cards : null, ci:0 };
       $('gkTitle').textContent = sub === 'j' ? '国語・読解（小3）' : SOCL[sub] ? NAMES[sub] : '理科（小3）';
       if(sub === 's') $('gkTitle').textContent = '理科 ' + (lv === '*' ? 'ぜんぶ' : lv);
       if(KLV[sub]) $('gkTitle').textContent = TITLES[sub] + '・' + KPL(KLV[sub][S.lv-1]);
       var oc = $('gkCapP'); if(oc) oc.remove();
       if(s.day.n >= DAY_CAP) $('gkProg').insertAdjacentHTML('beforebegin', '<div class="gk-cap" id="gkCapP">今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ! もんだいは とけるけど、コインは あした また もらえるよ</div>');
-      show('play'); ask();
+      show('play'); if(S.cards) kwCard(); else ask();
     }
     function ask(){
       var q = S.qs[S.i], ch = shuffle([q.a].concat(q.bad)), typeStep = !!q.ty && S.step === 0;
@@ -14787,7 +16495,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン' + (S.ok >= Math.ceil(S.qs.length*0.8) && got >= want ? '（8割 せいかい +3）' : '') + '</div>' +
         (got < want ? '<div class="gk-cap">'+(got ? 'これで 今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ!' : '今日の まなぶコインは もう '+DAY_CAP+'こ ぜんぶ もらって いるので、今回は 0コインだよ。')+' コインは あした また もらえるよ</div>' : '') +
         '<div class="gk-fb">1問 せいかいで 1コイン(読解は ②の 答えだけ)・今日 '+s.day.n+'/'+DAY_CAP+'</div>' +
-        ''+(S.sub === 's' && depthOf(S.lv) > S.d0 ? '<p class="gk-note">すごい! もっと ふかい もんだいが ひらいたよ</p>' : '')+'<button class="btn btn-primary" id="gkAgain">もう1回</button> '+(S.sub === 's' ? '<button class="btn btn-ghost" id="gkLvBtn">ぶんやを えらぶ</button> ' : '')+' <button class="btn btn-ghost" id="gkMenuBtn">まなぶ メニュー</button></div>';
+        ''+(S.sub === 's' && depthOf(S.lv) > S.d0 ? '<p class="gk-note">すごい! もっと ふかい もんだいが ひらいたよ</p>' : '')+'<button class="btn btn-primary" id="gkAgain">'+kAgainLabel(s)+'</button> '+(S.sub === 's' ? '<button class="btn btn-ghost" id="gkLvBtn">ぶんやを えらぶ</button> ' : '')+' <button class="btn btn-ghost" id="gkMenuBtn">まなぶ メニュー</button></div>';
       show('result');
     }
     $('gkBack').addEventListener('click', function(){ if($('gkMenu').hidden || LVOPEN){ menu(); } else goHome(); });
@@ -14936,7 +16644,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var subs = $('gkSubs'); if(!subs) return { render:function(){} };
     var W = 3.6, H = 4.7; /* % → viewBox(360x470) */
     function waves(l){ return '<g class="waves" fill="none" stroke="#ffffff" stroke-opacity=".55" stroke-width="2.5" stroke-linecap="round">' + l.map(function(w){ return '<path d="M'+w[0]+' '+w[1]+' q8 -6 16 0 t16 0"/>'; }).join('') + '</g>'; }
-    function road(T){ return '<path d="'+T.roads.map(function(r){ var a = T.at(r[0]), b = T.at(r[1]); return a && b ? 'M'+(a[0]*W)+' '+(a[1]*H)+' L'+(b[0]*W)+' '+(b[1]*H) : ''; }).join(' ')+'" fill="none" stroke="'+(T.roadColor || '#fff6d8')+'" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"/>'; }
+    function road(T){ return '<path d="'+T.roads.map(function(r){ var a = T.at(r[0]), b = T.at(r[1]); var HH = T.vh ? T.vh/100 : H; return a && b ? 'M'+(a[0]*W)+' '+(a[1]*HH)+' L'+(b[0]*W)+' '+(b[1]*HH) : ''; }).join(' ')+'" fill="none" stroke="'+(T.roadColor || '#fff6d8')+'" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"/>'; }
     function svgOpen(){ return '<svg class="isle-bg" viewBox="0 0 360 470" preserveAspectRatio="none" aria-hidden="true">'; }
     function trees(l, c){ return '<g fill="'+c+'">' + l.map(function(t){ return '<circle cx="'+t[0]+'" cy="'+t[1]+'" r="'+(t[2] || 14)+'"/>'; }).join('') + '</g>'; }
 
@@ -14988,7 +16696,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           road(T) + '</svg>'; } },
 
       j: { title:'📖 ことばの 島', hideParents:true,
-        pick:function(){ return list(':scope > .gk-sub[data-sub="j"] .kk-chip, :scope > .gk-sub[data-sub="b"] .kk-chip, :scope > .gk-sub[data-sub="r"] .kk-chip, :scope > a.gk-sub[href*="Kanji"]'); },
+        pick:function(){ return list(':scope > .gk-sub[data-sub="j"] .kk-chip, :scope > .gk-sub[data-sub="b"] .kk-chip, :scope > .gk-sub[data-sub="r"] .kk-chip, :scope > .gk-sub[data-sub="w"] .kk-chip, :scope > a.gk-sub[href*="Kanji"]'); },
         places:[['お話', 17, 31, '#D9446A', '📖'], ['せつめい', 35, 41, '#7A5BD0', '🔎', 'せつめい文'], ['くらし', 16, 51, '#E07A12', '✉️', 'くらしの 文'], ['考え', 35, 61, '#D96AA0', '🌸', '考え・俳句'],
           ['主語', 65, 31, '#3D7BE0', '🧩', '主語・述語'], ['くわしく', 84, 40, '#2E9BB5', '🎨', 'くわしく'], ['つなぐ', 65, 50, '#3F9B5A', '🔗', 'つなぐ・こそあど'], ['文の', 84, 59, '#8A5A3C', '🙇', '敬語など'], ['ならべ', 65, 67, '#C9A10C', '🔀', 'ならべかえ'],
           ['読む', 14, 83, '#5B6CE0', '🔤', '読む・書く', 'small'], ['文字で', 37, 92, '#5B6CE0', '⌨️', '文字で 打つ', 'small'], ['書き方', 63, 92, '#5B6CE0', '📏', '書き方', 'small'], ['パソコン', 86, 83, '#5B6CE0', '💻', 'パソコン', 'small'],
@@ -15031,6 +16739,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       b._orig = el; b._key = pl[0]; return b;
     }
     function placeFor(T, nm){ for(var i = 0; i < T.places.length; i++) if(nm.indexOf(clean(T.places[i][0])) === 0) return T.places[i]; return null; }
+    /* 国語の 島: 下に「ことばの はらっぱ」(慣用句の 4分野)を 足す。もとの 場所の y は 縮めて、見た目の 位置は 変えない */
+    (function(){
+      var T = THEMES.j, K = 470/580, bg0 = T.bg;
+      T.vh = 580;
+      T.places.forEach(function(p){ p[2] = Math.round(p[2]*K*10)/10; });
+      T.places.push(['体', 14, 92.5, '#D9446A', '🖐️', '体の ことば'], ['動物', 38, 92.5, '#E07A12', '🐱', '動物・しぜん'], ['気持ち', 62, 92.5, '#7A5BD0', '💭', '気持ち・ようす'], ['しごと', 86, 92.5, '#2E9B6B', '🛠️', 'しごと・くらし']);
+      T.bg = function(T){
+        var f = function(n){ var a = T.at(n); return a[0]*W + ' ' + a[1]*(T.vh/100); };
+        return bg0(T).replace('viewBox="0 0 360 470"', 'viewBox="0 0 360 580"').replace(/<\/svg>$/,
+          '<rect y="468" width="360" height="112" fill="#8d7fd6"/>' + waves([[16,482],[300,474],[24,572],[290,572]]) +
+          '<path d="M171 412 L189 412 L189 480 L171 480Z" fill="#a0723f"/><path d="M171 424 H189 M171 440 H189 M171 456 H189 M171 470 H189" stroke="#7a5230" stroke-width="2"/>' +
+          '<path d="M22 484 Q180 466 338 484 L346 566 Q180 580 14 566Z" fill="#f6e6c8"/><path d="M32 490 Q180 474 328 490 L336 560 Q180 572 24 560Z" fill="#b9e3a0"/>' +
+          '<text x="180" y="499" text-anchor="middle" font-size="12" font-weight="900" fill="#3d7a3a">ことばの はらっぱ</text>' +
+          '<path d="M'+f('体')+' L'+f('動物')+' L'+f('気持ち')+' L'+f('しごと')+'" fill="none" stroke="#d8b48c" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"/></svg>');
+      };
+    })();
     Object.keys(THEMES).forEach(function(k){ var T = THEMES[k]; T.at = function(key){ for(var i = 0; i < T.places.length; i++) if(T.places[i][0] === key) return [T.places[i][1], T.places[i][2]]; return null; }; });
 
     var want = null; /* ホームで えらんだ 教科 */
@@ -15070,7 +16794,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       /* まなぶ メニューの ほかの 教科の ボタンは かくす(場所の ない 同じ 教科の ものは 島の 下に のこす) */
       if(t !== 's') list(':scope > .gk-sub, :scope > .gk-note').forEach(function(el){ if(rest.indexOf(el) < 0 && !rest.some(function(r){ return el.contains(r); })) el.classList.add('isle-hide'); });
       var pet = document.createElement('div'); pet.className = 'isle-pet'; pet.innerHTML = petHTML();
-      var lk = T.at(getLast(t)) || (t === 'j' ? [50, 80] : t === 'o' ? [31, 95] : [24, 92]);
+      var lk = T.at(getLast(t)) || (t === 'j' ? [50, 65] : t === 'o' ? [31, 95] : [24, 92]);
       pet.style.left = lk[0] + '%'; pet.style.top = (lk[1] - 4) + '%';
       map.appendChild(pet);
       var note = document.createElement('p'); note.className = 'gk-note';
@@ -15142,7 +16866,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           map.appendChild(b);
         });
         var pet = document.createElement('div'); pet.className = 'isle-pet'; pet.innerHTML = petHTML();
-        var lk = T.at(getLast(t)) || (t === 'j' ? [50, 80] : t === 'o' ? [31, 95] : [24, 92]);
+        var lk = T.at(getLast(t)) || (t === 'j' ? [50, 65] : t === 'o' ? [31, 95] : [24, 92]);
         pet.style.left = lk[0] + '%'; pet.style.top = (lk[1] - 4) + '%';
         map.appendChild(pet);
         anchor.parentNode.insertBefore(map, anchor);
@@ -17390,6 +19114,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     });
   });
 })();
+</script>
+<script>
+/* 漢字ドリルへの リンクに この 合言葉を つける。ホーム画面の アプリと Safari では 保存場所が 別なので、
+   合言葉を わたさないと 漢字の 記録が 2つに 分かれてしまう(漢字ドリルは 合言葉が ちがえば 記録を 合わせて こちらに そろえる) */
+document.addEventListener('click', function(e){
+  var a = e.target.closest && e.target.closest('a[href^="https://hamm524.github.io/Kanji/"]');
+  if(!a || /[#&]t=/.test(location.hash || '')) return;
+  var c = null; try{ c = localStorage.getItem('kapp_code'); }catch(err){}
+  if(!c || !/^[a-z2-9]{10}$/.test(c)) return;
+  a.href = 'https://hamm524.github.io/Kanji/?k=' + c;
+}, true);
 </script>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});</script>
 
