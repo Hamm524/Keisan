@@ -2324,6 +2324,14 @@
   .st.is-cur > .weekend.rec{ border:3px solid var(--gold-deep); background:linear-gradient(170deg, color-mix(in srgb, var(--gold) 16%, var(--surface)), var(--surface) 60%); box-shadow:0 14px 30px -18px var(--gold-deep); }
   .rec-h{ font-size:21px; font-weight:900; margin:0; line-height:1.3; }
   .rec-sub{ font-size:12px; color:var(--ink-soft); font-weight:700; margin:2px 0 10px; line-height:1.55; }
+  .md-shelf-c.lock{ opacity:.55; cursor:default; }
+  .mix-path{ font-size:12px; color:var(--ink-soft); font-weight:700; line-height:1.55; background:var(--surface); border:1.5px solid var(--line); border-radius:14px; padding:8px 10px; margin:4px 0 8px; }
+  .mix-path b{ display:block; font-size:13px; color:var(--ink); font-weight:900; }
+  .mix-path .mp-done{ color:var(--good); font-weight:900; }
+  .mp-row{ display:flex; gap:8px; margin-top:4px; }
+  .mp-i{ flex:1; display:flex; align-items:center; gap:6px; font-size:12px; }
+  .mp-i i{ font-style:normal; width:24px; height:24px; border-radius:50%; background:var(--line); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-weight:900; }
+  .mp-i.ok i{ background:var(--good); color:#fff; }
   .rec-go{ margin:2px 0 6px; }
   .rec-meta{ font-size:12px; color:var(--ink-soft); font-weight:700; text-align:center; margin:0 0 8px; }
   .rec-meta b{ color:var(--gold-deep); font-weight:900; }
@@ -5591,9 +5599,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   /* きょうの おすすめ: 100問を いちばん ながく やっていない 計算(同じなら ÷ － ＋ × の じゅん)。やって 正解80%で コイン ＋REC100_BONUS(1日1回) */
   var REC100_BONUS = 10;
+  /* ミックスの 解放: ×と÷の 100問を それぞれ 正解 MIX100_ACC% 以上・MIX100_MS 以内で 1回 クリア(前に ミックスを やっていた 人は そのまま ひらく) */
+  var MIX100_ACC = 95, MIX100_MS = 300000;
+  function clear100(op){ return log100(op).some(function(e){ return e.ok/e.n*100 >= MIX100_ACC && e.ms <= MIX100_MS; }); }
+  function mixOpen(){ return (clear100('mul') && clear100('div')) || log100('mix').length > 0; }
+  function opName100(o){ return o === 'mix' ? 'ミックス' : OP_META[o].label; }
   function rec100Op(){
     var best = null, bd = null;
-    ['div','sub','add','mul'].forEach(function(o){
+    (mixOpen() ? ['mix','div','sub','add','mul'] : ['div','sub','add','mul']).forEach(function(o){
       var l = log100(o), d = l.length ? l[l.length-1].d : '';
       if(bd === null || d < bd){ bd = d; best = o; }
     });
@@ -5609,7 +5622,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   function coinPlan100(op){
     var R = Medal.RANKS, tp = Medal.topOf(op), rows = [], again = weekendDone();
-    if(rec100Open() && op === rec100Op()) rows.push({ l:'きょうの おすすめ('+OP_META[op].label+')', s:'正解 '+WEEKEND_ACC+'% 以上で 1日1回', n:REC100_BONUS, v:REC100_BONUS });
+    if(rec100Open() && op === rec100Op()) rows.push({ l:'きょうの おすすめ('+opName100(op)+')', s:'正解 '+WEEKEND_ACC+'% 以上で 1日1回', n:REC100_BONUS, v:REC100_BONUS });
     rows.push({ l:'100問 解けたら', s: again ? '今日 2回目からは 10分の1' : '今日 1回目', n:base100(op), v:base100(op) });
     if(!again) rows.push({ l:'正解 '+WEEKEND_ACC+'% 以上', s:'1日1回', n:WEEKEND_BONUS, v:WEEKEND_BONUS });
     rows.push({ l:'一発正解 90%で ＋'+BONUS_GREAT+'・全部で ＋'+(BONUS_PERFECT+2), s:'めあて '+fmtSec(printTarget(op, WEEKEND_N))+' 以内で さらに ＋'+BONUS_FAST, n:BONUS_PERFECT+2+BONUS_FAST, v:'＋'+(BONUS_PERFECT+2+BONUS_FAST)+'まで' });
@@ -5631,27 +5644,35 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     h += '</ul><div class="cp100-note">'+(P.again ? '今日の 1回目の コインは もう もらったよ。2回目からは メダルや 自己ベストで コインを 増やそう!' : '2回目からは「100問 解けたら」が 10分の1に なるよ。メダルの コインは 1日'+Medal.RUN_MAX+'回まで 毎回 もらえるよ。')+'</div></div>';
     return h;
   }
-  function op100(){ return state.w100Op || (rec100Open() ? rec100Op() : (state.homeOp || 'add')); }
+  function op100(){ return state.w100Op || rec100Op(); }   /* さいしょは いつも おすすめ(コインを もらった あとも、つぎに ひさしぶりの 計算) */
+  /* 「ミックスへの道」: × ÷ それぞれの 目標(正解 MIX100_ACC% 以上・MIX100_MS 以内) */
+  function mixPathHTML(){
+    var row = function(o){
+      var ok = clear100(o), b = best100(o);
+      return '<span class="mp-i'+(ok ? ' ok' : '')+'"><i>'+(ok ? '✓' : OP_META[o].symbol)+'</i>'+OP_META[o].symbol+(b ? ' ベスト '+fmtClock(b.ms) : '')+'</span>';
+    };
+    return '<div class="mix-path"><b>ミックスへの道</b>' + (mixOpen() ? '<span class="mp-done">ひらいたよ! 「ミックス」を えらべるよ</span>' : '<span>× と ÷ の 100問を 正解 '+MIX100_ACC+'% 以上・'+fmtClock(MIX100_MS)+' 以内で クリア</span><div class="mp-row">'+row('mul')+row('div')+'</div>') + '</div>';
+  }
   function renderWeekend(op){
     var c = $('weekendCard');
     c.hidden = false;
     /* 最初に えらばれて いるのは「きょうの おすすめ」(まだ ボーナスを もらっていない 日)。自分で えらんだら それを つづける */
     op = op100();
-    var name = op==='mix' ? '混ぜて' : OP_META[op].label;
+    var name = opName100(op);
     var best = best100(op), hist = log100(op).slice(-7), h = '';
     var ro = rec100Op(), shelf = '<div class="md-shelf" role="radiogroup" aria-label="100問の しゅるい">';
     SINGLE_OPS.concat(['mix']).forEach(function(o){
-      var tp = Medal.topOf(o);
-      shelf += '<button class="md-shelf-c'+(o===op ? ' on' : '')+(tp ? ' has' : '')+'" data-op100="'+o+'" role="radio" aria-checked="'+(o===op)+'">' + (rec100Open() && o===ro ? '<em>おすすめ</em>' : '') +
-        Medal.svg(tp) + '<b>'+Medal.sym(o)+'</b></button>';
+      var tp = Medal.topOf(o), lock = o === 'mix' && !mixOpen();
+      shelf += '<button class="md-shelf-c'+(o===op ? ' on' : '')+(tp ? ' has' : '')+(lock ? ' lock' : '')+'" data-op100="'+o+'" role="radio" aria-checked="'+(o===op)+'"'+(lock ? ' aria-disabled="true"' : '')+'>' + (o===ro ? '<em>おすすめ</em>' : '') +
+        Medal.svg(lock ? 0 : tp) + '<b>'+(lock ? '🔒' : Medal.sym(o))+'</b></button>';
     });
     shelf += '</div>';
     var P = coinPlan100(op), recNow = rec100Open() && op === ro;
     /* 上から: タイトル → しゅるい → 始めるボタン(いつも 画面の 上の ほう) → くわしく(たたんでおく) */
     h += '<span class="cur-tag">ここから やろう!</span><h3 class="rec-h">100問 <ruby>記録<rt>きろく</rt></ruby></h3>' + shelf +
       '<button class="rec-go" id="weekendBtn">'+name+'の 100問に 挑戦!</button>' +
-      '<p class="rec-meta">'+(recNow ? '⭐ きょうの おすすめ(＋'+REC100_BONUS+'コイン)<br>' : (rec100Open() ? '⭐ おすすめは '+OP_META[ro].label+'(＋'+REC100_BONUS+'コイン)<br>' : ''))+(best ? '自己ベスト <b class="num">'+fmtClock(best.ms)+'</b>・' : '')+'コイン 最大 <b class="num">'+P.max+'</b></p>' +
-      '<details class="rec-more" id="recMore"'+(state.w100Det ? ' open' : '')+'><summary>メダル・コイン・きろくを みる</summary>' +
+      '<p class="rec-meta">'+(recNow ? '⭐ きょうの おすすめ(＋'+REC100_BONUS+'コイン)<br>' : (op === ro ? '⭐ おすすめ(コインは 今日 もう もらったよ)<br>' : (rec100Open() ? '⭐ おすすめは '+opName100(ro)+'(＋'+REC100_BONUS+'コイン)<br>' : '')))+(best ? '自己ベスト <b class="num">'+fmtClock(best.ms)+'</b>・' : '')+'コイン 最大 <b class="num">'+P.max+'</b>'+(mixOpen() ? '' : '<br>🔒 ミックスは ×と÷の 目標クリアで ひらくよ')+'</p>' +
+      '<details class="rec-more" id="recMore"'+(state.w100Det ? ' open' : '')+'><summary>メダル・コイン・きろくを みる</summary>' + mixPathHTML() +
       '<p class="rec-sub">'+name+'を 100問('+(op==='mix' ? '九九と 2桁 ± 1桁まで' : EASY100[op].desc)+')。何回でも 挑戦して メダルを あつめよう!</p>'+Medal.ladder(op)+
       '<div class="rec-graph"><div class="rg-head">'+name+'の 自己ベスト<span class="num">'+(best ? fmtClock(best.ms) : '－')+'</span></div>';
     if(hist.length){
@@ -5670,7 +5691,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('recMore').addEventListener('toggle', function(){ state.w100Det = this.open; });
   }
   $('weekendCard').addEventListener('click', function(e){
-    var b = e.target.closest('[data-op100]'); if(!b) return;
+    var b = e.target.closest('[data-op100]'); if(!b || b.classList.contains('lock')) return;
     state.w100Op = b.getAttribute('data-op100');   /* 100問の しゅるいだけ かえる(プリントの しゅるいは そのまま) */
     renderWeekend();
   });
@@ -8539,7 +8560,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(pr){
       var log = printLog();
       var prevBest100 = pr.kind === 'weekend' ? best100(state.op) : null;
-      var recBefore = pr.kind === 'weekend' ? rec100Op() : null, recOpen = rec100Open();
+      var recBefore = pr.kind === 'weekend' ? rec100Op() : null, recOpen = rec100Open(), mixWas = mixOpen();
       var entry = { d:todayKey(), op:state.op, n:N, ok:firstTry, ms:elapsed, pass:passed, k:pr.kind };
       if(isReview) entry.rv = pr.lv;
       var volBefore = todayVolume();
@@ -8589,9 +8610,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       safeSet('keisan_weekend', weekendKey());
       bonuses.push({ label:'毎日100問チャレンジ', n:WEEKEND_BONUS });
     }
+    if(pr && pr.kind==='weekend' && !mixWas && mixOpen()){
+      banners.push({ type:'level', title:'ミックス 100問が ひらいた!', text:'× と ÷ の 100問を クリア!＋－×÷が まざった 100問に 挑戦できるよ。' });
+    }
     if(pr && pr.kind==='weekend' && accuracy >= WEEKEND_ACC && recOpen && state.op === recBefore){
       safeSet('keisan_rec100', todayKey());
-      bonuses.push({ label:'きょうの おすすめ('+OP_META[state.op].label+')', n:REC100_BONUS });
+      bonuses.push({ label:'きょうの おすすめ('+opName100(state.op)+')', n:REC100_BONUS });
     }
     if(pr && pr.kind==='weekend' && accuracy >= WEEKEND_ACC && prevBest100 && elapsed < prevBest100.ms){
       bonuses.push({ label:'100問 自己ベスト 更新', n:BEST100_BONUS });
