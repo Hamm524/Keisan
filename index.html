@@ -3671,7 +3671,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       return oshPlace({ vb:(o - e[1])+' '+(o - e[2])+' '+w+' '+w, inner:'<g transform="rotate('+e[3]+' 32 44)">'+it.inner+'</g>' }, d.clipAt[0], d.clipAt[1], 44);
     }
     if(it.s === 'head' && it.pos === 'ear') return oshPlace(it, d.clipAt[0], d.clipAt[1], 44);
-    if(it.s === 'head') return '<g transform="'+(d.crownT||'')+'">'+oshPlace(it, 100, 22, 56)+'</g>';
+    /* 花かんむりは ななめに のせない 仲間だと 頭の 上で うくので、少し さげる */
+    if(it.s === 'head') return '<g transform="'+(d.crownT||'')+(/花かんむり|花冠/.test(it.n || '') && !/rotate/.test(d.crownT || '') ? ' translate(0 11)' : '')+'">'+oshPlace(it, 100, 22, 56)+'</g>';
     if(it.s === 'eyes'){ var k = (ex[1]-ex[0])/26; return oshPlace(it, 100, d.eyeY - 2*k, 64*k); }
     /* マフラーは 首に まいて、結び目から 2本 たらす(相棒の 形に 合わせて ここで かく) */
     var sc = oshScarf(it);
