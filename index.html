@@ -1577,9 +1577,6 @@
   .osh-pos small{ font-size:11px; color:var(--ink-soft); }
   .oshare-name{ font-size:10.5px; line-height:1.25; text-align:center; }
   .oshare-st{ font-size:10.5px; font-weight:700; color:#C2496F; }
-  .acc-title{ margin:14px 0 2px; font-size:13.5px; }
-  .oshare-item .acc-price{ display:inline-flex; align-items:center; gap:3px; font-size:11px; font-weight:700; color:var(--ink); }
-  .oshare-item .acc-price .coin{ width:12px; height:12px; }
   .oshare-del{ position:absolute; top:-6px; right:-6px; width:22px; height:22px; border-radius:50%; border:1px solid var(--line); background:var(--surface); color:var(--ink-soft); font-size:12px; line-height:1; padding:0; cursor:pointer; }
   .ta{ overflow:visible; }
   .ta [class^="ta-"]{ transform-box:fill-box; }
@@ -2851,9 +2848,6 @@
       <p class="oshare-note" id="oshareNote"></p>
       <button class="oshare-paste" id="osharePasteBtn">📋 おしゃれコードを はる</button>
       <div class="oshare-grid" id="oshareGrid"></div>
-      <h4 class="acc-title">🛍 アクセサリー やさん</h4>
-      <p class="oshare-note" id="accNote">コインで 買うと、仲間 みんなが つけられるよ。</p>
-      <div class="oshare-grid" id="accGrid"></div>
     </section>
     <h2 class="sec-title">仲間 <span class="num sec-count" id="friendCount"></span></h2>
     <p class="sec-sub" id="friendSub">仲間を むかえると、いっしょに 計算する子を 選べるよ。</p>
@@ -6280,7 +6274,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
      keisan_oshare = { items:{ id:{n,s,vb,inner} }, wear:{ sp:{ つける所:id } }, pos:{ sp:'ear'|'top' } }
      pos は 頭の おしゃれを どこに つけるか(耳の横=いつもの リボンと 交換 / てっぺん)。ないときは 王かん・ティアラは てっぺん、ほかは 耳の横 */
   var OSH_POS = { ear:'耳の横', top:'てっぺん' };
-  function oshCrown(it){ return !!it.top || /王かん|王冠|ティアラ|かんむり/.test(it.n); }
+  function oshCrown(it){ return /王かん|王冠|ティアラ|かんむり/.test(it.n); }
   function oshPosOf(o, sp, it){ var p = o.pos[sp]; return p === 'ear' || p === 'top' ? p : (oshCrown(it) ? 'top' : 'ear'); }
   var oshPreview = null;
   var OSH_SLOTS = { head:'頭', eyes:'目', neck:'首', back:'せなか', ears:'耳', side:'となり' };
@@ -6373,14 +6367,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return out;
   });
   function oshIconHtml(it){
-    /* ic: ボタンの 小さな 絵だけ 大きさを かえる(アクセサリー やさんの はね・ふうせん) */
-    return '<svg class="ta" viewBox="' + it.vb + '" overflow="visible">' + (it.ic ? '<g transform="' + it.ic + '">' + it.inner + '</g>' : it.inner) + '</svg>';
+    return '<svg class="ta" viewBox="' + it.vb + '" overflow="visible">' + it.inner + '</svg>';
   }
   function renderOshare(a){
     var o = getOshare(), ids = Object.keys(o.items), w = o.wear[a.sp] || {}, name = petName(a.sp);
     $('oshareNote').textContent = ids.length
       ? 'タップすると '+name+'が 身に つけるよ。もう1回 タップすると はずすよ。'
-      : 'アクセサリー やさんで 買うか、漢字アプリで「相棒に つける」を おして コピーした コードを ここに はると、'+name+'が 身に つけられるよ。';
+      : '漢字アプリで「相棒に つける」を おして コピーした コードを ここに はると、'+name+'が 身に つけられるよ。';
     var g = $('oshareGrid'); g.innerHTML = '';
     ids.forEach(function(id){
       var it = o.items[id], on = w[it.s] === id;
@@ -6388,51 +6381,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       b.className = 'oshare-item' + (on ? ' on' : '');
       b.innerHTML = oshIconHtml(it) + '<span class="oshare-name">' + it.n + '</span><span class="oshare-st">' + (on ? 'つけてる ✓' + (it.s === 'head' ? '(' + OSH_POS[oshPosOf(o, a.sp, it)] + ')' : '') : OSH_SLOTS[it.s] + 'に つける') + '</span>';
       b.addEventListener('click', function(){ toggleOshare(id); });
-      if(id.indexOf('acc_') === 0){ g.appendChild(b); return; }
       var del = document.createElement('span');
       del.className = 'oshare-del'; del.textContent = '×'; del.setAttribute('role', 'button'); del.setAttribute('aria-label', 'しまう');
       del.addEventListener('click', function(e){ e.stopPropagation(); removeOshare(id); });
       b.appendChild(del);
       g.appendChild(b);
     });
-    renderAcc(a, o);
-  }
-  /* アクセサリー やさん: コインで 買う おしゃれ(id は acc_〜。漢字アプリの おしゃれと 同じ しくみで つける) */
-  var ACC = [
-    { k:"megane", n:"まるめがね", s:"eyes", p:40, g:"<path d=\"M9 33L2 30M55 33L62 30\" stroke=\"#8B5A2B\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><circle cx=\"19\" cy=\"34\" r=\"10\" fill=\"#fff\" fill-opacity=\".22\" stroke=\"#8B5A2B\" stroke-width=\"3\"/><circle cx=\"45\" cy=\"34\" r=\"10\" fill=\"#fff\" fill-opacity=\".22\" stroke=\"#8B5A2B\" stroke-width=\"3\"/><path d=\"M29 32Q32 29 35 32\" stroke=\"#8B5A2B\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M13 30Q15 27 18 27M39 30Q41 27 44 27\" stroke=\"#fff\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" opacity=\".85\"/>" },
-    { k:"heartgl", n:"ハートの めがね", s:"eyes", p:50, g:"<path d=\"M8 32L2 29M56 32L62 29\" stroke=\"#E0457B\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M19 44C7 36 7 26 13 25C16 24.5 18.5 27 19 29C19.5 27 22 24.5 25 25C31 26 31 36 19 44Z\" fill=\"#FF8FB1\" fill-opacity=\".6\" stroke=\"#E0457B\" stroke-width=\"2.6\" stroke-linejoin=\"round\"/><g transform=\"translate(26 0)\"><path d=\"M19 44C7 36 7 26 13 25C16 24.5 18.5 27 19 29C19.5 27 22 24.5 25 25C31 26 31 36 19 44Z\" fill=\"#FF8FB1\" fill-opacity=\".6\" stroke=\"#E0457B\" stroke-width=\"2.6\" stroke-linejoin=\"round\"/></g><path d=\"M29 31Q32 28 35 31\" stroke=\"#E0457B\" stroke-width=\"2.6\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M12 30Q13 28 15 28\" stroke=\"#fff\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" opacity=\".9\"/>" },
-    { k:"mugi", n:"むぎわらぼうし", s:"head", p:60, top:1, g:"<g transform=\"translate(32 52) scale(1.5) translate(-32 -44)\"><ellipse cx=\"32\" cy=\"42\" rx=\"31\" ry=\"9\" fill=\"#F2C46D\"/><path d=\"M15 42Q14 18 32 17Q50 18 49 42Z\" fill=\"#E9B65A\"/><path d=\"M15.2 35Q32 39 48.8 35L49 41Q32 45 15 41Z\" fill=\"#E8524C\"/><path d=\"M8 44Q32 52 56 44\" stroke=\"#D9A64E\" stroke-width=\"1.6\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M22 27Q26 23 30 23\" stroke=\"#F7D78F\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"42\" cy=\"38\" r=\"4\" fill=\"#fff\"/><circle cx=\"42\" cy=\"38\" r=\"1.8\" fill=\"#FFD84D\"/></g>" },
-    { k:"hana", n:"はなかんむり", s:"head", p:70, top:1, g:"<g transform=\"translate(32 50) scale(1.45) translate(-32 -44)\"><path d=\"M6 37Q32 50 58 37\" stroke=\"#6DBB6A\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M13 40l-4 4M26 44l-3 5M38 44l3 5M51 40l4 4\" stroke=\"#6DBB6A\" stroke-width=\"2.4\" stroke-linecap=\"round\"/><circle cx=\"11.6\" cy=\"37.0\" r=\"3.4\" fill=\"#FF9EB8\"/><circle cx=\"9.1\" cy=\"40.4\" r=\"3.4\" fill=\"#FF9EB8\"/><circle cx=\"5.1\" cy=\"39.1\" r=\"3.4\" fill=\"#FF9EB8\"/><circle cx=\"5.1\" cy=\"34.9\" r=\"3.4\" fill=\"#FF9EB8\"/><circle cx=\"9.1\" cy=\"33.6\" r=\"3.4\" fill=\"#FF9EB8\"/><circle cx=\"8\" cy=\"37\" r=\"2.6\" fill=\"#F2A33A\"/><circle cx=\"22.6\" cy=\"42.0\" r=\"3.4\" fill=\"#FFD84D\"/><circle cx=\"20.1\" cy=\"45.4\" r=\"3.4\" fill=\"#FFD84D\"/><circle cx=\"16.1\" cy=\"44.1\" r=\"3.4\" fill=\"#FFD84D\"/><circle cx=\"16.1\" cy=\"39.9\" r=\"3.4\" fill=\"#FFD84D\"/><circle cx=\"20.1\" cy=\"38.6\" r=\"3.4\" fill=\"#FFD84D\"/><circle cx=\"19\" cy=\"42\" r=\"2.6\" fill=\"#E8743B\"/><circle cx=\"35.6\" cy=\"44.0\" r=\"3.4\" fill=\"#fff\"/><circle cx=\"33.1\" cy=\"47.4\" r=\"3.4\" fill=\"#fff\"/><circle cx=\"29.1\" cy=\"46.1\" r=\"3.4\" fill=\"#fff\"/><circle cx=\"29.1\" cy=\"41.9\" r=\"3.4\" fill=\"#fff\"/><circle cx=\"33.1\" cy=\"40.6\" r=\"3.4\" fill=\"#fff\"/><circle cx=\"32\" cy=\"44\" r=\"2.6\" fill=\"#F2A33A\"/><circle cx=\"48.6\" cy=\"42.0\" r=\"3.4\" fill=\"#FF9EB8\"/><circle cx=\"46.1\" cy=\"45.4\" r=\"3.4\" fill=\"#FF9EB8\"/><circle cx=\"42.1\" cy=\"44.1\" r=\"3.4\" fill=\"#FF9EB8\"/><circle cx=\"42.1\" cy=\"39.9\" r=\"3.4\" fill=\"#FF9EB8\"/><circle cx=\"46.1\" cy=\"38.6\" r=\"3.4\" fill=\"#FF9EB8\"/><circle cx=\"45\" cy=\"42\" r=\"2.6\" fill=\"#F2A33A\"/><circle cx=\"59.6\" cy=\"37.0\" r=\"3.4\" fill=\"#FFD84D\"/><circle cx=\"57.1\" cy=\"40.4\" r=\"3.4\" fill=\"#FFD84D\"/><circle cx=\"53.1\" cy=\"39.1\" r=\"3.4\" fill=\"#FFD84D\"/><circle cx=\"53.1\" cy=\"34.9\" r=\"3.4\" fill=\"#FFD84D\"/><circle cx=\"57.1\" cy=\"33.6\" r=\"3.4\" fill=\"#FFD84D\"/><circle cx=\"56\" cy=\"37\" r=\"2.6\" fill=\"#E8743B\"/></g>" },
-    { k:"chou", n:"ちょうネクタイ", s:"neck", p:40, g:"<g transform=\"translate(32 32) scale(1.2) translate(-32 -32)\"><path d=\"M32 32L11 21Q6 32 11 43Z\" fill=\"#3E7BD9\"/><path d=\"M32 32L53 21Q58 32 53 43Z\" fill=\"#3E7BD9\"/><circle cx=\"15\" cy=\"27\" r=\"1.8\" fill=\"#fff\"/><circle cx=\"14\" cy=\"37\" r=\"1.8\" fill=\"#fff\"/><circle cx=\"49\" cy=\"27\" r=\"1.8\" fill=\"#fff\"/><circle cx=\"50\" cy=\"37\" r=\"1.8\" fill=\"#fff\"/><rect x=\"27\" y=\"26\" width=\"10\" height=\"12\" rx=\"4\" fill=\"#2F64B8\"/></g>" },
-    { k:"hane", n:"てんしの はね", s:"back", p:80, ic:"translate(32 30) scale(1.5) translate(-32 -30)", g:"<g class=\"ta-flapL\"><path d=\"M31 31C24 14 8 8 3 15C0 20 5 24 8 26C2 28 2 34 8 35C4 39 8 44 14 42C19 45 27 40 31 34Z\" fill=\"#fff\" stroke=\"#B4C6EA\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/><path d=\"M27 30C20 24 13 20 8 19M27 32C20 30 13 29 9 30M27 34C22 35 17 37 13 38\" stroke=\"#D5DFF2\" stroke-width=\"1.4\" fill=\"none\" stroke-linecap=\"round\"/></g><g class=\"ta-flapR\"><path d=\"M33 31C40 14 56 8 61 15C64 20 59 24 56 26C62 28 62 34 56 35C60 39 56 44 50 42C45 45 37 40 33 34Z\" fill=\"#fff\" stroke=\"#B4C6EA\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/><path d=\"M37 30C44 24 51 20 56 19M37 32C44 30 51 29 55 30M37 34C42 35 47 37 51 38\" stroke=\"#D5DFF2\" stroke-width=\"1.4\" fill=\"none\" stroke-linecap=\"round\"/></g>" },
-    { k:"fusen", n:"ふうせん", s:"side", p:30, ic:"translate(30 63) scale(.7) translate(-30 -63)", g:"<g transform=\"translate(30 63) scale(1.45) translate(-30 -63)\"><path d=\"M30 33Q34 44 29 52Q26 58 30 63\" stroke=\"#9AA3B5\" stroke-width=\"1.4\" fill=\"none\"/><g class=\"ta-sway\"><ellipse cx=\"30\" cy=\"17\" rx=\"13\" ry=\"16\" fill=\"#FF6F7D\"/><path d=\"M27 33l3 3 3-3Z\" fill=\"#E8525F\"/><path d=\"M23 9Q25 6 28 5.5\" stroke=\"#fff\" stroke-width=\"2.4\" fill=\"none\" stroke-linecap=\"round\" opacity=\".8\"/></g></g>" },
-    { k:"earstar", n:"ほしの イヤリング", s:"ears", p:40, g:"<g transform=\"translate(32 13) scale(1.3) translate(-32 -13)\"><path d=\"M32 14V28\" stroke=\"#E0B23A\" stroke-width=\"2\" stroke-linecap=\"round\"/><circle cx=\"32\" cy=\"13\" r=\"3\" fill=\"#E0B23A\"/><g class=\"ta-sway\"><polygon points=\"32.0,28.0 35.2,35.6 43.4,36.3 37.1,41.7 39.1,49.7 32.0,45.4 24.9,49.7 26.9,41.7 20.6,36.3 28.8,35.6\" fill=\"#FFD84D\" stroke=\"#E0B23A\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/><circle cx=\"28\" cy=\"37\" r=\"1.6\" fill=\"#fff\"/></g></g>" }
-  ];
-  function accItem(x){ var it = { n:x.n, s:x.s, vb:'0 0 64 64', inner:x.g }; if(x.top) it.top = 1; if(x.ic) it.ic = x.ic; return it; }
-  function renderAcc(a, o){
-    var g = $('accGrid'); g.innerHTML = '';
-    var left = ACC.filter(function(x){ return !o.items['acc_' + x.k]; });
-    $('accNote').textContent = left.length ? 'コインで 買うと、仲間 みんなが つけられるよ。' : 'ぜんぶ そろったよ! 上から えらんで つけてね。';
-    left.forEach(function(x){
-      var b = document.createElement('button');
-      b.className = 'oshare-item';
-      b.innerHTML = oshIconHtml(accItem(x)) + '<span class="oshare-name">' + x.n + '</span><span class="acc-price"><span class="coin"></span><span class="num">' + x.p + '</span></span>';
-      b.addEventListener('click', function(){ buyAcc(x); });
-      g.appendChild(b);
-    });
-  }
-  function buyAcc(x){
-    var a = activePet(), id = 'acc_' + x.k, it = accItem(x), o = getOshare();
-    if(o.items[id]) return;
-    /* 買う 前に 今の 相棒に つけた すがたを 見せる */
-    var w = o.wear[a.sp] || {}, list = [];
-    Object.keys(w).forEach(function(slot){ var y = o.items[w[slot]]; if(y && y.s === slot && slot !== it.s) list.push(slot === 'head' ? { n:y.n, s:y.s, vb:y.vb, inner:y.inner, e:y.e, pos:oshPosOf(o, a.sp, y) } : y); });
-    list.push(it.s === 'head' ? { n:it.n, s:it.s, vb:it.vb, inner:it.inner, pos:oshCrown(it) ? 'top' : 'ear' } : it);
-    oshPreview = { sp:a.sp, list:list };
-    var pic = Pet.svg(a.sp, a.lv);
-    oshPreview = null;
-    if(!buyGate(x.p, x.n + 'を かう?', pic, 'かう', function(){ buyAcc(x); })) return;
-    oshGot(id, it, x.n + 'を ゲット!');
   }
   function toggleOshare(id){
     var a = activePet(), o = getOshare(), it = o.items[id], name = petName(a.sp);
@@ -6504,10 +6458,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         : 'この コードは 読めなかったよ。漢字アプリで もう一度「コピーする」を おしてね。');
       return;
     }
-    oshGot(oshId(it), it, it.n+'が とどいたよ!');
-  }
-  function oshGot(id, it, title){
-    var o = getOshare(), a = activePet();
+    var o = getOshare(), id = oshId(it), a = activePet();
     o.items[id] = it;
     if(it.s === 'head'){
       safeSet('keisan_oshare', oshStamp(o));
@@ -6519,7 +6470,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     safeSet('keisan_oshare', oshStamp(o));
     renderShop();
     Pet.cheer($('shopPet'));
-    showModal({ title:title, text:petName(a.sp)+'が 身に つけたよ。ほかの 仲間にも つけられるよ。', ok:'OK' });
+    showModal({ title:it.n+'が とどいたよ!', text:petName(a.sp)+'が 身に つけたよ。ほかの 仲間にも つけられるよ。', ok:'OK' });
   }
   function openOsharePaste(){
     var canRead = !!(navigator.clipboard && navigator.clipboard.readText);
