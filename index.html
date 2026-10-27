@@ -557,9 +557,8 @@
   .rm-plate{ position:absolute; left:50%; top:4%; transform:translateX(-50%); z-index:2; background:#C99A62; color:#fff; border:2.5px solid #A77A45; border-radius:10px; padding:3px 14px 4px; font-size:max(13px, 3.6cqw); font-weight:900; letter-spacing:.05em; box-shadow:0 3px 0 rgba(0,0,0,.12); pointer-events:none; }
   .rm-plate::before{ content:''; position:absolute; left:50%; top:-9px; width:18px; height:9px; margin-left:-9px; border:2px solid #A77A45; border-bottom:none; border-radius:9px 9px 0 0; }
   .rm-empty{ position:absolute; left:50%; top:30%; transform:translate(-50%, -50%); z-index:2; text-align:center; color:#6B6478; font-size:max(14px, 3.4cqw); font-weight:900; background:rgba(255,255,255,.75); border-radius:16px; padding:8px 16px; pointer-events:none; white-space:nowrap; }
-  .rm-call{ position:absolute; left:50%; top:52%; transform:translateX(-50%); z-index:3000; font:inherit; font-size:max(14px, 3.6cqw); font-weight:900; color:#fff; background:#FF8A5C; border:0; border-radius:999px; padding:10px 20px; box-shadow:0 4px 0 #D9643A; cursor:pointer; white-space:nowrap; animation:rmCall 1.6s ease-in-out infinite; }
-  .rm-call small{ display:block; font-size:.7em; font-weight:700; opacity:.9; }
-  @keyframes rmCall{ 0%,100%{ transform:translateX(-50%) scale(1); } 50%{ transform:translateX(-50%) scale(1.06); } }
+  .rm-tb.call{ background:#FF8A5C; color:#fff; border-color:#FF8A5C; animation:rmCall 1.6s ease-in-out infinite; }
+  @keyframes rmCall{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.07); } }
   .rm-empty small{ display:block; font-size:.78em; font-weight:700; margin-top:2px; }
   #rmStage.swR{ animation:rm-swR .38s cubic-bezier(.2,.8,.3,1); } #rmStage.swL{ animation:rm-swL .38s cubic-bezier(.2,.8,.3,1); }
   @keyframes rm-swR{ 0%{ opacity:0; transform:translateX(18%); } 100%{ opacity:1; transform:none; } }
@@ -12403,8 +12402,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       stage.classList.toggle('editing', edit);
       if(isNight()){ var dk = document.createElement('div'); dk.className = 'rm-dark'; stage.appendChild(dk); }
       if(roomN() > 1){ var pl = document.createElement('div'); pl.className = 'rm-plate'; pl.textContent = '部屋 ' + (RI + 1); stage.appendChild(pl); }
-      if(!b.r.items.length && !pv){ var em = document.createElement('div'); em.className = 'rm-empty'; em.innerHTML = 'まだ からっぽの 部屋だよ<small>下の ショップで 家具を 買って おこう</small>'; stage.appendChild(em); }
-      if(!petsHere().length && !edit){ var cb = document.createElement('button'); cb.type = 'button'; cb.className = 'rm-call'; cb.innerHTML = '🐾 仲間を よぶ<small>だれも いないよ。タップして 入って もらおう</small>'; cb.addEventListener('click', function(e){ e.stopPropagation(); openMates(); }); stage.appendChild(cb); }
+      if(!b.r.items.length && !pv){ var em = document.createElement('div'); em.className = 'rm-empty'; em.innerHTML = 'まだ からっぽの 部屋だよ<small>下の「🐾 仲間」で 仲間を よぼう</small>'; stage.appendChild(em); }
+      $('rmMates').classList.toggle('call', !petsHere().length);
       petsHere().forEach(function(p, k){
         var el = document.createElement('div');
         el.className = 'rm-pet'; el.innerHTML = Pet.svg(p.sp, p.lv);
