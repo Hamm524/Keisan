@@ -3671,7 +3671,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       return oshPlace({ vb:(o - e[1])+' '+(o - e[2])+' '+w+' '+w, inner:'<g transform="rotate('+e[3]+' 32 44)">'+it.inner+'</g>' }, d.clipAt[0], d.clipAt[1], 44);
     }
     if(it.s === 'head' && it.pos === 'ear') return oshPlace(it, d.clipAt[0], d.clipAt[1], 44);
-    if(it.s === 'head') return '<g transform="'+(d.crownT||'')+'">'+oshPlace(it, 100, 22, 56)+'</g>';
+    /* 花かんむりは ななめに のせない 仲間だと 頭の 上で うくので、少し さげる */
+    if(it.s === 'head') return '<g transform="'+(d.crownT||'')+(/花かんむり|花冠/.test(it.n || '') && !/rotate/.test(d.crownT || '') ? ' translate(0 11)' : '')+'">'+oshPlace(it, 100, 22, 56)+'</g>';
     if(it.s === 'eyes'){ var k = (ex[1]-ex[0])/26; return oshPlace(it, 100, d.eyeY - 2*k, 64*k); }
     /* マフラーは 首に まいて、結び目から 2本 たらす(相棒の 形に 合わせて ここで かく) */
     var sc = oshScarf(it);
@@ -3790,6 +3791,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return '#E8B93A';
   }
   /* マスク・お面は うしろ向きだと うらがわ(顔の ない 金の かたち) */
+  /* せおう かばん(ランドセル・リュック): 前からは かたの ベルト、うしろ向きで かばんが 見える */
+  function oshIsPack(it){ return it.s === 'back' && /ランドセル|リュック/.test(it.n || ''); }
   function oshIsMask(it){ return it.s === 'side' && /マスク|仮面|かめん|お面|おめん/.test(it.n || ''); }
   /* 耳の横の かみかざり(リボン・おはな・ぼうし など)を うしろから 見た 形: 前に ついている 宝石と 台・光は 見えず、少し かげに なる */
   function oshBackOf(it){
@@ -4166,7 +4169,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(lv >= 3) out += '<circle cx="100" cy="104" r="86" fill="#FFE9A8" opacity=".45"/>';
     if(capeOn) out += CAPE;
     var osh = oshareFn ? (oshareFn(sp) || []) : [];
-    osh.forEach(function(it){ if(it.s === 'back') out += oshDraw(it, d); });
+    osh.forEach(function(it){ if(it.s === 'back' && !oshIsPack(it)) out += oshDraw(it, d); });
     var sk = (skinFn && lv >= 3) ? skinFn(sp) : null, dressed = sk ? dressBody(d, sk, sp) : { body:d.body, back:d.back||'', defs:'', back2:d.back2||'', deco:d.deco||'', front2:d.front2||'' };
     if(lv >= 2 && dressed.back2) out += dressed.back2;
     /* 耳の横の リボン・かみかざりは、うしろから 見ると 頭の かげに なり、はしだけ 見える */
@@ -4229,7 +4232,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var bOsh = (capeOn ? CAPE_BACK : ''), bWing = '';
     osh.forEach(function(it){
       if(it.s !== 'back') return;
-      if(/マント|ケープ/.test(it.n || '')) bOsh += oshDraw(it, d);
+      if(oshIsPack(it)) bWing += oshPlace(it, 100, 128, 104);
+      else if(/マント|ケープ/.test(it.n || '')) bOsh += oshDraw(it, d);
       else {
         /* 漢字アプリの はね(左右の はばたく つばさ)は、つばさだけ 大きく、まんなかの 宝石は 小さく */
         var wg = (it.inner || '').match(/<g class="ta-flap[LR]"[^>]*>[\s\S]*?<\/g>/g);
@@ -4249,6 +4253,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(lv >= 3 && !oshHead) out += crown(d.crownT);
     else if(boy && lv >= 2 && !oshHead) out += tophat(d.crownT);
     osh.forEach(function(it){
+      if(oshIsPack(it)){
+        var py = scarfNeckY(d), pc = oshColor(it);
+        out += '<g class="p-frontv" stroke="'+pc+'" stroke-width="7" fill="none" stroke-linecap="round">' +
+          '<path d="M72,'+(py-6)+' Q66,'+(py+18)+' 72,'+(py+40)+'"/><path d="M128,'+(py-6)+' Q134,'+(py+18)+' 128,'+(py+40)+'"/></g>';
+        return;
+      }
       if(it.s === 'back') return;
       if(it.s === 'eyes' || it.s === 'neck') out += '<g class="p-frontv">' + oshDraw(it, d) + '</g>';
       else if(oshIsMask(it)) out += '<g class="p-frontv">' + oshDraw(it, d) + '</g><g class="p-backv">' + oshBackSide(it, d) + '</g>';
