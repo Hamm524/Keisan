@@ -976,6 +976,34 @@
   .kw-w{ font-size:26px; font-weight:900; text-align:center; color:var(--ink); }
   .kw-row{ display:flex; gap:8px; align-items:baseline; font-size:16px; line-height:1.7; }
   .kw-row b{ flex:none; font-size:12px; color:#fff; background:var(--op-div); border-radius:8px; padding:1px 8px; }
+  /* お話(まず 学んで、それから 問題) story/apply.py */
+  .st-menu{ display:grid; gap:10px; }
+  .st-hello, .st-say{ display:flex; gap:8px; align-items:flex-start; text-align:left; }
+  .st-ava{ flex:none; width:58px; height:58px; display:grid; place-items:center; }
+  .st-ava svg{ width:58px; height:58px; }
+  .st-bub{ position:relative; flex:1; min-width:0; background:#fff; color:#2E2A3D; border:2px solid #2E2A3D; border-radius:16px; padding:8px 12px; font-size:15px; font-weight:800; line-height:1.75; }
+  .st-bub::before{ content:""; position:absolute; left:-9px; top:18px; border:8px solid transparent; border-right-color:#2E2A3D; border-left:0; }
+  .st-item.lock{ opacity:.6; }
+  .st-quick{ justify-self:end; margin-top:-4px; border:none; background:none; color:var(--ink-soft); font:inherit; font-size:13px; font-weight:800; text-decoration:underline; cursor:pointer; padding:2px 6px; }
+  .st-lab{ width:100%; }
+  .st-card{ background:#FFFDF6; color:#2E2A3D; border:2.5px solid #e3d6b8; border-radius:24px; padding:12px 14px 12px; display:grid; gap:10px; text-align:left; }
+  .st-top{ font-size:12px; font-weight:900; color:#7a7088; text-align:center; }
+  .st-pic .gk-ill{ display:block; width:100%; height:auto; max-height:260px; }
+  .st-w{ margin:0; font-size:22px; font-weight:900; text-align:center; }
+  .st-card .kw-tip{ background:#eef4fb; color:#2E2A3D; }
+  .st-exps{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+  .st-exp{ border:2.5px solid #E58A2E; background:#fff; color:#2E2A3D; border-radius:99px; padding:8px 16px; font:inherit; font-size:15px; font-weight:900; cursor:pointer; }
+  .st-exp.on{ background:#FFE9C9; }
+  .st-new{ font-weight:900; color:#C26A00; }
+  .st-svg .face-h{ display:none; } .st-svg .happy .face-n{ display:none; } .st-svg .happy .face-h{ display:inline; }
+  .st-ava-svg .face-h{ display:none; }
+  .st-flow{ stroke-dasharray:6 14; animation:stflow 1s linear infinite; } .st-flow.rev{ animation-direction:reverse; }
+  @keyframes stflow{ to{ stroke-dashoffset:-40; } }
+  .st-fan{ transform-origin:100px 40px; transform-box:view-box; animation:stspin .9s linear infinite; } .st-fan.rev{ animation-direction:reverse; }
+  @keyframes stspin{ to{ transform:rotate(360deg); } }
+  .st-spark{ animation:stspark 1.4s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+  @keyframes stspark{ 50%{ transform:scale(.6); opacity:.6; } }
+  @media (prefers-reduced-motion: reduce){ .st-flow, .st-fan, .st-spark{ animation:none; } }
   .kw-tip{ font-size:13.5px; line-height:1.7; color:var(--ink-soft); background:var(--surface-2); border-radius:12px; padding:8px 10px; }
   .isle[data-t="j"]{ aspect-ratio:360/580; }
   .isle > svg.isle-bg{ position:absolute; inset:0; width:100%; height:100%; display:block; }
@@ -16512,6 +16540,224 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         ''+(S.sub === 's' && depthOf(S.lv) > S.d0 ? '<p class="gk-note">すごい! もっと ふかい もんだいが ひらいたよ</p>' : '')+'<button class="btn btn-primary" id="gkAgain">'+kAgainLabel(s)+'</button> '+(S.sub === 's' ? '<button class="btn btn-ghost" id="gkLvBtn">ぶんやを えらぶ</button> ' : '')+' <button class="btn btn-ghost" id="gkMenuBtn">まなぶ メニュー</button></div>';
       show('result');
     }
+    /* ---------- お話(まず 学んで、それから 問題)。story/apply.py が Gaku の 中に 入れる ----------
+       理科「電気」と 社会「地図と 方位」は、分野を えらぶと お話の 一覧に なる。お話を さいごまで 見ると、その お話の 問題(3問)が ひらく。
+       理科は「理科で 遊ぼう」の でんちゃん(電池)・ピカリ(豆電球)・くるりん(モーター)が 先生。社会は 相棒が 先生。
+       記録: keisan_gaku.st(問題の 正解)・keisan_gaku.sty{seen, best} */
+    var Story = (function(){
+      /* 理科で 遊ぼう(gaku/rika.html)の キャラの 描き方 */
+      var D = (function(){
+        var INK = '#2E2A3D';
+        function eyesN(y, lx, rx){ return '<g class="face-n"><ellipse cx="'+lx+'" cy="'+y+'" rx="10" ry="13" fill="'+INK+'"/><ellipse cx="'+rx+'" cy="'+y+'" rx="10" ry="13" fill="'+INK+'"/><circle cx="'+(lx-3)+'" cy="'+(y-5)+'" r="3" fill="#fff"/><circle cx="'+(rx-3)+'" cy="'+(y-5)+'" r="3" fill="#fff"/></g>'; }
+        function eyesH(y, lx, rx){ var s = ' stroke="'+INK+'" stroke-width="5" fill="none" stroke-linecap="round"'; return '<g class="face-h"><path d="M'+(lx-10)+','+(y+3)+' Q'+lx+','+(y-13)+' '+(lx+10)+','+(y+3)+'"'+s+'/><path d="M'+(rx-10)+','+(y+3)+' Q'+rx+','+(y-13)+' '+(rx+10)+','+(y+3)+'"'+s+'/></g>'; }
+        function face(y, gap, cc){
+          var lx = 100-gap, rx = 100+gap;
+          return eyesN(y, lx, rx) + eyesH(y, lx, rx) + '<ellipse cx="'+(lx-14)+'" cy="'+(y+16)+'" rx="11" ry="7" fill="'+cc+'" opacity=".75"/><ellipse cx="'+(rx+14)+'" cy="'+(y+16)+'" rx="11" ry="7" fill="'+cc+'" opacity=".75"/>' +
+            '<path class="face-n" d="M92,'+(y+22)+' Q100,'+(y+28)+' 108,'+(y+22)+'" stroke="'+INK+'" stroke-width="2.5" fill="none" stroke-linecap="round"/><path class="face-h" d="M90,'+(y+21)+' Q100,'+(y+37)+' 110,'+(y+21)+' Q100,'+(y+24)+' 90,'+(y+21)+' Z" fill="#C94A63"/>';
+        }
+        function sparkle(x, y, s, c){ return '<path class="st-spark" d="M'+x+','+(y-s)+' Q'+x+','+y+' '+(x+s)+','+y+' Q'+x+','+y+' '+x+','+(y+s)+' Q'+x+','+y+' '+(x-s)+','+y+' Q'+x+','+y+' '+x+','+(y-s)+' Z" fill="'+c+'"/>'; }
+        function batt(flip){
+          var y0 = flip ? 22 : 38, a = flip ? ['−','＋'] : ['＋','−'], ca = flip ? ['#2B79C2','#D6403A'] : ['#D6403A','#2B79C2'];
+          return '<rect x="84" y="'+(flip ? 162 : 24)+'" width="32" height="16" rx="5" fill="#C9CED8"/><rect x="52" y="'+y0+'" width="96" height="140" rx="30" fill="#FFC53D"/><rect x="62" y="'+(y0+24)+'" width="76" height="104" rx="22" fill="#FFE59A"/>' +
+            '<text x="100" y="'+(y0+20)+'" text-anchor="middle" font-size="20" font-weight="900" fill="'+ca[0]+'">'+a[0]+'</text><text x="100" y="'+(y0+140)+'" text-anchor="middle" font-size="22" font-weight="900" fill="'+ca[1]+'">'+a[1]+'</text>' + face(y0+68, 20, '#FF9E8A');
+        }
+        function bulb(lit, big){
+          return (lit ? '<circle cx="100" cy="92" r="'+(big ? 100 : 84)+'" fill="'+(big ? '#FFE05A' : '#FFE27A')+'" opacity="'+(big ? .7 : .55)+'"/>' : '') +
+            '<circle cx="100" cy="92" r="60" fill="'+(lit ? (big ? '#FFF08A' : '#FFF3A6') : '#E3ECF4')+'" stroke="#B7C6D4" stroke-width="3"/><path d="M84,146 Q86,126 96,120 M116,146 Q114,126 104,120" stroke="#9AA3B2" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+            '<rect x="70" y="146" width="60" height="30" rx="7" fill="#B9C0CC"/><path d="M70,158 H130 M70,168 H130" stroke="#8E97A6" stroke-width="2.5"/><path d="M82,176 H118 L108,190 H92 Z" fill="#7E8796"/>' +
+            face(84, 22, '#FFB6A0') + (lit ? sparkle(168, 36, 12, '#FFC53D') + sparkle(30, 50, 9, '#FFC53D') + (big ? sparkle(166, 120, 10, '#FFC53D') + sparkle(36, 130, 8, '#FFC53D') : '') : '');
+        }
+        function motor(rev){
+          return '<rect x="96" y="44" width="8" height="18" fill="#8E97A6"/><rect x="88" y="174" width="24" height="16" rx="4" fill="#8E97A6"/><circle cx="100" cy="114" r="62" fill="#7FD0E0"/><circle cx="100" cy="122" r="46" fill="#D9F4FA"/>' +
+            '<g class="st-fan'+(rev ? ' rev' : '')+'"><ellipse cx="100" cy="40" rx="40" ry="8" fill="#FFB74D"/><ellipse cx="100" cy="40" rx="40" ry="8" fill="#FFB74D" transform="rotate(60 100 40)"/><ellipse cx="100" cy="40" rx="40" ry="8" fill="#FFA226" transform="rotate(120 100 40)"/><circle cx="100" cy="40" r="7" fill="#E58A2E"/></g>' + face(112, 22, '#FFB6A0');
+        }
+        function at(x, y, w, inner, happy){ return '<g class="'+(happy ? 'happy' : '')+'"><svg x="'+x+'" y="'+y+'" width="'+w+'" height="'+w+'" viewBox="0 0 200 200" overflow="visible">'+inner+'</svg></g>'; }
+        var W = '#E58A2E';
+        function wire(d){ return '<path d="'+d+'" stroke="'+W+'" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'; }
+        function flow(d, on, rev){ return on ? '<path class="st-flow'+(rev ? ' rev' : '')+'" d="'+d+'" stroke="#FFC53D" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' : ''; }
+        function box(inner, lab){ return '<svg class="gk-ill st-svg" viewBox="0 0 360 210" role="img" aria-label="'+(lab || '')+'"><rect width="360" height="210" rx="14" fill="#f3f6fb"/>'+inner+'</svg>'; }
+        function lab(x, y, t, c){ return '<text x="'+x+'" y="'+y+'" font-size="13" font-weight="800" text-anchor="middle" fill="'+(c || '#5B6472')+'">'+t+'</text>'; }
+        /* 電池 1こ・豆電球・スイッチ(on で 輪に なる)。電池の ＋(70,80) − (70,142)、豆電球の 横の金属(262,128)・下の でっぱり(285,145) */
+        function circuit(on){
+          var a = 'M70,80 V28 H220 V128 H262', b = 'M285,146 V188 H190', c = 'M140,188 H70 V142';
+          return box(wire(a) + wire(b) + wire(c) + (on ? wire('M190,188 H140') : wire('M140,188 L184,166')) + '<circle cx="140" cy="188" r="6" fill="#8A93A3"/><circle cx="190" cy="188" r="6" fill="#8A93A3"/>' + lab(165, 206, 'スイッチ') +
+            flow(a, on) + flow('M285,146 V188 H70 V142', on) + at(30, 70, 80, batt(), on) + at(222, 38, 110, bulb(on), on) + lab(70, 64, '', '') , '電池と 豆電球の 回路');
+        }
+        /* 電池 2こ: one / series(直列) / para(並列) */
+        function cells(k){
+          var s = '', on = true;
+          if(k === 'one'){ s = wire('M70,80 V28 H220 V128 H262') + wire('M285,146 V190 H70 V142') + flow('M70,80 V28 H220 V128 H262', on) + flow('M285,146 V190 H70 V142', on) + at(30, 70, 80, batt(), 1); }
+          else if(k === 'series'){ s = wire('M70,30 V14 H220 V128 H262') + wire('M285,146 V198 H70 V180') + wire('M70,92 V110') + flow('M70,30 V14 H220 V128 H262', on) + flow('M285,146 V198 H70 V180', on) + at(30, 20, 80, batt(), 1) + at(30, 100, 80, batt(), 1); }
+          else { s = wire('M50,80 V28 H220 V128 H262') + wire('M130,80 V28') + wire('M285,146 V190 H50 V142') + wire('M130,142 V190') + flow('M50,80 V28 H220 V128 H262', on) + flow('M285,146 V190 H50 V142', on) + at(10, 70, 80, batt(), 1) + at(90, 70, 80, batt(), 1); }
+          return box(s + at(222, 38, 110, bulb(true, k === 'series'), 1), '電池の つなぎ方');
+        }
+        /* 電池と くるりん(モーター)。flip で 電池の 向きが 逆 */
+        function motorPic(flip){
+          var a = 'M70,80 V28 H280 V60', b = 'M280,168 V190 H70 V142';
+          return box(wire(a) + wire(b) + flow(a, true, flip) + flow(b, true, flip) + at(30, 70, 80, batt(flip), 1) + at(222, 50, 116, motor(flip), 1) + lab(180, 120, flip ? 'ぎゃくに 回る' : '回る'), '電池と モーター');
+        }
+        function pics(list){ return box(list.map(function(x, i){ return '<text x="'+(60 + (i % 4) * 80)+'" y="'+(i < 4 ? 70 : 160)+'" font-size="40" text-anchor="middle">'+x[0]+'</text>' + lab(60 + (i % 4) * 80, i < 4 ? 98 : 188, x[1], x[2]); }).join(''), ''); }
+        return { batt:batt, bulb:bulb, motor:motor, circuit:circuit, cells:cells, motorPic:motorPic, pics:pics, ava:function(k){ return '<svg viewBox="0 0 200 200" class="st-ava-svg" aria-hidden="true">'+(k === 'bulb' ? bulb(true) : k === 'motor' ? motor() : batt())+'</svg>'; } };
+      })();
+      var OK = '#2e9b6b', NG = '#d4534a';
+      var TOPICS = {
+        den:{ title:'理科「電気」', sub:'s', lv:'電気', lab:true, hello:'でんちゃんと ピカリが、電気の ひみつを 教えて くれるよ。お話を さいごまで 見たら、問題に ちょうせん!', stories:[
+          { id:'den1', t:'でんちゃんと 電流', ico:'🔋', pages:[
+            { who:'batt', w:'でんちゃん(電池)', say:'ぼくは 電池の でんちゃん。上の でっぱりが ＋(プラス)、下が −(マイナス)だよ。', pic:function(){ return '<svg class="gk-ill st-svg" viewBox="0 0 360 210"><rect width="360" height="210" rx="14" fill="#f3f6fb"/><g class="happy"><svg x="110" y="10" width="190" height="190" viewBox="0 0 200 200">'+D.batt()+'</svg></g></svg>'; },
+              tip:'電気は 電池の ＋から 出て、導線《どうせん》や 豆電球などを 通って、電池の −へ 流れるよ。この 電気の 流れを「電流《でんりゅう》」と いうよ。' },
+            { who:'bulb', w:'輪《わ》に なると 光る', say:'ぼくは 豆電球《まめでんきゅう》の ピカリ。下の スイッチを おして みて!', exp:'sw',
+              pic:function(x){ return D.circuit(!!x.sw); }, tip:'電池・導線《どうせん》・豆電球が ぐるっと 輪《わ》に なると 電流が 流れて 光るよ。この 輪《わ》を「回路《かいろ》」と いうよ。1か所でも 切れると 光らない。' },
+            { who:'bulb', w:'豆電球の つなぐ 場所', say:'ぼくに つなぐ ときは、横の 金ぞくと 下の でっぱりの 2か所だよ。', pic:function(){ return '<svg class="gk-ill st-svg" viewBox="0 0 360 210"><rect width="360" height="210" rx="14" fill="#f3f6fb"/><g class="happy"><svg x="80" y="4" width="200" height="200" viewBox="0 0 200 200">'+D.bulb(true)+'</svg></g><path d="M150,165 H40" stroke="#E58A2E" stroke-width="5"/><path d="M180,193 H320" stroke="#E58A2E" stroke-width="5"/><text x="40" y="155" font-size="13" font-weight="800" fill="#5B6472">横の 金ぞく</text><text x="320" y="183" font-size="13" font-weight="800" text-anchor="end" fill="#5B6472">下の でっぱり</text></svg>'; },
+              tip:'ガラスの 所に つないでも 光らないよ。中の 細い 線に 電気が 通ると 光るんだ。' } ],
+            qs:[ { q:'豆電球《まめでんきゅう》が 光るのは、電気の 通り道が どう なって いる とき?', a:'ぐるっと 輪《わ》に なって いる', bad:['とちゅうが 1か所 切れて いる', '電池の ＋だけに つないだ', '豆電球の ガラスに つないだ'], pg:1 },
+                 { q:'電池の ＋から 出た 電気は、どこへ もどる?', a:'電池の −', bad:['電池の ＋', '豆電球の 中で 止まる', '空気の 中'], pg:0 },
+                 { q:'豆電球に 導線《どうせん》を つなぐ 2か所は?', a:'横の 金ぞくと 下の でっぱり', bad:['ガラスと 下の でっぱり', 'ガラスの 上と 下', '横の 金ぞくだけ'], pg:2 } ] },
+          { id:'den2', t:'電気を 通す もの・通さない もの', ico:'🪙', pages:[
+            { who:'batt', w:'金ぞくは 通す', say:'回路の とちゅうに いろいろな ものを はさんで、ピカリが 光るか ためして みよう。',
+              pic:function(){ return D.pics([['🪙', '10円玉', OK], ['🔩', 'くぎ', OK], ['📎', 'クリップ', OK], ['🥄', '金ぞくの スプーン', OK]]); }, tip:'10円玉(銅《どう》)・くぎ(鉄《てつ》)・クリップなどの 金ぞくは 電気を 通すよ。' },
+            { who:'bulb', w:'通さない もの', say:'これを はさむと、ぼくは 光れないんだ…', pic:function(){ return D.pics([['📄', '紙', NG], ['🪵', '木', NG], ['🎈', 'ゴム', NG], ['🥛', 'ガラス', NG]]); },
+              tip:'紙・木・ゴム・ガラス・プラスチックは 電気を 通さないよ。' },
+            { who:'batt', w:'空きかんの ひみつ', say:'空きかんは 金ぞくなのに、色の 所では 光らない。どうしてかな?', pic:function(){ return D.pics([['🥫', '色の 所 ×', NG], ['🥫', 'けずった 所 ○', OK]]); },
+              tip:'色の 所は、電気を 通さない ペンキの ような もので おおわれて いるよ。けずって 金ぞくを 出すと、電気を 通すよ。' } ],
+            qs:[ { q:'電気を 通すのは どれ?', a:'10円玉', bad:['紙', '木の ぼう', 'ゴムふうせん'], pg:0 },
+                 { q:'電気を 通さないのは どれ?', a:'ガラスの コップ', bad:['くぎ', 'クリップ', '金ぞくの スプーン'], pg:1 },
+                 { q:'空きかんの 色の 所に つなぐと 光らないのは なぜ?', a:'電気を 通さない もので おおわれて いるから', bad:['かんが 大きすぎるから', 'かんが つめたいから', 'かんの 中が 空《から》だから'], pg:2 } ] },
+          { id:'den3', t:'電池 2こと くるりん', ico:'⚡', deep:true, pages:[
+            { who:'bulb', w:'直列《ちょくれつ》つなぎ', say:'電池を 2こに すると どう なるかな? ボタンで つなぎ方を かえて みて!', exp:'cell',
+              pic:function(x){ return D.cells(x.cell || 'one'); }, tip:'1この 電池の ＋と、もう 1この 電池の −を つないで 1列に するのが「直列《ちょくれつ》つなぎ」。電流が 大きく なって、ピカリが もっと 明るく なるよ。' },
+            { who:'batt', w:'並列《へいれつ》つなぎ', say:'＋どうし、−どうしを つなぐと どう なるかな?', pic:function(){ return D.cells('para'); },
+              tip:'＋どうし・−どうしを つなぐのが「並列《へいれつ》つなぎ」。明るさは 電池 1この ときと 同じだけど、電池が 長もちするよ。' },
+            { who:'motor', w:'くるりん(モーター)', say:'ぼくは モーターの くるりん。電池の 向きを かえて みて!', exp:'flip',
+              pic:function(x){ return D.motorPic(!!x.flip); }, tip:'電池の 向きを 逆《ぎゃく》に すると、電流の 向きが 逆《ぎゃく》に なって、モーターの 回る 向きも 逆《ぎゃく》に なるよ。' } ],
+            qs:[ { q:'電池 2こを 直列《ちょくれつ》に つなぐと、豆電球《まめでんきゅう》は 1この ときと くらべて どう なる?', a:'明るく なる', bad:['暗く なる', '明るさは 同じ', '光らなく なる'], pg:0 },
+                 { q:'電池 2こを 並列《へいれつ》に つなぐと、どう なる?', a:'明るさは 同じで、電池が 長もちする', bad:['とても 明るく なる', 'すぐに 消える', '光らなく なる'], pg:1 },
+                 { q:'電池の 向きを 逆《ぎゃく》に すると、モーターは どう なる?', a:'回る 向きが 逆《ぎゃく》に なる', bad:['止まって しまう', 'もっと 速く 回る', 'こわれる'], pg:2 } ] } ] },
+        map:{ title:'社会「地図と 方位」', sub:'o:map', hello:'地図の 読み方を いっしょに 見て いこう! お話を さいごまで 見たら、問題に ちょうせん!', stories:[
+          { id:'map1', t:'方位って なに?', ico:'🧭', pages:[
+            { w:'4つの 方位《ほうい》', say:'北・南・東・西を「方位《ほうい》」と いうよ。北を 向いて 立って みよう。', pic:function(){ return SILL('stand'); }, tip:'北を 向くと、右手が 東、左手が 西、うしろが 南だよ。' },
+            { w:'地図の 上は 北', say:'地図は ふつう、上が 北に なるように かいて あるよ。', pic:function(){ return SILL('compass'); }, tip:'方位記号《ほういきごう》が ある ときは、矢じるしの 先が 北だよ。' },
+            { w:'地図で 方位を 読む', say:'学校から 見て、上に ある 郵便局《ゆうびんきょく》は 北。右の 神社《じんじゃ》は 東だね。', pic:function(){ return SILL('town'); }, tip:'下に ある 病院《びょういん》は 南、左の 田は 西。地図の 上・下・右・左が、北・南・東・西だよ。' } ],
+            qs:[ { q:'北を 向いて 立つと、右手の 方は どの 方位《ほうい》?', a:'東', bad:['西', '南', '北'], pg:0 },
+                 { q:'地図は ふつう、上が どの 方位《ほうい》?', a:'北', bad:['南', '東', '西'], pg:1 },
+                 { q:'学校から 見て、病院《びょういん》は どの 方位《ほうい》?', ill:'town', a:'南', bad:['北', '東', '西'], pg:2 } ] },
+          { id:'map2', t:'地図記号《ちずきごう》の ひみつ', ico:'🗺️', pages:[
+            { w:'学校は「文」', say:'地図記号《ちずきごう》は、地図の 上の 小さな しるしだよ。小・中学校は「文」の 字から できて いるよ。', pic:function(){ return SILL('sy:bun'); }, tip:'しるしを つかうと、せまい 地図にも 何が あるか わかりやすく かけるよ。' },
+            { w:'田は いねの あと', say:'田の 記号は、いねを かり取った あとの 形だよ。', pic:function(){ return SILL('sy:ta'); }, tip:'田んぼで かり取った あとに のこる いねの 下の 方を 見ると、こんな 形に 見えるよ。' },
+            { w:'消防署《しょうぼうしょ》は さすまた', say:'消防署《しょうぼうしょ》の 記号は、昔の 火消しの 道具「さすまた」の 形だよ。', pic:function(){ return SILL('sy:shobo'); }, tip:'記号には、形の もとに なった ものが あるよ。もとを 知ると おぼえやすいね。' } ],
+            qs:[ { q:'この 地図記号《ちずきごう》は 何?', ill:'sy:bun', a:'小・中学校', bad:['郵便局《ゆうびんきょく》', '病院《びょういん》', '図書館《としょかん》'], pg:0 },
+                 { q:'田の 地図記号《ちずきごう》は、何の 形から できた?', a:'いねを かり取った あとの 形', bad:['田植《たう》えを する 人', '水の 流れ', 'かかし'], pg:1 },
+                 { q:'この 地図記号《ちずきごう》は 何?', ill:'sy:shobo', a:'消防署《しょうぼうしょ》', bad:['病院《びょういん》', '田', '郵便局《ゆうびんきょく》'], pg:2 } ] },
+          { id:'map3', t:'八方位《はちほうい》と しゅくしゃく', ico:'📏', deep:true, pages:[
+            { w:'八方位《はちほうい》', say:'北と 東の あいだは「北東《ほくとう》」。こう やって 8つに 分けると、もっと くわしく 言えるよ。', pic:function(){ return SILL('compass'); }, tip:'北東《ほくとう》・南東《なんとう》・南西《なんせい》・北西《ほくせい》。北か 南を 先に 言うよ。' },
+            { w:'地図で 北東を さがす', say:'学校から 見て、右上に ある 消防署《しょうぼうしょ》は 北東だよ。', pic:function(){ return SILL('town'); }, tip:'右上=北東、左上=北西《ほくせい》、右下=南東《なんとう》、左下=南西《なんせい》 だよ。左上に ある 果樹園《かじゅえん》は 北西だね。' },
+            { w:'しゅくしゃく', say:'地図は 本当の 町を 小さく ちぢめて かいて いるよ。どれだけ ちぢめたかが「しゅくしゃく」。', pic:function(){ return SILL('scale'); }, tip:'しゅくしゃくの 線を 見ると、地図の 上の 長さが 本当は 何km か わかるよ。' } ],
+            qs:[ { q:'北と 東の あいだの 方位《ほうい》は?', a:'北東', bad:['南東', '北西', '南西'], pg:0 },
+                 { q:'学校から 見て、左上に ある 果樹園《かじゅえん》は どの 方位《ほうい》?', ill:'town', a:'北西', bad:['北東', '南西', '南東'], pg:1 },
+                 { q:'地図の「しゅくしゃく」で わかる ことは?', a:'本当の きょりを どれだけ ちぢめて あるか', bad:['土地の 高さ', '方位《ほうい》', '天気'], pg:2 } ] } ] }
+      };
+      var X = { tp:null, st:null, pg:0, x:{} }, SAVED = null;
+      function rec(){ var s = get(); s.st = s.st || {}; s.sty = s.sty || {}; s.sty.seen = s.sty.seen || {}; s.sty.best = s.sty.best || {}; return s; }
+      function T(){ return TOPICS[X.tp]; }
+      function story(id){ var r = null; Object.keys(TOPICS).forEach(function(k){ TOPICS[k].stories.forEach(function(s){ if(s.id === id) r = s; }); }); return r; }
+      function open(k, i, s){ return i === 0 || (s.sty.best[TOPICS[k].stories[i-1].id] || 0) >= 2; }
+      function ava(who){ if(who){ return '<span class="st-ava">'+D.ava(who)+'</span>'; } var p = ''; try{ var a = activePet(); p = Pet.svg(a.sp, a.lv); }catch(e){} return '<span class="st-ava">'+p+'</span>'; }
+      function menuOf(k){
+        X.tp = k; X.st = null; var t = T(), s = rec(); put(s);
+        var h = '<div class="st-menu"><div class="st-hello">'+ava(k === 'den' ? 'batt' : '')+'<div class="st-bub">'+ruby(t.hello)+'</div></div>';
+        t.stories.forEach(function(st, i){
+          var ok = open(k, i, s), seen = s.sty.seen[st.id], best = s.sty.best[st.id];
+          h += '<button class="gk-sub st-item'+(ok ? '' : ' lock')+'" data-story="'+st.id+'"'+(ok ? '' : ' aria-disabled="true"')+'><span class="gk-ico" style="font-size:26px">'+(ok ? st.ico : '🔒')+'</span><span><b>'+(i+1)+'. '+ruby(st.t)+(st.deep ? ' <small style="display:inline;color:#e0a400">★★</small>' : '')+'</b><small>' +
+            (!ok ? '前の お話の 問題で 2問 せいかいすると ひらくよ' : (seen ? '📖 お話 ✓ ・ ✏️ 問題 '+(best != null ? best+' / '+st.qs.length+' せいかい' : 'に ちょうせんできるよ') : '📖 お話 '+st.pages.length+'ページ → ✏️ 問題 '+st.qs.length+'問')) + '</small></span></button>';
+          if(ok && seen) h += '<button class="st-quick" data-squiz="'+st.id+'">✏️ お話を とばして 問題だけ</button>';
+        });
+        if(t.lab) h += '<button class="isle-ticket st-lab" data-stlab="1"><span class="tk-veh">🔬</span><span class="tk-txt"><small>じぶんで つないで ためそう</small><b>理科で 遊ぼう「電気の 実験室」</b></span><span class="tk-go">ひらく</span></button>';
+        h += '<button class="gk-sub" data-stdrill="1"><span class="gk-ico" style="font-size:26px">📝</span><span><b>いつもの れんしゅう問題</b><small>この 分野の 問題を 10問(お話より 多く 出るよ)</small></span></button></div>';
+        $('gkTitle').textContent = t.title; $('gkSubs').innerHTML = h; show('menu'); window.scrollTo(0, 0);
+      }
+      function page(){
+        var st = story(X.st), p = st.pages[X.pg], n = st.pages.length, last = X.pg === n - 1;
+        if(last){ var s = rec(); s.sty.seen[st.id] = 1; put(s); }
+        $('gkProg').innerHTML = st.pages.map(function(_, i){ return '<i class="'+(i <= X.pg ? 'ok' : '')+'"></i>'; }).join('');
+        var exp = '';
+        if(p.exp === 'sw') exp = '<button class="st-exp" data-sx="sw">'+(X.x.sw ? '🖐️ スイッチを はなす' : '👆 スイッチを おす')+'</button>';
+        if(p.exp === 'cell') exp = [['one', '電池 1こ'], ['series', '2こを 直列《ちょくれつ》']].map(function(c){ return '<button class="st-exp'+((X.x.cell || 'one') === c[0] ? ' on' : '')+'" data-sx="cell:'+c[0]+'">'+ruby(c[1])+'</button>'; }).join('');
+        if(p.exp === 'flip') exp = '<button class="st-exp" data-sx="flip">🔄 電池の 向きを かえる</button>';
+        $('gkQ').innerHTML = '<div class="st-card"><div class="st-top">お話 '+(X.pg+1)+' / '+n+' ・ '+ruby(st.t)+'</div><div class="st-say">'+ava(p.who)+'<div class="st-bub">'+ruby(p.say)+'</div></div>' +
+          '<div class="st-pic">'+p.pic(X.x)+'</div>' + (exp ? '<div class="st-exps">'+exp+'</div>' : '') + '<h2 class="st-w">'+ruby(p.w)+'</h2><div class="kw-tip">💡 '+ruby(p.tip)+'</div></div>';
+        $('gkCh').innerHTML = ''; $('gkFb').textContent = ''; $('gkFb').className = 'gk-fb';
+        $('gkNextBox').innerHTML = (X.pg > 0 ? '<button class="btn btn-ghost" data-spg="-1">← まえ</button> ' : '') + (last ? '<button class="btn btn-primary" data-squiz="'+st.id+'">お話 おしまい! 問題に ちょうせん</button>' : '<button class="btn btn-primary" data-spg="1">つぎへ →</button>');
+        $('gkTitle').textContent = T().title; show('play');
+      }
+      function read(id){ X.st = id; X.pg = 0; X.x = {}; page(); window.scrollTo(0, 0); }
+      function quiz(id){
+        var st = story(id), sub = 'st:' + id, s = rec(); put(s);
+        X.st = id; NAMES[sub] = 'お話「' + plain(st.t) + '」';
+        var qs = st.qs.map(function(e, i){
+          return { id:id + '_' + i, map:'st', pg:e.pg, tag:(X.tp === 'den' ? '理科' : '社会') + ' ・ お話「' + ruby(st.t) + '」の 問題', html:(e.ill ? SILL(e.ill) : '') + '<div class="gk-text">'+ruby(e.q)+'</div>', post:'', a:ruby(e.a), bad:e.bad.map(ruby), say:'答えは「'+plain(e.a)+'」' };
+        });
+        S = { lv:'*', d0:0, sub:sub, qs:shuffle(qs), i:0, ok:0, res:[], step:0, cards:null, ci:0 };
+        $('gkTitle').textContent = T().title;
+        var oc = $('gkCapP'); if(oc) oc.remove();
+        if(s.day.n >= DAY_CAP) $('gkProg').insertAdjacentHTML('beforebegin', '<div class="gk-cap" id="gkCapP">今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ! もんだいは とけるけど、コインは あした また もらえるよ</div>');
+        show('play'); ask(); window.scrollTo(0, 0);
+      }
+      function inStory(){ return S && String(S.sub).indexOf('st:') === 0; }
+      function afterFinish(){
+        var id = X.st, t = T(), s = rec(), i = -1; t.stories.forEach(function(x, j){ if(x.id === id) i = j; });
+        var wasOpen = t.stories[i+1] ? open(X.tp, i+1, s) : true;
+        s.sty.best[id] = Math.max(s.sty.best[id] || 0, S.ok); put(s);
+        var nowOpen = t.stories[i+1] ? open(X.tp, i+1, s) : true, box = $('gkResult').querySelector('.gk-res'); if(!box) return;
+        var add = '';
+        if(!wasOpen && nowOpen) add += '<p class="st-new">🎉 つぎの お話「'+ruby(t.stories[i+1].t)+'」が ひらいたよ!</p>';
+        else if(!nowOpen) add += '<p class="gk-note">2問 せいかいすると、つぎの お話が ひらくよ。お話を もう一度 見て みよう</p>';
+        if(t.lab) add += '<button class="isle-ticket st-lab" data-stlab="1"><span class="tk-veh">🔬</span><span class="tk-txt"><small>お話で 見た ことを</small><b>電気の 実験室で ためして みよう</b></span><span class="tk-go">ひらく</span></button>';
+        add += '<p><button class="btn btn-ghost" data-sread="'+id+'">📖 お話を もう一度</button> <button class="btn btn-primary" data-stback="1">お話の 一覧へ</button></p>';
+        box.insertAdjacentHTML('beforeend', add);
+        var mb = $('gkMenuBtn'); if(mb) mb.remove();
+      }
+      function look(){
+        var q = S.qs[S.i], st = story(X.st);
+        SAVED = ['gkQ', 'gkCh', 'gkFb', 'gkNextBox'].map(function(k){ return [k, $(k).innerHTML, $(k).className]; });
+        var keep = X.pg, kx = X.x; X.pg = q.pg; X.x = {}; page(); X.pg = keep; X.x = kx;
+        $('gkProg').innerHTML = S.qs.map(function(_, i){ return '<i class="'+(S.res[i] === 1 ? 'ok' : S.res[i] === 0 ? 'ng' : '')+'"></i>'; }).join('');
+        $('gkNextBox').innerHTML = '<button class="btn btn-primary" data-sback="1">← 問題に もどる</button>';
+        X.looking = q.pg; window.scrollTo(0, 0); void st;
+      }
+      function unlook(){ if(!SAVED) return; SAVED.forEach(function(x){ $(x[0]).innerHTML = x[1]; $(x[0]).className = x[2]; }); SAVED = null; X.looking = null; }
+      /* 島や メニューの ボタンより 先に 受ける */
+      $('view-gaku').addEventListener('click', function(e){
+        var t = e.target, b;
+        var menuOn = !$('gkMenu').hidden;
+        if(menuOn && (b = t.closest('.gk-sub[data-lv="電気"]'))){ e.stopImmediatePropagation(); menuOf('den'); return; }
+        if(menuOn && (b = t.closest('.gk-sub[data-sub="o:map"]'))){ e.stopImmediatePropagation(); menuOf('map'); return; }
+        if((b = t.closest('[data-story]'))){ e.stopImmediatePropagation(); if(b.getAttribute('aria-disabled') === 'true') return; read(b.getAttribute('data-story')); return; }
+        if((b = t.closest('[data-squiz]'))){ e.stopImmediatePropagation(); quiz(b.getAttribute('data-squiz')); return; }
+        if((b = t.closest('[data-sread]'))){ e.stopImmediatePropagation(); read(b.getAttribute('data-sread')); return; }
+        if((b = t.closest('[data-spg]'))){ e.stopImmediatePropagation(); X.pg += +b.getAttribute('data-spg'); X.x = {}; page(); return; }
+        if((b = t.closest('[data-sx]'))){
+          e.stopImmediatePropagation(); var v = b.getAttribute('data-sx');
+          if(v === 'sw') X.x.sw = !X.x.sw; else if(v === 'flip') X.x.flip = !X.x.flip; else X.x.cell = v.split(':')[1];
+          if(X.looking != null){ var k = X.pg; X.pg = X.looking; var nb = $('gkNextBox').innerHTML; page(); $('gkNextBox').innerHTML = nb; X.pg = k; } else page();
+          return;
+        }
+        if(t.closest('[data-sback]')){ e.stopImmediatePropagation(); unlook(); return; }
+        if(t.closest('[data-stlab]')){ e.stopImmediatePropagation(); openUchu(RIKA_HTML, '理科で 遊ぼう'); return; }
+        if(t.closest('[data-stdrill]')){ e.stopImmediatePropagation(); var tp = T(); if(tp.sub === 's') start('s', tp.lv); else start(tp.sub); return; }
+        if(t.closest('[data-stback]')){ e.stopImmediatePropagation(); menuOf(X.tp); return; }
+        if(t.closest('[data-slook]')){ e.stopImmediatePropagation(); look(); return; }
+        if(!inStory()) return;
+        if(t.closest('#gkAgain')){ e.stopImmediatePropagation(); quiz(X.st); return; }
+        if(t.closest('#gkCh button')){ setTimeout(function(){ if(S.res[S.i] === 0 && $('gkNextBox').querySelector('#gkNext')) $('gkNextBox').insertAdjacentHTML('afterbegin', '<button class="btn btn-ghost" data-slook="1">📖 お話で たしかめる</button> '); }, 0); return; }
+        if(t.closest('#gkNext') && S.i + 1 >= S.qs.length){ setTimeout(afterFinish, 0); return; }
+      }, true);
+      /* ← は、お話の 中なら お話の 一覧へ、お話の 一覧なら 島へ */
+      $('gkBack').addEventListener('click', function(e){
+        if(!X.tp) return;
+        if(!$('gkMenu').hidden && $('gkSubs').querySelector('.st-menu')){ e.stopImmediatePropagation(); var k = X.tp; X.tp = null; if(k === 'den') levelMenu(); else menu(); return; }
+        if($('gkMenu').hidden && (inStory() || X.st)){ e.stopImmediatePropagation(); SAVED = null; X.looking = null; menuOf(X.tp); }
+      }, true);
+      return { menu:menuOf, data:TOPICS };
+    })();
     $('gkBack').addEventListener('click', function(){ if($('gkMenu').hidden || LVOPEN){ menu(); } else goHome(); });
     $('view-gaku').addEventListener('click', function(e){
       var t = e.target;
