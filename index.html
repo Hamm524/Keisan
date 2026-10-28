@@ -16675,11 +16675,120 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         }
         function emo(list){ return box(list.map(function(x, i){ var cx = 360*(i+1)/(list.length+1); return '<text x="'+cx+'" y="110" font-size="56" text-anchor="middle">'+x[0]+'</text>' + lab(cx, 156, x[1], x[2]); }).join(''), ''); }
         function pics(list){ return box(list.map(function(x, i){ return '<text x="'+(60 + (i % 4) * 80)+'" y="'+(i < 4 ? 70 : 160)+'" font-size="40" text-anchor="middle">'+x[0]+'</text>' + lab(60 + (i % 4) * 80, i < 4 ? 98 : 188, x[1], x[2]); }).join(''), ''); }
-        return { emo:emo, batt:batt, bulb:bulb, motor:motor, circuit:circuit, cells:cells, motorPic:motorPic, pics:pics, ava:function(k){ return '<svg viewBox="0 0 200 200" class="st-ava-svg" aria-hidden="true">'+(k === 'bulb' ? bulb(true) : k === 'motor' ? motor() : batt())+'</svg>'; } };
+        /* ---- 天体・地球の 絵(うちゅうの 暗い 背景) ---- */
+        function sky(inner){ return '<svg class="gk-ill st-svg" viewBox="0 0 360 210" role="img" aria-hidden="true"><rect width="360" height="210" rx="14" fill="#14213d"/>'+inner+'</svg>'; }
+        function stars(){ var s = ''; for(var i = 0; i < 46; i++){ s += '<circle cx="'+((i*97)%340+10)+'" cy="'+((i*53)%196+7)+'" r="'+(i%5 === 0 ? 1.6 : .9)+'" fill="#fff" opacity="'+(i%3 === 0 ? .9 : .5)+'"/>'; } return s; }
+        function tl(x, y, t, k, c, sz){ return '<text x="'+x+'" y="'+y+'" font-size="'+(sz || 11)+'" font-weight="800" text-anchor="middle" fill="'+(c || '#fff')+'">'+t+'</text>' + (k ? '<text x="'+x+'" y="'+(y+(sz || 11)*.9)+'" font-size="'+((sz || 11)*.68)+'" font-weight="700" text-anchor="middle" fill="'+(c || '#cbd5e8')+'" opacity=".85">'+k+'</text>' : ''); }
+        /* 太陽と 8つの 惑星(大きさは 少し かえて ある)。hl = 目立たせる 惑星の 番号 */
+        function solar(hl){
+          var P = [['水星','すいせい',3.5,'#b6a89a'], ['金星','きんせい',6,'#e8c27a'], ['地球','ちきゅう',6.5,'#4a8fe0'], ['火星','かせい',4.5,'#d9654a'], ['木星','もくせい',15,'#d9b48a'], ['土星','どせい',13,'#e6cf98'], ['天王星','てんのうせい',9,'#8fd6dc'], ['海王星','かいおうせい',9,'#4f6fe0']];
+          var s = stars() + '<circle cx="-12" cy="92" r="52" fill="#ffd166" opacity=".35"/><circle cx="-12" cy="92" r="44" fill="#ffb703"/>' + tl(20, 96, '太陽', 'たいよう', '#5a3a00', 11);
+          P.forEach(function(p, i){
+            var x = 78 + i*37, on = hl === i;
+            if(on) s += '<circle cx="'+x+'" cy="92" r="'+(p[2]+7)+'" fill="none" stroke="#ffd166" stroke-width="2.5"/>';
+            s += '<circle cx="'+x+'" cy="92" r="'+p[2]+'" fill="'+p[3]+'"/>';
+            if(i === 5) s += '<ellipse cx="'+x+'" cy="92" rx="21" ry="4.5" fill="none" stroke="#c9b27a" stroke-width="2" transform="rotate(-14 '+x+' 92)"/>';
+            s += '<text x="'+x+'" y="62" font-size="10" font-weight="800" text-anchor="middle" fill="#9fb0d0">'+(i+1)+'</text>';
+            var low = i % 2 === 1, y = low ? 170 : 134;
+            if(low) s += '<path d="M'+x+','+(92+p[2]+3)+' V'+(y-12)+'" stroke="#4a5b80" stroke-width="1" stroke-dasharray="2 3"/>';
+            s += tl(x, y, p[0], p[1], on ? '#ffd166' : '#fff', 11);
+          });
+          return sky(s + '<text x="180" y="203" font-size="9" text-anchor="middle" fill="#8ea0c4">大きさは 少し かえて あるよ(きょりは もっと 遠い)</text>');
+        }
+        /* 月の かたち(p: 0 新月 … 4 満月 … 7)。右が 光る(ふえる月)・左が 光る(へる月) */
+        function moonFace(p, cx, cy, r){
+          var f = (1 - Math.cos(p*Math.PI/4))/2, g = '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#3a4258" stroke="#8da0c8" stroke-width="1.5"/>';
+          if(p === 4) return g + '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#fff3c4"/>';
+          if(p === 0) return g;
+          var crescent = f < .5, rx = Math.max(.01, crescent ? r*(1 - 2*f) : r*(2*f - 1));
+          var d = 'M'+cx+','+(cy-r)+' A'+r+','+r+' 0 0 1 '+cx+','+(cy+r)+' A'+rx.toFixed(2)+','+r+' 0 0 '+(crescent ? 0 : 1)+' '+cx+','+(cy-r)+' Z';
+          return g + '<path d="'+d+'" fill="#fff3c4"'+(p > 4 ? ' transform="translate('+(2*cx)+',0) scale(-1,1)"' : '')+'/>';
+        }
+        var MNAME = [['新月','しんげつ'], ['三日月','みかづき'], ['上弦','じょうげん'], ['','' ], ['満月','まんげつ'], ['',''], ['下弦の月','かげんのつき'], ['','']];
+        /* 太陽(左)・地球・月の 位置と、地球から 見た 月 */
+        function moonScene(p){
+          var th = (180 + 45*p)*Math.PI/180, mx = 150 + 66*Math.cos(th), my = 105 - 66*Math.sin(th), n = MNAME[p];
+          var s = stars() + '<circle cx="-20" cy="105" r="46" fill="#ffd166" opacity=".35"/><circle cx="-20" cy="105" r="38" fill="#ffb703"/>';
+          for(var i = 0; i < 5; i++) s += '<path d="M30,'+(45+i*30)+' H72" stroke="#ffd166" stroke-width="2" stroke-linecap="round" opacity=".7"/>';
+          s += '<circle cx="150" cy="105" r="66" fill="none" stroke="#5a6b92" stroke-width="1.3" stroke-dasharray="3 4"/>' + tl(70, 20, '太陽の 光', '', '#ffd166', 10);
+          s += '<circle cx="150" cy="105" r="19" fill="#2e6fbf"/><path d="M150,86 A19,19 0 0 1 150,124 Z" fill="#0d1b3a" opacity=".6"/>' + tl(150, 109, '地球', '', '#fff', 10);
+          s += '<circle cx="'+mx+'" cy="'+my+'" r="9" fill="#fff3c4"/><path d="M'+mx+','+(my-9)+' A9,9 0 0 1 '+mx+','+(my+9)+' Z" fill="#3a4258"/><circle cx="'+mx+'" cy="'+my+'" r="9" fill="none" stroke="#ffd166" stroke-width="2"/>';
+          s += '<path d="M'+(mx+(150-mx)*.25)+','+(my+(105-my)*.25)+' L'+(mx+(150-mx)*.7)+','+(my+(105-my)*.7)+'" stroke="#fff" stroke-width="1.2" stroke-dasharray="3 3"/>';
+          s += tl(285, 38, '地球から 見た 月', '', '#cbd5e8', 11) + moonFace(p, 285, 100, 38);
+          s += (n[0] ? tl(285, 162, p === 2 ? '上弦の月' : p === 6 ? '下弦の月' : n[0], p === 2 ? 'じょうげんのつき' : p === 6 ? 'かげんのつき' : n[1], '#ffd166', 13) : tl(285, 162, p < 4 ? 'ふくらんで いく 月' : '欠けて いく 月', '', '#ffd166', 11));
+          return sky(s);
+        }
+        /* 8つの 形を ならべる */
+        function moonRow(){
+          var s = '';
+          for(var i = 0; i < 8; i++){ var cx = 26 + i*44; s += moonFace(i, cx, 92, 17); if(MNAME[i][0]) s += tl(cx, 135, MNAME[i][0], MNAME[i][1], '#fff', 10); }
+          s += '<path d="M26,172 H318" stroke="#5a6b92" stroke-width="2"/><path d="M312,166 L320,172 L312,178" fill="none" stroke="#5a6b92" stroke-width="2"/>' + tl(180, 195, 'およそ 29.5日で 1まわり', '', '#9fb0d0', 11);
+          return sky(s);
+        }
+        /* 北の 空: 北極星・北斗七星・カシオペヤ座。trail=true で 星の 動きの わっか */
+        function skyNorth(trail){
+          var Pl = [285, 62], s = stars();
+          if(trail) [60, 105, 150].forEach(function(r){ s += '<circle cx="'+Pl[0]+'" cy="'+Pl[1]+'" r="'+r+'" fill="none" stroke="#8ea0c4" stroke-width="1.4" stroke-dasharray="5 5" opacity=".7"/>'; });
+          function line(a){ return '<polyline points="'+a.map(function(q){ return q.join(','); }).join(' ')+'" fill="none" stroke="#7f95c4" stroke-width="1.6"/>' + a.map(function(q){ return '<circle cx="'+q[0]+'" cy="'+q[1]+'" r="3.2" fill="#fff"/>'; }).join(''); }
+          var D1 = [[45,82],[80,100],[112,118],[150,125],[192,142],[170,160],[130,165],[150,125]];
+          s += line(D1) + line([[296,110],[308,92],[322,110],[334,92],[346,108]]);
+          s += '<path d="M170,160 L192,142 L'+Pl[0]+','+Pl[1]+'" fill="none" stroke="#ffd166" stroke-width="1.6" stroke-dasharray="4 3"/>';
+          s += '<circle cx="'+Pl[0]+'" cy="'+Pl[1]+'" r="5.5" fill="#ffd166"/>' + tl(Pl[0]+2, 42, '北極星', 'ほっきょくせい', '#ffd166', 12) + tl(95, 186, '北斗七星', 'ほくとしちせい', '#fff', 11) + tl(318, 134, 'カシオペヤ座', '', '#fff', 11);
+          return sky(s);
+        }
+        /* 地球の 昼と 夜。rot 0 昼 1 夕方 2 夜 3 朝 */
+        function earthDay(rot){
+          var cx = 235, cy = 104, r = 62, a = (180 + 90*rot)*Math.PI/180, px = cx + (r + 3)*Math.cos(a), py = cy - (r + 3)*Math.sin(a), names = ['昼', '夕方', '夜', '朝'];
+          var s = stars() + '<circle cx="-30" cy="104" r="55" fill="#ffb703"/><circle cx="-30" cy="104" r="64" fill="#ffd166" opacity=".3"/>';
+          for(var i = 0; i < 5; i++) s += '<path d="M40,'+(52+i*26)+' H'+(i === 2 ? 150 : 138)+'" stroke="#ffd166" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>';
+          s += '<clipPath id="stE"><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'"/></clipPath><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#2e6fbf"/>' +
+            '<g clip-path="url(#stE)"><path d="M'+(cx-38)+','+(cy-30)+' q18,-16 34,-4 q10,16 -6,34 q-16,6 -22,-14 z M'+(cx+10)+','+(cy+20)+' q24,-10 40,6 q-4,22 -24,26 q-14,-8 -16,-32 z M'+(cx-4)+','+(cy-52)+' q22,-6 30,8 q-14,12 -30,-8 z" fill="#58b368"/>' +
+            '<rect x="'+cx+'" y="'+(cy-r)+'" width="'+r+'" height="'+(2*r)+'" fill="#0d1b3a" opacity=".62"/></g>' +
+            '<path d="M'+cx+','+(cy-r-10)+' V'+(cy+r+10)+'" stroke="#fff" stroke-width="1" stroke-dasharray="3 4" opacity=".5"/>';
+          s += tl(cx - r/2, cy + r + 22, '昼', 'ひる', '#ffd166', 12) + tl(cx + r/2, cy + r + 22, '夜', 'よる', '#9fb0d0', 12);
+          s += '<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="12" fill="#fff"/><text x="'+px.toFixed(1)+'" y="'+(py+6).toFixed(1)+'" font-size="16" text-anchor="middle">🧍</text>';
+          s += tl(70, 24, '太陽の 光', '', '#ffd166', 11) + '<text x="'+cx+'" y="22" font-size="14" font-weight="900" text-anchor="middle" fill="#fff">'+(rot >= 0 ? 'いま は「'+names[rot]+'」' : '')+'</text>';
+          return sky(s);
+        }
+        /* 公転と 季節 */
+        function season(){
+          var s = stars() + '<circle cx="180" cy="105" r="21" fill="#ffb703"/><circle cx="180" cy="105" r="28" fill="#ffd166" opacity=".3"/>' + tl(180, 109, '太陽', '', '#5a3a00', 10);
+          s += '<ellipse cx="180" cy="105" rx="135" ry="70" fill="none" stroke="#5a6b92" stroke-width="1.3" stroke-dasharray="3 4"/>';
+          [[48,105,'夏','なつ',0], [180,175,'秋','あき',1], [312,105,'冬','ふゆ',2], [180,35,'春','はる',3]].forEach(function(e){
+            var x = e[0], y = e[1];
+            s += '<path d="M'+(x-8)+','+(y+20)+' L'+(x+8)+','+(y-20)+'" stroke="#fff" stroke-width="1.6"/><circle cx="'+x+'" cy="'+y+'" r="13" fill="#2e6fbf"/>' +
+              '<path d="M'+x+','+(y-13)+' A13,13 0 0 0 '+x+','+(y+13)+' Z" transform="rotate('+(Math.atan2(105-y, 180-x)*180/Math.PI).toFixed(0)+' '+x+' '+y+')" fill="#0d1b3a" opacity=".55"/>' +
+              '<circle cx="'+(x+8)+'" cy="'+(y-20)+'" r="3" fill="#ffd166"/>';
+            var lx = e[4] === 0 ? x : e[4] === 2 ? x : x + 40, ly = e[4] === 1 ? y + 4 : e[4] === 3 ? y + 4 : y + 34;
+            s += tl(lx, ly, e[2], e[3], '#ffd166', 14);
+          });
+          s += tl(180, 205, '地軸の かたむきは いつも 同じ 向き', '', '#9fb0d0', 10);
+          return sky(s);
+        }
+        /* 太陽が 東から 西へ */
+        function sunArc(){
+          function B(t){ return [(1-t)*(1-t)*30 + 2*t*(1-t)*180 + t*t*330, (1-t)*(1-t)*170 + 2*t*(1-t)*(-20) + t*t*170]; }
+          var s = '<svg class="gk-ill st-svg" viewBox="0 0 360 210" role="img" aria-hidden="true"><rect width="360" height="210" rx="14" fill="#cfeaf8"/><rect y="170" width="360" height="40" fill="#8fc27a"/><path d="M30,170 Q180,-20 330,170" fill="none" stroke="#f0a020" stroke-width="2" stroke-dasharray="5 5"/>';
+          [[.1,'朝','あさ'], [.5,'昼','ひる'], [.9,'夕方','ゆうがた']].forEach(function(e){ var q = B(e[0]); s += '<circle cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="14" fill="#ffb703"/>' + tl(q[0].toFixed(1), (q[1] - 22).toFixed(1), e[1], e[2], '#7a4a00', 11); });
+          s += tl(30, 190, '東', 'ひがし', '#27501f', 12) + tl(180, 190, '南', 'みなみ', '#27501f', 12) + tl(330, 190, '西', 'にし', '#27501f', 12);
+          return s + '</svg>';
+        }
+        /* 川の 上流・中流・下流。hl 0 上流 1 中流 2 下流 */
+        function riverProf(hl){
+          var s = '<svg class="gk-ill st-svg" viewBox="0 0 360 210" role="img" aria-hidden="true"><rect width="360" height="210" rx="14" fill="#eaf4ff"/>';
+          if(hl != null) s += '<rect x="'+(18 + hl*100)+'" y="4" width="100" height="202" rx="10" fill="#ffd166" opacity=".4"/>';
+          s += '<path d="M0,210 V46 L60,26 L120,70 L200,122 L290,152 L360,158 V210 Z" fill="#a9916e"/><path d="M290,152 L360,158 V210 H290 Z" fill="#6aaee0"/>' +
+            '<path d="M45,40 C90,58 100,86 150,96 S236,130 292,153" fill="none" stroke="#3b8fc4" stroke-width="6" stroke-linecap="round"/>' +
+            '<path d="M56,66 l8,-10 l9,6 l-3,12 z M82,78 l9,-6 l7,8 l-7,7 z" fill="#7d6a4d"/><circle cx="160" cy="112" r="5" fill="#7d6a4d"/><circle cx="176" cy="118" r="4" fill="#7d6a4d"/><circle cx="262" cy="150" r="1.8" fill="#7d6a4d"/><circle cx="272" cy="152" r="1.8" fill="#7d6a4d"/>';
+          s += tl(68, 20, '上流', 'じょうりゅう', '#27324f', 12) + tl(168, 20, '中流', 'ちゅうりゅう', '#27324f', 12) + tl(268, 20, '下流', 'かりゅう', '#27324f', 12);
+          s += tl(62, 168, 'けずる', 'しん食', '#fff', 12) + tl(162, 168, '運ぶ', 'うんぱん', '#fff', 12) + tl(262, 190, 'つもる', 'たい積', '#fff', 12);
+          return s + '</svg>';
+        }
+        return { solar:solar, moonScene:moonScene, moonRow:moonRow, skyNorth:skyNorth, earthDay:earthDay, season:season, sunArc:sunArc, riverProf:riverProf, emo:emo, batt:batt, bulb:bulb, motor:motor, circuit:circuit, cells:cells, motorPic:motorPic, pics:pics, ava:function(k){ return '<svg viewBox="0 0 200 200" class="st-ava-svg" aria-hidden="true">'+(k === 'bulb' ? bulb(true) : k === 'motor' ? motor() : batt())+'</svg>'; } };
       })();
       var OK = '#2e9b6b', NG = '#d4534a';
       var TOPICS = {
-        den:{ title:'理科「電気」', sub:'s', lv:'電気', lab:true, hello:'でんちゃんと ピカリが、電気の ひみつを 教えて くれるよ。お話を さいごまで 見たら、問題に ちょうせん!', stories:[
+        den:{ title:'理科「電気」', sub:'s', lv:'電気', subj:'理科', lab:true, hello:'でんちゃんと ピカリが、電気の ひみつを 教えて くれるよ。お話を さいごまで 見たら、問題に ちょうせん!', stories:[
           { id:'den1', t:'でんちゃんと 電流', ico:'🔋', pages:[
             { who:'batt', w:'でんちゃん(電池)', say:'ぼくは 電池の でんちゃん。上の でっぱりが ＋(プラス)、下が −(マイナス)だよ。', pic:function(){ return '<svg class="gk-ill st-svg" viewBox="0 0 360 210"><rect width="360" height="210" rx="14" fill="#f3f6fb"/><g class="happy"><svg x="110" y="10" width="190" height="190" viewBox="0 0 200 200">'+D.batt()+'</svg></g></svg>'; },
               tip:'電気は 電池の ＋から 出て、導線《どうせん》や 豆電球などを 通って、電池の −へ 流れるよ。この 電気の 流れを「電流《でんりゅう》」と いうよ。' },
@@ -16710,6 +16819,50 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             qs:[ { q:'電池 2こを 直列《ちょくれつ》に つなぐと、豆電球《まめでんきゅう》は 1この ときと くらべて どう なる?', a:'明るく なる', bad:['暗く なる', '明るさは 同じ', '光らなく なる'], pg:0 },
                  { q:'電池 2こを 並列《へいれつ》に つなぐと、どう なる?', a:'明るさは 同じで、電池が 長もちする', bad:['とても 明るく なる', 'すぐに 消える', '光らなく なる'], pg:1 },
                  { q:'電池の 向きを 逆《ぎゃく》に すると、モーターは どう なる?', a:'回る 向きが 逆《ぎゃく》に なる', bad:['止まって しまう', 'もっと 速く 回る', 'こわれる'], pg:2 } ] } ] },
+        ten:{ title:'理科「天体」', sub:'s', lv:'天体', subj:'理科', uchu:true, hello:'太陽・月・星の お話を 聞こう! お話を さいごまで 見たら、問題に ちょうせん!', stories:[
+          { id:'ten1', t:'太陽と 惑星《わくせい》', ico:'☀️', pages:[
+            { w:'太陽《たいよう》', say:'太陽は 自分で 光って、あたたかさを 出して いる 星だよ。地球から 見える 星の 中で、いちばん 近い 星なんだ。', pic:function(){ return D.solar(null); }, tip:'太陽の まわりを 回る 星を「惑星《わくせい》」と いうよ。太陽と 惑星を まとめて「太陽系《たいようけい》」と 言うよ。' },
+            { w:'8つの 惑星《わくせい》', say:'太陽に 近い ほうから、水星《すいせい》、 金星《きんせい》、 地球《ちきゅう》、 火星《かせい》、 木星《もくせい》、 土星《どせい》、 天王星《てんのうせい》、 海王星《かいおうせい》の じゅんだよ。', pic:function(){ return D.solar(2); }, tip:'「すい きん ち か もく ど てん かい」と 覚える 人も いるよ。地球は 3番目! むかしは 冥王星《めいおうせい》も 惑星に 数えて いたよ。' },
+            { w:'大きさくらべ', say:'8つの 惑星の 中で いちばん 大きいのは 木星《もくせい》。直径《ちょっけい》は 地球の 10倍 以上《いじょう》も あるよ。', pic:function(){ return D.solar(4); }, tip:'地球は 小さな 惑星。木星や 土星は 大きな ガスの かたまりだよ。' } ],
+            qs:[ { q:'自分で 光って いる 星は?', a:'太陽《たいよう》', bad:['月', '地球《ちきゅう》', '火星《かせい》'], pg:0 },
+                 { q:'地球《ちきゅう》は、太陽に 近い ほうから 数えて 何番目の 惑星《わくせい》?', a:'3番目', bad:['1番目', '2番目', '4番目'], pg:1 },
+                 { q:'太陽系《たいようけい》で いちばん 大きい 惑星《わくせい》は?', a:'木星《もくせい》', bad:['地球《ちきゅう》', '火星《かせい》', '金星《きんせい》'], pg:2 } ] },
+          { id:'ten2', t:'月の 満《み》ち欠《か》け', ico:'🌙', pages:[
+            { w:'月は 光を はね返す', say:'月は 自分では 光って いないよ。太陽の 光が あたって いる 所が、光って 見えるんだ。', pic:function(){ return D.moonScene(4); }, tip:'月は 地球の まわりを 回って いる 星で、「衛星《えいせい》」と いうよ。' },
+            { w:'形が かわる 月', say:'月の 形は 日に ちに よって かわるよ。ボタンで 月の 位置を かえて、地球から 見える 形を 見て みよう。', exp:'moon', pic:function(x){ return D.moonScene(x.moon != null ? x.moon : 2); }, tip:'月は いつも 半分だけ 太陽の 光を 受けて いるよ。地球から 見える 部分が、位置に よって かわるんだ。' },
+            { w:'満ち欠けの 一まわり', say:'新月《しんげつ》から 三日月《みかづき》・半月《はんげつ》を 通って 満月《まんげつ》に なり、また 欠けて 新月に もどるよ。ひとまわりに およそ 29.5日《にち》、約《やく》1か月 かかるよ。', pic:function(){ return D.moonRow(); }, tip:'半月は「上弦《じょうげん》」と「下弦《かげん》」と 言うよ。満月の ころは、夕方に 東の 空から のぼるよ。' } ],
+            qs:[ { q:'月が 光って 見えるのは なぜ?', a:'太陽の 光が あたって いるから', bad:['月が 自分で 光って いるから', '地球が 月を 照《て》らして いるから', '星の 光を 集めて いるから'], pg:0 },
+                 { q:'まん丸に 見える 月は?', a:'満月《まんげつ》', bad:['新月《しんげつ》', '三日月《みかづき》', '半月《はんげつ》'], pg:2 },
+                 { q:'満月から 次の 満月まで、およそ どれくらい?', a:'約《やく》1か月', bad:['約1日', '約1週間《しゅうかん》', '約1年'], pg:2 } ] },
+          { id:'ten3', t:'星と 星座《せいざ》', ico:'⭐', deep:true, pages:[
+            { w:'星は 遠くの 太陽', say:'夜空に 見える 星の 多くは、太陽と 同じように 自分で 光って いる 星だよ。とても 遠いから、小さく 見えるんだ。', pic:function(){ return D.skyNorth(false); }, tip:'金星や 木星などの 惑星《わくせい》は、太陽の 光を はね返して 光って 見えるよ。星の 集まりに 名前を つけたものが「星座《せいざ》」だよ。' },
+            { w:'北極星《ほっきょくせい》', say:'北極星は、ほぼ 真北《まきた》に 見える 星で、ほとんど 動かないよ。北斗七星《ほくとしちせい》や カシオペヤ座《ざ》から さがせるよ。', pic:function(){ return D.skyNorth(false); }, tip:'北斗七星の 先の 2つの 星の はばを 5ばい のばした 所に 北極星が あるよ。' },
+            { w:'星の 動き', say:'星は 1時間に 約《やく》15度ずつ、東から 西へ 動いて 見えるよ。地球が 西から 東へ 回って いる(自転《じてん》)からだよ。', pic:function(){ return D.skyNorth(true); }, tip:'1日で ぐるっと 1周。北極星の まわりを 回る ように 見えるよ。' } ],
+            qs:[ { q:'北極星《ほっきょくせい》が 見える 方位《ほうい》は?', a:'北', bad:['東', '南', '西'], pg:1 },
+                 { q:'星が 動いて 見える のは、なぜ?', a:'地球が 自転《じてん》して いるから', bad:['星が 地球の まわりを 回るから', '月が 動くから', '風が ふくから'], pg:2 },
+                 { q:'星は 1時間に どれくらい 動いて 見える?', a:'約《やく》15度', bad:['約5度', '約45度', '約90度'], pg:2 } ] } ] },
+        chi:{ title:'理科「地球」', sub:'s', lv:'地球', subj:'理科', hello:'地球の 動きと 川の はたらきの お話を 聞こう! お話を さいごまで 見たら、問題に ちょうせん!', stories:[
+          { id:'chi1', t:'地球が 回る(自転《じてん》)', ico:'🌏', pages:[
+            { w:'自転《じてん》', say:'地球は、北極と 南極を むすぶ 線(地軸《ちじく》)を じくに、1日に 1回 回って いるよ。これを「自転《じてん》」と いうよ。', pic:function(){ return D.earthDay(0); }, tip:'1回 回る のに かかる 時間は 約《やく》24時間。1日だよ。' },
+            { w:'昼と 夜', say:'太陽の 光が あたって いる 側が 昼、反対の 側が 夜だよ。ボタンで 地球を 回して みよう。', exp:'rot', pic:function(x){ return D.earthDay(x.rot || 0); }, tip:'地球が 回る ので、昼と 夜が 交代で やって くるよ。' },
+            { w:'太陽が 動いて 見える わけ', say:'太陽は 東から のぼり、南の 空を 通って、西に しずむよ。地球が 西から 東へ 回って いる ので、太陽が 動いて 見えるんだ。', pic:function(){ return D.sunArc(); }, tip:'本当は 太陽が 動いて いるのでは なく、地球が 回って いるんだ。' } ],
+            qs:[ { q:'地球が 1回 自転《じてん》するのに かかる 時間は?', a:'約《やく》24時間', bad:['約1時間', '約1週間《しゅうかん》', '約1年'], pg:0 },
+                 { q:'地球で 夜に なる のは、どんな 所?', a:'太陽と 反対の 側を 向いて いる 所', bad:['太陽に 近い 所', '月に 近い 所', '雲の 多い 所'], pg:1 },
+                 { q:'太陽が 東から のぼり 西に しずむ ように 見えるのは、なぜ?', a:'地球が 自転《じてん》して いるから', bad:['太陽が 地球の まわりを 回るから', '月が 太陽を 動かすから', '風が ふくから'], pg:2 } ] },
+          { id:'chi2', t:'公転《こうてん》と 季節《きせつ》', ico:'🍂', pages:[
+            { w:'公転《こうてん》', say:'地球は 自転しながら、太陽の まわりを 1年かけて 1周《しゅう》して いるよ。これを「公転《こうてん》」と いうよ。', pic:function(){ return D.season(); }, tip:'1周 する のに かかる 時間が、およそ 365日。これが 1年だよ。' },
+            { w:'地軸《ちじく》は かたむいて いる', say:'地球の 地軸《ちじく》は 少し かたむいて いて、公転しても いつも 同じ 向きだよ。', pic:function(){ return D.season(); }, tip:'かたむきは 約《やく》23度。この かたむきが 季節を 作るよ。(絵は 横長に かいて あるけど、本当の 道すじは ほとんど 円で、太陽との きょりは あまり かわらないよ)' },
+            { w:'夏と 冬', say:'北半球《きたはんきゅう》が 太陽の 方に かたむく 時が 夏。太陽の 光が 強く あたり、昼も 長いよ。反対に かたむく 時が 冬だよ。', pic:function(){ return D.season(); }, tip:'日本は 北半球に あるよ。南半球《みなみはんきゅう》では 季節が 反対に なるよ。' } ],
+            qs:[ { q:'地球が 太陽の まわりを 回る ことを 何と いう?', a:'公転《こうてん》', bad:['自転《じてん》', '日食《にっしょく》', '月食《げっしょく》'], pg:0 },
+                 { q:'地球が 太陽の まわりを 1周 する のに かかる 時間は?', a:'約《やく》1年', bad:['約1日', '約1か月', '約10年'], pg:0 },
+                 { q:'季節が できる いちばんの わけは?', a:'地軸《ちじく》が かたむいて いるから', bad:['太陽の 大きさが かわるから', '月の 形が かわるから', '地球が 毎日 すごく 太陽に 近づくから'], pg:2 } ] },
+          { id:'chi3', t:'流れる 水の はたらき', ico:'🏞️', deep:true, pages:[
+            { w:'上流《じょうりゅう》は けずる', say:'山の 中の 上流は 流れが 速《はや》くて、水が 地面を けずるよ。これを「しん食《しょく》」と いうよ。', pic:function(){ return D.riverProf(0); }, tip:'しん食で けずられた 谷は、アルファベットの「V」の 形に なるよ(V字谷《ブイじだに》)。' },
+            { w:'中流《ちゅうりゅう》は 運ぶ', say:'けずった 土や 石は、水に 運ばれるよ。これを「運搬《うんぱん》」と いうよ。運ばれる うちに、石は ぶつかって 小さく 丸く なって いくよ。', pic:function(){ return D.riverProf(1); }, tip:'上流の 石は 大きくて 角《かど》ばって いて、下流の 石は 小さくて 丸いよ。3つの はたらきは どこでも 起こるけれど、上流では しん食、下流では たい積が 目立つよ。' },
+            { w:'下流《かりゅう》は つもる', say:'流れが ゆるやかに なる 下流では、運んで きた 土や 砂が つもるよ。これを「たい積《せき》」と いうよ。', pic:function(){ return D.riverProf(2); }, tip:'たい積で できた 平らな 土地が 平野《へいや》。川の 河口《かこう》には「三角州《さんかくす》」が できる ことも あるよ。' } ],
+            qs:[ { q:'上流で、流れる 水が 地面を けずる はたらきは?', a:'しん食《しょく》', bad:['たい積《せき》', '運搬《うんぱん》', 'じょうはつ'], pg:0 },
+                 { q:'上流の 石と くらべて、下流の 石は どう なって いる?', a:'小さくて 丸い', bad:['大きくて 角《かど》ばって いる', '上流と 同じ 形', 'ふくざつな 形'], pg:1 },
+                 { q:'下流で、土や 砂が つもる はたらきは?', a:'たい積《せき》', bad:['しん食《しょく》', '運搬《うんぱん》', 'じょうはつ'], pg:2 } ] } ] },
         map:{ title:'社会「地図と 方位」', sub:'o:map', hello:'地図の 読み方を いっしょに 見て いこう! お話を さいごまで 見たら、問題に ちょうせん!', stories:[
           { id:'map1', t:'方位って なに?', ico:'🧭', pages:[
             { w:'4つの 方位《ほうい》', say:'北・南・東・西を「方位《ほうい》」と いうよ。北を 向いて 立って みよう。', pic:function(){ return SILL('stand'); }, tip:'北を 向くと、右手が 東、左手が 西、うしろが 南だよ。' },
@@ -16879,6 +17032,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           if(ok && seen) h += '<button class="st-quick" data-squiz="'+st.id+'">✏️ お話を とばして 問題だけ</button>';
         });
         if(t.go) h += '<a class="isle-ticket st-lab" href="map/" style="text-decoration:none"><span class="tk-veh">🗾</span><span class="tk-txt"><small>'+t.go[0]+'</small><b>'+t.go[1]+'</b></span><span class="tk-go">ひらく <span aria-hidden="true">↗</span></span></a>';
+        if(t.uchu) h += '<button class="isle-ticket st-lab" data-stuchu="1"><span class="tk-veh">🔭</span><span class="tk-txt"><small>太陽系の ようすを 見て みよう</small><b>「宇宙を のぞこう」</b></span><span class="tk-go">ひらく</span></button>';
         if(t.lab) h += '<button class="isle-ticket st-lab" data-stlab="1"><span class="tk-veh">🔬</span><span class="tk-txt"><small>じぶんで つないで ためそう</small><b>理科で 遊ぼう「電気の 実験室」</b></span><span class="tk-go">ひらく</span></button>';
         h += '<button class="gk-sub" data-stdrill="1"><span class="gk-ico" style="font-size:26px">📝</span><span><b>いつもの れんしゅう問題</b><small>この 分野の 問題を 10問(お話より 多く 出るよ)</small></span></button></div>';
         $('gkTitle').textContent = t.title; $('gkSubs').innerHTML = h; show('menu'); window.scrollTo(0, 0);
@@ -16890,6 +17044,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var exp = '';
         if(p.exp === 'sw') exp = '<button class="st-exp" data-sx="sw">'+(X.x.sw ? '🖐️ スイッチを はなす' : '👆 スイッチを おす')+'</button>';
         if(p.exp === 'cell') exp = [['one', '電池 1こ'], ['series', '2こを 直列《ちょくれつ》']].map(function(c){ return '<button class="st-exp'+((X.x.cell || 'one') === c[0] ? ' on' : '')+'" data-sx="cell:'+c[0]+'">'+ruby(c[1])+'</button>'; }).join('');
+        if(p.exp === 'moon') exp = [[0, '新月'], [1, '三日月'], [2, '上弦'], [4, '満月'], [6, '下弦']].map(function(c){ return '<button class="st-exp'+((X.x.moon != null ? X.x.moon : 2) === c[0] ? ' on' : '')+'" data-sx="moon:'+c[0]+'">'+c[1]+'</button>'; }).join('');
+        if(p.exp === 'rot') exp = '<button class="st-exp" data-sx="rot">🔄 地球を 回す</button>';
         if(p.exp === 'flip') exp = '<button class="st-exp" data-sx="flip">🔄 電池の 向きを かえる</button>';
         $('gkQ').innerHTML = '<div class="st-card"><div class="st-top">お話 '+(X.pg+1)+' / '+n+' ・ '+ruby(st.t)+'</div><div class="st-say">'+ava(p.who)+'<div class="st-bub">'+ruby(p.say)+'</div></div>' +
           '<div class="st-pic">'+p.pic(X.x)+'</div>' + (exp ? '<div class="st-exps">'+exp+'</div>' : '') + '<h2 class="st-w">'+ruby(p.w)+'</h2><div class="kw-tip">💡 '+ruby(p.tip)+'</div></div>';
@@ -16902,7 +17058,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var st = story(id), sub = 'st:' + id, s = rec(); put(s);
         X.st = id; NAMES[sub] = 'お話「' + plain(st.t) + '」';
         var qs = st.qs.map(function(e, i){
-          return { id:id + '_' + i, map:'st', pg:e.pg, tag:(X.tp === 'den' ? '理科' : '社会') + ' ・ お話「' + ruby(st.t) + '」の 問題', html:(e.hi ? JP(hi(e.hi, e.rv ? '#f6d98a' : null), e.rv) : e.ill ? SILL(e.ill) : '') + '<div class="gk-text">'+ruby(e.q)+'</div>', post:'', a:ruby(e.a), bad:e.bad.map(ruby), say:'答えは「'+plain(e.a)+'」' };
+          return { id:id + '_' + i, map:'st', pg:e.pg, tag:(T().subj || '社会') + ' ・ お話「' + ruby(st.t) + '」の 問題', html:(e.hi ? JP(hi(e.hi, e.rv ? '#f6d98a' : null), e.rv) : e.ill ? SILL(e.ill) : '') + '<div class="gk-text">'+ruby(e.q)+'</div>', post:'', a:ruby(e.a), bad:e.bad.map(ruby), say:'答えは「'+plain(e.a)+'」' };
         });
         S = { lv:'*', d0:0, sub:sub, qs:shuffle(qs), i:0, ok:0, res:[], step:0, cards:null, ci:0 };
         $('gkTitle').textContent = T().title;
@@ -16920,6 +17076,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(!wasOpen && nowOpen) add += '<p class="st-new">🎉 つぎの お話「'+ruby(t.stories[i+1].t)+'」が ひらいたよ!</p>';
         else if(!nowOpen) add += '<p class="gk-note">2問 せいかいすると、つぎの お話が ひらくよ。お話を もう一度 見て みよう</p>';
         if(t.lab) add += '<button class="isle-ticket st-lab" data-stlab="1"><span class="tk-veh">🔬</span><span class="tk-txt"><small>お話で 見た ことを</small><b>電気の 実験室で ためして みよう</b></span><span class="tk-go">ひらく</span></button>';
+        if(t.uchu) add += '<button class="isle-ticket st-lab" data-stuchu="1"><span class="tk-veh">🔭</span><span class="tk-txt"><small>お話で 見た ことを</small><b>「宇宙を のぞこう」で たしかめよう</b></span><span class="tk-go">ひらく</span></button>';
         add += '<p><button class="btn btn-ghost" data-sread="'+id+'">📖 お話を もう一度</button> <button class="btn btn-primary" data-stback="1">お話の 一覧へ</button></p>';
         box.insertAdjacentHTML('beforeend', add);
         var mb = $('gkMenuBtn'); if(mb) mb.remove();
@@ -16937,7 +17094,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       $('view-gaku').addEventListener('click', function(e){
         var t = e.target, b;
         var menuOn = !$('gkMenu').hidden;
-        if(menuOn && (b = t.closest('.gk-sub[data-lv="電気"]'))){ e.stopImmediatePropagation(); menuOf('den'); return; }
+        if(menuOn && (b = t.closest('.gk-sub[data-lv]')) && ({ '電気':'den', '天体':'ten', '地球':'chi' })[b.getAttribute('data-lv')]){ e.stopImmediatePropagation(); menuOf(({ '電気':'den', '天体':'ten', '地球':'chi' })[b.getAttribute('data-lv')]); return; }
         if(menuOn && (b = t.closest('.gk-sub[data-sub^="o:"]')) && TOPICS[b.getAttribute('data-sub').slice(2)]){ e.stopImmediatePropagation(); menuOf(b.getAttribute('data-sub').slice(2)); return; }
         if((b = t.closest('[data-story]'))){ e.stopImmediatePropagation(); if(b.getAttribute('aria-disabled') === 'true') return; read(b.getAttribute('data-story')); return; }
         if((b = t.closest('[data-squiz]'))){ e.stopImmediatePropagation(); quiz(b.getAttribute('data-squiz')); return; }
@@ -16945,11 +17102,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if((b = t.closest('[data-spg]'))){ e.stopImmediatePropagation(); X.pg += +b.getAttribute('data-spg'); X.x = {}; page(); return; }
         if((b = t.closest('[data-sx]'))){
           e.stopImmediatePropagation(); var v = b.getAttribute('data-sx');
-          if(v === 'sw') X.x.sw = !X.x.sw; else if(v === 'flip') X.x.flip = !X.x.flip; else X.x.cell = v.split(':')[1];
+          if(v === 'sw') X.x.sw = !X.x.sw; else if(v === 'flip') X.x.flip = !X.x.flip; else if(v === 'rot') X.x.rot = ((X.x.rot || 0) + 1) % 4; else if(v.indexOf('moon:') === 0) X.x.moon = +v.split(':')[1]; else X.x.cell = v.split(':')[1];
           if(X.looking != null){ var k = X.pg; X.pg = X.looking; var nb = $('gkNextBox').innerHTML; page(); $('gkNextBox').innerHTML = nb; X.pg = k; } else page();
           return;
         }
         if(t.closest('[data-sback]')){ e.stopImmediatePropagation(); unlook(); return; }
+        if(t.closest('[data-stuchu]')){ e.stopImmediatePropagation(); openUchu(); return; }
         if(t.closest('[data-stlab]')){ e.stopImmediatePropagation(); openUchu(RIKA_HTML, '理科で 遊ぼう'); return; }
         if(t.closest('[data-stdrill]')){ e.stopImmediatePropagation(); var tp = T(); if(tp.sub === 's') start('s', tp.lv); else start(tp.sub); return; }
         if(t.closest('[data-stback]')){ e.stopImmediatePropagation(); menuOf(X.tp); return; }
