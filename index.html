@@ -2905,6 +2905,7 @@
       <button class="icon-btn" id="toyBack" aria-label="もどる">←</button>
       <h1>あそぶ</h1>
       <button class="rm-edit" id="toyRoomBtn">🏠 お部屋</button>
+      <button class="rm-edit" id="toyZoomBtn" hidden>🔍 大きく</button>
     </div>
     <p class="toy-hint" id="toyHint"></p>
     <section class="toy-stage" id="toyStage">
@@ -6843,8 +6844,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('toyRoomBtn').classList.toggle('on', on);
     box.hidden = !on;
     st.classList.toggle('room', on);
-    if(on) Room.backdrop(box, st.clientWidth, st.clientHeight, 96, $('toyPetWrap').offsetWidth || 160); else box.innerHTML = '';
+    var wrap = $('toyPetWrap'), zb = $('toyZoomBtn'), zoom = safeGet('keisan_toyzoom') === 1;
+    zb.hidden = !on; zb.classList.toggle('on', zoom); zb.textContent = zoom ? '🔍 もどす' : '🔍 大きく';
+    if(on){
+      var pw = Math.round(Math.min(160, st.clientWidth * .21 * (zoom ? 1.35 : 1)));
+      wrap.style.width = pw + 'px'; wrap.style.marginLeft = (-pw / 2) + 'px';
+      Room.backdrop(box, st.clientWidth, st.clientHeight, 96, pw);
+    } else { wrap.style.width = ''; wrap.style.marginLeft = ''; box.innerHTML = ''; }
   }
+  $('toyZoomBtn').addEventListener('click', function(){ safeSet('keisan_toyzoom', safeGet('keisan_toyzoom') === 1 ? 0 : 1); paintToyRoom(); });
   $('toyRoomBtn').addEventListener('click', function(){
     safeSet('keisan_toyroom', toyRoomOn() ? 0 : 1);
     paintToyRoom();
