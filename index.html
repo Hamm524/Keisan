@@ -1258,6 +1258,51 @@
   .gz-cellq .gz-c{ border-radius:5px; min-width:0; } .gz-cellq .gz-c small{ display:none; } .gz-cellq .gz-c b{ font-size:10px; margin:0; }
   .gz-cellq .gz-lan{ font-size:0; }
 </style>
+<style id="bunshiStyle">
+  .bs-hand{ display:grid; grid-template-columns:repeat(4, 1fr); gap:4px; background:linear-gradient(180deg, #FFF3F8, #F3EEFF); border:2px dashed #F2A7C3; border-radius:22px; padding:10px 10px 8px; margin-bottom:12px; text-align:center; }
+  .bs-hand svg{ max-width:74px; margin:0 auto; cursor:pointer; }
+  .bs-hand b{ display:block; font-size:13px; color:#3A3650; }
+  .bs-hand p{ grid-column:1 / -1; margin:6px 2px 0; font-size:15px; font-weight:700; line-height:1.9; color:#3A3650; text-align:left; }
+  .bs-goal{ background:#FFFBEA; border:2px solid #FFD66B; border-radius:18px; padding:10px 12px; margin-bottom:10px; font-weight:700; line-height:1.8; color:#3A3650; }
+  .bs-goal h2{ font-size:19px; margin:0 0 2px; }
+  .bs-board{ position:relative; height:340px; background:#F7F9FF; border:2px solid #DCE3F5; border-radius:22px; margin-bottom:10px; overflow:hidden; touch-action:none; user-select:none; -webkit-user-select:none; }
+  .bs-board > svg{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+  .bs-at{ position:absolute; width:68px; transform:translate(-50%, -54%); text-align:center; cursor:pointer; border-radius:50%; transition:left .35s ease, top .35s ease; }
+  .bs-at.sel{ background:radial-gradient(circle, rgba(255,214,107,.75) 0 55%, transparent 70%); }
+  .bs-at .bs-free{ display:block; margin-top:-6px; font-size:15px; font-weight:900; color:#D6407A; white-space:nowrap; }
+  .bs-at .bs-free.ok{ color:#2E9D5B; }
+  .bs-bd{ position:absolute; transform:translate(-50%, -50%); width:34px; height:34px; padding:0; background:transparent; border:0; border-radius:50%; cursor:pointer; z-index:2; font-size:0; }
+  .bs-empty{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:20px; text-align:center; font-weight:700; color:#8A86A0; line-height:1.9; }
+  .bs-tray{ display:flex; gap:8px; justify-content:center; margin-bottom:8px; }
+  .bs-tray button{ width:78px; background:#fff; border:2px solid #DCE3F5; border-radius:16px; padding:4px 2px 2px; font-weight:900; font-size:12px; color:#3A3650; }
+  .bs-tray button:disabled{ opacity:.45; }
+  .bs-tray svg{ width:56px; margin:0 auto; }
+  .bs-msg{ min-height:30px; text-align:center; font-weight:800; color:var(--ink, #3A3650); line-height:1.8; margin:4px 0 8px; }
+  .bs-msg.bad{ color:#D6407A; }
+  .bs-row{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+  .bs-done{ background:linear-gradient(180deg, #E9FFF0, #FFFBEA); border:2px solid #8FD9A8; border-radius:20px; padding:12px 14px; margin:8px 0; text-align:center; font-weight:700; line-height:1.9; color:#3A3650; }
+  .bs-done h2{ font-size:22px; margin:0; }
+  .bs-zk{ display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:10px; }
+  .bs-zk > div{ background:#fff; border:2px solid #DCE3F5; border-radius:18px; padding:6px 6px 8px; text-align:center; font-weight:700; color:#3A3650; }
+  .bs-mini{ position:relative; width:150px; height:110px; margin:0 auto; }
+  .bs-mini > svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .bs-mini .bs-at{ width:40px; cursor:default; transform:translate(-50%, -50%); }
+  .bs-row2{ display:flex; justify-content:center; align-items:center; gap:4px; flex-wrap:wrap; margin:6px 0; }
+  .bs-row2 .bs-mini{ margin:0; }
+  .bs-one{ display:inline-block; width:92px; text-align:center; } .bs-one svg{ width:78px; margin:0 auto; } .bs-one b{ display:block; font-size:14px; color:#3A3650; }
+  .bs-e{ display:inline-block; width:12px; height:12px; border-radius:50%; background:#F5B800; border:2px solid #3A3650; vertical-align:middle; margin:0 1px; }
+  .bs-arrow{ font-size:22px; font-weight:900; color:#3A3650; }
+  .bs-cap{ text-align:center; font-weight:900; color:#3A3650; }
+  .bs-pool{ position:relative; background:linear-gradient(180deg, #E9F6FF, #CFE9FF); border-radius:18px; padding:4px 0 10px; }
+  .bs-swim{ text-align:center; } .bs-swim .bs-e{ animation:bs-swim 2.4s ease-in-out infinite; } .bs-swim .bs-e:nth-child(2n){ animation-delay:-1.2s; } .bs-swim .bs-e:nth-child(3n){ animation-delay:-.6s; }
+  @keyframes bs-swim{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(9px,-7px); } }
+  .bs-zk .bs-q{ height:110px; display:flex; align-items:center; justify-content:center; font-size:44px; color:#C9C5D6; }
+  .bs-zk b{ display:block; font-size:15px; } .bs-zk small{ color:#6A6680; }
+  .bs-done .gk-wallet, .bs-done .btn-ghost{ background:#fff; color:#3A3650; border-color:#DCE3F5; }
+  .bs-done .gk-fb{ color:#3A3650; }
+  .bs-hs{ display:inline-block; text-align:center; } .bs-hs .bs-mini{ display:block; } .bs-hs b{ display:block; font-size:14px; line-height:1.5; color:#3A3650; white-space:nowrap; }
+  .bs-board > svg.bs-drag{ z-index:3; }
+</style>
 </head><body>
 <title>けいさんチャレンジ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -3197,6 +3242,14 @@
     </div>
     <div id="gzResult" hidden></div>
     <div id="gzCard" class="gz-over" hidden></div>
+  </main>
+  <main id="view-bunshi" class="view" hidden>
+    <div class="shop-head">
+      <button class="icon-btn" id="bsBack" aria-label="もどる">←</button>
+      <h1>てを つなごう</h1>
+    </div>
+    <div id="bsTop"></div>
+    <div id="bsPlay" hidden></div>
   </main>
   <main id="view-gaku" class="view" hidden>
     <div class="shop-head">
@@ -5348,7 +5401,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     speed:{ timerId:null, endAt:0, correct:0, attempted:0, streak:0, maxStreak:0 }
   };
 
-  var views = { gaku:$('view-gaku'), pick:$('view-pick'), setup:$('view-setup'), shop:$('view-shop'), care:$('view-care'), food:$('view-food'), toy:$('view-toy'), mode:$('view-mode'), play:$('view-play'), result:$('view-result'), fish:$('view-fish'), kuri:$('view-kuri'), deci:$('view-deci'), hsl:$('view-hsl'), room:$('view-room'), medal:$('view-medal'), tabi:$('view-tabi'), ongaku:$('view-ongaku'), genso:$('view-genso') };
+  var views = { gaku:$('view-gaku'), pick:$('view-pick'), setup:$('view-setup'), shop:$('view-shop'), care:$('view-care'), food:$('view-food'), toy:$('view-toy'), mode:$('view-mode'), play:$('view-play'), result:$('view-result'), fish:$('view-fish'), kuri:$('view-kuri'), deci:$('view-deci'), hsl:$('view-hsl'), room:$('view-room'), medal:$('view-medal'), tabi:$('view-tabi'), ongaku:$('view-ongaku'), genso:$('view-genso'), bunshi:$('view-bunshi') };
   function showView(name){
     Object.keys(views).forEach(function(k){ views[k].hidden = (k!==name); });
     window.scrollTo(0,0);
@@ -18962,6 +19015,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         }).join('') + '</div>' +
         (all >= 4 || OK_ALL ? '<button class="btn btn-primary gz-mix" data-mix="1">🎲 ひらいた へやを ぜんぶ まぜて クイズ('+MIX+'問)</button>' : '') +
         (all >= 5 || OK_ALL ? '<button class="btn btn-primary gz-mix gz-cellbtn" data-cells="1">🧩 '+ruby('周期表《しゅうきひょう》あてクイズ(10問)')+'</button>' : '<p class="gk-note" style="text-align:center">'+ruby('5人 あつめると「周期表《しゅうきひょう》あてクイズ」が ひらくよ')+'</p>') +
+        '<button class="btn btn-primary gz-mix" data-bond="1" style="background:#F27AA6">🤝 '+ruby('てを つなごう(分子《ぶんし》づくり)')+'</button>' +
         '<h3 class="gz-sec">'+ruby('周期表《しゅうきひょう》(元素《げんそ》の じゅうしょ)')+'</h3>' +
         '<p class="gk-note">'+ruby('元素《げんそ》を 軽《かる》い じゅん(ばんごう じゅん)に、にた なかまが たてに そろうように ならべた 表。マスを タップすると 名前が わかるよ。色の ついた キャラは、あつめた なかま。')+'</p>' +
         legend() + '<div class="gz-ptw">' + table(s) + '</div>' +
@@ -19135,6 +19189,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var tap = t.closest('#gzCard .gz-tap');
       if(tap){ hop(tap, 'ok'); var say = $('gzCard').querySelector('.gz-say'), y = $('gzCard')._say; if(y && say){ say.innerHTML = ruby(y); say.hidden = false; } return; }
       var cq = t.closest('#gzCh .gz-c'); if(cq){ answerCell(cq); return; }
+      if(t.closest('[data-bond]')){ Bunshi.open(); return; }
       if(t.closest('[data-cells]')){ start('#'); return; }
       var zc = t.closest('[data-z]'); if(zc){ card(+zc.getAttribute('data-z')); return; }
       var rb = t.closest('[data-room]'); if(rb && !rb.disabled){ room(rb.getAttribute('data-room')); return; }
@@ -19158,6 +19213,311 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       showView('gaku'); /* 理科の 島へ もどる */
     });
     return { open:open, _cards:CARDS };
+  })();
+
+  /* ===== 元素ずかん「てを つなごう」: 元素キャラが 手を つないで 分子を つくる。
+     手の 数 H1 O2 N3 C4、手を あまらせずに ぜんぶ つなぐと できあがり。あつめた キャラだけ 使える。
+     できた 分子は 分子ずかんへ(keisan_gaku.gz.mol)。コインは まなぶ 共通の 1日40(はじめて 5、2回目から 1) ===== */
+  var Bunshi = (function(){
+    var KEY = 'keisan_gaku', DAY_CAP = 40, MAX = 6, D = GzData, G = GzDraw, OK_ALL = false;
+    var VAL = { H:1, O:2, N:3, C:4 }, TRAY = ['H', 'O', 'N', 'C'];
+    var MOLS = [
+      { k:'H2', n:'水素《すいそ》', f:'H₂', i:'🎈', need:{ H:2 }, at:['H', 'H'], bd:[[0, 1]],
+        h:'H と H で 手を つなごう。H を 2人 よんで、1人の 手を 引っぱって もう1人に くっつけよう。',
+        fact:'水素《すいそ》の つぶは、ふだん 1人では いないで、2人で 手を つないだ すがたで とんで いるよ。これが 水素の 分子《ぶんし》。いちばん かるい 気体《きたい》だよ。' },
+      { k:'H2O', n:'水《みず》', f:'H₂O', i:'💧', need:{ H:2, O:1 }, at:['O', 'H', 'H'], bd:[[0, 1], [0, 2]],
+        h:'O が 1人。H は なん人 いるかな? O の 手の 数を 見てね。',
+        fact:'水《みず》の 分子《ぶんし》は、O が まん中で 2人の H と 手を つないだ「くの字」の 形。コップ1ぱいの 水には、この 分子が 1兆《ちょう》の 1兆ばいより もっと たくさん 入って いるよ。' },
+      { k:'CH4', n:'メタン', f:'CH₄', i:'🔥', need:{ C:1, H:4 }, at:['C', 'H', 'H', 'H', 'H'], bd:[[0, 1], [0, 2], [0, 3], [0, 4]],
+        h:'C が 1人。H は なん人 いるかな? C の 手は 4本だよ。',
+        fact:'メタンは、C の 4本の 手に H が 1人ずつ。ガスコンロで もやす 都市《とし》ガスの おもな なかみで、牛《うし》の ゲップにも 入って いるよ。' },
+      { k:'O2', n:'酸素《さんそ》', f:'O₂', i:'🌬️', need:{ O:2 }, at:['O', 'O'], bd:[[0, 1], [0, 1]],
+        h:'O の 手は 2本。O を 2人 よんで、2本とも つなごう。同《おな》じ あいてと 2本 つなげるよ(手を 2回 くっつけてね)。',
+        fact:'酸素《さんそ》の 分子は、O が 2人で 手を 2本とも つないだ すがた。空気《くうき》の 5分の1が これで、わたしたちは 息《いき》で すって いるよ。' },
+      { k:'CO2', n:'二酸化炭素《にさんかたんそ》', f:'CO₂', i:'🫧', need:{ C:1, O:2 }, at:['C', 'O', 'O'], bd:[[0, 1], [0, 1], [0, 2], [0, 2]],
+        h:'C が 1人、O が 2人。C の 手は 4本、O の 手は 2本。ぜんぶ つなぐには、どう する?',
+        fact:'二酸化炭素《にさんかたんそ》は、C が まん中で 両《りょう》がわの O と 手を 2本ずつ つないだ、まっすぐな 形。息《いき》を はくと 出る ガスで、炭酸水《たんさんすい》の シュワシュワも これだよ。' },
+      { k:'NH3', n:'アンモニア', f:'NH₃', i:'🧪', need:{ N:1, H:3 }, at:['N', 'H', 'H', 'H'], bd:[[0, 1], [0, 2], [0, 3]],
+        h:'N の 手は 3本。H は なん人 いると ぴったり?',
+        fact:'アンモニアは、N の 3本の 手に H が 1人ずつ。つんと する においの ガスで、肥料《ひりょう》の 元《もと》にも なるよ。' },
+      { k:'N2', n:'窒素《ちっそ》', f:'N₂', i:'💨', need:{ N:2 }, at:['N', 'N'], bd:[[0, 1], [0, 1], [0, 1]],
+        h:'N の 手は 3本。N を 2人 よんで、3本とも つないでみよう。',
+        fact:'窒素《ちっそ》の 分子は、N が 2人で 手を 3本とも ぎゅっと つないだ すがた。とても かたい つながりで、空気の 5分の4が これだよ。' }
+    ];
+    var P = null;
+    function ruby(t){ return String(t).replace(/([0-9]*[一-龥々][0-9一-龥々]*)《([^》]+)》/g, '<ruby>$1<rt>$2</rt></ruby>'); }
+    function rec(){ var s = safeGet(KEY) || {}; s.gz = s.gz || {}; s.gz.got = s.gz.got || {}; s.gz.mol = s.gz.mol || {}; if(!s.day || s.day.d !== todayKey()) s.day = { d:todayKey(), n:0 }; return s; }
+    function el(sym){ return D.BY[sym]; }
+    function has(s, sym){ return OK_ALL || !!s.gz.got[sym]; }
+    function canMol(s, i){ var m = MOLS[i]; return Object.keys(m.need).every(function(x){ return has(s, x); }) && (OK_ALL || i === 0 || !!s.gz.mol[MOLS[i - 1].k]); }
+    function wallet(){ var s = rec(); return '<div class="gk-wallet"><span class="coin"></span><span>いまの コイン <b class="num">'+getCoins()+'</b></span><span class="gk-bar"><i style="width:'+Math.round(s.day.n / DAY_CAP * 100)+'%"></i></span><span>今日 '+s.day.n+'/'+DAY_CAP+'</span></div>'; }
+    function show(part){ ['bsTop', 'bsPlay'].forEach(function(id){ $(id).hidden = id !== part; }); showView('bunshi'); window.scrollTo(0, 0); }
+    function hop(svgEl, mood){ if(!svgEl) return; svgEl.classList.remove('hop', 'happy', 'sad'); void svgEl.getBoundingClientRect(); svgEl.classList.add(mood === 'sad' ? 'sad' : 'hop'); if(mood !== 'sad') svgEl.classList.add('happy'); setTimeout(function(){ svgEl.classList.remove('hop', 'sad'); }, 900); setTimeout(function(){ svgEl.classList.remove('happy'); }, 1600); }
+
+    /* ---- ならべ方: 手の 多い キャラが まん中、ほかは まわりに(水は くの字) ---- */
+    function layout(at){
+      var n = at.length; if(!n) return [];
+      if(n === 1) return [[50, 48]];
+      if(n === 2) return [[30, 48], [70, 48]];
+      var c = 0; at.forEach(function(a, i){ if(VAL[a.s] > VAL[at[c].s]) c = i; });
+      var k = n - 1, ang = k === 2 ? (VAL[at[c].s] === 4 ? [180, 0] : [150, 30]) : k === 3 ? [270, 30, 150] : k === 4 ? [180, 0, 270, 90] : null, out = [], j = 0;
+      at.forEach(function(a, i){
+        if(i === c){ out.push([50, 48]); return; }
+        var d = (ang ? ang[j] : -90 + j * 360 / k) * Math.PI / 180; j++;
+        out.push([50 + 34 * Math.cos(d), 48 + 36 * Math.sin(d)]);
+      });
+      return out;
+    }
+    function pairs(bd){ var m = {}; bd.forEach(function(b){ var key = Math.min(b[0], b[1]) + '-' + Math.max(b[0], b[1]); m[key] = (m[key] || 0) + 1; }); return m; }
+    function free(i){ return VAL[P.at[i].s] - P.bd.filter(function(b){ return b[0] === i || b[1] === i; }).length; }
+    function armCol(sym){ var e = el(sym), c = e.card && e.card.col; return (c || G.KCOL[e.kind])[0]; }
+    /* ニョキッと のびる 手: 体の うしろから のびて、先に 丸い 手。手の 中の 黄色い つぶが 電子(でんし)。
+       座標は ピクセル(iPhone は 引きのばした SVG の 線の 太さが 大きく なるので、引きのばさない) */
+    function arm(to, base, col, mini, anim){
+      var w = mini ? 4 : 10, r = mini ? 4 : 9, an = function(n, f, t){ return anim ? '<animate attributeName="'+n+'" from="'+f+'" to="'+t+'" dur=".4s" fill="freeze" calcMode="spline" keySplines=".3 1.5 .5 1" keyTimes="0;1"/>' : ''; };
+      var ln = function(c, ww){ return '<line x1="'+base[0]+'" y1="'+base[1]+'" x2="'+to[0]+'" y2="'+to[1]+'" stroke="'+c+'" stroke-width="'+ww+'" stroke-linecap="round">'+an('x2', base[0], to[0])+an('y2', base[1], to[1])+'</line>'; };
+      var ci = function(rr, c, extra){ return '<circle cx="'+to[0]+'" cy="'+to[1]+'" r="'+rr+'" fill="'+c+'"'+(extra || '')+'>'+an('cx', base[0], to[0])+an('cy', base[1], to[1])+'</circle>'; };
+      return ln('#3A3650', w + 4) + ln(col, w) + ci(r, '#FFE4C9', ' stroke="#3A3650" stroke-width="'+(mini ? 1.5 : 2.5)+'"') + ci(mini ? 1.6 : 3.4, '#F5B800');
+    }
+    /* 絵: at=[{s}]、bd=[[i,j]](i,j は at の ばんごう)。mini は ずかん・お話用の 小さい 絵(150×110) */
+    function pic(at, bd, mini){
+      var W = mini ? 150 : Math.max(240, ($('bsPlay').clientWidth || 344) - 4), H = mini ? 110 : 336;
+      var ps = layout(at), pm = pairs(bd), lines = '', badges = '', X = function(p){ return [p[0] * W / 100, p[1] * H / 100]; };
+      Object.keys(pm).forEach(function(key){
+        var ij = key.split('-'), a = X(ps[+ij[0]]), b = X(ps[+ij[1]]), n = pm[key], anim = !mini && P && P.nb === key;
+        var dx = b[0] - a[0], dy = b[1] - a[1], L = Math.sqrt(dx * dx + dy * dy) || 1, px = -dy / L, py = dx / L, r = mini ? 4 : 9;
+        for(var k = 0; k < n; k++){
+          var o = (k - (n - 1) / 2) * (mini ? 9 : 20), ox = px * o, oy = py * o, h = r * 0.95 / L;
+          lines += arm([a[0] + dx * (0.5 - h) + ox, a[1] + dy * (0.5 - h) + oy], [a[0] + ox, a[1] + oy], armCol(at[+ij[0]].s), mini, anim) +
+                   arm([a[0] + dx * (0.5 + h) + ox, a[1] + dy * (0.5 + h) + oy], [b[0] + ox, b[1] + oy], armCol(at[+ij[1]].s), mini, anim);
+        }
+        if(!mini) badges += '<button class="bs-bd" data-bd="'+key+'" style="left:'+(ps[+ij[0]][0] + ps[+ij[1]][0]) / 2+'%;top:'+(ps[+ij[0]][1] + ps[+ij[1]][1]) / 2+'%" aria-label="手を はなす">🤝</button>';
+      });
+      if(!mini && P){
+        P.ps = ps.map(X); P.hp = [];
+        at.forEach(function(a, i){
+          var f = free(i), c = P.ps[i], used = [];
+          if(!f) return;
+          bd.forEach(function(b){ var o = b[0] === i ? b[1] : b[1] === i ? b[0] : -1; if(o >= 0) used.push(Math.atan2(P.ps[o][1] - c[1], P.ps[o][0] - c[0])); });
+          if(!used.length && at.length > 1){ var tx = W / 2 - c[0], ty = H * 0.48 - c[1]; if(Math.abs(tx) + Math.abs(ty) > 4) used.push(Math.atan2(ty, tx) + Math.PI); }
+          var got = [], pre = used.length;
+          for(var k = 0; k < f; k++){
+            var best = 0, bs = -1;
+            for(var d = 0; d < 360; d += 15){
+              var r = d * Math.PI / 180, m = 9;
+              used.forEach(function(u){ var df = Math.abs(Math.atan2(Math.sin(r - u), Math.cos(r - u))); if(df < m) m = df; });
+              if(m > bs + 1e-6){ bs = m; best = r; }
+            }
+            used.push(best); got.push(best);
+          }
+          got.forEach(function(r){ var p = [c[0] + 50 * Math.cos(r), c[1] + 50 * Math.sin(r)]; lines += '<g class="bs-fh" data-hi="'+P.hp.length+'">' + arm(p, c, armCol(a.s), false, false) + '</g>'; P.hp.push({ i:i, x:p[0], y:p[1] }); });
+        });
+      }
+      return '<svg viewBox="0 0 '+W+' '+H+'">'+lines+'</svg>' + at.map(function(a, i){
+        var f = mini ? 0 : free(i);
+        return '<div class="bs-at'+(!mini && P.sel === i ? ' sel' : '')+'" data-at="'+i+'" style="left:'+ps[i][0]+'%;top:'+ps[i][1]+'%">' + G.svg(el(a.s), { mini:mini }) +
+          (mini || f ? '' : '<span class="bs-free ok">✓</span>') + '</div>';
+      }).join('') + badges;
+    }
+    /* できあがりの 形(ずかん用) */
+    function shape(m){ return pic(m.at.map(function(x){ return { s:x }; }), m.bd, true); }
+
+    /* ---- 「分子ってなに?」紙しばい(はじめの1回、ボタンでいつでも) ---- */
+    function pics(l){ return '<div class="gz-pics">' + l.map(function(x){ return G.svg(el(x), { cls:'gz-hop' }); }).join('') + '</div>'; }
+    function fm(a, b){ return '<span style="font-size:34px;font-weight:900;color:#3A3650">'+a+'</span><span style="font-size:20px;font-weight:700;color:#6A6680"> '+(b || '')+'</span>'; }
+    var INTRO = [
+      { t:'元素《げんそ》は、ものを つくって いる 小さな つぶの しゅるい。H(すいそ)、O(さんそ)、C(たんそ)、N(ちっそ)…。ひとつぶ ひとつぶが、ずかんの 元素キャラだよ。', pic:function(){ return pics(['H', 'O', 'C', 'N']); } },
+      { t:'元素の つぶは、1人だけで いる ことは あまり ないよ。何人か 手を つないで ひとかたまりに なる。この かたまりが「分子《ぶんし》」。水《みず》も 空気《くうき》も、分子で できて いるよ。', pic:function(){ return '<div class="gz-eq">' + pics(['H', 'O', 'H']) + '<span>= 💧</span></div>'; } },
+      { t:'キャラには 手が あって、元素ごとに 本数が きまって いるよ。H は 1本、O は 2本、N は 3本、C は 4本。手を あまらせずに ぜんぶ つなぐと、安定《あんてい》した 分子に なるんだ。', pic:function(){ return pics(['H', 'O', 'N', 'C']) + '<div style="text-align:center;font-weight:900;color:#3A3650">✋ 1本 ・ ✋✋ 2本 ・ ✋✋✋ 3本 ・ ✋✋✋✋ 4本</div>'; } },
+      { t:'分子の 中身は「化学式《かがくしき》」で あらわすよ。H₂O の 小さい「2」は、H が 2人 いると いう 意味。O は 1人だから、数字は つけない きまりだよ。つまり 水は、H 2人と O 1人。', pic:function(){ return '<div style="text-align:center;margin:8px 0">'+fm('H₂O', '= H が 2人 + O が 1人')+'</div>' + pics(['H', 'O', 'H']); } },
+      { t:'O の 手は 2本、H の 手は 1本。だから O が まん中で、H を 2人 つなぐと 手が ぴったり! メタン CH₄ は、C の 4本の 手に H が 1人ずつ。さあ、手を つないで 分子を つくろう!', pic:function(){ return '<div style="text-align:center;margin:8px 0">'+fm('CH₄', '= C が 1人 + H が 4人')+'</div>' + pics(['H', 'C', 'H']); } }
+    ];
+    function mini(m){ return '<div class="bs-mini">' + shape(m) + '</div>'; }
+    function row(h){ return '<div class="bs-row2">' + h + '</div>'; }
+    function one(x, lab){ return '<span class="bs-one">' + G.svg(el(x), { cls:'gz-hop' }) + (lab ? '<b>'+lab+'</b>' : '') + '</span>'; }
+    var e = '<i class="bs-e"></i>';
+    /* 手を のばした キャラ(手の 先に 電子) */
+    function hands(x, angs){
+      var W = 110, H = 104, cx = 55, cy = 46, R = 44, g = '';
+      angs.forEach(function(a){ var d = a * Math.PI / 180; g += arm([cx + R * Math.cos(d), cy + R * Math.sin(d)], [cx, cy], armCol(x), false, false); });
+      return '<span class="bs-hs"><span class="bs-mini" style="width:'+W+'px;height:'+H+'px"><svg viewBox="0 0 '+W+' '+H+'">'+g+'</svg><span class="bs-at" style="left:50%;top:44%;width:50px">'+G.svg(el(x), { mini:true })+'</span></span><b>'+x+' 手 '+angs.length+'本<br>'+new Array(angs.length + 1).join(e)+'</b></span>';
+    }
+    var HIMITSU = [
+      { t:'キャラの「手」の 正体《しょうたい》は、元素《げんそ》の つぶの まわりを 回って いる、もっと 小さな つぶ「電子《でんし》」だよ。手の 先の 黄色い つぶが 電子。H は 1こ、O は 2こ、C は 4こ、手に できる 電子を もって いるよ。', pic:function(){ return row(hands('H', [0]) + hands('O', [200, -20]) + hands('C', [0, 90, 180, 270])); } },
+      { t:'くっつき方 その1「手を つなぐ」(共有結合《きょうゆうけつごう》)。2人が 電子を 1こずつ 出して、まん中で 2こを いっしょに 持つよ。水《みず》・メタン・水素《すいそ》は、この くっつき方。「てを つなごう」で あそんで いるのは これ!', pic:function(){ return row(mini(MOLS[1]) + mini(MOLS[0])); } },
+      { t:'その2「あげる・もらう」(イオン結合《けつごう》)。ナトリウム Na は 電子を 1こ 手ばなしたい。塩素《えんそ》 Cl は 1こ ほしい。Na が あげると、Na は ＋、Cl は ー に なって、じしゃくの ように ぎゅっと 引き合うよ。これが 食塩《しょくえん》(NaCl)!', pic:function(){ return row(one('Na', 'Na⁺') + '<span class="bs-arrow">' + e + '→</span>' + one('Cl', 'Cl⁻')) + '<div class="bs-cap">'+ruby('＋ と ー で 引き合う → 🧂 食塩《しょくえん》')+'</div>'; } },
+      { t:'その3「みんなで 回す」(金属結合《きんぞくけつごう》)。鉄《てつ》や 銅《どう》などの 金属《きんぞく》は、電子を みんなで 出し合って、プールの ように 自由に およがせて いるよ。だから 金属は 電気を 通して、ピカピカ 光るんだ。', pic:function(){ return '<div class="bs-pool">' + row(one('Fe') + one('Fe') + one('Fe')) + '<div class="bs-swim">' + new Array(9).join(e) + '</div></div>'; } },
+      { t:'おまけ「分子どうしの そっと 引き合う 力」。分子と 分子も、手は つながないけれど、弱い 力で 引き合うよ。水の 分子どうしは、H の はしっこと となりの O が 引き合う(水素結合《すいそけつごう》)。氷《こおり》が すきまの 多い 形に なって、水に うくのは この ため!', pic:function(){ return row(mini(MOLS[1]) + '<span class="bs-arrow" style="letter-spacing:2px">・・・</span>' + mini(MOLS[1])) + '<div class="bs-cap">' + ruby('手より ずっと 弱い 引き合い') + '</div>'; } }
+    ];
+    var DECKS = { b:{ n:'分子《ぶんし》って なに?', l:INTRO }, h:{ n:'くっつき方の ひみつ', l:HIMITSU } };
+    function intro(i, dk){
+      dk = dk || 'b';
+      var s = rec(), D2 = DECKS[dk], L = D2.l, p = L[i], last = i === L.length - 1;
+      if(!s.gz.bsIntro){ s.gz.bsIntro = 1; safeSet(KEY, s); }
+      P = null;
+      show('bsPlay');
+      $('bsPlay').innerHTML = '<div class="gz-tdots">' + L.map(function(x, j){ return '<i class="'+(j < i ? 'on' : j === i ? 'now' : '')+'"></i>'; }).join('') + '</div>' +
+        '<div class="gz-tcard gz-intro"><h2>'+ruby(D2.n)+'</h2>' + p.pic() + '<p class="gz-fact">'+ruby(p.t)+'</p></div>' +
+        '<p class="gz-btns">' + (i > 0 ? '<button class="btn btn-ghost" data-bstep="'+(i - 1)+'" data-deck="'+dk+'">← まえ</button> ' : '') +
+        (last ? (dk === 'b' ? '<button class="btn btn-ghost" data-bstep="0" data-deck="h">'+ruby('🔬 くっつき方の ひみつ')+'</button> ' : '') + '<button class="btn btn-primary" data-top="1">つくりに いこう 🤝</button>' : '<button class="btn btn-primary" data-bstep="'+(i + 1)+'" data-deck="'+dk+'">つぎへ →</button>') + '</p>';
+      window.scrollTo(0, 0);
+    }
+
+    /* ---- トップ: 手の 数・おだい・分子ずかん ---- */
+    function open(){
+      var s = rec(); P = null;
+      if(!s.gz.bsIntro){ intro(0); return; }
+      var h = wallet() + (s.day.n >= DAY_CAP ? '<div class="gk-cap">🎉 今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ! 分子は つくれるけど、コインは あした また もらえるよ</div>' : '') +
+        '<div class="bs-hand">' + ['H', 'O', 'N', 'C'].map(function(x){ var e = el(x), ok = has(s, x); return '<div>'+G.svg(e, { sil:!ok, cls:'gz-hop' })+'<b>'+(ok ? x : '?')+' 手 '+VAL[x]+'本</b></div>'; }).join('') +
+        '<p>'+ruby('元素《げんそ》キャラには 手が あるよ。手を あまらせずに ぜんぶ つなぐと、「分子《ぶんし》」の できあがり! 水《みず》も 空気《くうき》も、分子で できて いるよ。')+'</p><button class="btn btn-ghost" data-bstep="0" data-deck="b" style="grid-column:1/-1;margin-top:6px">'+ruby('📖 分子《ぶんし》って なに?(お話を 見る)')+'</button><button class="btn btn-ghost" data-bstep="0" data-deck="h" style="grid-column:1/-1;margin-top:4px">'+ruby('🔬 くっつき方の ひみつ(手の 正体《しょうたい》は?)')+'</button></div>';
+      var any = TRAY.some(function(x){ return has(s, x); });
+      if(!any) h += '<p class="gk-note" style="text-align:center">'+ruby('元素《げんそ》ずかんの「空気《くうき》と水《みず》」の へやの クイズで、H・O・C を あつめよう。あつめた キャラだけ、ここで 使えるよ。')+'</p>';
+      h += '<h3 class="gz-sec">🎯 おだい</h3><div class="gk-menu">' + MOLS.map(function(m, i){
+        var ok = canMol(s, i), n = s.gz.mol[m.k] || 0, miss = Object.keys(m.need).filter(function(x){ return !has(s, x); });
+        return '<button class="gk-sub'+(ok ? '' : ' lock')+'" data-mol="'+i+'"'+(ok ? '' : ' disabled')+'><span class="gk-ico" style="font-size:28px">'+(ok ? m.i : '🔒')+'</span><span><b>'+(i + 1)+'. '+ruby(m.n)+'('+m.f+')をつくろう'+(n ? ' ✓' : '')+'</b><small>'+
+          (ok ? (n ? n + '回 つくったよ' : 'まだ つくって いないよ') : miss.length ? ruby(miss.join('・') + ' を 元素《げんそ》ずかんで あつめると ひらくよ') : ruby('前の 分子《ぶんし》を つくると ひらくよ'))+'</small></span></button>';
+      }).join('') + '</div>';
+      h += '<h3 class="gz-sec">📘 '+ruby('分子《ぶんし》ずかん')+'('+MOLS.filter(function(m){ return s.gz.mol[m.k]; }).length+' / '+MOLS.length+')</h3><div class="bs-zk">' + MOLS.map(function(m){
+        return s.gz.mol[m.k] ? '<div>'+mini(m)+'<b>'+ruby(m.n)+' '+m.f+'</b><small>'+ruby(m.fact)+'</small></div>' : '<div><div class="bs-q">?</div><b>? ? ?</b><small>まだ つくって いないよ</small></div>';
+      }).join('') + '</div><p class="gk-note gz-small">'+ruby('もっと たくさんの 分子《ぶんし》は、これから ふえるよ。')+'</p>';
+      $('bsTop').innerHTML = h;
+      show('bsTop');
+    }
+
+    /* ---- あそぶ ---- */
+    function play(i){ P = { mi:i, m:MOLS[i], at:[], bd:[], sel:null, done:false, msg:ruby(MOLS[i].h), bad:false }; show('bsPlay'); render(); }
+    function render(){
+      var s = rec(), m = P.m;
+      var h = '<div class="bs-goal"><h2>'+m.i+' '+ruby(m.n)+'('+m.f+')を つくろう</h2>'+ruby('手を あまらせずに ぜんぶ つなごう。キャラの 手を ゆびで 引っぱって、ほかの キャラに くっつけよう(タップ → タップでも つなげるよ)。つないだ 手を タップすると はなすよ。')+'</div>' +
+        '<div class="bs-board" id="bsBoard">' + (P.at.length ? pic(P.at, P.bd) : '<div class="bs-empty">'+ruby('下の キャラを タップして、ここに よんでね(6人まで)')+'</div>') + '</div>' +
+        '<div class="bs-msg'+(P.bad ? ' bad' : '')+'" id="bsMsg">'+P.msg+'</div>';
+      if(P.done){ h += P.done; }
+      else {
+        h += '<div class="bs-tray">' + TRAY.map(function(x){ var ok = has(s, x); return '<button data-add="'+x+'"'+(ok ? '' : ' disabled')+'>'+G.svg(el(x), { mini:true, sil:!ok })+(ok ? ruby(el(x).name) : 'まだ')+'</button>'; }).join('') + '</div>' +
+          '<div class="bs-row">' + (P.sel != null ? '<button class="btn btn-ghost" data-rm="1">'+ruby('この キャラを もどす')+'</button>' : '') + '<button class="btn btn-ghost" data-reset="1">やりなおし</button></div>';
+      }
+      $('bsPlay').innerHTML = h;
+    }
+    function say(t, bad){ P.msg = ruby(t); P.bad = !!bad; }
+    function svgAt(i){ var d = document.querySelector('#bsBoard [data-at="'+i+'"] svg'); return d; }
+    function add(x){
+      if(P.at.length >= MAX){ say(MAX + '人までだよ。いらない キャラは タップして「もどす」で へらせるよ', true); render(); return; }
+      P.at.push({ s:x }); P.sel = null; say(x + ' が きたよ! 手は ' + VAL[x] + '本。'); render(); hop(svgAt(P.at.length - 1));
+    }
+    function tapAt(i){
+      if(P.sel == null){ P.sel = i; say(P.at[i].s + ' を えらんだよ。手を つなぐ あいてを タップしてね'); render(); return; }
+      if(P.sel === i){ P.sel = null; say('えらぶのを やめたよ'); render(); return; }
+      var a = P.sel; P.sel = null; bond(a, i);
+    }
+    function bond(a, i){
+      var fa = free(a), fb = free(i);
+      if(!fa || !fb){
+        var who = !fa ? a : i; P.sel = null;
+        say(P.at[who].s + ' は もう 手が あいて いないよ(' + P.at[who].s + ' の 手は ' + VAL[P.at[who].s] + '本)', true); render(); hop(svgAt(who), 'sad'); return;
+      }
+      var same = P.bd.filter(function(b){ return (b[0] === a && b[1] === i) || (b[0] === i && b[1] === a); }).length;
+      if(same >= 3){ P.sel = null; say('同《おな》じ あいてとは 3本までだよ', true); render(); return; }
+      P.bd.push([a, i]); P.sel = null; P.nb = Math.min(a, i) + '-' + Math.max(a, i); say(P.at[a].s + ' と ' + P.at[i].s + ' が 手を つないだ! 🤝'); check(); render(); P.nb = null; hop(svgAt(a)); hop(svgAt(i));
+      if(P.done) P.at.forEach(function(_, j){ setTimeout(function(){ hop(svgAt(j)); }, 200 + j * 120); });
+    }
+    function connected(){
+      var seen = { 0:1 }, st = [0];
+      while(st.length){ var v = st.pop(); P.bd.forEach(function(b){ var w = b[0] === v ? b[1] : b[1] === v ? b[0] : -1; if(w >= 0 && !seen[w]){ seen[w] = 1; st.push(w); } }); }
+      return Object.keys(seen).length === P.at.length;
+    }
+    function check(){
+      var left = 0; P.at.forEach(function(_, i){ left += free(i); });
+      if(left){ say(ruby('手を つないだ! あまって いる 手は あと ' + left + '本')); return; }
+      if(!connected()){ say(ruby('手は ぜんぶ つないだけど、2つの かたまりに 分《わ》かれて いるよ。おだいは 1つの 分子《ぶんし》だよ'), true); return; }
+      var cnt = {}; P.at.forEach(function(a){ cnt[a.s] = (cnt[a.s] || 0) + 1; });
+      var key = Object.keys(cnt).sort().map(function(x){ return x + cnt[x]; }).join('');
+      var hit = MOLS.filter(function(m){ return Object.keys(m.need).sort().map(function(x){ return x + m.need[x]; }).join('') === key; })[0];
+      if(!hit){ say(ruby('手は ぜんぶ つないだね! でも ' + P.m.f + ' とは ちがう 分子《ぶんし》だよ。キャラの 数を 見なおそう'), true); return; }
+      win(hit);
+    }
+    function win(m){
+      var s = rec(), first = !s.gz.mol[m.k], want = first ? 5 : 1, got = Math.min(want, Math.max(0, DAY_CAP - s.day.n));
+      s.gz.mol[m.k] = (s.gz.mol[m.k] || 0) + 1; s.day.n += got; safeSet(KEY, s); if(got > 0) earn(got);
+      var other = m !== P.m, nx = MOLS.indexOf(P.m) + 1, s2 = rec();
+      say('');
+      P.done = '<div class="bs-done"><h2>🎉 '+ruby(m.n)+'('+m.f+')が できた!</h2>' +
+        (other ? '<p>'+ruby('おだいの ' + P.m.n + 'とは ちがうけど、本物の 分子《ぶんし》だよ!')+'</p>' : '') +
+        (first ? '<p>📘 '+ruby('分子《ぶんし》ずかんに 入ったよ!')+'</p>' : '') +
+        '<p>'+ruby(m.fact)+'</p>' +
+        '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン'+(first && got ? '(はじめて)' : '')+'</div>' +
+        (got < want ? '<div class="gk-cap">'+(got ? 'これで 今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ!' : '今日の まなぶコインは もう '+DAY_CAP+'こ ぜんぶ もらって いるので、今回は 0コインだよ。')+' コインは あした また もらえるよ</div>' : '') +
+        '<div class="gk-fb">はじめての 分子は 5コイン、2回目からは 1コイン・今日 '+s2.day.n+'/'+DAY_CAP+'</div>' +
+        '<div class="bs-row">' + (!other && nx < MOLS.length && canMol(s2, nx) ? '<button class="btn btn-primary" data-mol="'+nx+'">つぎの おだいへ</button>' : '') +
+        '<button class="btn btn-ghost" data-mol="'+MOLS.indexOf(P.m)+'">もういちど</button><button class="btn btn-ghost" data-top="1">'+ruby('分子《ぶんし》ずかんへ')+'</button></div></div>';
+    }
+    var view = $('view-bunshi');
+    view.addEventListener('click', function(e){
+      var t = e.target;
+      var mb = t.closest('[data-mol]'); if(mb && !mb.disabled){ play(+mb.getAttribute('data-mol')); return; }
+      if(t.closest('[data-top]')){ open(); return; }
+      var bs = t.closest('[data-bstep]'); if(bs){ intro(+bs.getAttribute('data-bstep'), bs.getAttribute('data-deck')); return; }
+      var hp = t.closest('.bs-hand .gz-hop'); if(hp){ hop(hp); return; }
+      if(!P || P.done) return;
+      var ad = t.closest('[data-add]'); if(ad && !ad.disabled){ add(ad.getAttribute('data-add')); return; }
+      var bb = t.closest('[data-bd]');
+      if(bb){
+        var ij = bb.getAttribute('data-bd').split('-').map(Number), k = -1;
+        P.bd.forEach(function(b, n){ if((b[0] === ij[0] && b[1] === ij[1]) || (b[0] === ij[1] && b[1] === ij[0])) k = n; });
+        if(k >= 0) P.bd.splice(k, 1); P.sel = null; say('手を はなしたよ'); render(); return;
+      }
+      if(t.closest('[data-rm]') && P.sel != null){
+        var r = P.sel; P.at.splice(r, 1);
+        P.bd = P.bd.filter(function(b){ return b[0] !== r && b[1] !== r; }).map(function(b){ return [b[0] > r ? b[0] - 1 : b[0], b[1] > r ? b[1] - 1 : b[1]]; });
+        P.sel = null; say('もどしたよ'); render(); return;
+      }
+      if(t.closest('[data-reset]')){ play(P.mi); return; }
+    });
+    /* ドラッグで 手を のばして くっつける(理科で遊ぼうと 同じ さわり方) */
+    var DR = null;
+    function bpt(e, bd){ var r = bd.getBoundingClientRect(); return [e.clientX - r.left - 2, e.clientY - r.top - 2]; }
+    function nearHand(q, from){
+      var best = -1, bd = 30;
+      (P.hp || []).forEach(function(h, k){ if(h.i !== from) return; var d = Math.hypot(h.x - q[0], h.y - q[1]); if(d < bd){ bd = d; best = k; } });
+      if(best < 0) (P.hp || []).forEach(function(h, k){ if(best < 0 && h.i === from) best = k; });
+      return best;
+    }
+    function near(q, not){
+      var best = -1, bd = 46;
+      (P.ps || []).forEach(function(c, i){ if(i === not) return; var d = Math.hypot(c[0] - q[0], c[1] - q[1]); if(d < bd){ bd = d; best = i; } });
+      (P.hp || []).forEach(function(h){ if(h.i === not) return; var d = Math.hypot(h.x - q[0], h.y - q[1]); if(d < Math.min(bd, 28)){ bd = d; best = h.i; } });
+      return best;
+    }
+    view.addEventListener('pointerdown', function(e){
+      if(!P || P.done || !P.ps) return;
+      var bd = e.target.closest('#bsBoard'); if(!bd || e.target.closest('[data-bd]')) return;
+      var q = bpt(e, bd), from = near(q, -1); if(from < 0) return;
+      DR = { from:from, x:e.clientX, y:e.clientY, moved:false, bd:bd, to:-1, hi:nearHand(q, from) };
+      try { bd.setPointerCapture(e.pointerId); } catch(_){}
+      e.preventDefault();
+    });
+    view.addEventListener('pointermove', function(e){
+      if(!DR) return;
+      if(!DR.moved && Math.abs(e.clientX - DR.x) + Math.abs(e.clientY - DR.y) > 8) DR.moved = true;
+      if(!DR.moved) return;
+      var q = bpt(e, DR.bd), c = P.ps[DR.from]; var gh = DR.bd.querySelector('.bs-fh[data-hi="'+DR.hi+'"]'); if(gh) gh.style.display = 'none';
+      var sv = DR.bd.querySelector('.bs-drag');
+      if(!sv){ sv = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); sv.setAttribute('class', 'bs-drag'); DR.bd.appendChild(sv); }
+      sv.setAttribute('viewBox', '0 0 ' + (DR.bd.clientWidth) + ' 336');
+      sv.innerHTML = arm(q, c, armCol(P.at[DR.from].s), false, false);
+      DR.to = near(q, DR.from);
+      DR.bd.querySelectorAll('.bs-at').forEach(function(d, j){ d.classList.toggle('sel', j === DR.from || j === DR.to); });
+    });
+    function endDr(){
+      if(!DR) return;
+      var d = DR; DR = null;
+      if(!d.moved){ tapAt(d.from); return; }
+      if(d.to >= 0){ P.sel = null; bond(d.from, d.to); return; }
+      say('ほかの キャラの 上で ゆびを はなしてね'); render();
+    }
+    view.addEventListener('pointerup', endDr);
+    view.addEventListener('pointercancel', function(){ if(DR){ DR = null; render(); } });
+    $('bsBack').addEventListener('click', function(){ if(!$('bsPlay').hidden){ open(); return; } Genso.open(); });
+    return { open:open };
   })();
 
   /* ---------- backup / restore ---------- */
