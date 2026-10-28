@@ -16596,8 +16596,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           var a = 'M70,80 V28 H280 V60', b = 'M280,168 V190 H70 V142';
           return box(wire(a) + wire(b) + flow(a, true, flip) + flow(b, true, flip) + at(30, 70, 80, batt(flip), 1) + at(222, 50, 116, motor(flip), 1) + lab(180, 120, flip ? 'ぎゃくに 回る' : '回る'), '電池と モーター');
         }
+        function emo(list){ return box(list.map(function(x, i){ var cx = 360*(i+1)/(list.length+1); return '<text x="'+cx+'" y="110" font-size="56" text-anchor="middle">'+x[0]+'</text>' + lab(cx, 156, x[1], x[2]); }).join(''), ''); }
         function pics(list){ return box(list.map(function(x, i){ return '<text x="'+(60 + (i % 4) * 80)+'" y="'+(i < 4 ? 70 : 160)+'" font-size="40" text-anchor="middle">'+x[0]+'</text>' + lab(60 + (i % 4) * 80, i < 4 ? 98 : 188, x[1], x[2]); }).join(''), ''); }
-        return { batt:batt, bulb:bulb, motor:motor, circuit:circuit, cells:cells, motorPic:motorPic, pics:pics, ava:function(k){ return '<svg viewBox="0 0 200 200" class="st-ava-svg" aria-hidden="true">'+(k === 'bulb' ? bulb(true) : k === 'motor' ? motor() : batt())+'</svg>'; } };
+        return { emo:emo, batt:batt, bulb:bulb, motor:motor, circuit:circuit, cells:cells, motorPic:motorPic, pics:pics, ava:function(k){ return '<svg viewBox="0 0 200 200" class="st-ava-svg" aria-hidden="true">'+(k === 'bulb' ? bulb(true) : k === 'motor' ? motor() : batt())+'</svg>'; } };
       })();
       var OK = '#2e9b6b', NG = '#d4534a';
       var TOPICS = {
@@ -16653,7 +16654,29 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             { w:'しゅくしゃく', say:'地図は 本当の 町を 小さく ちぢめて かいて いるよ。どれだけ ちぢめたかが「しゅくしゃく」。', pic:function(){ return SILL('scale'); }, tip:'しゅくしゃくの 線を 見ると、地図の 上の 長さが 本当は 何km か わかるよ。' } ],
             qs:[ { q:'北と 東の あいだの 方位《ほうい》は?', a:'北東', bad:['南東', '北西', '南西'], pg:0 },
                  { q:'学校から 見て、左上に ある 果樹園《かじゅえん》は どの 方位《ほうい》?', ill:'town', a:'北西', bad:['北東', '南西', '南東'], pg:1 },
-                 { q:'地図の「しゅくしゃく」で わかる ことは?', a:'本当の きょりを どれだけ ちぢめて あるか', bad:['土地の 高さ', '方位《ほうい》', '天気'], pg:2 } ] } ] }
+                 { q:'地図の「しゅくしゃく」で わかる ことは?', a:'本当の きょりを どれだけ ちぢめて あるか', bad:['土地の 高さ', '方位《ほうい》', '天気'], pg:2 } ] } ] },
+        anzen:{ title:'社会「安全と 災害」', sub:'o:anzen', hello:'くらしを まもる 人たちの お話を 聞こう! お話を さいごまで 見たら、問題に ちょうせん!', stories:[
+          { id:'anz1', t:'火事の とき', ico:'🚒', pages:[
+            { w:'119番', say:'火事の ときは 119番に 電話を するよ。落ち着いて「火事です」と 言って、場所を つたえよう。', pic:function(){ return SILL('fire'); }, tip:'けがや 病気で 急ぐ ときも 119番。救急車《きゅうきゅうしゃ》が 来て くれるよ。' },
+            { w:'通信指令《つうしんしれい》センター', say:'119番の 電話は「通信指令センター」に つながるよ。ここから 消防署《しょうぼうしょ》に 出動を つたえるんだ。', pic:function(){ return SILL('fire'); }, tip:'消防車《しょうぼうしゃ》や 救急車が すぐに 出発できる ように なって いるよ。' },
+            { w:'消火せんと 消防士《しょうぼうし》さん', say:'道ばたの「消火せん」からは、火を 消す 水が とれるよ。消防士さんは 交代で 24時間 はたらいて いるよ。', pic:function(){ return SILL('hydrant'); }, tip:'火事や けがは いつ 起きるか わからないから、夜も 消防署には 人が いるよ。' } ],
+            qs:[ { q:'火事の とき、電話を かける 番号は?', a:'119', bad:['110', '117', '177'], pg:0 },
+                 { q:'119番の 電話は、どこに つながる?', a:'通信指令《つうしんしれい》センター', bad:['交番', '市役所', '図書館《としょかん》'], pg:1 },
+                 { q:'道ばたの「消火せん」は 何に 使う?', a:'火を 消す 水を とる', bad:['手紙を 出す', 'ごみを すてる', '雨を ためる'], pg:2 } ] },
+          { id:'anz2', t:'事件・事故の とき', ico:'🚓', pages:[
+            { w:'110番', say:'事件や 事故の ときは 110番に 電話を するよ。警察《けいさつ》の 人が 来て くれるよ。', pic:function(){ return SILL('police'); }, tip:'火事・けが・病気は 119番、事件・事故は 110番。まちがえないように しよう。' },
+            { w:'交番', say:'町の「交番」には おまわりさんが いて、パトロールを したり、道を おしえたり して くれるよ。', pic:function(){ return SILL('police'); }, tip:'こまった ときは、近くの 交番に 行って 相談《そうだん》しても いいよ。' },
+            { w:'こども110番の 家', say:'「こども110番の 家」は、こまった ときに 助けて もらえる 家だよ。', pic:function(){ return SILL('kodomo110'); }, tip:'あぶない 目に あいそうに なったら にげこんで、大人に 助けて もらおう。' } ],
+            qs:[ { q:'事件《じけん》や 事故《じこ》の とき、電話を かける 番号は?', a:'110', bad:['119', '117', '177'], pg:0 },
+                 { q:'町で パトロールを したり、道を おしえたり して くれる ところは?', a:'交番', bad:['消防署《しょうぼうしょ》', '図書館《としょかん》', '郵便局《ゆうびんきょく》'], pg:1 },
+                 { q:'「こども110番の 家」は、どんな 家?', a:'こまった ときに 助けて もらえる 家', bad:['おかしを 売る 家', '110円で 遊べる 家', '警察官《けいさつかん》が 住む 家'], pg:2 } ] },
+          { id:'anz3', t:'地震・津波から 守る', ico:'🌊', deep:true, pages:[
+            { w:'地震《じしん》の とき', say:'大きな 地震《じしん》が 来たら、まず 自分の 身を 守るよ。つくえの 下に もぐって、頭を 守ろう。', pic:function(){ return D.emo([['🪑', 'つくえの 下', OK], ['🧑', '頭を 守る', OK]]); }, tip:'ゆれが おさまるまで、ガラスや たおれやすい 物から はなれよう。' },
+            { w:'津波《つなみ》', say:'海の 近くで 大きな 地震《じしん》が 来たら、津波《つなみ》が おしよせる ことが あるよ。すぐに 高い ところへ にげよう。', pic:function(){ return SILL('tsunami'); }, tip:'「ここまでは 来ない」と 思わずに、高い ところへ 早く にげる ことが 大切だよ。' },
+            { w:'ハザードマップ', say:'町には、きけんな 場所や にげる 場所を しめした「ハザードマップ」が あるよ。', pic:function(){ return SILL('hazard'); }, tip:'ふだんから 家の 近くの にげる 場所を、家族で 見て 話して おこう。' } ],
+            qs:[ { q:'地震《じしん》で はげしく ゆれて いる とき、まず どう する?', a:'つくえの 下に もぐって 頭を 守る', bad:['すぐに 外へ 走り出す', 'エレベーターに 乗る', 'まどの そばで ようすを 見る'], pg:0 },
+                 { q:'地しんの あと、海から おしよせる 大きな 波を 何と いう?', a:'津波《つなみ》', bad:['台風', '高しお', '雪なだれ'], pg:1 },
+                 { q:'災害《さいがい》の とき、きけんな 場所や にげる 場所を しめした 地図を 何と いう?', a:'ハザードマップ', bad:['道路地図', '天気図', '世界地図'], pg:2 } ] } ] }
       };
       var X = { tp:null, st:null, pg:0, x:{} }, SAVED = null;
       function rec(){ var s = get(); s.st = s.st || {}; s.sty = s.sty || {}; s.sty.seen = s.sty.seen || {}; s.sty.best = s.sty.best || {}; return s; }
@@ -16729,7 +16752,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var t = e.target, b;
         var menuOn = !$('gkMenu').hidden;
         if(menuOn && (b = t.closest('.gk-sub[data-lv="電気"]'))){ e.stopImmediatePropagation(); menuOf('den'); return; }
-        if(menuOn && (b = t.closest('.gk-sub[data-sub="o:map"]'))){ e.stopImmediatePropagation(); menuOf('map'); return; }
+        if(menuOn && (b = t.closest('.gk-sub[data-sub^="o:"]')) && TOPICS[b.getAttribute('data-sub').slice(2)]){ e.stopImmediatePropagation(); menuOf(b.getAttribute('data-sub').slice(2)); return; }
         if((b = t.closest('[data-story]'))){ e.stopImmediatePropagation(); if(b.getAttribute('aria-disabled') === 'true') return; read(b.getAttribute('data-story')); return; }
         if((b = t.closest('[data-squiz]'))){ e.stopImmediatePropagation(); quiz(b.getAttribute('data-squiz')); return; }
         if((b = t.closest('[data-sread]'))){ e.stopImmediatePropagation(); read(b.getAttribute('data-sread')); return; }
