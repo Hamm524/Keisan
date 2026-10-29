@@ -16511,7 +16511,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       document.body.appendChild(w);
       w.querySelector('#gkUchuX').addEventListener('click', function(){ w.remove(); try{ extraPack(); }catch(e){} });
     }
-    function show(part){ if(part !== 'menu') LVOPEN = false;  $('gkMenu').hidden = part !== 'menu'; $('gkPlay').hidden = part !== 'play'; $('gkResult').hidden = part !== 'result'; showView('gaku'); }
+    function show(part){
+      /* 問題から 次の 問題へ 進む ときは、画面の 位置を そのままに する(上までもどらない)。問題が 見えなく なる ときだけ、問題の ところまで 動かす */
+      var keep = (part === 'play' && !$('gkPlay').hidden && !$('gkMenu').hidden === false) ? window.scrollY : null;
+      if(part !== 'menu') LVOPEN = false;  $('gkMenu').hidden = part !== 'menu'; $('gkPlay').hidden = part !== 'play'; $('gkResult').hidden = part !== 'result'; showView('gaku');
+      if(keep != null){ window.scrollTo(0, keep); requestAnimationFrame(function(){ var q = $('gkQ'); if(!q) return; var r = q.getBoundingClientRect(); if(r.top < 40 || r.top > window.innerHeight - 160) window.scrollBy(0, r.top - 70); }); }
+    }
     function card(){
       var c = $('gakuCards'); if(!c) return;
       var s = get(), sn = Object.keys(s.s).filter(function(x){ return s.s[x].ok > 0; }).length;
