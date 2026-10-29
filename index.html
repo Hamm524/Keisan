@@ -16825,14 +16825,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
                  { q:'電池 2こを 並列《へいれつ》に つなぐと、どう なる?', a:'明るさは 同じで、電池が 長もちする', bad:['とても 明るく なる', 'すぐに 消える', '光らなく なる'], pg:1 },
                  { q:'電池の 向きを 逆《ぎゃく》に すると、モーターは どう なる?', a:'回る 向きが 逆《ぎゃく》に なる', bad:['止まって しまう', 'もっと 速く 回る', 'こわれる'], pg:2 } ] } ] },
         ten:{ title:'理科「天体」', sub:'s', lv:'天体', subj:'理科', uchu:true, hello:'太陽・月・星の お話を 聞こう! お話を さいごまで 見たら、問題に ちょうせん!', stories:[
-          { id:'ten1', t:'太陽と 惑星《わくせい》', ico:'☀️', pages:[
+          { id:'ten1', t:'太陽と 惑星《わくせい》', ico:'☀️', uchu:true, pages:[
             { w:'太陽《たいよう》', say:'太陽は 自分で 光って、あたたかさを 出して いる 星だよ。地球から 見える 星の 中で、いちばん 近い 星なんだ。', pic:function(){ return D.solar(null); }, tip:'太陽の まわりを 回る 星を「惑星《わくせい》」と いうよ。太陽と 惑星を まとめて「太陽系《たいようけい》」と 言うよ。' },
             { w:'8つの 惑星《わくせい》', say:'太陽に 近い ほうから、水星《すいせい》、 金星《きんせい》、 地球《ちきゅう》、 火星《かせい》、 木星《もくせい》、 土星《どせい》、 天王星《てんのうせい》、 海王星《かいおうせい》の じゅんだよ。', pic:function(){ return D.solar(2); }, tip:'「すい きん ち か もく ど てん かい」と 覚える 人も いるよ。地球は 3番目! むかしは 冥王星《めいおうせい》も 惑星に 数えて いたよ。' },
             { w:'大きさくらべ', say:'8つの 惑星の 中で いちばん 大きいのは 木星《もくせい》。直径《ちょっけい》は 地球の 10倍 以上《いじょう》も あるよ。', pic:function(){ return D.solar(4); }, tip:'地球は 小さな 惑星。木星や 土星は 大きな ガスの かたまりだよ。' } ],
             qs:[ { q:'自分で 光って いる 星は?', a:'太陽《たいよう》', bad:['月', '地球《ちきゅう》', '火星《かせい》'], pg:0 },
                  { q:'地球《ちきゅう》は、太陽に 近い ほうから 数えて 何番目の 惑星《わくせい》?', a:'3番目', bad:['1番目', '2番目', '4番目'], pg:1 },
                  { q:'太陽系《たいようけい》で いちばん 大きい 惑星《わくせい》は?', a:'木星《もくせい》', bad:['地球《ちきゅう》', '火星《かせい》', '金星《きんせい》'], pg:2 } ] },
-          { id:'ten2', t:'月の 満《み》ち欠《か》け', ico:'🌙', pages:[
+          { id:'ten2', t:'月の 満《み》ち欠《か》け', ico:'🌙', uchu:true, pages:[
             { w:'月は 光を はね返す', say:'月は 自分では 光って いないよ。太陽の 光が あたって いる 所が、光って 見えるんだ。', pic:function(){ return D.moonScene(4); }, tip:'月は 地球の まわりを 回って いる 星で、「衛星《えいせい》」と いうよ。' },
             { w:'形が かわる 月', say:'月の 形は 日に ちに よって かわるよ。ボタンで 月の 位置を かえて、地球から 見える 形を 見て みよう。', exp:'moon', pic:function(x){ return D.moonScene(x.moon != null ? x.moon : 2); }, tip:'月は いつも 半分だけ 太陽の 光を 受けて いるよ。地球から 見える 部分が、位置に よって かわるんだ。' },
             { w:'満ち欠けの 一まわり', say:'新月《しんげつ》から 三日月《みかづき》・半月《はんげつ》を 通って 満月《まんげつ》に なり、また 欠けて 新月に もどるよ。ひとまわりに およそ 29.5日《にち》、約《やく》1か月 かかるよ。', pic:function(){ return D.moonRow(); }, tip:'半月は「上弦《じょうげん》」と「下弦《かげん》」と 言うよ。満月の ころは、夕方に 東の 空から のぼるよ。' } ],
@@ -17037,7 +17037,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           if(ok && seen) h += '<button class="st-quick" data-squiz="'+st.id+'">✏️ お話を とばして 問題だけ</button>';
         });
         if(t.go) h += '<a class="isle-ticket st-lab" href="map/" style="text-decoration:none"><span class="tk-veh">🗾</span><span class="tk-txt"><small>'+t.go[0]+'</small><b>'+t.go[1]+'</b></span><span class="tk-go">ひらく <span aria-hidden="true">↗</span></span></a>';
-        if(t.uchu) h += '<button class="isle-ticket st-lab" data-stuchu="1"><span class="tk-veh">🔭</span><span class="tk-txt"><small>太陽系の ようすを 見て みよう</small><b>「宇宙を のぞこう」</b></span><span class="tk-go">ひらく</span></button>';
+        if(t.uchu) h += '<button class="isle-ticket st-lab" data-stuchu="1"><span class="tk-veh">🔭</span><span class="tk-txt"><small>惑星の 位置や 月の 満ち欠けを 見られるよ</small><b>「宇宙を のぞこう」</b></span><span class="tk-go">ひらく</span></button>';
         if(t.lab) h += '<button class="isle-ticket st-lab" data-stlab="1"><span class="tk-veh">🔬</span><span class="tk-txt"><small>じぶんで つないで ためそう</small><b>理科で 遊ぼう「電気の 実験室」</b></span><span class="tk-go">ひらく</span></button>';
         h += '<button class="gk-sub" data-stdrill="1"><span class="gk-ico" style="font-size:26px">📝</span><span><b>いつもの れんしゅう問題</b><small>この 分野の 問題を 10問(お話より 多く 出るよ)</small></span></button></div>';
         $('gkTitle').textContent = t.title; $('gkSubs').innerHTML = h; show('menu'); window.scrollTo(0, 0);
@@ -17077,11 +17077,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var wasOpen = t.stories[i+1] ? open(X.tp, i+1, s) : true;
         s.sty.best[id] = Math.max(s.sty.best[id] || 0, S.ok); put(s);
         var nowOpen = t.stories[i+1] ? open(X.tp, i+1, s) : true, box = $('gkResult').querySelector('.gk-res'); if(!box) return;
-        var add = '';
+        var add = '', st2 = story(id);
         if(!wasOpen && nowOpen) add += '<p class="st-new">🎉 つぎの お話「'+ruby(t.stories[i+1].t)+'」が ひらいたよ!</p>';
         else if(!nowOpen) add += '<p class="gk-note">2問 せいかいすると、つぎの お話が ひらくよ。お話を もう一度 見て みよう</p>';
         if(t.lab) add += '<button class="isle-ticket st-lab" data-stlab="1"><span class="tk-veh">🔬</span><span class="tk-txt"><small>お話で 見た ことを</small><b>電気の 実験室で ためして みよう</b></span><span class="tk-go">ひらく</span></button>';
-        if(t.uchu) add += '<button class="isle-ticket st-lab" data-stuchu="1"><span class="tk-veh">🔭</span><span class="tk-txt"><small>お話で 見た ことを</small><b>「宇宙を のぞこう」で たしかめよう</b></span><span class="tk-go">ひらく</span></button>';
+        if(t.uchu && st2 && st2.uchu) add += '<button class="isle-ticket st-lab" data-stuchu="1"><span class="tk-veh">🔭</span><span class="tk-txt"><small>お話で 見た ことを</small><b>「宇宙を のぞこう」で たしかめよう</b></span><span class="tk-go">ひらく</span></button>';
         add += '<p><button class="btn btn-ghost" data-sread="'+id+'">📖 お話を もう一度</button> <button class="btn btn-primary" data-stback="1">お話の 一覧へ</button></p>';
         box.insertAdjacentHTML('beforeend', add);
         var mb = $('gkMenuBtn'); if(mb) mb.remove();
