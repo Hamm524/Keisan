@@ -17567,6 +17567,40 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(!$('gkMenu').hidden && $('gkSubs').querySelector('.st-menu')){ e.stopImmediatePropagation(); var k = X.tp; X.tp = null; if(k === 'den') levelMenu(); else menu(); return; }
         if($('gkMenu').hidden && (inStory() || X.st)){ e.stopImmediatePropagation(); SAVED = null; X.looking = null; menuOf(X.tp); }
       }, true);
+      /* SMIL が 動かない 画面(iPhone など)でも 動くように、animate を JS で 動かす */
+      (function(){
+        var seen = typeof WeakSet !== 'undefined' ? new WeakSet() : null, run = [], raf = 0;
+        function num(a){ return String(a).trim().split(/[\s,]+/).map(parseFloat); }
+        function ease(u){ return u*u*(3 - 2*u); }
+        function setup(svg){
+          if(seen.has(svg)) return; seen.add(svg);
+          var list = [];
+          [].forEach.call(svg.querySelectorAll('animate,animateTransform'), function(a){
+            var vals = (a.getAttribute('values') || '').split(';').map(num), n = vals.length, kt = a.getAttribute('keyTimes'), dur = parseFloat(a.getAttribute('dur')) || 1;
+            if(n < 2) return;
+            kt = kt ? kt.split(';').map(parseFloat) : vals.map(function(_, i){ return i/(n - 1); });
+            list.push({ el:a.parentNode, attr:a.getAttribute('attributeName'), type:a.getAttribute('type'), vals:vals, kt:kt, dur:dur, begin:parseFloat(a.getAttribute('begin')) || 0, sp:a.getAttribute('calcMode') === 'spline' });
+          });
+          if(!list.length) return;
+          try{ svg.pauseAnimations(); }catch(e){}
+          run.push({ svg:svg, list:list, t0:performance.now() });
+          if(!raf) raf = requestAnimationFrame(tick);
+        }
+        function tick(now){
+          raf = 0; run = run.filter(function(r){ return r.svg.isConnected; });
+          run.forEach(function(r){ r.list.forEach(function(it){
+            var t = (now - r.t0)/1000 - it.begin; if(t < 0) return;
+            var u = (t % it.dur)/it.dur, i = 0; while(i < it.kt.length - 2 && u > it.kt[i + 1]) i++;
+            var span = it.kt[i + 1] - it.kt[i] || 1, f = Math.max(0, Math.min(1, (u - it.kt[i])/span)); if(it.sp) f = ease(f);
+            var a = it.vals[i], b = it.vals[i + 1], v = a.map(function(x, j){ return +(x + (b[j] - x)*f).toFixed(3); });
+            if(it.attr === 'transform') it.el.setAttribute('transform', it.type + '(' + v.join(' ') + ')'); else it.el.setAttribute(it.attr, v[0]);
+          }); });
+          if(run.length) raf = requestAnimationFrame(tick);
+        }
+        function scan(){ [].forEach.call(document.querySelectorAll('svg.st-svg'), setup); }
+        if(typeof MutationObserver !== 'undefined') new MutationObserver(function(){ scan(); }).observe(document.body, { childList:true, subtree:true });
+        scan();
+      })();
       return { menu:menuOf, data:TOPICS };
     })();
     $('gkBack').addEventListener('click', function(){ if($('gkMenu').hidden || LVOPEN){ menu(); } else goHome(); });
