@@ -17070,17 +17070,18 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           return s + '</svg>';
         }
 
-        function wgt(x, y, t, c){ return '<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y+14)+'" stroke="#6b7a92" stroke-width="2"/><rect x="'+(x-17)+'" y="'+(y+14)+'" width="34" height="26" rx="6" fill="'+(c||'#6fb7f2')+'" stroke="#2b79c2" stroke-width="2"/>'+tl(x, y+32, t, '', '#fff', 12); }
+        function wgt(x, y, t, c){ return '<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y+14)+'" stroke="#6b7a92" stroke-width="2"/><rect x="'+(x-17)+'" y="'+(y+14)+'" width="34" height="26" rx="6" fill="'+(c||'#6fb7f2')+'" stroke="#2b79c2" stroke-width="2"/>'+tl(x, y+32, t, '', '#fff', String(t).length > 4 ? 9 : 12); }
         function leverCalc(wl, dl, wr, dr, sl, sr, drT){
-          var cx = 180, k = 4, xl = cx - dl*k, xr = cx + dr*k, h = '';
+          sl = sl && String(sl).replace(/\?/g, '？'); sr = sr && String(sr).replace(/\?/g, '？'); drT = drT && String(drT).replace(/\?/g, '？');
+          var cx = 180, k = Math.min(4, 140/Math.max(dl, dr)), xl = cx - dl*k, xr = cx + dr*k, h = '';
           h += '<path d="M180,112 L162,150 L198,150 Z" fill="#8a7a66"/><g><animateTransform attributeName="transform" type="rotate" values="0 180 108;5 180 108;-3 180 108;2 180 108;-1 180 108;0 180 108;0 180 108" keyTimes="0;.1;.25;.4;.55;.7;1" dur="5s" repeatCount="indefinite"/><rect x="30" y="104" width="300" height="8" rx="4" fill="#c9a063" stroke="#8a6a3a" stroke-width="2"/>';
           h += wgt(xl, 112, sl || (wl+'g'), '#6fb7f2') + wgt(xr, 112, sr || (wr+'g'), '#f2a36f') + '</g>';
           h += arrow(cx-4, 80, xl+2, 80, '#2b79c2', 2) + tl((cx+xl)/2, 72, dl+'cm', '', '#2b79c2', 12);
-          h += arrow(cx+4, 80, xr-2, 80, '#d6703a', 2) + tl((cx+xr)/2, 72, (drT || dr)+'cm', '', '#d6703a', 12);
+          h += arrow(cx+4, 80, xr-2, 80, '#d6703a', 2) + tl((cx+xr)/2, 72, drT ? (/[a-z]/.test(drT) ? drT : drT+'cm') : dr+'cm', '', '#d6703a', 12);
           h += tl(180, 172, '支点', '', '#3a2f22', 12);
-          var unkR = (sr && String(sr).indexOf('?') >= 0) || (drT && String(drT).indexOf('?') >= 0), unkL = sl && String(sl).indexOf('?') >= 0;
-          h += tl(110, 190, unkL ? '？g × '+dl+'cm' : wl+'g × '+dl+'cm', '', '#2b79c2', 11) + tl(110, 205, '= '+(unkL ? '？' : wl*dl)+' g·cm', '', '#2b79c2', 12);
-          h += tl(250, 190, unkR ? (typeof drT === 'string' && drT.indexOf('?') === 0 ? wr+'g × ？cm' : '？g × '+dr+'cm') : wr+'g × '+dr+'cm', '', '#d6703a', 11) + tl(250, 205, '= '+(unkR ? '？' : wr*dr)+' g·cm', '', '#d6703a', 12);
+          var unkR = (sr && sr.indexOf('？') >= 0) || (drT && drT.indexOf('？') >= 0), unkL = sl && sl.indexOf('？') >= 0, kgL = sl && /kg/.test(sl), mmR = drT && /mm/.test(drT);
+          h += tl(110, 190, kgL ? sl+' × '+dl+'cm' : unkL ? '？g × '+dl+'cm' : wl+'g × '+dl+'cm', '', '#2b79c2', 11) + tl(110, 205, '= '+(unkL || kgL ? '？' : wl*dl)+' g·cm', '', '#2b79c2', 12);
+          h += tl(250, 190, mmR ? '？g × '+drT : unkR ? (drT && drT.indexOf('？') === 0 ? wr+'g × ？cm' : '？g × '+dr+'cm') : wr+'g × '+dr+'cm', '', '#d6703a', 11) + tl(250, 205, '= '+(unkR ? '？' : wr*dr)+' g·cm', '', '#d6703a', 12);
           return svgO('#fdf6e6', h) + '</svg>';
         }
         function an(attr, vals, dur, kt, type){ return '<animate'+(type ? 'Transform type="'+type+'"' : '')+' attributeName="'+attr+'" values="'+vals+'" keyTimes="'+(kt || '0;.55;.75;1')+'" dur="'+(dur || 4)+'s" repeatCount="indefinite"/>'; }
@@ -17091,7 +17092,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           h += '<g>'+an('transform','0 0;0 24;0 24;0 0',4,0,'translate')+arrow(116, 90, 116, 130, '#2b79c2', 3)+tl(136, 112, '60g', '', '#2b79c2', 12)+'</g>' + tl(100, 182, '定かっ車', '', '#3a2f22', 13) + tl(90, 200, '60g → 60g(同じ)', '', '#6b7a92', 10);
           h += '<rect x="200" y="10" width="140" height="8" rx="3" fill="#8a7a66"/><line x1="254" y1="18" x2="254" y2="100" stroke="#6b7a92" stroke-width="2">'+an('y2','100;88;88;100')+'</line><line x1="286" y1="100" x2="286" y2="60" stroke="#6b7a92" stroke-width="2">'+an('y1','100;88;88;100')+an('y2','60;36;36;60')+'</line>';
           h += '<g>'+an('transform','0 0;0 -12;0 -12;0 0',4,0,'translate')+'<circle cx="270" cy="100" r="16" fill="#e6e9f2" stroke="#6b7a92" stroke-width="3"/><line x1="270" y1="116" x2="270" y2="132" stroke="#6b7a92" stroke-width="2"/><rect x="252" y="132" width="36" height="26" rx="6" fill="#f2a36f" stroke="#c4622d" stroke-width="2"/>'+tl(270, 150, '60g', '', '#fff', 12)+'</g>';
-          h += '<g>'+an('transform','0 0;0 -24;0 -24;0 0',4,0,'translate')+arrow(286, 60, 286, 28, '#2b79c2', 3)+tl(312, 44, '30g', '', '#2b79c2', 12)+'</g>' + tl(270, 182, '動かっ車', '', '#3a2f22', 13) + tl(270, 200, '60g ÷ 2 = 30g、引く 長さ 2倍', '', '#6b7a92', 9);
+          h += '<g>'+an('transform','0 0;0 -24;0 -24;0 0',4,0,'translate')+arrow(286, 60, 286, 28, '#2b79c2', 3)+tl(312, 44, '30g', '', '#2b79c2', 12)+'</g>' + tl(270, 182, '動かっ車', '', '#3a2f22', 13) + tl(270, 200, '60g ÷ 2 = 30g、引く 長さ 2倍', '', '#6b7a92', 10);
           return svgO('#fdf6e6', h) + '</svg>';
         }
         function baneP(){
@@ -17132,9 +17133,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           return svgO('#fdf6e6', h) + '</svg>';
         }
         function furyokuQ(kind, name, w, sub){
-          var wy = kind === 'hang' ? 96 : 100, h = '<rect x="110" y="'+wy+'" width="140" height="'+(180-wy)+'" fill="#9fd3f5" fill-opacity=".8"/><path d="M110,60 L110,180 L250,180 L250,60" fill="none" stroke="#5b7aa0" stroke-width="4"/>';
+          var wy = kind === 'hang' ? 96 : 126 - w/2, h = '<rect x="110" y="'+wy+'" width="140" height="'+(180-wy)+'" fill="#9fd3f5" fill-opacity=".8"/><path d="M110,60 L110,180 L250,180 L250,60" fill="none" stroke="#5b7aa0" stroke-width="4"/>';
           if(kind === 'hang'){
-            h += '<rect x="150" y="6" width="60" height="38" rx="8" fill="#fff" stroke="#8a7a66" stroke-width="3"/>' + tl(180, 32, '？g', '', '#d6403a', 18) + '<line x1="180" y1="44" x2="180" y2="104" stroke="#6b7a92" stroke-width="3"/><rect x="155" y="104" width="50" height="50" rx="6" fill="#b07a5a" stroke="#6b4a24" stroke-width="3"/>' + tl(180, 130, name, '', '#fff', 13) + tl(180, 146, w+'g', '', '#fff', 11) + tl(290, 130, '全部 しずめた', '', '#2b79c2', 11) + tl(180, 202, '浮力 = 100cm³ × 1g = 100g → '+w+' − 100 = ？', '', '#6b7a92', 11);
+            h += '<rect x="150" y="6" width="60" height="38" rx="8" fill="#fff" stroke="#8a7a66" stroke-width="3"/>' + tl(180, 32, '？g', '', '#d6403a', 18) + '<line x1="180" y1="44" x2="180" y2="104" stroke="#6b7a92" stroke-width="3"/><rect x="155" y="104" width="50" height="50" rx="6" fill="#b07a5a" stroke="#6b4a24" stroke-width="3"/>' + tl(180, 130, name, '', '#fff', 13) + tl(180, 146, w+'g', '', '#fff', 11) + tl(290, 130, '全部 しずめた', '', '#2b79c2', 11) + tl(180, 202, 'ばねばかり = 重さ − 浮力', '', '#6b7a92', 11);
           } else {
             h += '<rect x="155" y="76" width="50" height="50" rx="6" fill="#c9a063" stroke="#6b4a24" stroke-width="3"/>' + tl(180, 98, name, '', '#3a2f22', 13) + tl(180, 114, w+'g', '', '#3a2f22', 11) + tl(180, 160, '水に 入った 体積 ？cm³', '', '#2b79c2', 12);
           }
@@ -17308,19 +17309,19 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           { id:'mnt1', t:'てこの つりあい(計算)', ico:'⚖️', pages:[
             { w:'おもり × 支点からの 長さ', say:'てこが つりあうのは、「おもりの 重さ × 支点《してん》からの 長さ」が、左と 右で 同じ ときだよ。これは「うでを まわそうと する はたらき」の 大きさで、左まわりと 右まわりの はたらきが 同じ ときに つりあうよ。', pic:function(){ return D.leverCalc(60, 20, 60, 20); }, tip:'左 60g × 20cm = 1200、右 60g × 20cm = 1200。同じだから つりあうよ。g と cm を かけた 数は「まわす はたらき」の 大きさ(単位は「g·cm」)。速さ × 時間 = 道のり、のように、ちがう 単位を かけると 新しい 量に なるよ。' },
             { w:'ちがう おもりでも つりあう', say:'支点から 左へ 20cm の ところに 60g、右へ 30cm の ところに 40g を つるして みよう。左 60 × 20 = 1200、右 40 × 30 = 1200。同じだから つりあうよ。(ぼうの 重さは 考えないよ。)重い ほうを 支点に 近づけると いいんだ。', pic:function(){ return D.leverCalc(60, 20, 40, 30); }, tip:'おもりが 軽い ほうは、支点から 遠くに つるせば つりあうよ。' },
-            { w:'わからない ところを 求める', say:'支点から 左へ 20cm の ところに 30g。右へ 10cm の ところに 何gを つるすと つりあう? 左は 30 × 20 = 600。右は □ × 10 = 600 だから、□ = 600 ÷ 10 = 60g。', pic:function(){ return D.leverCalc(30, 20, 60, 10, '30g', '?g'); }, tip:'「左の 答え」を 先に 出して、右で わり算して 求めよう。' },
-            { w:'単位を そろえよう(むずかしいよ!)', say:'ここからは ちょっと むずかしいよ! 右が 80mm のように 単位が ちがうと、そのままでは 計算できないんだ。先に 8cm に 直して から 計算しよう。重さも 同じで、kg と g が まざったら g に そろえるよ。', pic:function(){ return D.leverCalc(40, 20, 100, 8, '40g', '?g', '8'); }, tip:'10mm = 1cm、1kg = 1000g。左右とも「g × cm」に そろえて から くらべよう。ここが 受験で よく ねらわれる ところだよ。' } ],
-            qs:[ { q:'支点から 左へ 20cm の ところに 30g の おもりを つるした。右へ 10cm の ところに 何gの おもりを つるすと つりあう?', bag:3, pic:function(){ return D.leverCalc(30, 20, 60, 10, '30g', '?g'); }, a:'60g', bad:['15g', '30g', '20g'], pg:2 },
-                 { q:'支点から 左へ 40cm の ところに 15g の おもりを つるした。右へ 30cm の ところに 何gの おもりを つるすと つりあう?', bag:3, pic:function(){ return D.leverCalc(15, 40, 20, 30, '15g', '?g'); }, a:'20g', bad:['15g', '25g', '45g'], pg:2 },
+            { w:'わからない ところを 求める', say:'支点から 左へ 20cm の ところに 30g。右へ 10cm の ところに 何gを つるすと つりあう? 左は 30 × 20 = 600。右は □ × 10 = 600 だから、□ = 600 ÷ 10 = 60g。', pic:function(){ return D.leverCalc(30, 20, 60, 10, '30g', '？g'); }, tip:'「左の 答え」を 先に 出して、右で わり算して 求めよう。' },
+            { w:'単位を そろえよう(むずかしいよ!)', say:'ここからは ちょっと むずかしいよ! 右が 80mm のように 単位が ちがうと、そのままでは 計算できないんだ。先に 8cm に 直して から 計算しよう。重さも 同じで、0.3kg なら 300g に 直すよ。kg と g が まざったら g に そろえよう。', pic:function(){ return D.leverCalc(40, 20, 100, 8, '40g', '？g', '8'); }, tip:'10mm = 1cm、1kg = 1000g。左右とも「g × cm」に そろえて から くらべよう。ここが 受験で よく ねらわれる ところだよ。' } ],
+            qs:[ { q:'支点から 左へ 25cm の ところに 40g の おもりを つるした。右へ 20cm の ところに 何gの おもりを つるすと つりあう?', bag:3, pic:function(){ return D.leverCalc(40, 25, 50, 20, '40g', '？g'); }, a:'50g', bad:['25g', '40g', '100g'], pg:2 },
+                 { q:'支点から 左へ 40cm の ところに 15g の おもりを つるした。右へ 30cm の ところに 何gの おもりを つるすと つりあう?', bag:3, pic:function(){ return D.leverCalc(15, 40, 20, 30, '15g', '？g'); }, a:'20g', bad:['15g', '25g', '45g'], pg:2 },
                  { q:'支点から 左へ 30cm の ところに 20g の おもりを つるし、右に 50g の おもりを つるしたら つりあった。右は 支点から 何cm の ところ?', bag:3, pic:function(){ return D.leverCalc(20, 30, 50, 12, '20g', '50g', '?'); }, a:'12cm', bad:['10cm', '15cm', '60cm'], pg:2 },
-                 { q:'支点から 左へ 20cm の ところに 40g の おもり。右へ 80mm の ところに 何gの おもりを つるすと つりあう?', bag:3, warn:'むずかしいよ! 単位を そろえてから 計算しよう', pic:function(){ return D.leverCalc(40, 20, 100, 8, '40g', '?g', '8(80mm)'); }, a:'100g', bad:['10g', '50g', '20g'], pg:3 },
-                 { q:'支点から 左へ 20cm の ところに 0.3kg の おもり。右へ 30cm の ところに 何gの おもりを つるすと つりあう?', bag:3, warn:'むずかしいよ! kg と g に ちゅうい', pic:function(){ return D.leverCalc(300, 20, 200, 30, '0.3kg', '?g'); }, a:'200g', bad:['0.2g', '20g', '2000g'], pg:3 } ] },
+                 { q:'支点から 左へ 15cm の ところに 30g の おもり。右へ 50mm の ところに 何gの おもりを つるすと つりあう?', bag:3, warn:'むずかしいよ! 単位を そろえてから 計算しよう', pic:function(){ return D.leverCalc(30, 15, 90, 5, '30g', '？g', '50mm'); }, a:'90g', bad:['9g', '60g', '450g'], pg:3 },
+                 { q:'支点から 左へ 20cm の ところに 0.3kg の おもり。右へ 30cm の ところに 何gの おもりを つるすと つりあう?', bag:3, warn:'むずかしいよ! kg と g に ちゅうい', pic:function(){ return D.leverCalc(300, 20, 200, 30, '0.3kg', '？g'); }, a:'200g', bad:['0.2g', '20g', '2000g'], pg:3 } ] },
           { id:'mnt2', t:'かっ車', ico:'🪢', pages:[
             { w:'定かっ車', say:'天じょうに とめた かっ車を「定《てい》かっ車」と いうよ。ひもを 引く 向きを 変えられるけれど、力の 大きさは 変わらないよ。60gの ものを 持ち上げるには、60gぶんの 力が いるよ。', pic:function(){ return D.kasshaP(); }, tip:'かっ車や ひもの 重さは、ふつう 考えないよ。' },
             { w:'動かっ車', say:'ものと いっしょに 動く かっ車を「動《どう》かっ車」と いうよ。ひもが 2本で ささえるので、引く 力は 半分に なるよ。60gの ものは 30gぶんの 力で 持ち上がるよ。', pic:function(){ return D.kasshaP(); }, tip:'そのかわり、引く ひもの 長さは 2倍に なるよ。10cm 持ち上げるには ひもを 20cm 引くよ。' },
             { w:'ひもを 引く 長さ', say:'動かっ車では、力は 半分で すむけれど、ひもを 引く 長さは 2倍に なるよ。得を した ぶん、長く 引かなければ ならないんだ。楽に なっても、「力 × 引く 長さ」は 同じなんだよ。', pic:function(){ return D.kasshaP(); }, tip:'力が 1/2 なら 引く 長さは 2倍、力が 1/3 なら 3倍。かけると いつも 同じに なるよ。' } ],
             qs:[ { q:'ひもを 引く 向きを 変えられるが、力の 大きさは 変わらない かっ車は?', a:'定かっ車', bad:['動かっ車', 'どちらも', 'どちらでも ない'], pg:0 },
-                 { q:'動かっ車で 60g の ものを 持ち上げる。引く 力は 何g?(かっ車の 重さは 考えない)', bag:3, pic:function(){ return D.kasshaQ('60g', '？g'); }, a:'30g', bad:['60g', '120g', '20g'], pg:1 },
+                 { q:'動かっ車で 80g の ものを 持ち上げる。引く 力は 何g?(かっ車の 重さは 考えない)', bag:3, pic:function(){ return D.kasshaQ('80g', '？g'); }, a:'40g', bad:['80g', '160g', '20g'], pg:1 },
                  { q:'動かっ車で ものを 40cm 持ち上げる。ひもを 何cm 引く?', bag:3, pic:function(){ return D.kasshaQ('40cm↑', '？cm'); }, a:'80cm', bad:['40cm', '20cm', '160cm'], pg:2 } ] },
           { id:'mnt3', t:'ばねの のび', ico:'🌀', pages:[
             { w:'のびは おもりに 比例', say:'ばねに おもりを つるすと、のびるよ。おもりが 2倍、3倍に なると、のびも 2倍、3倍に なるよ。これを「比例《ひれい》」と いうよ。', pic:function(){ return D.baneP(); }, tip:'この ばねは 10gで 2cm のびるよ。のびの グラフは、0 から 出発する 一直線に なるよ。' },
@@ -17342,7 +17343,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             { w:'うく・しずむ', say:'全部 しずめた ときの 浮力が 重さより 大きいと、うき上がるよ。上がって 水に 入る 体積が へると 浮力も へって、浮力 = 重さ に なった ところで うくよ。体積 100cm³ で 60g の 木は、60cm³ だけ しずんで うくよ。', pic:function(){ return D.furyokuP(); }, tip:'うく ものは、水に 入った 体積(cm³) = 重さ(g) に なるよ。' } ],
             qs:[ { q:'ものが 水の 中で 軽く なる のは、何の 力が はたらく から?', a:'浮力', bad:['重力', '磁力', '電気の 力'], pg:0 },
                  { q:'200g の ねんど(体積 100cm³)を 全部 水に しずめた。ばねばかりは 何g?', bag:3, pic:function(){ return D.furyokuQ('hang', 'ねんど', 200); }, a:'100g', bad:['200g', '300g', '0g'], pg:1 },
-                 { q:'体積 100cm³、重さ 60g の 木が 水に ういた。水に 入って いる 体積は?', bag:3, pic:function(){ return D.furyokuQ('float', '木', 60); }, a:'60cm³', bad:['40cm³', '100cm³', '160cm³'], pg:2 } ] } ] },
+                 { q:'体積 100cm³、重さ 80g の 木が 水に ういた。水に 入って いる 体積は?', bag:3, pic:function(){ return D.furyokuQ('float', '木', 80); }, a:'80cm³', bad:['20cm³', '100cm³', '180cm³'], pg:2 } ] } ] },
         map:{ title:'社会「地図と 方位」', sub:'o:map', hello:'地図の 読み方を いっしょに 見て いこう! お話を さいごまで 見たら、問題に ちょうせん!', stories:[
           { id:'map1', t:'方位って なに?', ico:'🧭', pages:[
             { w:'4つの 方位《ほうい》', say:'北・南・東・西を「方位《ほうい》」と いうよ。北を 向いて 立って みよう。', pic:function(){ return SILL('stand'); }, tip:'北を 向くと、右手が 東、左手が 西、うしろが 南だよ。' },
