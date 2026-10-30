@@ -16926,8 +16926,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           var s = svgO('#eaf6ff');
           s += '<rect x="30" y="52" width="60" height="60" rx="10" fill="#bfe4f8" stroke="#7fbfe0" stroke-width="3"/><path d="M40,62 l14,0 M40,72 l8,0" stroke="#fff" stroke-width="4" stroke-linecap="round"/>';
           s += '<path d="M180,48 C200,80 204,104 180,114 C156,104 160,80 180,48 Z" fill="#4aa3df"/><path d="M172,86 q-2,8 4,14" stroke="#cfeaff" stroke-width="3" fill="none" stroke-linecap="round"/>';
-          s += '<path d="M290,112 q-10,-14 0,-26 q10,-12 0,-26 M310,112 q-10,-14 0,-26 q10,-12 0,-26 M270,112 q-10,-14 0,-26 q10,-12 0,-26" fill="none" stroke="#b8c6d6" stroke-width="4" stroke-dasharray="3 7" stroke-linecap="round"/>';
-          s += arrow(100, 74, 150, 74, '#d6403a', 3) + arrow(150, 96, 100, 96, '#2b79c2', 3) + arrow(212, 74, 262, 74, '#d6403a', 3) + arrow(262, 96, 212, 96, '#2b79c2', 3);
+          s += '<g>'+an('transform','0 10;0 -14;0 10',3,'0;.5;1','translate')+an('opacity','.35;1;.35',3,'0;.5;1')+'<path d="M290,112 q-10,-14 0,-26 q10,-12 0,-26 M310,112 q-10,-14 0,-26 q10,-12 0,-26 M270,112 q-10,-14 0,-26 q10,-12 0,-26" fill="none" stroke="#b8c6d6" stroke-width="4" stroke-dasharray="3 7" stroke-linecap="round"/></g>';
+          s += '<g>'+an('opacity','1;1;.15;.15;1',4,'0;.4;.5;.9;1')+arrow(100, 74, 150, 74, '#d6403a', 3) + arrow(212, 74, 262, 74, '#d6403a', 3)+'</g><g>'+an('opacity','.15;.15;1;1;.15',4,'0;.4;.5;.9;1')+arrow(150, 96, 100, 96, '#2b79c2', 3) + arrow(262, 96, 212, 96, '#2b79c2', 3)+'</g>';
           s += tl(125, 62, 'とける', '', '#c9302c', 11) + tl(125, 120, 'こおる', '', '#1f5fa6', 11) + tl(237, 62, 'じょう発', 'じょうはつ', '#c9302c', 11) + tl(237, 120, 'ぎょう結', 'ぎょうけつ', '#1f5fa6', 11);
           s += tl(60, 146, '氷', 'こおり', '#27324f', 13) + tl(180, 146, '水', 'みず', '#27324f', 13) + tl(290, 146, '水じょう気', 'すいじょうき', '#27324f', 13) + tl(290, 172, '(目に 見えない)', '', '#6b7a92', 10);
           s += tl(125, 192, '0℃', '', '#27324f', 12) + tl(237, 192, 'ふっとうで 100℃', '', '#27324f', 11);
@@ -16936,9 +16936,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         function boilP(){
           var s = svgO('#fff4ea');
           s += '<path d="M120,60 L120,150 Q120,166 136,166 L224,166 Q240,166 240,150 L240,60" fill="#e8f5fd" stroke="#7a8aa2" stroke-width="4"/><path d="M122,84 L122,150 Q122,164 136,164 L224,164 Q238,164 238,150 L238,84 Z" fill="#7fc0ea" opacity=".75"/>';
-          [[150, 150], [180, 140], [208, 152], [166, 118], [196, 108], [150, 96], [220, 118]].forEach(function(b, i){ s += '<circle cx="'+b[0]+'" cy="'+b[1]+'" r="'+(5 + (i % 3) * 2)+'" fill="none" stroke="#fff" stroke-width="2.5"/>'; });
-          s += '<path d="M150,70 q-8,-14 0,-26 M180,70 q-8,-14 0,-26 M210,70 q-8,-14 0,-26" fill="none" stroke="#b4c0d0" stroke-width="4" stroke-linecap="round"/>';
-          s += '<path d="M160,176 q8,-18 20,-6 q12,-12 20,6 q-4,14 -20,14 q-16,0 -20,-14 Z" fill="#ff8a1f"/><path d="M172,184 q8,-12 16,0" fill="#ffd24a" stroke="#ffd24a" stroke-width="4"/>';
+          [[150, 150], [180, 140], [208, 152], [166, 118], [196, 108], [150, 96], [220, 118]].forEach(function(b, i){ s += '<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -'+(b[1] - 88)+'" keyTimes="0;1" dur="'+(1.6 + i*.25).toFixed(2)+'s" begin="'+(i*.35).toFixed(2)+'s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.8;1" dur="'+(1.6 + i*.25).toFixed(2)+'s" begin="'+(i*.35).toFixed(2)+'s" repeatCount="indefinite"/><circle cx="'+b[0]+'" cy="'+b[1]+'" r="'+(5 + (i % 3) * 2)+'" fill="none" stroke="#fff" stroke-width="2.5"/></g>'; });
+          s += '<g>'+an('transform','0 8;0 -12;0 8',2,'0;.5;1','translate')+an('opacity','.3;1;.3',2,'0;.5;1')+'<path d="M150,70 q-8,-14 0,-26 M180,70 q-8,-14 0,-26 M210,70 q-8,-14 0,-26" fill="none" stroke="#b4c0d0" stroke-width="4" stroke-linecap="round"/></g>';
+          s += '<g transform="translate(180,190)"><g>'+an('transform','1 1;1.1 .9;.92 1.1;1 1',.6,'0;.33;.66;1','scale')+'<g transform="translate(-180,-190)"><path d="M160,176 q8,-18 20,-6 q12,-12 20,6 q-4,14 -20,14 q-16,0 -20,-14 Z" fill="#ff8a1f"/><path d="M172,184 q8,-12 16,0" fill="#ffd24a" stroke="#ffd24a" stroke-width="4"/></g></g></g>';
           s += '<rect x="278" y="40" width="14" height="110" rx="7" fill="#fff" stroke="#7a8aa2" stroke-width="3"/><rect x="282" y="52" width="6" height="96" rx="3" fill="#d6403a"/><circle cx="285" cy="152" r="12" fill="#d6403a"/>';
           s += tl(285, 28, '100℃', '', '#c9302c', 13) + tl(60, 100, 'ふっとう', '', '#c24a00', 15) + tl(60, 122, '温度は ほぼ 同じ', 'おんどは', '#27324f', 11);
           return s + '</svg>';
@@ -16947,36 +16947,36 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           var s = svgO('#eaf6ff');
           [[90, 112, false], [270, 92, true]].forEach(function(c){
             s += '<path d="M'+(c[0]-40)+',70 L'+(c[0]-40)+',160 Q'+(c[0]-40)+',172 '+(c[0]-28)+',172 L'+(c[0]+28)+',172 Q'+(c[0]+40)+',172 '+(c[0]+40)+',160 L'+(c[0]+40)+',70" fill="none" stroke="#7a8aa2" stroke-width="4"/>';
-            s += '<rect x="'+(c[0]-38)+'" y="'+c[1]+'" width="76" height="'+(170-c[1])+'" rx="6" fill="'+(c[2] ? '#cfeefc' : '#7fc0ea')+'" opacity=".9"/>';
-            if(c[2]) s += '<rect x="'+(c[0]-30)+'" y="'+(c[1]+6)+'" width="60" height="58" rx="8" fill="#e8f8ff" stroke="#9fd2ec" stroke-width="3"/>';
+            s += '<rect x="'+(c[0]-38)+'" y="'+c[1]+'" width="76" height="'+(170-c[1])+'" rx="6" fill="'+(c[2] ? '#cfeefc' : '#7fc0ea')+'" opacity=".9">'+(c[2] ? an('y','112;112;92;92;112',5,'0;.15;.55;.9;1')+an('height','58;58;78;78;58',5,'0;.15;.55;.9;1') : '')+'</rect>';
+            if(c[2]) s += '<rect x="'+(c[0]-30)+'" y="'+(c[1]+6)+'" width="60" height="58" rx="8" fill="#e8f8ff" stroke="#9fd2ec" stroke-width="3" opacity="0">'+an('opacity','0;0;1;1;0',5,'0;.15;.55;.9;1')+an('y','118;118;98;98;118',5,'0;.15;.55;.9;1')+'</rect>';
           });
           s += '<line x1="40" y1="112" x2="330" y2="112" stroke="#c9302c" stroke-width="2" stroke-dasharray="5 4"/>';
-          s += arrow(322, 112, 322, 94, '#c9302c', 3);
+          s += '<g>'+an('transform','0 0;0 0;0 -4;0 -4;0 0',5,'0;.15;.55;.9;1','translate')+arrow(322, 112, 322, 94, '#c9302c', 3)+'</g>';
           s += tl(90, 196, '水', 'みず', '#27324f', 13) + tl(270, 196, '氷', 'こおり', '#27324f', 13) + tl(180, 44, 'こおると 体積が 大きく なる', 'たいせき', '#27324f', 12);
           return s + '</svg>';
         }
         function syringeP(){
           var s = svgO('#eef7ff');
-          s += '<rect x="90" y="84" width="170" height="44" rx="8" fill="#e8f5fd" stroke="#7a8aa2" stroke-width="4"/><rect x="92" y="86" width="86" height="40" rx="6" fill="#f0f2f6"/>';
-          [[104, 96], [124, 112], [142, 98], [160, 114], [112, 118], [150, 124], [130, 90]].forEach(function(d){ s += '<circle cx="'+d[0]+'" cy="'+d[1]+'" r="3.5" fill="#9aa6b8"/>'; });
-          s += '<rect x="176" y="90" width="8" height="32" fill="#9aa6b8"/><rect x="184" y="102" width="130" height="8" fill="#9aa6b8"/><rect x="312" y="88" width="10" height="32" rx="3" fill="#6b7a92"/><rect x="60" y="100" width="30" height="8" fill="#9aa6b8"/>';
-          s += arrow(350, 106, 326, 106, '#d6403a', 4);
+          s += '<rect x="90" y="84" width="170" height="44" rx="8" fill="#e8f5fd" stroke="#7a8aa2" stroke-width="4"/><rect x="92" y="86" width="86" height="40" rx="6" fill="#f0f2f6">'+an('width','86;86;48;48;86',4,'0;.15;.55;.85;1')+'</rect>';
+          [[104, 96], [124, 112], [142, 98], [160, 114], [112, 118], [150, 124], [130, 90]].forEach(function(d){ s += '<circle cx="'+d[0]+'" cy="'+d[1]+'" r="3.5" fill="#9aa6b8">'+an('cx', d[0]+';'+d[0]+';'+(92 + (d[0]-92)*.55).toFixed(1)+';'+(92 + (d[0]-92)*.55).toFixed(1)+';'+d[0], 4, '0;.15;.55;.85;1')+'</circle>'; });
+          s += '<g>'+an('transform','0 0;0 0;-38 0;-38 0;0 0',4,'0;.15;.55;.85;1','translate')+'<rect x="176" y="90" width="8" height="32" fill="#9aa6b8"/><rect x="184" y="102" width="130" height="8" fill="#9aa6b8"/><rect x="312" y="88" width="10" height="32" rx="3" fill="#6b7a92"/></g><rect x="60" y="100" width="30" height="8" fill="#9aa6b8"/>';
+          s += '<g>'+an('transform','0 0;0 0;-38 0;-38 0;0 0',4,'0;.15;.55;.85;1','translate')+arrow(350, 106, 326, 106, '#d6403a', 4)+'</g>';
           s += tl(135, 150, '空気', 'くうき', '#1f5fa6', 13) + tl(180, 44, 'おすと 空気は ちぢむ', '', '#27324f', 13) + tl(300, 150, 'おす', '', '#c9302c', 13);
           return s + '</svg>';
         }
         function warmAirP(){
           var s = svgO('#fff4ea', '<rect y="176" width="360" height="34" fill="#d9c7a6"/>');
           s += '<path d="M164,176 q8,-26 16,-8 q8,-20 16,8 Z" fill="#ff8a1f"/><rect x="150" y="170" width="60" height="10" rx="3" fill="#8a7a66"/>';
-          [[150, 150, 110], [180, 150, 90], [210, 150, 110]].forEach(function(a){ s += arrow(a[0], a[1], a[0], a[2] - 40, '#e5533d', 4); });
-          s += arrow(50, 160, 140, 160, '#4aa3df', 3) + arrow(310, 160, 220, 160, '#4aa3df', 3);
+          [[150, 150, 110], [180, 150, 90], [210, 150, 110]].forEach(function(a){ s += '<g>'+an('transform','0 0;0 -16;0 0',2.5,'0;.5;1','translate')+an('opacity','1;.45;1',2.5,'0;.5;1')+arrow(a[0], a[1], a[0], a[2] - 40, '#e5533d', 4)+'</g>'; });
+          s += '<g>'+an('transform','0 0;14 0;0 0',2.5,'0;.5;1','translate')+arrow(50, 160, 140, 160, '#4aa3df', 3)+'</g><g>'+an('transform','0 0;-14 0;0 0',2.5,'0;.5;1','translate')+arrow(310, 160, 220, 160, '#4aa3df', 3)+'</g>';
           s += tl(180, 30, 'あたためた 空気は 上へ', '', '#c9302c', 14) + tl(60, 144, '冷たい 空気', 'つめたい くうき', '#1f5fa6', 11) + tl(300, 144, '冷たい 空気', 'つめたい くうき', '#1f5fa6', 11);
           return s + '</svg>';
         }
         function metalHeat(){
           var s = svgO('#f4f6fb');
-          s += '<rect x="60" y="106" width="250" height="16" rx="5" fill="#a8b1c0"/><rect x="60" y="106" width="80" height="16" rx="5" fill="#e5533d" opacity=".75"/>';
+          s += '<rect x="60" y="106" width="250" height="16" rx="5" fill="#a8b1c0"/><rect x="60" y="106" width="30" height="16" rx="5" fill="#e5533d" opacity=".75">'+an('width','30;250;250;30',8,'0;.9;.96;1')+'</rect>';
           s += '<path d="M34,140 q8,-26 20,-8 q10,-24 20,8 q-4,16 -20,16 q-16,0 -20,-16 Z" fill="#ff8a1f"/>';
-          [[88, true], [138, true], [188, false], [238, false], [288, false]].forEach(function(w){ s += '<circle cx="'+w[0]+'" cy="'+(w[1] ? 156 : 131)+'" r="6" fill="'+(w[1] ? '#e5533d' : '#f5d7a1')+'"/>'; });
+          [88, 138, 188, 238, 288].forEach(function(x){ var t = (x - 60)/250*.9, k = '0;'+t.toFixed(3)+';'+(t + .04).toFixed(3)+';.96;1'; s += '<circle cx="'+x+'" cy="131" r="6" fill="#f5d7a1">'+an('cy','131;131;156;156;131',8,k)+an('opacity','1;1;0;0;1',8,k)+'</circle><circle cx="'+x+'" cy="131" r="6" fill="#e5533d" opacity="0">'+an('cy','131;131;156;156;131',8,k)+an('opacity','0;0;1;1;0',8,k)+'</circle>'; });
           s += arrow(110, 70, 280, 70, '#2e9d5b', 3);
           s += tl(195, 56, 'あたためた ところから じゅんに', '', '#1f7a43', 12) + tl(190, 176, 'ろうは あたためた ほうから とける', '', '#27324f', 11);
           return s + '</svg>';
@@ -17024,7 +17024,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         }
         function candleJar(){
           var s = svgO('#fff4ea');
-          function candle(x, flame){ var t = '<rect x="'+(x-9)+'" y="110" width="18" height="50" rx="3" fill="#f5e8c8"/><line x1="'+x+'" y1="110" x2="'+x+'" y2="102" stroke="#555" stroke-width="2"/>'; if(flame) t += '<path d="M'+x+',66 C'+(x+14)+',84 '+(x+10)+',102 '+x+',102 C'+(x-10)+',102 '+(x-14)+',84 '+x+',66 Z" fill="#ff8a1f"/><path d="M'+x+',82 C'+(x+6)+',92 '+(x+4)+',100 '+x+',100 C'+(x-4)+',100 '+(x-6)+',92 '+x+',82 Z" fill="#ffd24a"/>'; else t += '<path d="M'+x+',96 q-8,-12 0,-22 q8,-10 0,-22" fill="none" stroke="#b4c0d0" stroke-width="4" stroke-linecap="round"/>'; return t; }
+          function candle(x, flame){ var t = '<rect x="'+(x-9)+'" y="110" width="18" height="50" rx="3" fill="#f5e8c8"/><line x1="'+x+'" y1="110" x2="'+x+'" y2="102" stroke="#555" stroke-width="2"/>'; if(flame) t += '<g transform="translate('+x+',102)"><g>'+an('transform','1 1;1.06 .94;.94 1.05;1 1',.7,'0;.33;.66;1','scale')+'<g transform="translate('+(-x)+',-102)"><path d="M'+x+',66 C'+(x+14)+',84 '+(x+10)+',102 '+x+',102 C'+(x-10)+',102 '+(x-14)+',84 '+x+',66 Z" fill="#ff8a1f"/><path d="M'+x+',82 C'+(x+6)+',92 '+(x+4)+',100 '+x+',100 C'+(x-4)+',100 '+(x-6)+',92 '+x+',82 Z" fill="#ffd24a"/></g></g></g>'; else t += '<g>'+an('transform','0 8;0 -14;0 8',3,'0;.5;1','translate')+an('opacity','.2;1;.2',3,'0;.5;1')+'<path d="M'+x+',96 q-8,-12 0,-22 q8,-10 0,-22" fill="none" stroke="#b4c0d0" stroke-width="4" stroke-linecap="round"/></g>'; return t; }
           s += candle(90, true) + candle(270, false);
           s += '<rect x="60" y="160" width="60" height="6" fill="#8a7a66"/><rect x="240" y="160" width="60" height="6" fill="#8a7a66"/>';
           s += '<path d="M222,52 L222,160 L318,160 L318,52 Q270,40 222,52 Z" fill="#d6ecf8" opacity=".55" stroke="#7a8aa2" stroke-width="4"/>';
@@ -17034,10 +17034,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         function limeWater(){
           var s = svgO('#eef7ff');
           [[100, false], [260, true]].forEach(function(t){
-            s += '<path d="M'+(t[0]-26)+',50 L'+(t[0]-26)+',150 Q'+t[0]+',176 '+(t[0]+26)+',150 L'+(t[0]+26)+',50" fill="none" stroke="#7a8aa2" stroke-width="4"/><path d="M'+(t[0]-24)+',92 L'+(t[0]-24)+',150 Q'+t[0]+',172 '+(t[0]+24)+',150 L'+(t[0]+24)+',92 Z" fill="'+(t[1] ? '#f4f1ea' : '#cfe9f6')+'" opacity="'+(t[1] ? '1' : '.7')+'"/>';
+            s += '<path d="M'+(t[0]-26)+',50 L'+(t[0]-26)+',150 Q'+t[0]+',176 '+(t[0]+26)+',150 L'+(t[0]+26)+',50" fill="none" stroke="#7a8aa2" stroke-width="4"/><path d="M'+(t[0]-24)+',92 L'+(t[0]-24)+',150 Q'+t[0]+',172 '+(t[0]+24)+',150 L'+(t[0]+24)+',92 Z" fill="#cfe9f6" opacity=".7"/>' + (t[1] ? '<path d="M236,92 L236,150 Q260,172 284,150 L284,92 Z" fill="#f4f1ea" opacity="0">'+an('opacity','0;0;1;1;0',6,'0;.3;.7;.95;1')+'</path>' : '');
           });
           s += '<line x1="290" y1="30" x2="262" y2="130" stroke="#8a95a6" stroke-width="5" stroke-linecap="round"/>';
-          [[258, 118], [270, 106], [262, 96]].forEach(function(b){ s += '<circle cx="'+b[0]+'" cy="'+b[1]+'" r="4" fill="none" stroke="#7a8aa2" stroke-width="2"/>'; });
+          [[258, 118], [270, 106], [262, 96]].forEach(function(b){ s += '<g><animateTransform attributeName="transform" type="translate" values="0 18;0 -26" keyTimes="0;1" dur="1.8s" begin="'+(b[0] % 5 * .3)+'s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.2;.8;1" dur="1.8s" begin="'+(b[0] % 5 * .3)+'s" repeatCount="indefinite"/><circle cx="'+b[0]+'" cy="'+b[1]+'" r="4" fill="none" stroke="#7a8aa2" stroke-width="2"/></g>'; });
           s += arrow(166, 100, 206, 100, '#6b7a92', 4);
           s += tl(100, 40, '石灰水', 'せっかいすい', '#27324f', 13) + tl(205, 22, '二酸化炭素を 通す', 'にさんかたんそ とおす', '#27324f', 11) + tl(260, 192, '白く にごる', 'しろく', '#c24a00', 14) + tl(100, 192, 'すきとおって いる', '', '#27324f', 11);
           return s + '</svg>';
