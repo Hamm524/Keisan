@@ -1004,6 +1004,11 @@
   .st-spark{ animation:stspark 1.4s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
   @keyframes stspark{ 50%{ transform:scale(.6); opacity:.6; } }
   @media (prefers-reduced-motion: reduce){ .st-flow, .st-fan, .st-spark{ animation:none; } }
+  .st-bag{ background:#fff4cf; color:#8a5a00; border:2px dashed #e0a020; border-radius:12px; padding:6px 10px; margin:0 0 8px; font-weight:800; font-size:13px; text-align:center; }
+  .st-chal{ background:linear-gradient(135deg,#ff9a3c,#e5483d); color:#fff; border-radius:16px; padding:12px 10px; margin:0 0 10px; font-weight:900; font-size:20px; text-align:center; line-height:1.4; box-shadow:0 4px 0 #b83228; animation:stChal .6s ease-out; }
+  .st-chal small{ display:block; font-size:13px; font-weight:800; opacity:.95; }
+  @keyframes stChal{ 0%{ transform:scale(.7); opacity:0; } 60%{ transform:scale(1.06); opacity:1; } 100%{ transform:scale(1); } }
+  @media (prefers-reduced-motion: reduce){ .st-chal{ animation:none; } }
   .kw-tip{ font-size:13.5px; line-height:1.7; color:var(--ink-soft); background:var(--surface-2); border-radius:12px; padding:8px 10px; }
   .isle[data-t="j"]{ aspect-ratio:360/580; }
   .isle > svg.isle-bg{ position:absolute; inset:0; width:100%; height:100%; display:block; }
@@ -17546,7 +17551,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var st = story(id), sub = 'st:' + id, s = rec(); put(s);
         X.st = id; NAMES[sub] = 'お話「' + plain(st.t) + '」';
         var qs = st.qs.map(function(e, i){
-          return { id:id + '_' + i, map:'st', pg:e.pg, tag:(T().subj || '社会') + ' ・ お話「' + ruby(st.t) + '」の 問題', bag:e.bag || 0, html:(e.bag ? '<div class="st-bag">🔥 ちょうせん! 🎁 ボーナスぶくろ もんだい(せいかいで +'+e.bag+'コイン)' + (e.warn ? '<br>💪 '+e.warn : '') + '</div>' : '') + (e.hi ? JP(hi(e.hi, e.rv ? '#f6d98a' : null), e.rv) : e.ill ? SILL(e.ill) : e.pic ? '<div class="st-pic">'+e.pic()+'</div>' : '') + '<div class="gk-text">'+ruby(e.q)+'</div>', post:'', a:ruby(e.a), bad:e.bad.map(ruby), say:'答えは「'+plain(e.a)+'」' };
+          return { id:id + '_' + i, map:'st', pg:e.pg, tag:(T().subj || '社会') + ' ・ お話「' + ruby(st.t) + '」の 問題', bag:e.bag || 0, html:(e.bag ? (i === 0 || !st.qs[i - 1].bag ? '<div class="st-chal">🔥 ここから ちょうせん! 🔥<small>むずかしい もんだいだよ。せいかいで 🎁ボーナスぶくろ +'+e.bag+'コイン</small>' + (e.warn ? '<small>💪 '+e.warn+'</small>' : '') + '</div>' : '<div class="st-bag">🔥 ちょうせん! 🎁 せいかいで +'+e.bag+'コイン' + (e.warn ? '<br>💪 '+e.warn : '') + '</div>') : '') + (e.hi ? JP(hi(e.hi, e.rv ? '#f6d98a' : null), e.rv) : e.ill ? SILL(e.ill) : e.pic ? '<div class="st-pic">'+e.pic()+'</div>' : '') + '<div class="gk-text">'+ruby(e.q)+'</div>', post:'', a:ruby(e.a), bad:e.bad.map(ruby), say:'答えは「'+plain(e.a)+'」' };
         });
         S = { lv:'*', d0:0, sub:sub, qs:(qs.some(function(q){ return q.bag; }) ? qs : shuffle(qs)), i:0, ok:0, res:[], step:0, cards:null, ci:0 };
         $('gkTitle').textContent = T().title;
