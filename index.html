@@ -17075,23 +17075,25 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           h += tl(180, 172, '支点', '', '#3a2f22', 12);
           return svgO('#fdf6e6', h) + '</svg>';
         }
+        function an(attr, vals, dur, kt, type){ return '<animate'+(type ? 'Transform type="'+type+'"' : '')+' attributeName="'+attr+'" values="'+vals+'" keyTimes="'+(kt || '0;.55;.75;1')+'" dur="'+(dur || 4)+'s" repeatCount="indefinite"/>'; }
         function kasshaP(){
           var h = '';
-          h += '<rect x="30" y="10" width="140" height="8" rx="3" fill="#8a7a66"/><circle cx="100" cy="40" r="16" fill="#e6e9f2" stroke="#6b7a92" stroke-width="3"/><line x1="84" y1="40" x2="84" y2="130" stroke="#6b7a92" stroke-width="2"/><line x1="116" y1="40" x2="116" y2="90" stroke="#6b7a92" stroke-width="2"/>';
-          h += '<rect x="66" y="130" width="36" height="26" rx="6" fill="#f2a36f" stroke="#c4622d" stroke-width="2"/>' + tl(84, 148, '60g', '', '#fff', 12) + arrow(116, 90, 116, 130, '#2b79c2', 3) + tl(136, 112, '60g', '', '#2b79c2', 12) + tl(100, 182, '定かっ車', '', '#3a2f22', 13);
-          h += '<rect x="200" y="10" width="140" height="8" rx="3" fill="#8a7a66"/><line x1="254" y1="18" x2="254" y2="100" stroke="#6b7a92" stroke-width="2"/><circle cx="270" cy="100" r="16" fill="#e6e9f2" stroke="#6b7a92" stroke-width="3"/><line x1="286" y1="100" x2="286" y2="60" stroke="#6b7a92" stroke-width="2"/>';
-          h += '<rect x="252" y="132" width="36" height="26" rx="6" fill="#f2a36f" stroke="#c4622d" stroke-width="2"/><line x1="270" y1="116" x2="270" y2="132" stroke="#6b7a92" stroke-width="2"/>' + tl(270, 150, '60g', '', '#fff', 12) + arrow(286, 60, 286, 28, '#2b79c2', 3) + tl(312, 44, '30g', '', '#2b79c2', 12) + tl(270, 182, '動かっ車', '', '#3a2f22', 13);
+          h += '<rect x="30" y="10" width="140" height="8" rx="3" fill="#8a7a66"/><line x1="84" y1="40" x2="84" y2="130" stroke="#6b7a92" stroke-width="2">'+an('y2','130;106;106;130')+'</line><line x1="116" y1="40" x2="116" y2="90" stroke="#6b7a92" stroke-width="2">'+an('y2','90;114;114;90')+'</line><circle cx="100" cy="40" r="16" fill="#e6e9f2" stroke="#6b7a92" stroke-width="3"/>';
+          h += '<g>'+an('transform','0 0;0 -24;0 -24;0 0',4,0,'translate')+'<rect x="66" y="130" width="36" height="26" rx="6" fill="#f2a36f" stroke="#c4622d" stroke-width="2"/>'+tl(84, 148, '60g', '', '#fff', 12)+'</g>';
+          h += '<g>'+an('transform','0 0;0 24;0 24;0 0',4,0,'translate')+arrow(116, 90, 116, 130, '#2b79c2', 3)+tl(136, 112, '60g', '', '#2b79c2', 12)+'</g>' + tl(100, 182, '定かっ車', '', '#3a2f22', 13) + tl(100, 200, '引く 長さ = 上がる 長さ', '', '#6b7a92', 10);
+          h += '<rect x="200" y="10" width="140" height="8" rx="3" fill="#8a7a66"/><line x1="254" y1="18" x2="254" y2="100" stroke="#6b7a92" stroke-width="2">'+an('y2','100;88;88;100')+'</line><line x1="286" y1="100" x2="286" y2="60" stroke="#6b7a92" stroke-width="2">'+an('y1','100;88;88;100')+an('y2','60;36;36;60')+'</line>';
+          h += '<g>'+an('transform','0 0;0 -12;0 -12;0 0',4,0,'translate')+'<circle cx="270" cy="100" r="16" fill="#e6e9f2" stroke="#6b7a92" stroke-width="3"/><line x1="270" y1="116" x2="270" y2="132" stroke="#6b7a92" stroke-width="2"/><rect x="252" y="132" width="36" height="26" rx="6" fill="#f2a36f" stroke="#c4622d" stroke-width="2"/>'+tl(270, 150, '60g', '', '#fff', 12)+'</g>';
+          h += '<g>'+an('transform','0 0;0 -24;0 -24;0 0',4,0,'translate')+arrow(286, 60, 286, 28, '#2b79c2', 3)+tl(312, 44, '30g', '', '#2b79c2', 12)+'</g>' + tl(270, 182, '動かっ車', '', '#3a2f22', 13) + tl(270, 200, '力は 半分、引く 長さは 2倍', '', '#6b7a92', 10);
           return svgO('#fdf6e6', h) + '</svg>';
         }
         function baneP(){
-          var h = '<rect x="20" y="10" width="320" height="8" rx="3" fill="#8a7a66"/>';
+          var h = '<rect x="20" y="10" width="320" height="8" rx="3" fill="#8a7a66"/>', kt = '0;.2;.3;.4;.85;1';
           [[0,0],[10,2],[20,4],[30,6]].forEach(function(a, i){
-            var x = 60 + i*80, len = 40 + a[1]*8, d = 'M'+x+',18';
-            for(var j = 0; j < 8; j++) d += ' L'+(x + (j%2 ? -9 : 9))+','+(18 + len*(j+.5)/8);
-            d += ' L'+x+','+(18+len);
-            h += '<path d="'+d+'" stroke="#6b7a92" stroke-width="3" fill="none"/>';
-            if(a[0]) h += '<rect x="'+(x-16)+'" y="'+(18+len)+'" width="32" height="24" rx="6" fill="#6fb7f2" stroke="#2b79c2" stroke-width="2"/>' + tl(x, 18+len+17, a[0]+'g', '', '#fff', 12);
-            h += tl(x, 190, a[1] ? 'のび '+a[1]+'cm' : 'もとの 長さ', '', '#3a2f22', 12);
+            var x = 60 + i*80, d = a[1]*8, sc = (40 + d)/40, d0 = '';
+            for(var j = 0; j < 8; j++) d0 += ' L'+(j%2 ? -9 : 9)+','+(40*(j+.5)/8);
+            h += '<g transform="translate('+x+',18)"><g>'+(a[1] ? an('transform','1 1;1 '+(sc*1.15).toFixed(3)+';1 '+(sc*.95).toFixed(3)+';1 '+sc.toFixed(3)+';1 '+sc.toFixed(3)+';1 1',5,kt,'scale') : '')+'<path d="M0,0'+d0+' L0,40" stroke="#6b7a92" stroke-width="3" fill="none"/></g>';
+            if(a[0]) h += '<g>'+an('transform','0 0;0 '+(d*1.15).toFixed(1)+';0 '+(d*.95).toFixed(1)+';0 '+d+';0 '+d+';0 0',5,kt,'translate')+'<rect x="-16" y="40" width="32" height="24" rx="6" fill="#6fb7f2" stroke="#2b79c2" stroke-width="2"/>'+tl(0, 57, a[0]+'g', '', '#fff', 12)+'</g>';
+            h += '</g>' + tl(x, 190, a[1] ? 'のび '+a[1]+'cm' : 'もとの 長さ', '', '#3a2f22', 12);
           });
           return svgO('#fdf6e6', h) + '</svg>';
         }
@@ -17105,10 +17107,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           return svgO('#fdf6e6', h) + '</svg>';
         }
         function furyokuP(sub){
-          var h = '<rect x="110" y="86" width="140" height="94" fill="#9fd3f5" fill-opacity=".8"/><path d="M110,60 L110,180 L250,180 L250,60" fill="none" stroke="#5b7aa0" stroke-width="4"/>';
-          h += '<rect x="155" y="66" width="50" height="50" rx="6" fill="#c9a063" stroke="#6b4a24" stroke-width="3"/>' + tl(180, 96, '木', '', '#3a2f22', 14);
-          h += arrow(195, 140, 195, 112, '#1f9d5b', 3) + tl(225, 138, '浮力', '', '#1f9d5b', 13) + arrow(165, 90, 165, 130, '#d6403a', 3) + tl(137, 142, '重さ', '', '#d6403a', 13);
-          h += tl(70, 106, '水を', '', '#2b79c2', 12) + tl(70, 122, 'おしのける', '', '#2b79c2', 12);
+          var h = '<rect x="110" y="96" width="140" height="84" fill="#9fd3f5" fill-opacity=".8">'+an('y','96;86;86;96',5,'0;.35;.8;1')+an('height','84;94;94;84',5,'0;.35;.8;1')+'</rect><path d="M110,60 L110,180 L250,180 L250,60" fill="none" stroke="#5b7aa0" stroke-width="4"/>';
+          h += '<line x1="110" y1="96" x2="90" y2="96" stroke="#d6403a" stroke-width="2" stroke-dasharray="4 3"/>' + tl(70, 100, 'もとの 水面', '', '#d6403a', 11);
+          h += '<g>'+an('transform','0 -50;0 0;0 0;0 -50',5,'0;.35;.8;1','translate')+'<rect x="155" y="66" width="50" height="50" rx="6" fill="#c9a063" stroke="#6b4a24" stroke-width="3"/>' + tl(180, 96, '木', '', '#3a2f22', 14)+'</g>';
+          h += '<g opacity="0">'+an('opacity','0;0;1;1;0',5,'0;.3;.45;.8;1')+arrow(195, 140, 195, 112, '#1f9d5b', 3) + tl(225, 138, '浮力', '', '#1f9d5b', 13) + arrow(165, 90, 165, 130, '#d6403a', 3) + tl(137, 142, '重さ', '', '#d6403a', 13)+'</g>';
+          h += tl(60, 130, '水が おしのけられて', '', '#2b79c2', 11) + tl(60, 144, '水面が あがる', '', '#2b79c2', 11);
           return svgO('#fdf6e6', h) + '</svg>';
         }
         return { waterStates:waterStates, leverCalc:leverCalc, kasshaP:kasshaP, baneP:baneP, furikoP:furikoP, furyokuP:furyokuP, boilP:boilP, iceExpand:iceExpand, syringeP:syringeP, warmAirP:warmAirP, metalHeat:metalHeat, clayP:clayP, dissolveP:dissolveP, saltLeft:saltLeft, airPie:airPie, candleJar:candleJar, limeWater:limeWater, pendulumP:pendulumP, leverP:leverP, lightStraight:lightStraight, shadowP:shadowP, sunShadow:sunShadow, mirrorP:mirrorP, mirrors3:mirrors3, lensP:lensP, magItems:magItems, magThrough:magThrough, magPoles:magPoles, magPair:magPair, compassP:compassP, nailMag:nailMag, solar:solar, moonScene:moonScene, moonRow:moonRow, skyNorth:skyNorth, earthDay:earthDay, season:season, sunArc:sunArc, riverProf:riverProf, emo:emo, batt:batt, bulb:bulb, motor:motor, circuit:circuit, cells:cells, motorPic:motorPic, pics:pics, ava:function(k){ return '<svg viewBox="0 0 200 200" class="st-ava-svg" aria-hidden="true">'+(k === 'bulb' ? bulb(true) : k === 'motor' ? motor() : batt())+'</svg>'; } };
