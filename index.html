@@ -16619,14 +16619,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var s = get(), want = S.ok + (S.ok >= Math.ceil(S.qs.length*0.8) ? 3 : 0), room = Math.max(0, DAY_CAP - s.day.n), got = Math.min(want, room);
       s.day.n += got; s.rounds++; var kup = kUp(s);
       var bagN = 0; s.bagDay = (s.bagDay && s.bagDay.d === todayKey()) ? s.bagDay : { d:todayKey(), n:0 };
-      S.qs.forEach(function(q, i){ if(q.bag && S.res[i]){ s.bag = s.bag || {}; if(s.bag[q.id] !== todayKey() && s.bagDay.n + bagN + q.bag <= 10){ s.bag[q.id] = todayKey(); bagN += q.bag; } } });
+      S.qs.forEach(function(q, i){ if(q.bag && S.res[i]){ s.bag = s.bag || {}; if(s.bag[q.id] !== todayKey() && true){ s.bag[q.id] = todayKey(); bagN += q.bag; } } });
       s.bagDay.n += bagN;
       put(s);
       if(got > 0) earn(got);
       if(bagN > 0) earn(bagN);
       var name = NAMES[S.sub] + (S.sub === 's' ? ' '+(S.lv === '*' ? '' : S.lv) : '');
       $('gkResult').innerHTML = '<div class="gk-res"><div class="gk-big">'+S.ok+' / '+S.qs.length+'</div><p>'+name+(KLV[S.sub] ? '・'+KPL(KLV[S.sub][S.lv-1]) : '')+'の れんしゅう おわり!</p>' + (kup ? '<div class="kk-up">'+kup+'</div>' : '') +
-        (bagN ? '<div class="st-bag">🎁 ボーナスぶくろ <b class="num">+'+bagN+'</b> コイン(むずかしい もんだい。1日 10コインまで)</div>' : '') + '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン' + (S.ok >= Math.ceil(S.qs.length*0.8) && got >= want ? '（8割 せいかい +3）' : '') + '</div>' +
+        (bagN ? '<div class="st-bag">🎁 ボーナスぶくろ <b class="num">+'+bagN+'</b> コイン(むずかしい もんだい。今日の 上限の 外だよ)</div>' : '') + '<div class="gk-wallet" style="justify-content:center"><span class="coin"></span><b class="num">+'+got+'</b> コイン' + (S.ok >= Math.ceil(S.qs.length*0.8) && got >= want ? '（8割 せいかい +3）' : '') + '</div>' +
         (got < want ? '<div class="gk-cap">'+(got ? 'これで 今日の まなぶコインは '+DAY_CAP+'こ ぜんぶ もらったよ!' : '今日の まなぶコインは もう '+DAY_CAP+'こ ぜんぶ もらって いるので、今回は 0コインだよ。')+' コインは あした また もらえるよ</div>' : '') +
         '<div class="gk-fb">1問 せいかいで 1コイン(読解は ②の 答えだけ)・今日 '+s.day.n+'/'+DAY_CAP+'</div>' +
         ''+(S.sub === 's' && depthOf(S.lv) > S.d0 ? '<p class="gk-note">すごい! もっと ふかい もんだいが ひらいたよ</p>' : '')+'<button class="btn btn-primary" id="gkAgain">'+kAgainLabel(s)+'</button> '+(S.sub === 's' ? '<button class="btn btn-ghost" id="gkLvBtn">ぶんやを えらぶ</button> ' : '')+' <button class="btn btn-ghost" id="gkMenuBtn">まなぶ メニュー</button></div>';
@@ -17321,28 +17321,28 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             qs:[ { q:'支点から 左へ 25cm の ところに 40g の おもりを つるした。右へ 20cm の ところに 何gの おもりを つるすと つりあう?', pic:function(){ return D.leverCalc(40, 25, 50, 20, '40g', '？g'); }, a:'50g', bad:['25g', '40g', '100g'], pg:2 },
                  { q:'支点から 左へ 40cm の ところに 15g の おもりを つるした。右へ 30cm の ところに 何gの おもりを つるすと つりあう?', pic:function(){ return D.leverCalc(15, 40, 20, 30, '15g', '？g'); }, a:'20g', bad:['15g', '25g', '45g'], pg:2 },
                  { q:'支点から 左へ 30cm の ところに 20g の おもりを つるし、右に 50g の おもりを つるしたら つりあった。右は 支点から 何cm の ところ?', pic:function(){ return D.leverCalc(20, 30, 50, 12, '20g', '50g', '?'); }, a:'12cm', bad:['10cm', '15cm', '60cm'], pg:2 },
-                 { q:'支点から 左へ 15cm の ところに 30g の おもり。右へ 50mm の ところに 何gの おもりを つるすと つりあう?', bag:2, warn:'むずかしいよ! 単位を そろえてから 計算しよう', pic:function(){ return D.leverCalc(30, 15, 90, 5, '30g', '？g', '50mm'); }, a:'90g', bad:['9g', '60g', '450g'], pg:3 },
-                 { q:'支点から 左へ 20cm の ところに 0.3kg の おもり。右へ 30cm の ところに 何gの おもりを つるすと つりあう?', bag:2, warn:'むずかしいよ! kg と g に ちゅうい', pic:function(){ return D.leverCalc(300, 20, 200, 30, '0.3kg', '？g'); }, a:'200g', bad:['0.2g', '20g', '2000g'], pg:3 } ] },
+                 { q:'支点から 左へ 15cm の ところに 30g の おもり。右へ 50mm の ところに 何gの おもりを つるすと つりあう?', bag:3, warn:'むずかしいよ! 単位を そろえてから 計算しよう', pic:function(){ return D.leverCalc(30, 15, 90, 5, '30g', '？g', '50mm'); }, a:'90g', bad:['9g', '60g', '450g'], pg:3 },
+                 { q:'支点から 左へ 20cm の ところに 0.3kg の おもり。右へ 30cm の ところに 何gの おもりを つるすと つりあう?', bag:3, warn:'むずかしいよ! kg と g に ちゅうい', pic:function(){ return D.leverCalc(300, 20, 200, 30, '0.3kg', '？g'); }, a:'200g', bad:['0.2g', '20g', '2000g'], pg:3 } ] },
           { id:'mnt2', t:'かっ車', ico:'🪢', pages:[
             { w:'定かっ車', say:'天じょうに とめた かっ車を「定《てい》かっ車」と いうよ。ひもを 引く 向きを 変えられるけれど、力の 大きさは 変わらないよ。60gの ものを 持ち上げるには、60gぶんの 力が いるよ。', pic:function(){ return D.kasshaP(); }, tip:'かっ車や ひもの 重さは、ふつう 考えないよ。' },
             { w:'動かっ車', say:'ものと いっしょに 動く かっ車を「動《どう》かっ車」と いうよ。ひもが 2本で ささえるので、引く 力は 半分に なるよ。60gの ものは 30gぶんの 力で 持ち上がるよ。', pic:function(){ return D.kasshaP(); }, tip:'そのかわり、引く ひもの 長さは 2倍に なるよ。10cm 持ち上げるには ひもを 20cm 引くよ。' },
             { w:'ひもを 引く 長さ', say:'動かっ車では、力は 半分で すむけれど、ひもを 引く 長さは 2倍に なるよ。得を した ぶん、長く 引かなければ ならないんだ。楽に なっても、「力 × 引く 長さ」は 同じなんだよ。', pic:function(){ return D.kasshaP(); }, tip:'力が 1/2 なら 引く 長さは 2倍、力が 1/3 なら 3倍。かけると いつも 同じに なるよ。' } ],
             qs:[ { q:'ひもを 引く 向きを 変えられるが、力の 大きさは 変わらない かっ車は?', a:'定かっ車', bad:['動かっ車', 'どちらも', 'どちらでも ない'], pg:0 },
                  { q:'動かっ車で 80g の ものを 持ち上げる。引く 力は 何g?(かっ車の 重さは 考えない)', pic:function(){ return D.kasshaQ('80g', '？g'); }, a:'40g', bad:['80g', '160g', '20g'], pg:1 },
-                 { q:'動かっ車で ものを 40cm 持ち上げる。ひもを 何cm 引く?', bag:2, pic:function(){ return D.kasshaQ('40cm↑', '？cm'); }, a:'80cm', bad:['40cm', '20cm', '160cm'], pg:2 } ] },
+                 { q:'動かっ車で ものを 40cm 持ち上げる。ひもを 何cm 引く?', bag:3, pic:function(){ return D.kasshaQ('40cm↑', '？cm'); }, a:'80cm', bad:['40cm', '20cm', '160cm'], pg:2 } ] },
           { id:'mnt3', t:'ばねの のび', ico:'🌀', pages:[
             { w:'のびは おもりに 比例', say:'ばねに おもりを つるすと、のびるよ。おもりが 2倍、3倍に なると、のびも 2倍、3倍に なるよ。これを「比例《ひれい》」と いうよ。', pic:function(){ return D.baneP(); }, tip:'この ばねは 10gで 2cm のびるよ。のびの グラフは、0 から 出発する 一直線に なるよ。' },
             { w:'のびを 求める', say:'10gで 2cm のびる ばねに 35gを つるすと? 10gの 3.5倍 だから、のびも 2 × 3.5 = 7cm だよ。1gあたりの のびは 0.2cm と 考えても 同じだね。', pic:function(){ return D.baneP(); }, tip:'「1gで 何cm」を 先に 出すと、どんな おもりでも 計算できるよ。' },
             { w:'「のび」と「ばねの 長さ」', say:'「のび」は、もとの 長さから 何cm ふえたか。「ばねの 長さ」は、もとの 長さ + のび だよ。もとの 長さが 8cm の ばねに 30gを つるすと、のびは 6cm、ばねの 長さは 8 + 6 = 14cm だよ。', pic:function(){ return D.baneP(); }, tip:'問題文が「のび」か「長さ」か、よく 読もう。まちがえやすい ところだよ。' } ],
             qs:[ { q:'10gで 2cm のびる ばね。50gでは 何cm のびる?', pic:function(){ return D.baneQ({g:'10g', e:2, t:'のび 2cm'}, {g:'50g', e:10, t:'のび ？cm'}); }, a:'10cm', bad:['5cm', '8cm', '25cm'], pg:1 },
-                 { q:'もとの 長さ 8cm、10gで 2cm のびる ばね。30gを つるすと ばねの 長さは?', bag:2, pic:function(){ return D.baneQ({g:'10g', e:2, t:'のび 2cm'}, {g:'30g', e:6, t:'ばねの 長さ ？cm'}, 'もとの 長さ 8cm'); }, a:'14cm', bad:['6cm', '8cm', '16cm'], pg:2 },
-                 { q:'もとの 長さ 8cm、10gで 2cm のびる ばね。長さが 18cm の とき、おもりは?', bag:2, pic:function(){ return D.baneQ({g:'10g', e:2, t:'のび 2cm'}, {g:'？g', e:10, t:'ばねの 長さ 18cm'}, 'もとの 長さ 8cm'); }, a:'50g', bad:['90g', '40g', '20g'], pg:2 } ] },
+                 { q:'もとの 長さ 8cm、10gで 2cm のびる ばね。30gを つるすと ばねの 長さは?', bag:3, pic:function(){ return D.baneQ({g:'10g', e:2, t:'のび 2cm'}, {g:'30g', e:6, t:'ばねの 長さ ？cm'}, 'もとの 長さ 8cm'); }, a:'14cm', bad:['6cm', '8cm', '16cm'], pg:2 },
+                 { q:'もとの 長さ 8cm、10gで 2cm のびる ばね。長さが 18cm の とき、おもりは?', bag:3, pic:function(){ return D.baneQ({g:'10g', e:2, t:'のび 2cm'}, {g:'？g', e:10, t:'ばねの 長さ 18cm'}, 'もとの 長さ 8cm'); }, a:'50g', bad:['90g', '40g', '20g'], pg:2 } ] },
           { id:'mnt4', t:'ふりこの 周期', ico:'🕰️', pages:[
             { w:'長さだけで 決まる', say:'ふりこが 1往復する 時間を「周期《しゅうき》」と いうよ。周期は ひもの 長さだけで 決まるよ。おもりの 重さや ふれはばを 変えても、ほとんど 変わらないよ。', pic:function(){ return D.furikoP(); }, tip:'「力の 実験室」の ふりこで ためして みよう。' },
             { w:'長さ 4倍で 時間 2倍', say:'長さ 25cm の ふりこは 1往復 1秒。長さを 4倍の 100cm に すると 2秒、9倍の 225cm に すると 3秒に なるよ。長さが 4倍(2×2)なら 時間は 2倍、9倍(3×3)なら 3倍 だよ。', pic:function(){ return D.furikoP(); }, tip:'長さを 2倍に しても 時間は 2倍には ならないよ。4倍で 2倍だよ。' },
             { w:'10往復で はかる', say:'1往復は 短くて はかりにくいので、10往復の 時間を はかって 10で わるよ。100cm の ふりこなら 10往復で 20秒、1往復は 2秒だね。', pic:function(){ return D.furikoP(); }, tip:'何回も はかって 平均を 出すと、もっと 正しく はかれるよ。' } ],
             qs:[ { q:'長さ 25cm で 1往復 1秒 の ふりこ。長さを 100cm に すると?', pic:function(){ return D.furikoQ({L:25, m:20, t:'1往復 1秒'}, {L:100, m:20, t:'1往復 ？秒'}); }, a:'2秒', bad:['4秒', '1秒', '3秒'], pg:1 },
-                 { q:'長さ 25cm で 1往復 1秒 の ふりこ。長さを 225cm に すると?', bag:2, pic:function(){ return D.furikoQ({L:25, m:20, t:'1往復 1秒'}, {L:225, m:20, t:'1往復 ？秒'}); }, a:'3秒', bad:['9秒', '6秒', '2秒'], pg:1 },
+                 { q:'長さ 25cm で 1往復 1秒 の ふりこ。長さを 225cm に すると?', bag:3, pic:function(){ return D.furikoQ({L:25, m:20, t:'1往復 1秒'}, {L:225, m:20, t:'1往復 ？秒'}); }, a:'3秒', bad:['9秒', '6秒', '2秒'], pg:1 },
                  { q:'ふりこの おもりを 2倍の 重さに すると、1往復の 時間は?', pic:function(){ return D.furikoQ({L:100, m:20, g:'20g', t:'1往復 2秒'}, {L:100, m:40, g:'40g', t:'1往復 ？秒'}); }, a:'ほとんど 変わらない', bad:['2倍に なる', '半分に なる', '4倍に なる'], pg:0 } ] },
           { id:'mnt5', t:'浮力', ico:'🛟', pages:[
             { w:'水の 中は 軽く なる', say:'ものを 水に しずめると、ばねばかりの 目もりが 軽く なるよ。水が ものを 上へ おし上げる 力が はたらくからだよ。これを「浮力《ふりょく》」と いうよ。', pic:function(){ return D.furyokuP(); }, tip:'プールで 体が 軽く 感じるのも 浮力の おかげだよ。' },
@@ -17350,7 +17350,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             { w:'うく・しずむ', say:'全部 しずめた ときの 浮力が 重さより 大きいと、うき上がるよ。上がって 水に 入る 体積が へると 浮力も へって、浮力 = 重さ に なった ところで うくよ。体積 100cm³ で 60g の 木は、60cm³ だけ しずんで うくよ。', pic:function(){ return D.furyokuP(); }, tip:'うく ものは、水に 入った 体積(cm³) = 重さ(g) に なるよ。' } ],
             qs:[ { q:'ものが 水の 中で 軽く なる のは、何の 力が はたらく から?', a:'浮力', bad:['重力', '磁力', '電気の 力'], pg:0 },
                  { q:'200g の ねんど(体積 100cm³)を 全部 水に しずめた。ばねばかりは 何g?', pic:function(){ return D.furyokuQ('hang', 'ねんど', 200); }, a:'100g', bad:['200g', '300g', '0g'], pg:1 },
-                 { q:'体積 100cm³、重さ 80g の 木が 水に ういた。水に 入って いる 体積は?', bag:2, pic:function(){ return D.furyokuQ('float', '木', 80); }, a:'80cm³', bad:['20cm³', '100cm³', '180cm³'], pg:2 } ] } ] },
+                 { q:'体積 100cm³、重さ 80g の 木が 水に ういた。水に 入って いる 体積は?', bag:3, pic:function(){ return D.furyokuQ('float', '木', 80); }, a:'80cm³', bad:['20cm³', '100cm³', '180cm³'], pg:2 } ] } ] },
         map:{ title:'社会「地図と 方位」', sub:'o:map', hello:'地図の 読み方を いっしょに 見て いこう! お話を さいごまで 見たら、問題に ちょうせん!', stories:[
           { id:'map1', t:'方位って なに?', ico:'🧭', pages:[
             { w:'4つの 方位《ほうい》', say:'北・南・東・西を「方位《ほうい》」と いうよ。北を 向いて 立って みよう。', pic:function(){ return SILL('stand'); }, tip:'北を 向くと、右手が 東、左手が 西、うしろが 南だよ。' },
