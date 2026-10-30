@@ -17088,10 +17088,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           var h = '';
           h += '<rect x="30" y="10" width="140" height="8" rx="3" fill="#8a7a66"/><line x1="84" y1="40" x2="84" y2="130" stroke="#6b7a92" stroke-width="2">'+an('y2','130;106;106;130')+'</line><line x1="116" y1="40" x2="116" y2="90" stroke="#6b7a92" stroke-width="2">'+an('y2','90;114;114;90')+'</line><circle cx="100" cy="40" r="16" fill="#e6e9f2" stroke="#6b7a92" stroke-width="3"/>';
           h += '<g>'+an('transform','0 0;0 -24;0 -24;0 0',4,0,'translate')+'<rect x="66" y="130" width="36" height="26" rx="6" fill="#f2a36f" stroke="#c4622d" stroke-width="2"/>'+tl(84, 148, '60g', '', '#fff', 12)+'</g>';
-          h += '<g>'+an('transform','0 0;0 24;0 24;0 0',4,0,'translate')+arrow(116, 90, 116, 130, '#2b79c2', 3)+tl(136, 112, '60g', '', '#2b79c2', 12)+'</g>' + tl(100, 182, '定かっ車', '', '#3a2f22', 13) + tl(100, 200, '引く 長さ = 上がる 長さ', '', '#6b7a92', 10);
+          h += '<g>'+an('transform','0 0;0 24;0 24;0 0',4,0,'translate')+arrow(116, 90, 116, 130, '#2b79c2', 3)+tl(136, 112, '60g', '', '#2b79c2', 12)+'</g>' + tl(100, 182, '定かっ車', '', '#3a2f22', 13) + tl(90, 200, '60g → 60g(同じ)', '', '#6b7a92', 10);
           h += '<rect x="200" y="10" width="140" height="8" rx="3" fill="#8a7a66"/><line x1="254" y1="18" x2="254" y2="100" stroke="#6b7a92" stroke-width="2">'+an('y2','100;88;88;100')+'</line><line x1="286" y1="100" x2="286" y2="60" stroke="#6b7a92" stroke-width="2">'+an('y1','100;88;88;100')+an('y2','60;36;36;60')+'</line>';
           h += '<g>'+an('transform','0 0;0 -12;0 -12;0 0',4,0,'translate')+'<circle cx="270" cy="100" r="16" fill="#e6e9f2" stroke="#6b7a92" stroke-width="3"/><line x1="270" y1="116" x2="270" y2="132" stroke="#6b7a92" stroke-width="2"/><rect x="252" y="132" width="36" height="26" rx="6" fill="#f2a36f" stroke="#c4622d" stroke-width="2"/>'+tl(270, 150, '60g', '', '#fff', 12)+'</g>';
-          h += '<g>'+an('transform','0 0;0 -24;0 -24;0 0',4,0,'translate')+arrow(286, 60, 286, 28, '#2b79c2', 3)+tl(312, 44, '30g', '', '#2b79c2', 12)+'</g>' + tl(270, 182, '動かっ車', '', '#3a2f22', 13) + tl(270, 200, '力は 半分、引く 長さは 2倍', '', '#6b7a92', 10);
+          h += '<g>'+an('transform','0 0;0 -24;0 -24;0 0',4,0,'translate')+arrow(286, 60, 286, 28, '#2b79c2', 3)+tl(312, 44, '30g', '', '#2b79c2', 12)+'</g>' + tl(270, 182, '動かっ車', '', '#3a2f22', 13) + tl(270, 200, '60g ÷ 2 = 30g、引く 長さ 2倍', '', '#6b7a92', 9);
           return svgO('#fdf6e6', h) + '</svg>';
         }
         function baneP(){
@@ -17103,6 +17103,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             if(a[0]) h += '<g>'+an('transform','0 0;0 '+(d*1.15).toFixed(1)+';0 '+(d*.95).toFixed(1)+';0 '+d+';0 '+d+';0 0',5,kt,'translate')+'<rect x="-16" y="40" width="32" height="24" rx="6" fill="#6fb7f2" stroke="#2b79c2" stroke-width="2"/>'+tl(0, 57, a[0]+'g', '', '#fff', 12)+'</g>';
             h += '</g>' + tl(x, 190, a[1] ? 'のび '+a[1]+'cm' : 'もとの 長さ', '', '#3a2f22', 12);
           });
+          h += tl(180, 206, '10g で 2cm → 1g で 0.2cm → 30g は 0.2 × 30 = 6cm', '', '#6b7a92', 11);
           return svgO('#fdf6e6', h) + '</svg>';
         }
         function kasshaQ(txt, tx2){
@@ -17133,7 +17134,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         function furyokuQ(kind, name, w, sub){
           var wy = kind === 'hang' ? 96 : 100, h = '<rect x="110" y="'+wy+'" width="140" height="'+(180-wy)+'" fill="#9fd3f5" fill-opacity=".8"/><path d="M110,60 L110,180 L250,180 L250,60" fill="none" stroke="#5b7aa0" stroke-width="4"/>';
           if(kind === 'hang'){
-            h += '<rect x="150" y="6" width="60" height="38" rx="8" fill="#fff" stroke="#8a7a66" stroke-width="3"/>' + tl(180, 32, '？g', '', '#d6403a', 18) + '<line x1="180" y1="44" x2="180" y2="104" stroke="#6b7a92" stroke-width="3"/><rect x="155" y="104" width="50" height="50" rx="6" fill="#b07a5a" stroke="#6b4a24" stroke-width="3"/>' + tl(180, 130, name, '', '#fff', 13) + tl(180, 146, w+'g', '', '#fff', 11) + tl(290, 130, '全部 しずめた', '', '#2b79c2', 11);
+            h += '<rect x="150" y="6" width="60" height="38" rx="8" fill="#fff" stroke="#8a7a66" stroke-width="3"/>' + tl(180, 32, '？g', '', '#d6403a', 18) + '<line x1="180" y1="44" x2="180" y2="104" stroke="#6b7a92" stroke-width="3"/><rect x="155" y="104" width="50" height="50" rx="6" fill="#b07a5a" stroke="#6b4a24" stroke-width="3"/>' + tl(180, 130, name, '', '#fff', 13) + tl(180, 146, w+'g', '', '#fff', 11) + tl(290, 130, '全部 しずめた', '', '#2b79c2', 11) + tl(180, 202, '浮力 = 100cm³ × 1g = 100g → '+w+' − 100 = ？', '', '#6b7a92', 11);
           } else {
             h += '<rect x="155" y="76" width="50" height="50" rx="6" fill="#c9a063" stroke="#6b4a24" stroke-width="3"/>' + tl(180, 98, name, '', '#3a2f22', 13) + tl(180, 114, w+'g', '', '#3a2f22', 11) + tl(180, 160, '水に 入った 体積 ？cm³', '', '#2b79c2', 12);
           }
@@ -17153,7 +17154,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           h += '<line x1="110" y1="96" x2="90" y2="96" stroke="#d6403a" stroke-width="2" stroke-dasharray="4 3"/>' + tl(70, 100, 'もとの 水面', '', '#d6403a', 11);
           h += '<g>'+an('transform','0 -50;0 0;0 0;0 -50',5,'0;.35;.8;1','translate')+'<rect x="155" y="66" width="50" height="50" rx="6" fill="#c9a063" stroke="#6b4a24" stroke-width="3"/>' + tl(180, 96, '木', '', '#3a2f22', 14)+'</g>';
           h += '<g opacity="0">'+an('opacity','0;0;1;1;0',5,'0;.3;.45;.8;1')+arrow(195, 140, 195, 112, '#1f9d5b', 3) + tl(225, 138, '浮力', '', '#1f9d5b', 13) + arrow(165, 90, 165, 130, '#d6403a', 3) + tl(137, 142, '重さ', '', '#d6403a', 13)+'</g>';
-          h += tl(60, 130, '水が おしのけられて', '', '#2b79c2', 11) + tl(60, 144, '水面が あがる', '', '#2b79c2', 11);
+          h += tl(60, 130, '水が おしのけられて', '', '#2b79c2', 11) + tl(60, 144, '水面が あがる', '', '#2b79c2', 11) + tl(180, 202, '浮力(g) = おしのけた 水の 体積(cm³) × 1g', '', '#6b7a92', 11);
           return svgO('#fdf6e6', h) + '</svg>';
         }
         return { waterStates:waterStates, leverCalc:leverCalc, kasshaQ:kasshaQ, baneQ:baneQ, furikoQ:furikoQ, furyokuQ:furyokuQ, kasshaP:kasshaP, baneP:baneP, furikoP:furikoP, furyokuP:furyokuP, boilP:boilP, iceExpand:iceExpand, syringeP:syringeP, warmAirP:warmAirP, metalHeat:metalHeat, clayP:clayP, dissolveP:dissolveP, saltLeft:saltLeft, airPie:airPie, candleJar:candleJar, limeWater:limeWater, pendulumP:pendulumP, leverP:leverP, lightStraight:lightStraight, shadowP:shadowP, sunShadow:sunShadow, mirrorP:mirrorP, mirrors3:mirrors3, lensP:lensP, magItems:magItems, magThrough:magThrough, magPoles:magPoles, magPair:magPair, compassP:compassP, nailMag:nailMag, solar:solar, moonScene:moonScene, moonRow:moonRow, skyNorth:skyNorth, earthDay:earthDay, season:season, sunArc:sunArc, riverProf:riverProf, emo:emo, batt:batt, bulb:bulb, motor:motor, circuit:circuit, cells:cells, motorPic:motorPic, pics:pics, ava:function(k){ return '<svg viewBox="0 0 200 200" class="st-ava-svg" aria-hidden="true">'+(k === 'bulb' ? bulb(true) : k === 'motor' ? motor() : batt())+'</svg>'; } };
