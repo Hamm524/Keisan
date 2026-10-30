@@ -17057,10 +17057,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         function leverP(mode){
           var far = mode !== 'near', fx = 110, ex = far ? 320 : 150;
           var s = svgO('#eef7ff', '<rect y="176" width="360" height="34" fill="#d9c7a6"/>');
-          s += '<line x1="30" y1="132" x2="340" y2="132" stroke="#8a5a2a" stroke-width="10" stroke-linecap="round"/><polygon points="'+fx+',132 '+(fx-18)+',176 '+(fx+18)+',176" fill="#6b7a92"/>';
-          s += '<rect x="34" y="92" width="44" height="40" rx="6" fill="#7a8aa2"/>' + tl(56, 117, 'おもり', '', '#fff', 11);
-          s += arrow(ex, far ? 70 : 76, ex, 124, '#d6403a', far ? 3 : 7);
-          s += tl(fx, 196, '支点', 'してん', '#27324f', 12) + tl(ex, far ? 54 : 58, '力点', 'りきてん', '#c9302c', 12) + tl(56, 76, '作用点', 'さようてん', '#27324f', 11);
+          var dy = ((ex - fx)*Math.sin(8*Math.PI/180)).toFixed(1), ks = ' calcMode="spline" keySplines=".4 0 .6 1;.4 0 .6 1;.4 0 .6 1"';
+          s += '<polygon points="'+fx+',132 '+(fx-18)+',176 '+(fx+18)+',176" fill="#6b7a92"/>';
+          s += '<g><animateTransform attributeName="transform" type="rotate" values="0 '+fx+' 132;8 '+fx+' 132;8 '+fx+' 132;0 '+fx+' 132" keyTimes="0;.4;.7;1" dur="3.5s"'+ks+' repeatCount="indefinite"/><line x1="30" y1="132" x2="340" y2="132" stroke="#8a5a2a" stroke-width="10" stroke-linecap="round"/>';
+          s += '<rect x="34" y="92" width="44" height="40" rx="6" fill="#7a8aa2"/>' + tl(56, 117, 'おもり', '', '#fff', 11) + '</g>';
+          s += '<g><animateTransform attributeName="transform" type="translate" values="0 0;0 '+dy+';0 '+dy+';0 0" keyTimes="0;.4;.7;1" dur="3.5s"'+ks+' repeatCount="indefinite"/>' + arrow(ex, far ? 70 : 76, ex, 124, '#d6403a', far ? 3 : 7) + tl(ex, far ? 54 : 58, '力点', 'りきてん', '#c9302c', 12) + '</g>';
+          s += tl(fx, 196, '支点', 'してん', '#27324f', 12) + tl(56, 76, '作用点', 'さようてん', '#27324f', 11);
           s += tl(260, 34, far ? '小さな 力で 持ち上がる' : '大きな 力が いる', far ? 'ちいさな ちから' : 'おおきな ちから', far ? '#1f7a43' : '#c9302c', 12);
           return s + '</svg>';
         }
