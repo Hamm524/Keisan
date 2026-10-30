@@ -17078,6 +17078,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           h += arrow(cx-4, 80, xl+2, 80, '#2b79c2', 2) + tl((cx+xl)/2, 72, dl+'cm', '', '#2b79c2', 12);
           h += arrow(cx+4, 80, xr-2, 80, '#d6703a', 2) + tl((cx+xr)/2, 72, (drT || dr)+'cm', '', '#d6703a', 12);
           h += tl(180, 172, '支点', '', '#3a2f22', 12);
+          var unkR = (sr && String(sr).indexOf('?') >= 0) || (drT && String(drT).indexOf('?') >= 0), unkL = sl && String(sl).indexOf('?') >= 0;
+          h += tl(110, 190, unkL ? '？g × '+dl+'cm' : wl+'g × '+dl+'cm', '', '#2b79c2', 11) + tl(110, 205, '= '+(unkL ? '？' : wl*dl)+' g·cm', '', '#2b79c2', 12);
+          h += tl(250, 190, unkR ? (typeof drT === 'string' && drT.indexOf('?') === 0 ? wr+'g × ？cm' : '？g × '+dr+'cm') : wr+'g × '+dr+'cm', '', '#d6703a', 11) + tl(250, 205, '= '+(unkR ? '？' : wr*dr)+' g·cm', '', '#d6703a', 12);
           return svgO('#fdf6e6', h) + '</svg>';
         }
         function an(attr, vals, dur, kt, type){ return '<animate'+(type ? 'Transform type="'+type+'"' : '')+' attributeName="'+attr+'" values="'+vals+'" keyTimes="'+(kt || '0;.55;.75;1')+'" dur="'+(dur || 4)+'s" repeatCount="indefinite"/>'; }
