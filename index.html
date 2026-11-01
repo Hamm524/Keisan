@@ -17593,6 +17593,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           return (cur > 0 ? '<circle cx="'+cx+'" cy="'+cy+'" r="'+(12+7*c)+'" fill="#FFE05A" opacity="'+(.18+.17*c).toFixed(2)+'"/>' : '') + '<circle cx="'+cx+'" cy="'+cy+'" r="12" fill="'+(cur > 0 ? '#FFF3A6' : '#E3ECF4')+'" stroke="#9AA3B2" stroke-width="2.5"/><path d="M'+(cx-4)+','+(cy+6)+' L'+cx+','+(cy-3)+' L'+(cx+4)+','+(cy+6)+'" stroke="'+(cur > 0 ? '#E58A2E' : '#9AA3B2')+'" stroke-width="2" fill="none"/>';
         }
         function scell(cx, cy){ return '<rect x="'+(cx-5)+'" y="'+(cy-24)+'" width="10" height="6" rx="2" fill="#C9CED8"/><rect x="'+(cx-12)+'" y="'+(cy-19)+'" width="24" height="40" rx="7" fill="#FFC53D" stroke="#E0A400" stroke-width="1.5"/><text x="'+cx+'" y="'+(cy-6)+'" font-size="12" font-weight="900" text-anchor="middle" fill="#D6403A">＋</text><text x="'+cx+'" y="'+(cy+16)+'" font-size="13" font-weight="900" text-anchor="middle" fill="#2B79C2">−</text>'; }
+        function hcell(cx, cy, flip){ return '<rect x="'+(flip ? cx-26 : cx+20)+'" y="'+(cy-5)+'" width="6" height="10" rx="2" fill="#C9CED8"/><rect x="'+(cx-20)+'" y="'+(cy-12)+'" width="40" height="24" rx="7" fill="#FFC53D" stroke="#E0A400" stroke-width="1.5"/><text x="'+(flip ? cx-11 : cx+11)+'" y="'+(cy+5)+'" font-size="13" font-weight="900" text-anchor="middle" fill="#D6403A">＋</text><text x="'+(flip ? cx+11 : cx-11)+'" y="'+(cy+5)+'" font-size="14" font-weight="900" text-anchor="middle" fill="#2B79C2">−</text>'; }
         function nlab(x, y, t, c){ return '<text x="'+x+'" y="'+y+'" font-size="13" font-weight="900" fill="'+(c || '#c9302c')+'" stroke="#f3f6fb" stroke-width="4" paint-order="stroke">'+t+'</text>'; }
         function fmt(n){ return String(Math.round(n*100)/100); }
         /* cells: one/series/para, bulbs: one/series/para/serOut/parOut, md: cur(電流)/res(通りにくさ)/pow(電池の力) */
@@ -17612,7 +17613,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           else if(bulbs === 'series' || bulbs === 'serOut'){ bl += sbulb(150, 50, I, bulbs === 'serOut') + sbulb(225, 50, I); if(cap){ bl += nlab(166, 40, fmt(I)) + nlab(241, 40, fmt(I)); } }
           else { var e = bulbs === 'parOut' ? E : E; b1 = E; bl += sbulb(190, 28, bulbs === 'parOut' ? 0 : E, bulbs === 'parOut') + sbulb(190, 78, E); if(cap){ if(bulbs !== 'parOut') bl += nlab(208, 20, fmt(E)); bl += nlab(208, 72, fmt(E)); } }
           if(bulbs === 'parOut') I = E;
-          var foot = md === 'res' ? '豆電球 ぜんたいの 通りにくさ: ' + fmt(R) : md === 'pow' ? '電池の 力: ' + E : '電池から 流れる 電流: ' + fmt(I);
+          var foot = md === 'none' ? '' : md === 'res' ? '豆電球 ぜんたいの 通りにくさ: ' + fmt(R) : md === 'pow' ? '電池の 力: ' + E : '電池から 流れる 電流: ' + fmt(I);
           return box(s + bl + '<text x="182" y="198" font-size="14" font-weight="900" text-anchor="middle" fill="#27324f">'+foot+'</text>', '回路の 図');
         }
         /* 電磁石: on=電流, flip=電池の 向き */
@@ -17620,7 +17621,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           var s = '<rect x="110" y="93" width="150" height="14" rx="3" fill="#9AA3B2"/><rect x="104" y="84" width="8" height="32" rx="2" fill="#7E8796"/><path d="M260,93 L278,100 L260,107 Z" fill="#9AA3B2"/>';
           for(var i = 0; i < 12; i++) s += '<ellipse cx="'+(122+i*11)+'" cy="100" rx="4" ry="17" fill="none" stroke="#E58A2E" stroke-width="3"/>';
           s += wire('M122,117 V170 H160') + wire('M243,117 V170 H220') + (on ? wire('M220,170 H200') : wire('M220,170 L204,154'));
-          s += '<g transform="translate(180,170) rotate(90)">' + scell(0, 0).replace(/text x="0" y="-6"/, 'text x="0" y="-6" transform="rotate(-90 0 -10)"').replace(/text x="0" y="16"/, 'text x="0" y="16" transform="rotate(-90 0 12)"') + '</g>';
+          s += hcell(180, 170, flip);
           s += lab(212, 196, 'スイッチ') + '<circle cx="220" cy="170" r="4" fill="#8A93A3"/><circle cx="200" cy="170" r="4" fill="#8A93A3"/>';
           if(on){
             var L = flip ? 'N' : 'S', Rr = flip ? 'S' : 'N';
@@ -17653,7 +17654,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             s += wire('M'+(x-50)+',150 V70 H'+(x-34)+' M'+(x+34)+',70 H'+(x+50)+' V150 H'+(x-50));
             s += '<path d="M'+(x-34)+',70 H'+(x+34)+'" stroke="#E0603A" stroke-width="'+c[1]+'" stroke-linecap="round"/>';
             for(var i = 0; i < c[2]; i++) s += '<path d="M'+(x-20+i*20)+',58 q-6,-8 0,-14 q6,-8 0,-16" stroke="#E0603A" stroke-width="2.5" fill="none" opacity=".8"/>';
-            s += scell(x, 150) + lab(x, 102, c[3], '#27324f') + lab(x, 198, c[2] > 1 ? '電流が 多い → 早く あつく' : '電流が 少ない', c[2] > 1 ? '#c9302c' : '#5B6472');
+            s += hcell(x, 150) + lab(x, 102, c[3], '#27324f') + lab(x, 198, c[2] > 1 ? '電流が 多い → 早く あつく' : '電流が 少ない', c[2] > 1 ? '#c9302c' : '#5B6472');
           });
           return box(s, '電熱線の 太さと 発熱');
         }
@@ -17663,16 +17664,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           var s = '<rect x="30" y="80" width="80" height="60" rx="12" fill="#7FB8E0"/><text x="70" y="116" font-size="13" font-weight="900" text-anchor="middle" fill="#fff">発電機</text>';
           s += '<line x1="70" y1="80" x2="70" y2="50" stroke="#5B6472" stroke-width="5" stroke-linecap="round"/><line x1="70" y1="50" x2="100" y2="50" stroke="#5B6472" stroke-width="5" stroke-linecap="round"/><circle cx="100" cy="50" r="7" fill="#E58A2E"/>';
           s += '<path d="M40,46 A32,32 0 0 '+(k === 'rev' ? '0' : '1')+' 70,18" stroke="#c9302c" stroke-width="3" fill="none"/>' + (k === 'rev' ? '<path d="M40,46 l-2,-11 l9,5 Z" fill="#c9302c"/>' : '<path d="M70,18 l-10,-4 l2,9 Z" fill="#c9302c"/>');
-          s += wire('M110,95 H235 V70') + wire('M110,125 H245 V160') + flow('M110,95 H235 V70', true, k === 'rev') + flow('M110,125 H245 V160', true, k === 'rev');
+          s += wire('M110,100 H200 V165 H241 V146') + wire('M110,125 H185 V180 H250 V146') + flow('M110,100 H200 V165 H241 V146', true, k === 'rev') + flow('M110,125 H185 V180 H250 V146', true, k === 'rev');
           var m = motor(k === 'rev'); if(k === 'fast') m = m.replace('class="st-fan', 'style="animation-duration:.3s" class="st-fan'); else m = m.replace('class="st-fan', 'style="animation-duration:1.6s" class="st-fan');
           s += at(190, 40, 110, m, 1) + lab(70, 170, k === 'fast' ? '速く 回す' : k === 'rev' ? '逆に 回す' : 'ゆっくり 回す', '#27324f');
-          s += lab(250, 198, k === 'fast' ? '電流が 大きい → 速く 回る' : k === 'rev' ? '電流の 向きが 逆 → 逆に 回る' : '電流が 小さい → ゆっくり 回る', '#c9302c');
+          s += lab(262, 202, k === 'fast' ? '電流が 大きい → 速く 回る' : k === 'rev' ? '電流の 向きが 逆 → 逆に 回る' : '電流が 小さい → ゆっくり 回る', '#c9302c');
           return box(s, '手回し 発電機');
         }
         /* コンデンサーに ためた 電気: 豆電球 と LED */
         function capP(){
           var s = '<rect x="30" y="70" width="44" height="70" rx="10" fill="#4A6FA5"/><rect x="30" y="70" width="44" height="14" rx="6" fill="#6C8FC4"/><text x="52" y="160" font-size="12" font-weight="800" text-anchor="middle" fill="#27324f">コンデンサー</text>';
-          s += sbulb(120, 70, 1) + lab(120, 102, '豆電球') + '<rect x="150" y="62" width="40" height="16" rx="8" fill="#FFC53D"/>' + lab(240, 76, 'すぐ 消える');
+          s += sbulb(120, 70, 1) + lab(120, 102, '豆電球') + '<rect x="150" y="62" width="40" height="16" rx="8" fill="#FFC53D"/>' + lab(240, 76, '早く 消える');
           s += '<circle cx="120" cy="140" r="14" fill="#ffe4ec" stroke="#E0507A" stroke-width="2.5"/><circle cx="120" cy="140" r="22" fill="#FF8FB0" opacity=".25"/>' + lab(120, 176, 'LED') + '<rect x="150" y="132" width="190" height="16" rx="8" fill="#FF8FB0"/>' + lab(300, 170, 'ずっと 長く 光る');
           s += lab(200, 30, '同じ 量の 電気で 光る 時間を くらべる', '#27324f');
           return box(s, 'コンデンサー');
@@ -17734,8 +17735,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             { who:'bulb', w:'通りにくさ', say:'豆電球 1この 電気の 通りにくさを「1」と しよう。直列《ちょくれつ》に 2こ ならべると 通りにくさは 1 + 1 = 2。並列《へいれつ》に 2こ ならべると、道が 2本に なって 半分の 0.5 に なるよ。', exp:[['one', '豆電球 1こ'], ['series', '2こ 直列《ちょくれつ》'], ['para', '2こ 並列《へいれつ》']],
               pic:function(x){ return D.ckt('one', x.g || 'one', 'res'); }, tip:'通りにくさは、中学校で「抵抗《ていこう》」と よぶ ものだよ。' },
             { who:'batt', w:'電流 = 電池の 力 ÷ 通りにくさ', say:'電池から 流れる 電流は「電池の 力 ÷ 通りにくさ」で 計算できるよ。電池 2こ 直列《ちょくれつ》に、豆電球 2こ 直列《ちょくれつ》なら 2 ÷ 2 = 1。1この ときと 同じ 明るさだよ。', pic:function(){ return D.ckt('series', 'series', 'cur'); },
-              tip:'この 計算の きまりを「オームの 法則《ほうそく》」と いうよ。中学校では「電流 = 電圧 ÷ 抵抗《ていこう》」と 習うよ。' },
-            { who:'bulb', w:'計算してみよう', say:'電池 2こ 直列《ちょくれつ》に、豆電球 2こ 並列《へいれつ》なら、電池から 流れる 電流は 2 ÷ 0.5 = 4。それが 2本に 分かれて、豆電球 1こには 2 ずつ 流れるよ。すごく 明るいね!', pic:function(){ return D.ckt('series', 'para', 'cur'); },
+              tip:'この 計算の きまりを「オームの 法則《ほうそく》」と いうよ。中学校では「電流 = 電圧《でんあつ》 ÷ 抵抗《ていこう》」と 習うよ。' },
+            { who:'bulb', w:'計算してみよう', say:'電池 2こ 直列《ちょくれつ》に、豆電球 2こ 並列《へいれつ》なら、電池から 流れる 電流は 2 ÷ 0.5 = 4。それが 2本に 分かれて、豆電球 1こには 2 ずつ 流れるよ。すごく 明るいね! でも、電流が 大きすぎると 豆電球が 切れる ことも あるよ。', pic:function(){ return D.ckt('series', 'para', 'cur'); },
               tip:'まず ぜんたいの 電流を 出して、分かれ道で 分けよう。同じ 豆電球 2この 並列《へいれつ》なら 半分ずつ だよ。' } ],
             qs:[ { q:'電池 3こを 直列《ちょくれつ》に して、豆電球 1こを つないだ。電池の 力は いくつ?(電池 1こを 1と する)', a:'3', bad:['1', '2', '0.3'], pg:0 },
                  { q:'豆電球 2こを 並列《へいれつ》に つないだ ときの 通りにくさは?(豆電球 1こを 1と する)', a:'0.5', bad:['2', '1', '4'], pg:1 },
@@ -17745,22 +17746,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             { who:'batt', w:'電流で じしゃくに なる', say:'導線《どうせん》を ぐるぐる まいた ものを「コイル」と いうよ。コイルに 鉄の しんを 入れて 電流を 流すと、じしゃくに なるよ。スイッチを おして みて!', exp:'sw',
               pic:function(x){ return D.emag(!!x.sw, false); }, tip:'これを「電磁石《でんじしゃく》」と いうよ。電流を 止めると、じしゃくでは なくなるよ。ふつうの じしゃくと ちがう ところだね。' },
             { who:'batt', w:'N極《きょく》と S極《きょく》', say:'電磁石《でんじしゃく》にも N極《きょく》と S極《きょく》が あるよ。電池の 向きを 逆《ぎゃく》に して みて!', exp:'flip',
-              pic:function(x){ return D.emag(true, !!x.flip); }, tip:'電流の 向きを 逆《ぎゃく》に すると、N極と S極が 入れかわるよ。極は 方位《ほうい》じしんを 近づけて 調べるよ。' },
+              pic:function(x){ return D.emag(true, !!x.flip); }, tip:'電流の 向きを 逆《ぎゃく》に すると、N極《きょく》と S極《きょく》が 入れかわるよ。極は 方位《ほうい》じしんを 近づけて 調べるよ。' },
             { who:'bulb', w:'強く する には', say:'電磁石《でんじしゃく》を 強く するには、コイルの まき数を 多く するか、電流を 大きく する(電池を 直列《ちょくれつ》に する)よ。', pic:function(){ return D.emagCmp(); },
-              tip:'まき数の ちがいを 調べる ときは、電流の 大きさや 導線《どうせん》の 長さを 同じに するよ。調べる こと 1つ だけを かえるのが 実験の きまりだよ。' } ],
+              tip:'まき数の ちがいを 調べる ときは、電流の 大きさや 導線《どうせん》の 長さを 同じに するよ。調べる こと 1つ だけを かえるのが 実験《じっけん》の きまりだよ。' } ],
             qs:[ { q:'電磁石《でんじしゃく》が ふつうの じしゃくと ちがう ところは?', a:'電流を 止めると じしゃくで なくなる', bad:['N極《きょく》と S極《きょく》が ない', '鉄を 引きつけない', 'ずっと じしゃくの まま'], pg:0 },
                  { q:'電池の 向きを 逆《ぎゃく》に すると、電磁石《でんじしゃく》は どう なる?', a:'N極《きょく》と S極《きょく》が 入れかわる', bad:['じしゃくで なくなる', '強く なる', 'かわらない'], pg:1 },
-                 { q:'コイルの まき数と 電磁石《でんじしゃく》の 強さの 関係を 調べたい。同じに しない ものは どれ?', bag:3, a:'コイルの まき数', bad:['電池の 数と つなぎ方', '導線《どうせん》の 長さ', '鉄の しん'], pg:2, warn:'かえるのは 1つ だけ' } ] },
+                 { q:'コイルの まき数と 電磁石《でんじしゃく》の 強さの 関係《かんけい》を 調べたい。同じに しない ものは どれ?', bag:3, a:'コイルの まき数', bad:['電池の 数と つなぎ方', '導線《どうせん》の 長さ', '鉄の しん'], pg:2, warn:'かえるのは 1つ だけ' } ] },
           { id:'den7', t:'電気を つくる・ためる・使う', ico:'🔌', deep:true, pages:[
-            { who:'motor', w:'手回し 発電機', say:'手回し 発電機の ハンドルを 回すと、電気を つくれるよ。回し方を かえて、ぼく(くるりん)が どう 回るか 見て みて!', exp:[['slow', 'ゆっくり'], ['fast', '速く'], ['rev', '逆《ぎゃく》に']],
-              pic:function(x){ return D.genP(x.g || 'slow'); }, tip:'速く 回すと 電流が 大きく なり、逆《ぎゃく》に 回すと 電流の 向きが 逆に なるよ。発電所《はつでんしょ》も 大きな 発電機を 回して 電気を つくって いるよ。' },
-            { who:'bulb', w:'コンデンサーに ためる', say:'コンデンサーは 電気を ためて おける 部品だよ。同じ 量の 電気を ためて つなぐと、ぼく(豆電球)より LEDの ほうが ずっと 長く 光るよ。', pic:function(){ return D.capP(); },
+            { who:'motor', w:'手回し 発電機《はつでんき》', say:'手回し 発電機《はつでんき》の ハンドルを 回すと、電気を つくれるよ。回し方を かえて、ぼく(くるりん)が どう 回るか 見て みて!', exp:[['slow', 'ゆっくり'], ['fast', '速く'], ['rev', '逆《ぎゃく》に']],
+              pic:function(x){ return D.genP(x.g || 'slow'); }, tip:'速く 回すと 電流が 大きく なり、逆《ぎゃく》に 回すと 電流の 向きが 逆に なるよ。発電所《はつでんしょ》も 大きな 発電機《はつでんき》を 回して 電気を つくって いるよ。' },
+            { who:'bulb', w:'コンデンサーに ためる', say:'コンデンサーは 電気を ためて おける 部品だよ。同じ 量《りょう》の 電気を ためて つなぐと、ぼく(豆電球)より LEDの ほうが ずっと 長く 光るよ。', pic:function(){ return D.capP(); },
               tip:'LEDは 少しの 電気で 光るので、電気を むだに しないよ。信号機《しんごうき》や 電灯《でんとう》にも 使われて いるよ。' },
-            { who:'batt', w:'電熱線《でんねつせん》', say:'電熱線《でんねつせん》に 電流を 流すと 熱く なるよ。同じ 長さで 太さの ちがう 電熱線を 1つずつ 電池に つなぐと、太い ほうが 電流が 多く 流れて、早く 熱く なるよ。', pic:function(){ return D.heatP(); },
-              tip:'太い ほうが 電気が 通りやすいから だよ。同じ 太さなら、長い ほうが 通りにくく、熱く なりにくいよ。' } ],
-            qs:[ { q:'手回し 発電機を 速く 回すと、どう なる?', a:'電流が 大きく なる', bad:['電流が 小さく なる', '電流の 向きが 逆《ぎゃく》に なる', '電気が つくれない'], pg:0 },
-                 { q:'コンデンサーに ためた 同じ 量の 電気で、長く 光るのは どちら?', a:'LED', bad:['豆電球', 'どちらも 同じ', 'どちらも 光らない'], pg:1 },
-                 { q:'同じ 長さで 太い 電熱線《でんねつせん》と 細い 電熱線を、1つずつ 同じ 電池に つないだ。早く 熱く なるのは?', bag:3, a:'太い 電熱線', bad:['細い 電熱線', 'どちらも 同じ', 'どちらも 熱く ならない'], pg:2, warn:'電流が 多く 流れるのは どっち?' } ] }
+            { who:'batt', w:'電熱線《でんねつせん》', say:'電熱線《でんねつせん》に 電流を 流すと 熱《あつ》く なるよ。同じ 長さで 太さの ちがう 電熱線《でんねつせん》を 1つずつ 電池に つなぐと、太い ほうが 電流が 多く 流れて、早く 熱《あつ》く なるよ。', pic:function(){ return D.heatP(); },
+              tip:'太い ほうが 電気が 通りやすいから だよ。同じ 太さなら、長い ほうが 通りにくく、熱《あつ》く なりにくいよ。直列《ちょくれつ》に つなぐと 反対に 細い ほうが 熱《あつ》く なるので 注意《ちゅうい》!' } ],
+            qs:[ { q:'手回し 発電機《はつでんき》を 速く 回すと、どう なる?', a:'電流が 大きく なる', bad:['電流が 小さく なる', '電流の 向きが 逆《ぎゃく》に なる', '電気が つくれない'], pg:0 },
+                 { q:'コンデンサーに ためた 同じ 量《りょう》の 電気で、長く 光るのは どちら?', a:'LED', bad:['豆電球', 'どちらも 同じ', 'どちらも 光らない'], pg:1 },
+                 { q:'同じ 長さで 太い 電熱線《でんねつせん》と 細い 電熱線《でんねつせん》を、1つずつ 同じ 電池に つないだ。早く 熱《あつ》く なるのは?', bag:3, a:'太い 電熱線《でんねつせん》', bad:['細い 電熱線《でんねつせん》', 'どちらも 同じ', 'どちらも 熱《あつ》く ならない'], pg:2, warn:'電流が 多く 流れるのは どっち?' } ] }
           /*DEN47-S-END*/ ] },
         ten:{ title:'理科「天体」', sub:'s', lv:'天体', subj:'理科', uchu:true, seiza:true, hello:'太陽・月・星の お話を 聞こう! お話を さいごまで 見たら、問題に ちょうせん!', stories:[
           { id:'ten1', t:'太陽と 惑星《わくせい》', ico:'☀️', uchu:true, pages:[
