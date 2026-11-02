@@ -21537,7 +21537,8 @@ var NEN_DATA={"eras": [{"n": "縄文《じょうもん》", "y": "約《やく�
     h += '</tbody></table>';
     root.querySelector('.nn-sc').innerHTML = h;
     (function(){ var sc = root.querySelector('.nn-sc'), th = sc.querySelector('thead'), hh = Math.floor((sc.clientHeight - (th ? th.offsetHeight : 60)) / rows.length) - 14;
-      if(hh < 90) hh = 90; var r0 = sc.querySelector('tbody tr'); if(r0 && rows.length > 1) r0.querySelectorAll('.nn-cl').forEach(function(c){ c.style.maxHeight = hh + 'px'; c.style.overflowY = 'auto'; }); sc.querySelectorAll('tbody tr:not(:first-child) .nn-cl').forEach(function(c){ c.style.maxHeight = 'none'; c.style.overflowY = 'visible'; }); })();
+      if(hh < 90) hh = 90; var r0 = sc.querySelector('tbody tr'); if(r0 && rows.length > 1) r0.querySelectorAll('td, th').forEach(function(c){ c.style.position = 'sticky'; c.style.top = (th ? th.offsetHeight : 60) + 'px'; c.style.zIndex = c.classList.contains('nn-c0') ? 3 : 2; });
+      if(r0 && rows.length > 1) r0.querySelectorAll('.nn-cl').forEach(function(c){ c.style.maxHeight = hh + 'px'; c.style.overflowY = 'auto'; }); sc.querySelectorAll('tbody tr:not(:first-child) .nn-cl').forEach(function(c){ c.style.maxHeight = 'none'; c.style.overflowY = 'visible'; }); })();
     root.querySelector('.nn-jp').innerHTML = '<span style="flex:none;font-size:12px;font-weight:900;align-self:center">とぶ ▶</span>' + D.eras.map(function(e, i){ return '<button class="nn-jb' + (i === hi ? ' on' : '') + '" data-j="' + i + '">' + rb(e.n) + '</button>'; }).join('');
     root.querySelector('.nn-tabs').innerHTML = TABS.map(function(t){ return '<button class="nn-tab' + (t[0] === tab ? ' on' : '') + '" data-t="' + t[0] + '">' + t[2] + ' ' + rb(t[1]) + '</button>'; }).join('');
   }
