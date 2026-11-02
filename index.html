@@ -21533,7 +21533,7 @@ var NEN_DATA={"eras": [{"n": "縄文《じょうもん》", "y": "約《やく�
   function cell(i, r){
     var list = NEN_DATA.ev.filter(function(x){ return x.e === i && x.r === r && (tab === 'all' ? x.c !== 'm' : x.c === tab); });
     list.sort(function(a, b){ return a.y - b.y; });
-    return list.map(evHtml).join('') || '<div class="nn-no">これから ふやすよ</div>';
+    return list.map(evHtml).join('') || '<div class="nn-no">はっきり わからない、または まだ 入れて いないよ</div>';
   }
   function render(){
     var D = NEN_DATA, h = '';
@@ -21544,7 +21544,7 @@ var NEN_DATA={"eras": [{"n": "縄文《じょうもん》", "y": "約《やく�
     rows.forEach(function(r){
       h += '<tr><th class="nn-c0"><div style="font-size:20px">' + r[0] + '</div>' + rb(r[1]) + '</th>';
       D.eras.forEach(function(e, i){
-        var inner = r[2] === 'p' ? (D.ppl[i].length ? D.ppl[i].map(function(p, j){ return '<div class="nn-ev nn-tap" data-p="' + i + ',' + j + '">👤 <span class="nn-pn" style="pointer-events:none">' + rb(p.n) + '</span></div>'; }).join('') : '<div class="nn-no">これから ふやすよ</div>') : cell(i, r[2]);
+        var inner = r[2] === 'p' ? (D.ppl[i].length ? D.ppl[i].map(function(p, j){ return '<div class="nn-ev nn-tap" data-p="' + i + ',' + j + '">👤 <span class="nn-pn" style="pointer-events:none">' + rb(p.n) + '</span></div>'; }).join('') : '<div class="nn-no">はっきり わからない、または まだ 入れて いないよ</div>') : cell(i, r[2]);
         h += '<td class="' + (i === hi ? 'hi' : '') + '"><div class="nn-cl">' + inner + '</div></td>';
       });
       h += '</tr>';
