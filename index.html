@@ -12258,7 +12258,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         grain(a, t, 'bandpass', 5200, .8, .55, .035, .11, Math.random() * .5);
         grain(a, t + .13, 'bandpass', 6400, 1.1, .38, .012, .07, Math.random() * .5); }catch(_){}
     }
-    /* タンバリン: 本物は 毎回 いろいろ。「タン タン!」(たたく)・「シャン シャン」(ふる)・「シャラララ」(ふるわせる)を ランダムに 鳴らす。ピッチのある音は入れない */
+    /* タンバリン: 手で「タン タン!」とたたく(皮の打音+すずが ほんの少し)。ピッチのある音は入れない */
     function tjing(a, t, len, n, vol, hp){
       for(var k = 0; k < n; k++){
         var u = k / n, tk = t + u * len + Math.random() * .008, v = vol * Math.pow(1 - u, 1.2);
@@ -12269,33 +12269,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       grain(a, t, 'bandpass', 800, .6, .5 * vol, .002, .07);
       grain(a, t, 'bandpass', 2200, .8, .35 * vol, .002, .04);
     }
-    /* シャラララ: すずのような 軽い音。小さな金属の円ばんが ちりちりと ぶつかる 短い「チリッ」を たくさん 不規則に。ノイズの連続だと ばねの「ジャー」に なるので、高い金属の ピン(短い減衰)を ならべる */
-    function ping(a, t, fr, vol, dec){
-      [[1, 1], [2.32, .25]].forEach(function(h){
-        var o = a.createOscillator(), g = a.createGain();
-        o.type = 'sine'; o.frequency.value = fr * h[0];
-        g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(vol * h[1], t + .0015); g.gain.exponentialRampToValueAtTime(.0001, t + dec);
-        o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dec + .02);
-      });
-    }
-    function roll(a, t){
-      var n = 26, len = .38, k;
-      for(k = 0; k < n; k++){
-        var u = k / n, env = (.5 + .5 * Math.random()) * Math.pow(1 - u, .7), tk = t + len * Math.pow(u, 1.15) + Math.random() * .012;
-        ping(a, tk, 4800 + Math.random() * 4200, .05 * env, .016 + Math.random() * .022);
-      }
-    }
-    var tambN = 0;
     function tamb(){
-      try{ var a = aud(), t = a.currentTime, m = tambN++ % 3;
-        if(Math.random() < .35) m = (Math.random() * 3) | 0;
-        if(m === 0){            /* タン タン! */
-          [0, .2].forEach(function(o, q){ thead(a, t + o, q ? .85 : 1); tjing(a, t + o + .004, .09, 8, .9, 5500); });
-        }else if(m === 1){      /* シャン シャン */
-          [0, .24].forEach(function(o, q){ grain(a, t + o, 'highpass', 6000, .6, .5, .004, .08); tjing(a, t + o + .002, .2, 16, 1, 4500); });
-        }else{                  /* シャラララ */
-          roll(a, t);
-        } }catch(_){}
+      try{ var a = aud(), t = a.currentTime;
+        [0, .2].forEach(function(o, q){ thead(a, t + o, q ? .85 : 1); tjing(a, t + o + .004, .09, 8, .9, 5500); }); }catch(_){}
     }
     function horn(fr){
       try{ var a = aud(), t = a.currentTime, o = a.createOscillator(), f = a.createBiquadFilter(), g = a.createGain();
