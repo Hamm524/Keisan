@@ -12269,6 +12269,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       grain(a, t, 'bandpass', 800, .6, .5 * vol, .002, .07);
       grain(a, t, 'bandpass', 2200, .8, .35 * vol, .002, .04);
     }
+    /* シャラララ: 小さなシンバル(ジングル)が たくさん ばらばらに ぶつかる。ばねっぽく ならないよう せまい帯域(共鳴)は つかわず、広い高音の ごく短い粒を 不規則に ならべる */
+    function roll(a, t){
+      var n = 80, len = .62, k;
+      for(k = 0; k < n; k++){
+        var u = k / n, env = Math.min(1, .45 + u * 4) * Math.pow(1 - u, .9), tk = t + u * len + (Math.random() - .5) * .012;
+        grain(a, tk, 'highpass', 5500 + Math.random() * 3500, .3, (.25 + Math.random() * .75) * env * .9, .0006, .012 + Math.random() * .022, Math.random() * .5);
+      }
+    }
     var tambN = 0;
     function tamb(){
       try{ var a = aud(), t = a.currentTime, m = tambN++ % 3;
@@ -12278,7 +12286,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         }else if(m === 1){      /* シャン シャン */
           [0, .24].forEach(function(o, q){ grain(a, t + o, 'highpass', 6000, .6, .5, .004, .08); tjing(a, t + o + .002, .2, 16, 1, 4500); });
         }else{                  /* シャラララ */
-          grain(a, t, 'highpass', 6000, .6, .35, .01, .1); tjing(a, t + .002, .6, 55, .75, 4000);
+          roll(a, t);
         } }catch(_){}
     }
     function horn(fr){
