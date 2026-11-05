@@ -12269,13 +12269,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       grain(a, t, 'bandpass', 800, .6, .5 * vol, .002, .07);
       grain(a, t, 'bandpass', 2200, .8, .35 * vol, .002, .04);
     }
-    /* シャラララ: 小さなシンバル(ジングル)が たくさん ばらばらに ぶつかる。ばねっぽく ならないよう せまい帯域(共鳴)は つかわず、広い高音の ごく短い粒を 不規則に ならべる */
+    /* シャラララ: すずのような 軽い音。小さな金属の円ばんが ちりちりと ぶつかる 短い「チリッ」を たくさん 不規則に。ノイズの連続だと ばねの「ジャー」に なるので、高い金属の ピン(短い減衰)を ならべる */
+    function ping(a, t, fr, vol, dec){
+      [[1, 1], [2.32, .45]].forEach(function(h){
+        var o = a.createOscillator(), g = a.createGain();
+        o.type = 'sine'; o.frequency.value = fr * h[0];
+        g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(vol * h[1], t + .0015); g.gain.exponentialRampToValueAtTime(.0001, t + dec);
+        o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dec + .02);
+      });
+    }
     function roll(a, t){
-      var n = 80, len = .62, k;
+      var n = 38, len = .6, k;
       for(k = 0; k < n; k++){
-        var u = k / n, env = Math.min(1, .45 + u * 4) * Math.pow(1 - u, .9), tk = t + u * len + (Math.random() - .5) * .012;
-        grain(a, tk, 'highpass', 5500 + Math.random() * 3500, .3, (.25 + Math.random() * .75) * env * .9, .0006, .012 + Math.random() * .022, Math.random() * .5);
+        var u = k / n, env = Math.min(1, .5 + u * 4) * Math.pow(1 - u, .8), tk = t + u * len + Math.random() * .014;
+        ping(a, tk, 3800 + Math.random() * 3200, (.04 + Math.random() * .06) * env, .035 + Math.random() * .045);
       }
+      grain(a, t, 'highpass', 7000, .3, .12, .004, .05);
     }
     var tambN = 0;
     function tamb(){
