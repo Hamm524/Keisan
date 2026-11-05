@@ -322,6 +322,10 @@
   .rm-hud b{ color:#E5484D; }
   .rm-hud button{ border:none; background:#2E2A3D; color:#fff; border-radius:100px; padding:7px 12px; font:inherit; font-size:12px; font-weight:900; cursor:pointer; }
   .rm-it.rm-shake{ animation:rm-shake .45s; }
+  .rm-it.on .gk-cone{ transform-box:fill-box; transform-origin:center; animation:gk-cone .42s ease-in-out infinite; }
+  @keyframes gk-cone{ 50%{ transform:scale(1.12); } }
+  .rm-it.rm-shake .gk-cym{ transform-box:fill-box; transform-origin:center; animation:gk-cym .45s; }
+  @keyframes gk-cym{ 30%{ transform:rotate(-8deg); } 70%{ transform:rotate(6deg); } }
   @keyframes rm-shake{ 20%{ translate:-3px 0; } 50%{ translate:3px 0; } 80%{ translate:-2px 0; } }
   .rm-it.rm-rustle{ transform-origin:50% 100%; animation:rm-rustle .5s ease-in-out 3; }
   @keyframes rm-rustle{ 25%{ rotate:-2.5deg; } 75%{ rotate:2.5deg; } }
@@ -11481,6 +11485,64 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           '<path d="M96,56 V42 Q110,34 124,42 V56 Z" fill="#FFFDF7"/><path d="M96,42 Q110,34 124,42 L124,46 Q110,40 96,46 Z" fill="#FF8FB1"/><circle cx="104" cy="38" r="3" fill="#E5484D"/><circle cx="116" cy="38" r="3" fill="#E5484D"/><ellipse cx="110" cy="56" rx="18" ry="3" fill="#E2D6C3"/>' +
           '<rect x="2" y="76" width="42" height="10" rx="4" fill="#E8C597"/><rect x="176" y="76" width="42" height="10" rx="4" fill="#E8C597"/><rect x="8" y="86" width="6" height="32" fill="#A77A45"/><rect x="32" y="86" width="6" height="32" fill="#A77A45"/><rect x="182" y="86" width="6" height="32" fill="#A77A45"/><rect x="206" y="86" width="6" height="32" fill="#A77A45"/>' },
 
+      /* ---- 楽器 タブ(cat:'gk') ---- */
+      { id:'gpiano', cat:'gk', name:'グランドピアノ', price:400, z:'floor', w:36, vb:[240,170], act:'music', tap:'inst', snd:function(f){ gkSnd('piano', f); },
+        talk:['ポロロン♪ きれいな 音!', 'えんそう会 みたい!', 'ドレミファソ〜♪'],
+        b:'<path d="M12,74 H186 Q234,74 234,96 Q234,114 198,114 H12 Z" fill="#2E2A3D"/><path d="M16,72 H188 Q226,72 228,90 L224,92 Q220,78 186,78 H16 Z" fill="#E8C46A" opacity=".55"/>' +
+          '<path d="M14,72 L128,10 Q196,16 230,66 L222,72 Z" fill="#3A3346"/><path d="M28,70 L126,18 Q186,24 216,66 Z" fill="#4A4258"/><path d="M150,72 L150,40" stroke="#C9A86A" stroke-width="3" stroke-linecap="round"/>' +
+          '<rect x="6" y="80" width="84" height="15" rx="3" fill="#fff"/><g fill="#E6E1D8"><rect x="18" y="80" width="1.2" height="15"/><rect x="30" y="80" width="1.2" height="15"/><rect x="42" y="80" width="1.2" height="15"/><rect x="54" y="80" width="1.2" height="15"/><rect x="66" y="80" width="1.2" height="15"/><rect x="78" y="80" width="1.2" height="15"/></g>' +
+          '<g fill="#2E2A3D"><rect x="14" y="80" width="7" height="9" rx="1.5"/><rect x="26" y="80" width="7" height="9" rx="1.5"/><rect x="50" y="80" width="7" height="9" rx="1.5"/><rect x="62" y="80" width="7" height="9" rx="1.5"/><rect x="74" y="80" width="7" height="9" rx="1.5"/></g>' +
+          '<rect x="4" y="94" width="88" height="6" rx="2" fill="#2E2A3D"/><path d="M58,52 l0,16 M58,52 q8,-3 10,4" stroke="#FFE58A" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="55" cy="68" r="3.6" fill="#FFE58A"/>' +
+          '<rect x="16" y="112" width="11" height="54" rx="3" fill="#3A3346"/><rect x="118" y="112" width="11" height="54" rx="3" fill="#3A3346"/><rect x="200" y="110" width="11" height="56" rx="3" fill="#3A3346"/>' +
+          '<rect x="14" y="164" width="15" height="5" rx="2" fill="#E8C46A"/><rect x="116" y="164" width="15" height="5" rx="2" fill="#E8C46A"/><rect x="198" y="164" width="15" height="5" rx="2" fill="#E8C46A"/>' +
+          '<path d="M66,114 V150 H84 V114" stroke="#3A3346" stroke-width="4" fill="none"/><g fill="#E8C46A"><rect x="64" y="150" width="7" height="4" rx="1.5"/><rect x="72" y="150" width="7" height="4" rx="1.5"/><rect x="80" y="150" width="7" height="4" rx="1.5"/></g>' },
+      { id:'guitar', cat:'gk', name:'ギター', price:90, z:'floor', w:9, vb:[70,170], act:'music', side:true, tap:'inst', snd:function(f){ gkSnd('guitar', f); },
+        talk:['ジャカジャーン!', 'ギター かっこいい?', 'うたも うたっちゃおう♪'],
+        b:'<path d="M35,128 a24,24 0 1 0 0.1,0 Z M35,74 a17,17 0 1 0 0.1,0 Z" fill="#E8A33D"/><path d="M16,166 L35,118 L54,166" stroke="#5A5560" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
+          '<circle cx="35" cy="132" r="24" fill="#E8A33D"/><circle cx="35" cy="96" r="17" fill="#E8A33D"/><rect x="20" y="100" width="30" height="16" fill="#E8A33D"/><circle cx="35" cy="132" r="19" fill="#F2B95A"/><circle cx="35" cy="96" r="12.5" fill="#F2B95A"/><rect x="24" y="100" width="22" height="16" fill="#F2B95A"/>' +
+          '<circle cx="35" cy="110" r="7.5" fill="#5A3A1E"/><rect x="25" y="138" width="20" height="5" rx="2" fill="#5A3A1E"/>' +
+          '<rect x="31" y="14" width="8" height="90" rx="2" fill="#8A5A2E"/><g fill="#D8C6A8"><rect x="31" y="30" width="8" height="1.2"/><rect x="31" y="44" width="8" height="1.2"/><rect x="31" y="56" width="8" height="1.2"/><rect x="31" y="67" width="8" height="1.2"/><rect x="31" y="77" width="8" height="1.2"/></g>' +
+          '<rect x="28" y="0" width="14" height="18" rx="4" fill="#5A3A1E"/><g fill="#D8D8D8"><circle cx="25" cy="5" r="2.4"/><circle cx="25" cy="12" r="2.4"/><circle cx="45" cy="5" r="2.4"/><circle cx="45" cy="12" r="2.4"/></g>' +
+          '<path d="M33,16 V140 M35,16 V140 M37,16 V140" stroke="#F4F0E6" stroke-width=".7"/>' },
+      { id:'drums', cat:'gk', name:'ドラムセット', price:220, z:'floor', w:27, vb:[210,150], act:'music', tap:'inst', snd:function(f){ gkSnd('drum', f); },
+        talk:['ドンドン タタタン!', 'リズム ばっちり!', 'シャーン! って 鳴った!'],
+        b:'<circle cx="105" cy="104" r="42" fill="#E5484D"/><circle cx="105" cy="104" r="34" fill="#FFF6E8"/><path d="M105,88 l4.7,9.6 10.6,1.5 -7.7,7.5 1.8,10.5 -9.4,-5 -9.4,5 1.8,-10.5 -7.7,-7.5 10.6,-1.5 Z" fill="#FFD24C"/>' +
+          '<path d="M80,146 L86,138 M130,146 L124,138" stroke="#9AA3AD" stroke-width="4" stroke-linecap="round"/>' +
+          '<path d="M14,148 L22,40 M30,148 L22,40 M22,40 V148" stroke="#9AA3AD" stroke-width="2.4" fill="none"/><ellipse class="gk-cym" cx="22" cy="38" rx="22" ry="4.5" fill="#FFD24C" stroke="#E0A92A" stroke-width="1.2"/>' +
+          '<path d="M182,148 L190,30 M198,148 L190,30 M190,30 V148" stroke="#9AA3AD" stroke-width="2.4" fill="none"/><ellipse class="gk-cym b2" cx="190" cy="28" rx="20" ry="4" fill="#FFD24C" stroke="#E0A92A" stroke-width="1.2"/>' +
+          '<path d="M76,64 L88,62 M134,64 L122,62" stroke="#9AA3AD" stroke-width="3"/><rect x="60" y="52" width="32" height="22" rx="4" fill="#E5484D"/><ellipse cx="76" cy="52" rx="16" ry="5" fill="#FFF6E8" stroke="#C9C9C4" stroke-width="1.2"/>' +
+          '<rect x="118" y="52" width="32" height="22" rx="4" fill="#E5484D"/><ellipse cx="134" cy="52" rx="16" ry="5" fill="#FFF6E8" stroke="#C9C9C4" stroke-width="1.2"/>' +
+          '<path d="M36,148 L44,106 M60,148 L52,106" stroke="#9AA3AD" stroke-width="2.4"/><rect x="28" y="90" width="40" height="18" rx="4" fill="#D7DCE2"/><path d="M28,99 H68" stroke="#B9C2CC" stroke-width="2"/><ellipse cx="48" cy="90" rx="20" ry="5" fill="#FFF6E8" stroke="#B9C2CC" stroke-width="1.2"/>' +
+          '<path d="M150,148 V112 M182,148 V112" stroke="#9AA3AD" stroke-width="2.4"/><rect x="146" y="80" width="40" height="38" rx="5" fill="#E5484D"/><ellipse cx="166" cy="80" rx="20" ry="5.5" fill="#FFF6E8" stroke="#C9C9C4" stroke-width="1.2"/>' +
+          '<path d="M86,46 L104,34 M108,48 L126,40" stroke="#C99A62" stroke-width="3" stroke-linecap="round"/>' },
+      { id:'mokkin', cat:'gk', name:'もっきん', price:80, z:'floor', w:20, vb:[170,92], act:'music', tap:'inst', snd:function(f){ gkSnd('mokkin', f); },
+        talk:['ポコポコ♪ かわいい 音!', 'たたくと たのしい!', 'ドレミ〜♪'],
+        b:'<path d="M8,26 L162,32 L162,40 L8,46 Z" fill="#A77A45"/>' + '<rect x="14" y="9.0" width="14" height="50.0" rx="3" fill="#E5484D"/><circle cx="21" cy="14.0" r="1.6" fill="#fff" opacity=".8"/><circle cx="21" cy="54.0" r="1.6" fill="#fff" opacity=".8"/><rect x="32" y="10.7" width="14" height="46.6" rx="3" fill="#FF9E6B"/><circle cx="39" cy="15.7" r="1.6" fill="#fff" opacity=".8"/><circle cx="39" cy="52.3" r="1.6" fill="#fff" opacity=".8"/><rect x="50" y="12.4" width="14" height="43.2" rx="3" fill="#FFD24C"/><circle cx="57" cy="17.4" r="1.6" fill="#fff" opacity=".8"/><circle cx="57" cy="50.6" r="1.6" fill="#fff" opacity=".8"/><rect x="68" y="14.1" width="14" height="39.8" rx="3" fill="#9BD66B"/><circle cx="75" cy="19.1" r="1.6" fill="#fff" opacity=".8"/><circle cx="75" cy="48.9" r="1.6" fill="#fff" opacity=".8"/><rect x="86" y="15.8" width="14" height="36.4" rx="3" fill="#5FC9B8"/><circle cx="93" cy="20.8" r="1.6" fill="#fff" opacity=".8"/><circle cx="93" cy="47.2" r="1.6" fill="#fff" opacity=".8"/><rect x="104" y="17.5" width="14" height="33.0" rx="3" fill="#7FB8F0"/><circle cx="111" cy="22.5" r="1.6" fill="#fff" opacity=".8"/><circle cx="111" cy="45.5" r="1.6" fill="#fff" opacity=".8"/><rect x="122" y="19.2" width="14" height="29.6" rx="3" fill="#9B80E0"/><circle cx="129" cy="24.2" r="1.6" fill="#fff" opacity=".8"/><circle cx="129" cy="43.8" r="1.6" fill="#fff" opacity=".8"/><rect x="140" y="20.9" width="14" height="26.2" rx="3" fill="#FF8FB1"/><circle cx="147" cy="25.9" r="1.6" fill="#fff" opacity=".8"/><circle cx="147" cy="42.1" r="1.6" fill="#fff" opacity=".8"/>' +
+          '<path d="M18,46 L12,90 M152,40 L158,90 M18,46 L152,40" stroke="#A77A45" stroke-width="5" stroke-linecap="round"/>' +
+          '<path d="M40,76 L82,62 M60,82 L100,66" stroke="#C99A62" stroke-width="2.4" stroke-linecap="round"/><circle cx="84" cy="61" r="5" fill="#FF8FB1"/><circle cx="102" cy="65" r="5" fill="#7FB8F0"/>' },
+      { id:'mic', cat:'gk', name:'マイク', price:60, z:'floor', w:6, vb:[50,170], act:'music', side:true, tap:'inst', snd:function(f){ gkSnd('voice', f); },
+        talk:['ラララ〜♪', 'みんな 聞いて〜!', 'うたうの 大好き!'],
+        b:'<rect x="22" y="40" width="6" height="124" rx="3" fill="#7A7F88"/><ellipse cx="25" cy="164" rx="21" ry="5.5" fill="#4A4F5C"/><rect x="18" y="58" width="14" height="5" rx="2" fill="#4A4F5C"/>' +
+          '<rect x="20" y="26" width="10" height="20" rx="3" fill="#2E2A3D"/><circle cx="25" cy="18" r="13" fill="#C9CDD4"/><path d="M14,14 H36 M13,19 H37 M14,24 H36 M20,6 V30 M25,5 V31 M30,6 V30" stroke="#9AA0AA" stroke-width="1"/><circle cx="20" cy="12" r="3" fill="#fff" opacity=".7"/>' },
+      { id:'speaker', cat:'gk', name:'スピーカー', price:100, z:'floor', w:11, vb:[80,132], act:'look', tap:'light', talk:['いい 曲〜♪', 'おどっちゃおう!', 'ノリノリ だね!'],
+        fx:function(i, on){ gkSpeaker(i, on); },
+        b:'<rect x="4" y="4" width="72" height="122" rx="9" fill="#3A3346"/><rect x="9" y="9" width="62" height="112" rx="6" fill="#433B52"/>' +
+          '<circle cx="40" cy="30" r="12" fill="#2A2433" stroke="#8A8494" stroke-width="2.4"/><circle cx="40" cy="30" r="4.5" fill="#6A6478"/>' +
+          '<circle cx="40" cy="84" r="29" fill="#2A2433" stroke="#8A8494" stroke-width="3"/><g class="gk-cone"><circle cx="40" cy="84" r="19" fill="#3E3848"/><circle cx="40" cy="84" r="8" fill="#6A6478"/></g>' +
+          '<g class="rm-lit"><circle cx="40" cy="84" r="32" fill="none" stroke="#7FE3F0" stroke-width="3"/><circle cx="40" cy="30" r="15" fill="none" stroke="#FF8FB1" stroke-width="2.4"/><circle cx="64" cy="14" r="3" fill="#9BD66B"/></g>' +
+          '<rect x="10" y="126" width="12" height="5" rx="2" fill="#2A2433"/><rect x="58" y="126" width="12" height="5" rx="2" fill="#2A2433"/>' },
+      { id:'harp', cat:'gk', name:'ハープ', price:280, z:'floor', w:14, vb:[112,180], act:'music', tap:'inst', snd:function(f){ gkSnd('harp', f); },
+        talk:['ポロロロ〜ン♪', 'お姫さまの 楽器 みたい!', 'やさしい 音 だね'],
+        b:'<rect x="10" y="22" width="12" height="148" rx="4" fill="#C99A62"/><rect x="6" y="166" width="96" height="10" rx="4" fill="#A77A45"/><path d="M98,40 L106,44 L30,170 L18,170 Z" fill="#C99A62"/>' +
+          '<path d="M28,32.7 V161.6" stroke="#E5484D" stroke-width="1.3"/><path d="M34,30.6 V151.9" stroke="#FFF6E0" stroke-width="1.3"/><path d="M40,30.0 V142.3" stroke="#FFF6E0" stroke-width="1.3"/><path d="M46,30.9 V132.7" stroke="#FFF6E0" stroke-width="1.3"/><path d="M52,33.3 V123.1" stroke="#4A6FD0" stroke-width="1.3"/><path d="M58,37.3 V113.4" stroke="#FFF6E0" stroke-width="1.3"/><path d="M64,43.0 V103.8" stroke="#FFF6E0" stroke-width="1.3"/><path d="M70,47.7 V94.2" stroke="#E5484D" stroke-width="1.3"/><path d="M76,51.1 V84.5" stroke="#FFF6E0" stroke-width="1.3"/><path d="M82,53.1 V74.9" stroke="#FFF6E0" stroke-width="1.3"/><path d="M88,53.8 V65.3" stroke="#FFF6E0" stroke-width="1.3"/><path d="M94,53.1 V55.6" stroke="#4A6FD0" stroke-width="1.3"/>' +
+          '<path d="M12,30 Q40,0 64,28 Q84,48 106,34 L106,46 Q84,62 64,40 Q40,14 18,42 Z" fill="#E8C46A"/><circle cx="16" cy="22" r="7" fill="#E8C46A"/><path d="M13,40 V160 M19,40 V160" stroke="#E8C46A" stroke-width="1.5"/>' },
+      { id:'onpu', cat:'gk', name:'音符の かざり', price:40, z:'wall', w:16, vb:[124,70], tap:'inst', snd:function(f){ chime(f * 2); },
+        b:'<rect x="2" y="6" width="120" height="58" rx="8" fill="#FFF6E0" stroke="#C99A62" stroke-width="4"/><path d="M12,20 H112 M12,28 H112 M12,36 H112 M12,44 H112 M12,52 H112" stroke="#B5A88E" stroke-width="1.2"/>' +
+          '<path d="M14,24 c6,-12 12,6 4,14 c-6,6 -6,16 2,16 M18,12 V58" stroke="#3A3346" stroke-width="2.4" fill="none" stroke-linecap="round"/>' +
+          '<ellipse cx="40" cy="48" rx="5.5" ry="4" fill="#E5484D" transform="rotate(-20 40 48)"/><path d="M45,47 V24" stroke="#E5484D" stroke-width="2"/>' +
+          '<ellipse cx="62" cy="40" rx="5.5" ry="4" fill="#4A6FD0" transform="rotate(-20 62 40)"/><ellipse cx="80" cy="36" rx="5.5" ry="4" fill="#4A6FD0" transform="rotate(-20 80 36)"/><path d="M67,39 V16 L85,12 V35" stroke="#4A6FD0" stroke-width="2" fill="none"/><path d="M67,16 L85,12" stroke="#4A6FD0" stroke-width="4"/>' +
+          '<ellipse cx="100" cy="28" rx="5.5" ry="4" fill="#3FAE6A" transform="rotate(-20 100 28)"/><path d="M105,27 V8 q6,4 8,10" stroke="#3FAE6A" stroke-width="2" fill="none"/>' },
+
       { id:'fridge', cat:'kd', name:'れいぞう庫', price:120, z:'floor', w:15, vb:[100,190], act:'look', tap:'light', talk:['おいしそう!', 'つめたい!', 'アイス 食べたいな'],
         b:'<rect x="6" y="4" width="88" height="180" rx="12" fill="#DDEFF8"/><rect x="10" y="8" width="80" height="56" rx="8" fill="#F4FBFF"/><rect x="10" y="68" width="80" height="112" rx="8" fill="#F4FBFF"/><rect x="76" y="40" width="6" height="18" rx="3" fill="#A9C7D8"/><rect x="76" y="74" width="6" height="28" rx="3" fill="#A9C7D8"/>' +
           '<circle cx="26" cy="86" r="5" fill="#FF8FB1"/><rect x="36" y="80" width="22" height="16" rx="2" fill="#FFFDF0" transform="rotate(-6 47 88)"/><path d="M40,92 l5,-7 4,5 4,-3 3,5" stroke="#7FB8F0" stroke-width="1.6" fill="none"/><circle cx="52" cy="84" r="2" fill="#FFD24C"/><circle cx="30" cy="24" r="4" fill="#9BD66B"/>' +
@@ -11876,9 +11938,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var g2 = geo(it), side = it.x > 50 ? -1 : 1;
       var tx = d.z === 'wall' ? it.x : it.x + side * (g2.vw / 2 + 5), ty = d.z === 'wall' ? WALL + 14 + Math.random() * 10 : Math.min(99, it.y + 3);
       if(d.act === 'slide') return slide(P, i);
-      if(d.act === 'music'){ tx = it.x; ty = Math.min(99, it.y + 4); }
+      if(d.act === 'music' && !d.side){ tx = it.x; ty = Math.min(99, it.y + 4); }
       walkTo(P, Math.max(6, Math.min(94, tx)), ty, null, null, function(){
-        if(d.act === 'music'){ playTune(P, byUser); }
+        if(d.act === 'music'){ playTune(P, byUser, d); }
         else{ Pet.tap(P.el); bubble(P, '♥'); }
         if(byUser || Math.random() < .5) say(nm + '「' + any(talk) + '」');
         next(P, 2500);
@@ -11911,12 +11973,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       });
     }
     var TUNE = [523, 587, 659, 523, 659, 784, 659, 587, 523];
-    function playTune(P, loud){
+    function playTune(P, loud, d){
       var n = 0;
       (function step(){
         if(!live() || n >= 6) return;
         var f = TUNE[(Math.random() * TUNE.length) | 0];
-        if(loud) chime(f);
+        if(loud){ if(d && d.snd) d.snd(f); else chime(f); }
         var note = document.createElement('span'); note.className = 'rm-note'; note.textContent = n % 2 ? '♪' : '♫';
         note.style.left = (30 + Math.random() * 40) + '%'; P.el.appendChild(note);
         setTimeout(function(){ note.remove(); }, 1400);
@@ -12254,6 +12316,58 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.12, t + .04); g.gain.exponentialRampToValueAtTime(.0001, t + .34);
         o.connect(f); f.connect(g); g.connect(a.destination); o.start(t); o.stop(t + .36); }catch(_){}
     }
+    /* ---- 楽器 タブの 音 ---- */
+    function pluck(f, len, bright, vol){
+      try{ var a = aud(), sr = a.sampleRate, n = (sr * len) | 0, buf = a.createBuffer(1, n, sr), d = buf.getChannelData(0), per = Math.max(2, Math.round(sr / f));
+        for(var k = 0; k < per; k++) d[k] = Math.random() * 2 - 1;
+        for(k = per; k < n; k++) d[k] = (d[k - per] + d[k - per + 1]) * .5 * bright;
+        var src = a.createBufferSource(), g = a.createGain(); src.buffer = buf; g.gain.value = vol || .3;
+        src.connect(g); g.connect(a.destination); src.start(a.currentTime); }catch(_){}
+    }
+    function keyTone(f, dur, parts, vol, type){
+      try{ var a = aud(), t0 = a.currentTime;
+        parts.forEach(function(h){
+          var o = a.createOscillator(), g = a.createGain(); o.type = type || 'sine'; o.frequency.value = f * h[0];
+          g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(h[1] * (vol || 1), t0 + .008); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur * (h[2] || 1));
+          o.connect(g); g.connect(a.destination); o.start(t0); o.stop(t0 + dur + .05);
+        }); }catch(_){}
+    }
+    function voice(f){
+      try{ var a = aud(), t = a.currentTime, o = a.createOscillator(), lfo = a.createOscillator(), lg = a.createGain(), bp = a.createBiquadFilter(), g = a.createGain();
+        o.type = 'triangle'; o.frequency.value = f; lfo.frequency.value = 5.5; lg.gain.value = f * .018; lfo.connect(lg); lg.connect(o.frequency);
+        bp.type = 'lowpass'; bp.frequency.value = 1800;
+        g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.22, t + .06); g.gain.setValueAtTime(.22, t + .32); g.gain.exponentialRampToValueAtTime(.0001, t + .55);
+        o.connect(bp); bp.connect(g); g.connect(a.destination); o.start(t); lfo.start(t); o.stop(t + .6); lfo.stop(t + .6); }catch(_){}
+    }
+    var gkHit = 0;
+    function gkSnd(kind, f){
+      f = f || 523;
+      if(kind === 'piano') keyTone(f, 1.5, [[1, .22], [2, .07, .6], [3, .03, .4]]);
+      else if(kind === 'guitar'){ [1, 1.26, 1.5, 2].forEach(function(r, k){ setTimeout(function(){ pluck(f / 2 * r, 1.4, .996, .22); }, k * 28); }); }
+      else if(kind === 'harp'){ [1, 1.125, 1.26, 1.5, 1.68, 2].forEach(function(r, k){ setTimeout(function(){ pluck(f * r, 1.6, .998, .16); }, k * 70); }); }
+      else if(kind === 'mokkin') keyTone(f * 2, .45, [[1, .3], [3.9, .06, .3]]);
+      else if(kind === 'voice') voice(f / 2);
+      else if(kind === 'drum'){ var k = gkHit++ % 4; if(k === 0 || k === 2) drum(); else if(k === 1) shake(.12, 1800); else{ drum(); shake(.5, 6000); } }
+    }
+    /* スピーカー: 曲が ながれて、みんな おどる */
+    var gkSp = { i:-1, T:[] };
+    function gkSpeaker(i, on){
+      gkSp.T.forEach(clearTimeout); gkSp.T = [];
+      if(S) S.pets.forEach(function(P){ P.el.classList.remove('dance'); });
+      if(!on){ gkSp.i = -1; return; }
+      gkSp.i = i;
+      var S0 = S, song = SONGS[(Math.random() * SONGS.length) | 0];
+      say('♪「' + song[0] + '」が ながれてるよ');
+      S.pets.forEach(function(P){ P.el.classList.add('dance'); });
+      song[1].forEach(function(f, k){
+        gkSp.T.push(setTimeout(function(){ if(S !== S0 || !lampOn[i]) return; if(f) keyTone(f, .5, [[1, .18], [2, .05, .5]], 1, 'triangle'); if(k % 2 === 0) drum(); }, k * BEAT));
+      });
+      gkSp.T.push(setTimeout(function(){
+        if(S0 && S0.pets) S0.pets.forEach(function(P){ P.el.classList.remove('dance'); });
+        if(S !== S0 || !lampOn[i]) return;
+        lampOn[i] = false; if(S.els[i]) S.els[i].el.classList.remove('on'); gkSp.i = -1;
+      }, song[1].length * BEAT + 300));
+    }
     var INST = [
       { n:'タンバリン', svg:'<circle cx="20" cy="20" r="14" fill="#FFE9C2" stroke="#E8A33D" stroke-width="5"/><g fill="#FFD24C" stroke="#C9973A" stroke-width="1"><circle cx="20" cy="4" r="3.4"/><circle cx="36" cy="20" r="3.4"/><circle cx="20" cy="36" r="3.4"/><circle cx="4" cy="20" r="3.4"/></g>', play:function(){ shake(.16, 5000); setTimeout(function(){ chime(2093); }, 10); } },
       { n:'たいこ', svg:'<path d="M8,4 L17,13 M32,4 L23,13" stroke="#A77A45" stroke-width="3" stroke-linecap="round"/><rect x="5" y="15" width="30" height="21" rx="5" fill="#E5484D"/><path d="M5,22 L35,32 M5,32 L35,22" stroke="#FFD24C" stroke-width="2.4"/><ellipse cx="20" cy="15" rx="15" ry="5" fill="#FFF6E8" stroke="#C9973A" stroke-width="1.5"/>', play:drum },
@@ -12356,7 +12470,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       later(tEnd + 3300, function(){ stop(2); });
     }
     /* ---- かくれんぼ ---- */
-    var HIDE_OK = { sofa:1, bed:1, shelf:1, toybox:1, tent:1, castle:1, partition:1, partwin:1, counter:1, counterh:1, fridge:1, washer:1, sink:1, stove:1, senmen:1, bath:1, tv:1, aquarium:1, piano:1, tree:1 };
+    var HIDE_OK = { sofa:1, bed:1, shelf:1, toybox:1, tent:1, castle:1, partition:1, partwin:1, counter:1, counterh:1, fridge:1, washer:1, sink:1, stove:1, senmen:1, bath:1, tv:1, aquarium:1, piano:1, tree:1, gpiano:1, drums:1, harp:1 };
     function hideSpots(){
       var a = [];
       S.r.items.forEach(function(it, i){ var g = geo(it); if(HIDE_OK[it.k] && !(pv && pv.it === it) && g.h >= 12 && g.vw >= 9) a.push(i); });
@@ -12636,6 +12750,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var d = BY[S.r.items[i].k];
         if(d.tap === 'light'){ lampOn[i] = !lampOn[i]; S.els[i].el.classList.toggle('on', !!lampOn[i]); if(d.fx) d.fx(i, !!lampOn[i]); }
         if(d.tap === 'piano'){ chime(TUNE[(Math.random() * TUNE.length) | 0]); }
+        if(d.tap === 'inst' && d.snd){ d.snd(TUNE[(Math.random() * TUNE.length) | 0]); var ie = S.els[i].el; ie.classList.remove('rm-shake'); void ie.offsetWidth; ie.classList.add('rm-shake'); setTimeout(function(){ ie.classList.remove('rm-shake'); }, 500); }
         if(d.group && GROUP[d.group] && !(pv && pv.it === S.r.items[i])){ GROUP[d.group](i); return; }
         if(d.act){ if(!S.pets[0]) return; var P = lead(); clearTimeout(P.t); if(P.seat === i) return; useItem(P, i, true); }
         else if(d.photo){
@@ -12701,11 +12816,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ふりがなを span に(Safari は rt を 自由に おけない) */
     function rbFix(h){ return h.replace(/<ruby>([^<]*)<rt>([^<]*)<\/rt><\/ruby>/g, '<span class="rb">$1<span class="rk">$2</span></span>'); }
     /* ---- おへやの ショップ ---- */
-    var TABS = [ { id:'item', name:'家具' }, { id:'kd', name:'家電・キッチン・おふろ' }, { id:'wall', name:'<ruby>壁<rt>かべ</rt></ruby>の <ruby>飾<rt>かざ</rt></ruby>り' }, { id:'wp', name:'<ruby>壁<rt>かべ</rt></ruby>紙' }, { id:'fl', name:'<ruby>床<rt>ゆか</rt></ruby>' } ];
+    var TABS = [ { id:'item', name:'家具' }, { id:'kd', name:'家電・キッチン・おふろ' }, { id:'gk', name:'<ruby>楽器<rt>がっき</rt></ruby>' }, { id:'wall', name:'<ruby>壁<rt>かべ</rt></ruby>の <ruby>飾<rt>かざ</rt></ruby>り' }, { id:'wp', name:'<ruby>壁<rt>かべ</rt></ruby>紙' }, { id:'fl', name:'<ruby>床<rt>ゆか</rt></ruby>' } ];
     function listFor(t){
       if(t === 'wp') return WALLS;
       if(t === 'fl') return FLOORS;
       if(t === 'kd') return ITEMS.filter(function(d){ return d.cat === 'kd' || d.id === 'tv'; });
+      if(t === 'gk') return ITEMS.filter(function(d){ return d.cat === 'gk' || d.id === 'piano'; });
       return ITEMS.filter(function(d){ return !d.cat && (t === 'wall' ? d.z === 'wall' : d.z !== 'wall'); });
     }
     function renderShop(){
