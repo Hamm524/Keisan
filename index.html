@@ -961,7 +961,7 @@
   .care-open{ align-self:flex-start; margin-top:6px; border:0; border-radius:999px; padding:6px 14px; background:var(--live, #1FA98E); color:#fff; font:inherit; font-size:13px; font-weight:900; cursor:pointer; box-shadow:0 3px 0 color-mix(in srgb, var(--live, #1FA98E) 55%, #000); touch-action:manipulation; }
   .care-open small{ display:block; font-size:11px; font-weight:700; opacity:.92; }
   .care-open{ text-align:left; line-height:1.3; }
-  .care-quick{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px; margin:0 0 14px; }
+  .care-quick{ display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:8px; margin:0 0 14px; }
   .care-q{ display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 4px; border-radius:16px; border:1.5px solid var(--line); background:var(--surface); color:var(--ink); font:inherit; font-size:13px; font-weight:900; cursor:pointer; }
   .care-q span{ font-size:24px; line-height:1.1; }
   .care-hint{ display:flex; align-items:center; gap:10px; width:100%; text-align:left; margin:0 0 16px; padding:10px 12px; border-radius:16px; border:2px dashed color-mix(in srgb, var(--live, #1FA98E) 55%, transparent); background:color-mix(in srgb, var(--live, #1FA98E) 8%, var(--surface)); color:var(--ink); font:inherit; cursor:pointer; }
@@ -1605,6 +1605,9 @@
   }
 
   /* ---- pick partner ---- */
+  .repick-btn{ display:block; width:100%; margin:-4px 0 14px; padding:11px 12px; border-radius:16px; border:1.5px dashed var(--line); background:var(--surface); color:var(--ink); font:inherit; font-size:13px; font-weight:900; cursor:pointer; }
+  .pick-later{ margin:-6px 0 14px; padding:10px 12px; border-radius:14px; background:var(--surface); box-shadow:var(--shadow); font-size:12.5px; line-height:1.6; color:var(--ink-soft); }
+  .pick-later b{ color:var(--ink); }
   .pick-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px; }
   .pick-card{
     border:3px solid transparent; border-radius:22px; background:var(--surface); box-shadow:var(--shadow);
@@ -2805,7 +2808,8 @@
   <p class="boot-msg" id="bootMsg">記録を 読みこみ中…</p>
   <main id="view-pick" class="view" hidden>
     <h1>相棒を 選んでね</h1>
-    <p class="sub">いっしょに 計算を がんばる 仲間だよ。ほかの 14ひきは あとで コインで むかえられるよ。</p>
+    <p class="sub">いっしょに 計算を がんばる 仲間だよ。ほかの 子も あとで コインで むかえられるよ。</p>
+    <p class="pick-later">💡 えらんでから <b>24時間いないなら 1回だけ</b>、「相棒」ページで えらびなおせるよ。そのあとは、コインで ほかの 子を むかえて <b>🐾 仲間</b> で こうたい してね。</p>
     <div class="pick-grid" id="pickGrid"></div>
     <div class="pick-name" id="pickNameBox" hidden>
       <label class="pick-name-label" for="pickName">名前を つけよう(つけなくても いいよ)</label>
@@ -2814,6 +2818,7 @@
       <p class="pick-name-note">名前は 8文字まで。あとから ホームの「✎ 名前」で かえられるよ。</p>
     </div>
     <button class="btn btn-primary" id="pickGo" disabled>この子に 決めた!</button>
+    <button class="restore-link" id="pickCancel" hidden>やっぱり このまま</button>
     <button class="restore-link" id="pickRestore">まえの 記録を もどす</button>
   </main>
 
@@ -2957,7 +2962,9 @@
       <button class="care-q" id="careFood"><span>🍙</span>ごはん</button>
       <button class="care-q" id="careToy"><span>🪶</span>あそぶ</button>
       <button class="care-q" id="careName"><span>✎</span>名前</button>
+      <button class="care-q" id="careMates"><span>🐾</span>仲間</button>
     </div>
+    <button class="repick-btn" id="repickBtn" hidden></button>
     <section class="grow-card">
       <div class="grow-pet" id="shopPet"></div>
       <div class="grow-info">
@@ -2983,7 +2990,7 @@
       <button class="oshare-paste" id="osharePasteBtn">📋 おしゃれコードを はる</button>
       <div class="oshare-grid" id="oshareGrid"></div>
     </section>
-    <h2 class="sec-title">仲間 <span class="num sec-count" id="friendCount"></span></h2>
+    <h2 class="sec-title" id="friendHead">仲間 <span class="num sec-count" id="friendCount"></span></h2>
     <p class="sec-sub" id="friendSub">仲間を むかえると、いっしょに 計算する子を 選べるよ。</p>
     <div class="friend-grid" id="friendGrid"></div>
   </main>
@@ -5472,7 +5479,27 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function pickGoLabel(){ if(pickSel) $('pickGo').textContent = (pickNameVal() || Pet.SPECIES[pickSel].name) + 'に 決めた!'; }
   $('pickName').addEventListener('input', pickGoLabel);
   $('pickName').addEventListener('keydown', function(e){ if(e.key === 'Enter' && !e.isComposing){ e.preventDefault(); $('pickName').blur(); } });
+  var REPICK_MS = 24*3600*1000, repicking = false;
+  function repickLeft(){
+    var r = safeGet('keisan_pickat'), p = getPets();
+    if(!r || r.used || !p || !p.owned) return 0;
+    var ks = Object.keys(p.owned);
+    if(ks.length !== 1 || p.owned[ks[0]] !== 0 || ks[0] !== p.active) return 0;
+    return Math.max(0, r.t + REPICK_MS - Date.now());
+  }
+  function updateRepick(){
+    var b = $('repickBtn'), l = repickLeft();
+    if(!l){ b.hidden = true; return; }
+    var h = Math.ceil(l/3600000);
+    b.textContent = '🔄 相棒を えらびなおす(あと '+h+'時間・1回だけ)'; b.hidden = false;
+  }
+  $('repickBtn').addEventListener('click', function(){
+    if(!repickLeft()) { updateRepick(); return; }
+    repicking = true; openPick(); $('pickCancel').hidden = false; $('pickRestore').hidden = true;
+  });
+  $('pickCancel').addEventListener('click', function(){ repicking = false; $('pickCancel').hidden = true; $('pickRestore').hidden = false; Care.open(); });
   function openPick(){
+    if(!repicking){ $('pickCancel').hidden = true; $('pickRestore').hidden = false; }
     var grid = $('pickGrid'); grid.innerHTML = '';
     pickSel = null; $('pickName').value = ''; $('pickNameBox').hidden = true; sexRow('pickSex', '');
     STARTERS.forEach(function(sp){
@@ -5499,8 +5526,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   $('pickGo').addEventListener('click', function(){
     if(!pickSel) return;
     var owned = {}; owned[pickSel] = 0;
+    var oldSp = null;
+    if(repicking){ var op = getPets(); oldSp = op && op.active; }
     savePets({ active:pickSel, owned:owned });
+    safeSet('keisan_pickat', { t: repicking ? (safeGet('keisan_pickat')||{}).t||Date.now() : Date.now(), used: repicking });
     var nm = pickNameVal(), names = safeGet('keisan_names') || {};
+    if(oldSp && oldSp !== pickSel){ delete names[oldSp]; setSex(oldSp, ''); }
+    repicking = false; $('pickCancel').hidden = true; $('pickRestore').hidden = false;
     if(nm) names[pickSel] = nm; else delete names[pickSel];
     safeSet('keisan_names', names);
     setSex(pickSel, sexRowVal('pickSex'));
@@ -6917,7 +6949,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   /* ---------- 相棒(お世話)ページ: ショップから 引っこした 育てる・きせかえ・おしゃれ・仲間 ---------- */
   var Care = (function(){
-    function open(){ setLive('add'); renderShop(); showView('care'); }
+    function open(){ setLive('add'); renderShop(); updateRepick(); showView('care'); }
     function home(){
       var b = $('careOpen'); if(!b) return;
       var a = activePet(), c = getCoins(), t = '🌱 そだてる・きせかえ ›';
@@ -6931,6 +6963,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('careFood').addEventListener('click', function(){ $('openFood').click(); });
     $('careToy').addEventListener('click', function(){ $('openToy').click(); });
     $('careName').addEventListener('click', function(){ $('nameEdit').click(); });
+    $('careMates').addEventListener('click', function(){ var h = $('friendHead'); if(h) h.scrollIntoView({ behavior:'smooth', block:'start' }); });
     /* 仲間の タイル(コレクション)は 仲間が いる「相棒」へ */
     $('collectRow').addEventListener('click', function(e){ e.stopImmediatePropagation(); open(); }, true);
     return { open:open, home:home };
