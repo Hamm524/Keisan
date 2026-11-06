@@ -2740,6 +2740,23 @@
   .home-nav .nav-home .care-head{ color:var(--ink); }
   .home-nav .nav-home{ background:var(--surface-2); }
 
+  /* 下の ボタン(ずっと 出す) */
+  .home-nav[hidden]{ display:none; }
+  .home-nav .care{ position:relative; }
+  .home-nav .care[aria-current="page"]{ background:var(--surface-2); }
+  .home-nav .care[aria-current="page"] .care-head{ color:var(--ink); }
+  .home-nav .care[aria-current="page"]::before{ content:''; position:absolute; top:-7px; left:22%; right:22%; height:3px; border-radius:0 0 3px 3px; background:var(--ink); }
+  .home-nav .care-head ruby rt{ font-size:.5em; }
+  body.has-nav .app{ padding-bottom:calc(84px + env(safe-area-inset-bottom,0px)); }
+  @media (min-width:700px){
+    .home-nav .care{ flex:0 1 150px; }
+    .home-nav .care[aria-current="page"]{ background:var(--ink); }
+    .home-nav .care[aria-current="page"] .care-head{ color:var(--surface); }
+    .home-nav .care[aria-current="page"]::before{ background:var(--accent,#FF6F4C); top:-11px; }
+    body.has-nav .app{ padding-bottom:calc(124px + env(safe-area-inset-bottom,0px)); }
+  }
+  @media (min-width:700px){ .app:has(#view-setup:not([hidden])){ max-width:620px; } }
+
   /* tablets */
   @media (min-width:700px){
     .app:has(#view-setup:not([hidden])){ max-width:620px; }
@@ -2921,8 +2938,19 @@
     </div>
     </div>
 
-    <nav class="care-row home-nav">
-      <button class="care nav-home" id="navHome" aria-current="page"><span class="care-head"><span class="care-ico">🏠</span>ホーム</span></button>
+  </main>
+
+    <nav class="care-row home-nav" id="mainNav" aria-label="メニュー" hidden>
+      <button class="care" id="navHome" aria-current="page"><span class="care-head"><span class="care-ico">🏠</span><ruby>ホーム<rt>&#8203;</rt></ruby></span></button>
+      <button class="care" id="navStudy"><span class="care-head"><span class="care-ico">📚</span><ruby>勉強<rt>べんきょう</rt></ruby></span></button>
+      <button class="care" id="navCare"><span class="care-head"><span class="care-ico">🐾</span><ruby>相棒<rt>あいぼう</rt></ruby></span></button>
+      <button class="care" id="navRoom"><span class="care-head"><span class="care-ico">🏡</span><ruby>おうち<rt>&#8203;</rt></ruby></span></button>
+      <button class="care" id="openShop">
+        <span class="care-head"><span class="care-ico">💎</span><ruby>ショップ<rt>&#8203;</rt></ruby></span>
+        <span class="care-sub" id="treasureLabel"></span>
+        <span class="treasure-track"><span class="treasure-fill" id="treasureFill"></span></span>
+      </button>
+      <div id="navLegacy" hidden>
       <button class="care" id="openFood">
         <span class="care-head"><span class="care-ico">🍙</span>ごはん<span class="care-go">›</span></span>
         <span class="care-sub">おなか</span>
@@ -2931,14 +2959,8 @@
       <button class="care care-wide" id="openToy">
         <span class="care-head"><span class="care-ico" id="toyIco"></span>あそぶ<span class="care-sub" id="toySub" style="margin-left:6px"></span><span class="care-go">›</span></span>
       </button>
-      <button class="care" id="navRoom"><span class="care-head"><span class="care-ico">🏡</span>おうち<span class="care-go">›</span></span></button>
-      <button class="care" id="openShop">
-        <span class="care-head"><span class="care-ico">💎</span>ショップ<span class="care-go">›</span></span>
-        <span class="care-sub" id="treasureLabel"></span>
-        <span class="treasure-track"><span class="treasure-fill" id="treasureFill"></span></span>
-      </button>
+      </div>
     </nav>
-  </main>
 
   <!-- SHOP -->
   <main id="view-shop" class="view" hidden>
@@ -5471,7 +5493,24 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function showView(name){
     Object.keys(views).forEach(function(k){ views[k].hidden = (k!==name); });
     window.scrollTo(0,0);
+    navSync(name);
   }
+  /* ---------- 下の ボタン: おもな 画面に ずっと 出す ---------- */
+  var NAV_ON = { setup:'navHome', gaku:'navStudy', shop:'openShop', care:'navCare', food:'navCare', toy:'navCare', room:'navRoom' };
+  var navCur = 'setup';
+  function navSync(name){
+    if(name) navCur = name;
+    var nav = $('mainNav'); if(!nav) return;
+    var on = NAV_ON[navCur];
+    if(navCur === 'gaku' && $('gkMenu') && $('gkMenu').hidden) on = null;
+    nav.hidden = !on;
+    document.body.classList.toggle('has-nav', !!on);
+    ['navHome', 'navStudy', 'navCare', 'navRoom', 'openShop'].forEach(function(id){
+      var b = $(id); if(!b) return;
+      if(id === on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+    });
+  }
+  if($('gkMenu')) new MutationObserver(function(){ navSync(); }).observe($('gkMenu'), { attributes:true, attributeFilter:['hidden'] });
 
   /* ---------- partner pick (first run) ---------- */
   var pickSel = null;
@@ -6475,7 +6514,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   });
   $('todayAlt').addEventListener('click', function(){ state.op = state.homeOp || 'add'; openModeSelect(); });
   $('collectRow').addEventListener('click', function(){ openShop(); });
-  $('navHome').addEventListener('click', function(){ window.scrollTo({ top:0, behavior:'smooth' }); });
+  $('navHome').addEventListener('click', function(){ if(navCur === 'setup') window.scrollTo({ top:0, behavior:'smooth' }); else goHome(); });
+  $('navStudy').addEventListener('click', function(){
+    if(navCur !== 'setup') goHome();
+    setTimeout(function(){ var t = $('subjTabs'); if(t && t.scrollIntoView) t.scrollIntoView({ behavior:'smooth', block:'start' }); }, 30);
+  });
+  $('navCare').addEventListener('click', function(){ if(navCur !== 'care') $('careOpen').click(); });
   $('homePet').addEventListener('click', function(){
     Pet.spin($('homePet'));
     $('homeSay').textContent = any(SAY_HOME);
