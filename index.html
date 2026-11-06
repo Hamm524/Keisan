@@ -2622,6 +2622,11 @@
   .lt-hint{ font-size:12px; color:var(--ink-soft); font-weight:700; text-align:center; }
   .lt-q{ font-size:40px; font-weight:700; margin:26px 0 20px; font-family:'Fredoka',sans-serif; }
   .lt-a{ color:var(--c); }
+  .lt-v{ display:inline-block; text-align:right; font-size:38px; line-height:1.25; margin:18px 0 14px; padding:0 8px 0 34px; position:relative; }
+  .lt-v .r{ position:relative; }
+  .lt-v .r i{ position:absolute; left:-30px; font-style:normal; }
+  .lt-v .ln{ border-top:3px solid var(--ink); margin:2px 0; }
+  .lt-tg{ border:2px solid var(--line); background:var(--surface); border-radius:12px; padding:5px 12px; font:inherit; font-size:12px; font-weight:900; color:var(--ink-soft); cursor:pointer; margin:0 0 14px; }
   .lt-pad{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; width:100%; max-width:300px; }
   .lt-pad button{ height:62px; border:2px solid var(--line); background:var(--surface); border-radius:16px; font-size:26px; font-family:'Fredoka',sans-serif; font-weight:600; cursor:pointer; touch-action:manipulation; }
   .lt-pad button.ok{ background:var(--c); border-color:var(--c); color:#fff; }
@@ -5711,17 +5716,28 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     function openTest(op){
       var old = $('lvTest'); if(old) old.remove();
-      var n = LEVELS[op].length, T = { op:op, lv:0, i:0, ok:0, q:null, ans:'', done:false };
+      var n = LEVELS[op].length, T = { op:op, lv:0, i:0, ok:0, q:null, ans:'', done:false, vert:null };
       var ov = document.createElement('div'); ov.id = 'lvTest'; ov.className = 'lt'; ov.style.setProperty('--c', 'var('+OP_META[op].color+')');
       document.body.appendChild(ov);
       function close(){ document.removeEventListener('keydown', onKey); ov.remove(); }
       function next(){ T.q = LEVELS[op][T.lv].gen(); T.ans = ''; draw(); }
+      /* 筆算で 見る: 3桁いじょう・かけ算の 2桁いじょうは はじめから 縦書き(ボタンで きりかえ。わり算は よこ書きのまま) */
+      function vertOn(){
+        if(op === 'div') return false;
+        if(T.vert != null) return T.vert;
+        return Math.max(T.q.a, T.q.b) >= 100 || (op === 'mul' && T.q.a >= 10);
+      }
+      function qHTML(){
+        var q = T.q, sym = OP_META[op].symbol, a = '<span class="lt-a">'+(T.ans === '' ? '?' : T.ans)+'</span>';
+        if(!vertOn()) return '<div class="lt-q num">'+q.a+' '+sym+' '+q.b+' = '+a+'</div>';
+        return '<div class="lt-q lt-v num"><div class="r">'+q.a+'</div><div class="r"><i>'+sym+'</i>'+q.b+'</div><div class="ln"></div><div class="r">'+a+'</div></div>';
+      }
       function draw(){
         var q = T.q, ph = Math.round(T.lv / n * 100);
         ov.innerHTML = '<div class="lt-top"><button class="lt-x" data-lt="x" aria-label="やめる">✕</button><b>'+OP_META[op].label.replace('練習','')+'の クラス分けテスト</b></div>' +
           '<div class="lt-bar"><i style="width:'+ph+'%"></i></div>' +
           '<div class="lt-hint">だんだん むずかしく なるよ。わからない ときは そのまま ✓ で OK!</div>' +
-          '<div class="lt-q num">'+q.a+' '+OP_META[op].symbol+' '+q.b+' = <span class="lt-a">'+(T.ans === '' ? '?' : T.ans)+'</span></div>' +
+          qHTML() + (op === 'div' ? '' : '<button class="lt-tg" data-lt="vt">'+(vertOn() ? 'よこ書きで 見る' : '筆算(たて書き)で 見る')+'</button>') +
           '<div class="lt-pad">'+[1,2,3,4,5,6,7,8,9].map(function(d){ return '<button data-lt="'+d+'">'+d+'</button>'; }).join('')+'<button data-lt="b">⌫</button><button data-lt="0">0</button><button class="ok" data-lt="ok">✓</button></div>';
       }
       function submit(){
@@ -5757,6 +5773,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var b = e.target.closest('[data-lt]'); if(!b) return;
         var k = b.getAttribute('data-lt');
         if(k === 'x') return close();
+        if(k === 'vt'){ T.vert = !vertOn(); return draw(); }
         if(k === 'set'){
           var lv = +b.getAttribute('data-lv');
           safeSet('keisan_level_' + op, lv); safeSet('keisan_clears_' + op + '_' + lv, 0); safeSet('keisan_placed_' + op, 1); safeSet('keisan_plan', null);
