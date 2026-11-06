@@ -1064,9 +1064,9 @@
 </style>
 <style id="ongakuStyle">
   /* ===== 音楽の 島 ===== */
-  :root{ --sj-n:#8A5BD0; }
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --sj-n:#C2A2FF; } }
-  :root[data-theme="dark"]{ --sj-n:#C2A2FF; }
+  :root{ --sj-n:#1E9DB0; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --sj-n:#5CD0E0; } }
+  :root[data-theme="dark"]{ --sj-n:#5CD0E0; }
   #subjTabs.subj-tabs{ grid-template-columns:repeat(5, minmax(0, 1fr)); gap:6px; }
   #subjTabs .sj-ico{ width:38px; height:38px; font-size:22px; }
   #subjTabs button b{ font-size:13px; }
@@ -1075,7 +1075,7 @@
   .subj-panel[data-s="n"] #gakuCards .gk-card:not([data-subj="n"]){ display:none; }
   .subj-panel:not([data-s="n"]) #gakuCards .gk-card[data-subj="n"]{ display:none; }
   .subj-panel[data-s="n"] .isle.pv-n{ display:block; }
-  .isle[data-t="n"]{ --is-plate:#8A5BD0; }
+  .isle[data-t="n"]{ --is-plate:#1E9DB0; }
   #view-ongaku .isle{ margin-top:0; }
   .ok-snd{ text-align:center; font-size:12px; }
   .ok-st{ display:block; height:auto; margin:0 auto; border-radius:12px; }
@@ -1120,7 +1120,7 @@
   .ok-w{ background:#fffdf6; border:1.5px solid #b8b0a4; border-radius:0 0 10px 10px; display:flex; align-items:flex-end; justify-content:center; padding:0 0 10px; color:#3a3340; font-weight:900; font-size:14px; }
   .ok-kb.nonames .ok-w span{ visibility:hidden; }
   .ok-b{ position:absolute; top:0; width:6.4%; height:58%; background:#2b2633; border:0; border-radius:0 0 7px 7px; z-index:2; }
-  .ok-w.on{ background:#e6dbff; } .ok-b.on{ background:#6d5bc7; }
+  .ok-w.on{ background:#d3f0f5; } .ok-b.on{ background:#17808f; }
   .ok-w.glow{ background:#fff1a8; box-shadow:inset 0 -6px 0 #ffcf3a; }
   .ok-tog{ display:block; text-align:center; font-size:13px; font-weight:700; margin:4px 0 12px; }
   .ok-songs{ display:grid; gap:8px; }
@@ -2495,6 +2495,55 @@
   .goal{ position:relative; font-size:12.5px; font-weight:700; color:var(--ink-soft); padding:4px 0 0; min-height:30px; }
   .road-pet{ position:absolute; left:-44px; top:-6px; width:62px; height:62px; z-index:3; pointer-events:none; filter:drop-shadow(0 4px 3px rgba(0,0,0,.08)); }
   .road-pet svg{ width:100%; height:100%; }
+  /* 別の ページへ 行く ボタンは 白 + ↗ */
+  .isle-ticket .tk-go{ background:var(--surface) !important; color:var(--ink) !important; border:2px solid color-mix(in srgb, var(--ink) 28%, var(--bg)); padding:2px 9px; }
+  .fk-tile{ background:var(--surface) !important; border-color:color-mix(in srgb, var(--ink) 22%, var(--bg)) !important; }
+  .fk-tile::after{ content:'↗'; position:absolute; right:10px; bottom:6px; font-size:13px; font-weight:900; color:var(--ink-soft); }
+  .fk-tile .tt small{ color:var(--ink-soft) !important; }
+  /* 島の 進み具合 */
+  .isle-prog{ background:var(--surface); border:2px solid color-mix(in srgb, var(--ic) 40%, var(--bg)); border-radius:18px; padding:10px 12px 12px; margin:0 0 10px; display:flex; flex-direction:column; gap:6px; }
+  .isle-prog[data-t="j"]{ --ic:var(--sj-j); } .isle-prog[data-t="s"]{ --ic:var(--sj-s); } .isle-prog[data-t="o"]{ --ic:var(--sj-o); }
+  .isle-prog .ip-row{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+  .isle-prog .ip-row b{ font-size:15px; font-weight:900; }
+  .isle-prog .ip-row span{ font-size:13px; font-weight:800; color:var(--ink-soft); }
+  .isle-prog .ip-row strong{ font-family:'Fredoka',sans-serif; color:var(--ic); font-size:17px; }
+  .isle-prog .ip-bar{ height:12px; border-radius:99px; background:color-mix(in srgb, var(--ic) 14%, var(--surface-2)); overflow:hidden; }
+  .isle-prog .ip-bar i{ display:block; height:100%; border-radius:99px; background:var(--ic); }
+  .isle-prog .ip-sub{ font-size:12.5px; color:var(--ink-soft); font-weight:700; }
+  .isle-prog .ip-goal{ display:flex; align-items:center; gap:8px; width:100%; text-align:left; border:2px dashed color-mix(in srgb, var(--ic) 55%, var(--bg)); background:color-mix(in srgb, var(--ic) 8%, var(--surface)); color:var(--ink); border-radius:14px; padding:8px 10px; font:inherit; font-size:14px; font-weight:900; line-height:1.9; cursor:pointer; touch-action:manipulation; }
+  .isle-prog .ip-goal:active{ transform:translateY(2px); }
+  .isle-prog .ip-goal em{ font-style:normal; flex:none; font-size:20px; }
+  .isle-prog .ip-goal span{ flex:1; min-width:0; }
+  .isle-prog .ip-goal i{ font-style:normal; flex:none; color:var(--ic); font-size:13px; }
+  .subj-panel .isle-prog.pv{ display:none; } .subj-panel[data-s="j"] .isle-prog.pv-j, .subj-panel[data-s="s"] .isle-prog.pv-s, .subj-panel[data-s="o"] .isle-prog.pv-o{ display:flex; }
+  .isle-prog.all{ border-color:var(--gold-deep); background:color-mix(in srgb, var(--gold) 14%, var(--surface)); }
+  /* 道の さいごの 駅: 何から 学ぶ? */
+  #dailyBand{ display:none; }
+  #pinF{ background:var(--sj-s); font-size:14px; }
+  .st.fk.is-done .pin{ background:var(--good) !important; }
+  .st.fk.solo{ margin:12px 0 0; }
+  .st.fk.solo .pin{ display:none; }
+  .fk-card{ background:color-mix(in srgb, var(--sj-s) 9%, var(--bg)); border:2px solid color-mix(in srgb, var(--sj-s) 45%, var(--bg)); border-radius:20px; padding:10px 12px 12px; }
+  .fk-h{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .fk-h b{ font-size:15px; font-weight:900; }
+  .fk-h small{ font-size:12px; color:var(--ink-soft); font-weight:700; }
+  .fk-top{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px; }
+  .fk-tile{ position:relative; display:flex; align-items:center; gap:8px; min-height:64px; border:2px solid color-mix(in srgb, var(--c) 45%, var(--bg)); background:color-mix(in srgb, var(--c) 9%, var(--surface)); color:var(--ink); border-radius:16px; padding:8px 10px; text-decoration:none; touch-action:manipulation; }
+  .fk-tile:active{ transform:translateY(2px); }
+  .fk-tile .ti{ flex:none; font-size:26px; line-height:1; }
+  .fk-tile .tt{ min-width:0; display:flex; flex-direction:column; line-height:1.7; }
+  .fk-tile .tt b{ font-size:14px; font-weight:900; white-space:nowrap; }
+  .fk-tile .tt small{ font-size:11.5px; font-weight:800; color:var(--ink-soft); }
+  .fk-tile.done{ border-color:var(--good); }
+  .fk-tile.done .tt small{ color:var(--good); }
+  .fk-tile .fr{ position:absolute; top:-9px; right:10px; background:var(--c); color:#fff; border-radius:99px; font-size:10.5px; padding:0 8px; white-space:nowrap; line-height:1.6; font-weight:900; }
+  .fk-chips{ display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; }
+  .fk-chip{ position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; min-height:64px; border:2px solid color-mix(in srgb, var(--c) 40%, var(--bg)); background:var(--surface); color:var(--ink); border-radius:14px; padding:6px 2px; font:inherit; font-weight:900; cursor:pointer; touch-action:manipulation; }
+  .fk-chip:active{ transform:translateY(2px); }
+  .fk-chip .fi{ width:30px; height:30px; border-radius:10px; background:color-mix(in srgb, var(--c) 18%, var(--surface)); color:var(--c); display:flex; align-items:center; justify-content:center; font-size:17px; line-height:1; }
+  .fk-chip .fl{ font-size:12.5px; line-height:1.9; white-space:nowrap; }
+  .fk-chip.rec{ border-color:var(--c); box-shadow:0 0 0 2px color-mix(in srgb, var(--c) 25%, transparent); }
+  .fk-chip .fr{ position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:var(--c); color:#fff; border-radius:99px; font-size:10.5px; padding:0 8px; white-space:nowrap; line-height:1.6; }
   .road-bubble{ position:absolute; left:26px; top:8px; z-index:3; background:var(--surface); border:1.5px solid var(--line); border-radius:12px; padding:2px 10px; font-weight:900; font-size:12.5px; white-space:nowrap; pointer-events:none; }
   .road-bubble::after{ content:""; position:absolute; left:-6px; top:50%; margin-top:-5px; width:9px; height:9px; background:var(--surface); border-left:1.5px solid var(--line); border-bottom:1.5px solid var(--line); transform:rotate(45deg); }
   .st.is-cur{ padding-top:44px; }
@@ -2827,6 +2876,7 @@
       <div class="st" id="st3"><span class="pin" id="pin3">3</span><div class="st-row" id="row3"></div>
     <section class="weekend" id="weekendCard" hidden></section>
       </div>
+      <div class="st fk" id="stF"><span class="pin" id="pinF">★</span><div class="fk-card" id="fkCard"></div></div>
       <div class="goal"><span class="pin flag">🏁</span><span id="goalText">全部 おわると 今日の 花丸!</span></div>
     </div>
     <div id="allClear" hidden></div>
@@ -6016,6 +6066,50 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     requestAnimationFrame(step);
   }
+  var Fork = (function(){
+    var KANJI = 'https://hamm524.github.io/Kanji/';
+    var CH = [
+      { k:'j', c:'--sj-j', i:'国', l:'<ruby>国語<rt>こくご</rt></ruby>' },
+      { k:'s', c:'--sj-s', i:'理', l:'<ruby>理科<rt>りか</rt></ruby>' },
+      { k:'o', c:'--sj-o', i:'社', l:'<ruby>社会<rt>しゃかい</rt></ruby>' },
+      { k:'n', c:'--sj-n', i:'♪', l:'<ruby>音楽<rt>おんがく</rt></ruby>' }
+    ];
+    function kanjiDone(){ var o = null; try{ o = JSON.parse(localStorage.getItem('kapp_daily_open2') || 'null'); }catch(e){} var d = new Date(); return !!(o && o.k === d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()); }
+    function mapDone(){ var m = null; try{ m = JSON.parse(localStorage.getItem('map-coins-v1') || 'null'); }catch(e){} return !!(m && m.day && m.day.d === todayKey() && m.day.c > 0); }
+    function gakuN(){ var g = safeGet('keisan_gaku') || {}; return g.day && g.day.d === todayKey() ? (g.day.n || 0) : 0; }
+    function done(){ return kanjiDone() || mapDone() || gakuN() > 0; }
+    /* きょうの おすすめ: 日がわりで 国語・理科・社会・音楽 */
+    function rec(){ return ['j', 's', 'o', 'n'][dayNo() % 4]; }
+    function place(solo){
+      var f = $('stF'), road = $('road'); if(!f) return;
+      f.classList.toggle('solo', !!solo);
+      if(solo){ var ac = $('allClear'); if(ac && f.previousElementSibling !== ac) ac.insertAdjacentElement('afterend', f); }
+      else{ var g = road.querySelector('.goal'); if(g && f.nextElementSibling !== g) road.insertBefore(f, g); }
+    }
+    function render(solo){
+      var c = $('fkCard'); if(!c) return;
+      place(solo);
+      var r = rec(), kd = kanjiDone(), md = mapDone();
+      var h = '<div class="fk-h"><b>' + (solo ? '<ruby>好<rt>す</rt></ruby>きな <ruby>教科<rt>きょうか</rt></ruby>も <ruby>学<rt>まな</rt></ruby>ぼう' : '<ruby>今日<rt>きょう</rt></ruby>は <ruby>何<rt>なに</rt></ruby>から <ruby>学<rt>まな</rt></ruby>ぶ?') + '</b><small>' + (done() ? '1つ できたね!ほかも どうぞ' : '1つ えらんで はじめよう') + '</small></div>';
+      h += '<div class="fk-top">' +
+        '<a class="fk-tile' + (kd ? ' done' : '') + '" style="--c:var(--sj-j)" href="' + KANJI + '" target="_blank" rel="noopener" data-fk="k"><span class="fr">' + (kd ? '✓' : '<ruby>毎日<rt>まいにち</rt></ruby>') + '</span><span class="ti">✈️</span><span class="tt"><b><ruby>漢字<rt>かんじ</rt></ruby>ドリル</b><small>' + (kd ? '今日 やったよ' : 'ひらく ›') + '</small></span></a>' +
+        '<a class="fk-tile' + (md ? ' done' : '') + '" style="--c:var(--sj-o)" href="map/" data-fk="m"><span class="ti">⛵</span><span class="tt"><b><ruby>地図<rt>ちず</rt></ruby>で <ruby>遊<rt>あそ</rt></ruby>ぼう</b><small>' + (md ? '今日 クリア!' : 'ひらく ›') + '</small></span></a></div>';
+      h += '<div class="fk-chips">';
+      CH.forEach(function(x){
+        h += '<button type="button" class="fk-chip' + (x.k === r ? ' rec' : '') + '" style="--c:var(' + x.c + ')" data-fk="' + x.k + '">' + (x.k === r ? '<span class="fr">おすすめ</span>' : '') + '<span class="fi">' + x.i + '</span><span class="fl">' + x.l + '</span></button>';
+      });
+      c.innerHTML = h + '</div>';
+      $('stF').classList.toggle('is-done', done());
+      $('pinF').textContent = done() ? '✓' : '★';
+    }
+    $('fkCard').addEventListener('click', function(e){
+      var b = e.target.closest('button[data-fk]'); if(!b) return;
+      var t = $('subjTabs') && $('subjTabs').querySelector('[data-s="' + b.getAttribute('data-fk') + '"]');
+      if(t){ t.click(); var p = $('subjPanel'); if(p && p.scrollIntoView) p.scrollIntoView({ behavior:'smooth', block:'start' }); }
+    });
+    document.addEventListener('visibilitychange', function(){ if(!document.hidden) render($('road').hidden); });
+    return { render:render, done:done };
+  })();
   function renderRoad(){
     var d = dayState(), done = [d.p, d.c, d.w], cur = done.indexOf(false);
     var road = $('road'), ac = $('allClear'), card = $('todayCard');
@@ -6055,6 +6149,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       ac.hidden = false;
       var now = document.querySelector('#streakDots .now'); if(now){ now.classList.add('hana'); now.querySelector('i').textContent = '花'; }
       $('roadPet').innerHTML = '';
+      Fork.render(true);
       return;
     }
     if(card.parentNode !== $('st1')) $('st1').appendChild(card);
@@ -6084,6 +6179,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(rp.parentNode !== cs){ cs.insertBefore(rbb, cs.firstChild); cs.insertBefore(rp, cs.firstChild); }
     rbb.innerHTML = [sheetsSay(sheetsToday()), 'ボスに 挑もう!', '100問に 挑戦!'][cur];
     $('goalText').textContent = '全部 おわると 今日の 花丸!(＋'+ALLCLEAR_BONUS+'コイン)';
+    Fork.render(false);
   }
   function rb(t){ return String(t).replace(/桁/g, '<ruby>桁<rt>けた</rt></ruby>'); }
   function cheerFor(op){
@@ -19058,6 +19154,70 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     })();
     Object.keys(THEMES).forEach(function(k){ var T = THEMES[k]; T.at = function(key){ for(var i = 0; i < T.places.length; i++) if(T.places[i][0] === key) return [T.places[i][1], T.places[i][2]]; return null; }; });
 
+    /* ===== 島の 進み具合: 島の ページを 開いた ときの 数を 覚えて、ホームの 見本の 島にも 出す ===== */
+    var PK = 'kapp_isle_prog_';
+    function loadProg(t){ var o = null; try{ o = JSON.parse(localStorage.getItem(PK + t) || 'null'); }catch(e){} return o || {}; }
+    function saveProg(t, o){ try{ localStorage.setItem(PK + t, JSON.stringify(o)); }catch(e){} }
+    function rj(x){ return String(x).replace(/([一-龥々]+)《(.+?)》/g, '<ruby>$1<rt>$2</rt></ruby>'); }
+    function cleared(p){ return !!(p && ((p.all && p.n >= p.all) || p.done)); }
+    function snapOf(T, spots){
+      var o = {};
+      spots.forEach(function(x){
+        var pl = x[1]; if(pl[6] === 'go' || pl[6] === 'side') return;
+        var inf = infoOf(x[0]);
+        o[pl[0]] = { n:inf.all ? inf.n : null, all:inf.all || 0, star:inf.star || '', done:x[0].classList.contains('done') ? 1 : 0 };
+      });
+      return o;
+    }
+    function goalOf(T, snap){
+      var list = [];
+      T.places.forEach(function(pl){
+        if(pl[6] === 'go' || pl[6] === 'side') return;
+        var p = snap[pl[0]]; if(p) list.push({ key:pl[0], name:pl[5] || pl[0], p:p, ok:cleared(p) });
+      });
+      if(!list.length) return { kind:'start' };
+      var cnt = list.filter(function(x){ return x.ok; }).length;
+      var qn = 0, qa = 0; list.forEach(function(x){ if(x.p.all){ qa += x.p.all; qn += Math.min(x.p.n || 0, x.p.all); } });
+      var todo = list.filter(function(x){ return !x.ok; });
+      var g = { kind:'doing', cnt:cnt, total:list.length, qn:qn, qa:qa };
+      if(todo.length){
+        var go = todo.filter(function(x){ return x.p.all && x.p.n > 0; }).sort(function(a, b){ return (a.p.all - a.p.n) - (b.p.all - b.p.n); })[0];
+        if(go){ g.key = go.key; g.name = go.name; g.left = go.p.all - go.p.n; }
+        else{ g.kind = 'begin'; g.key = todo[0].key; g.name = todo[0].name; }
+        return g;
+      }
+      var up = list.filter(function(x){ return /☆/.test(x.p.star); })[0];
+      if(up){ g.kind = 'stars'; g.key = up.key; g.name = up.name; return g; }
+      g.kind = 'all'; return g;
+    }
+    function progEl(t, T, snap){
+      var g = goalOf(T, snap), box = document.createElement('div');
+      box.className = 'isle-prog' + (g.kind === 'all' ? ' all' : ''); box.setAttribute('data-t', t);
+      var h;
+      if(g.kind === 'start'){
+        h = '<div class="ip-row"><b>' + rj('島《しま》の 進《すす》み具合《ぐあい》') + '</b></div><div class="ip-sub">' + rj('まだ ひとつも やって いないよ。') + '</div>' +
+            '<div class="ip-goal" style="cursor:default"><em>🎯</em><span>' + rj('好《す》きな 場所《ばしょ》から はじめよう!') + '</span></div>';
+      }else{
+        var pct = g.qa ? Math.round(g.qn / g.qa * 100) : Math.round(g.cnt / g.total * 100);
+        h = '<div class="ip-row"><b>' + rj('島《しま》の 進《すす》み具合《ぐあい》') + '</b><span>' + rj('クリアした 場所《ばしょ》') + ' <strong>' + g.cnt + '</strong> / ' + g.total + '</span></div>' +
+            '<div class="ip-bar"><i style="width:' + pct + '%"></i></div>' +
+            (g.qa ? '<div class="ip-sub">' + rj('せいかい') + ' <b class="num">' + g.qn + '</b> / ' + g.qa + rj(' 問《もん》') + '</div>' : '');
+        var txt = g.kind === 'doing' ? rj('次《つぎ》の もくひょう: ' + g.name + 'を クリア!(あと ' + g.left + ' 問《もん》)') :
+                  g.kind === 'begin' ? rj('次《つぎ》の もくひょう: ' + g.name + 'を はじめよう!') :
+                  g.kind === 'stars' ? rj('ぜんぶ クリア! 次《つぎ》は ' + g.name + 'の ★を ふやそう') :
+                  rj('島《しま》ぜんぶ コンプリート! 「ぜんぶ まぜる」で もういちど ちょうせん');
+        h += '<button type="button" class="ip-goal" data-goal="' + (g.key || '') + '"' + (g.key ? '' : ' disabled style="cursor:default"') + '><em>' + (g.kind === 'all' ? '🏆' : '🎯') + '</em><span>' + txt + '</span>' + (g.key ? '<i>' + rj('行《い》く ›') + '</i>' : '') + '</button>';
+      }
+      box.innerHTML = h;
+      return box;
+    }
+    document.addEventListener('click', function(e){
+      var gb = e.target.closest('.isle-prog .ip-goal[data-goal]'); if(!gb) return;
+      var key = gb.getAttribute('data-goal'); if(!key) return;
+      var t = gb.closest('.isle-prog').getAttribute('data-t'), isle = document.querySelector('.isle[data-t="' + t + '"]');
+      var sp = isle && Array.prototype.filter.call(isle.querySelectorAll('.spot'), function(x){ return x._key === key || (x._pv && x._pv[1] === key); })[0];
+      if(sp) sp.click();
+    });
     var want = null; /* ホームで えらんだ 教科 */
     function petHTML(){ try{ var a = activePet(); return a ? Pet.svg(a.sp, a.lv) : ''; }catch(e){ return ''; } }
     function getLast(t){ try{ return localStorage.getItem('kapp_isle_' + t) || ''; }catch(e){ return ''; } }
@@ -19105,6 +19265,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       subs.insertBefore(note, map);
       if(tickets.children.length){ tickets.insertAdjacentHTML('afterbegin', '<p class="tk-head">島の そとへ おでかけ(べつの ページが ひらくよ)</p>'); subs.insertBefore(tickets, map.nextSibling); }
       subs.classList.add('has-isle');
+      var snap = snapOf(T, spots); saveProg(t, snap);
+      var pbox = progEl(t, T, snap); map.parentNode.insertBefore(pbox, map);
       if($('gkTitle')) $('gkTitle').textContent = { s:'理科の 島', o:'社会の 島', j:'ことばの 島' }[t];
       if(pending && pending[0] === t){
         var key = pending[1], isGo = pending[2] === 'go'; pending = null;
@@ -19143,12 +19305,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function card(t){ return Array.prototype.filter.call(document.querySelectorAll('#gakuCards .gk-card'), function(c){ return Subj.subjOf(c) === t && c.querySelector('button'); })[0]; }
     function homeRender(){
       var panel = $('subjPanel'); if(!panel || typeof Subj === 'undefined') return;
-      Array.prototype.forEach.call(panel.querySelectorAll('.isle.pv, .isle-tickets.pv'), function(x){ x.remove(); });
+      Array.prototype.forEach.call(panel.querySelectorAll('.isle.pv, .isle-tickets.pv, .isle-prog.pv'), function(x){ x.remove(); });
       var anchor = $('gakuCards');
       ['j', 's', 'o'].forEach(function(t){
         var c = card(t); if(!c) return;
         c.classList.add('pv-card');
-        var T = THEMES[t], map = document.createElement('div');
+        var T = THEMES[t], map = document.createElement('div'), prog = loadProg(t);
         map.className = 'isle pv pv-' + t; map.setAttribute('data-t', t);
         map.innerHTML = T.bg(T) + '<div class="isle-title">'+T.title+'</div>';
         var tk = document.createElement('div'); tk.className = 'isle-tickets pv pv-' + t;
@@ -19163,6 +19325,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           b.className = 'spot' + (pl[6] === 'side' ? ' sp-side' : '') + (pl[6] === 'small' ? ' small' : '');
           b.style.left = pl[1] + '%'; b.style.top = pl[2] + '%'; b.style.setProperty('--sp', pl[3]);
           b.innerHTML = '<span class="sp-ico">'+(pl[4] || T.icons && T.icons[pl[0]] || '•')+'</span><span class="sp-name">'+(pl[5] || pl[0])+'</span>';
+          var pg = prog[pl[0]];
+          if(pg && pl[6] !== 'side'){
+            if(pg.n === 0) b.classList.add('new');
+            if(cleared(pg) && (pg.n || pg.done)) b.classList.add('done');
+            if(pg.star) b.insertAdjacentHTML('beforeend', '<span class="sp-star">' + pg.star + '</span>');
+            else if(pg.all) b.insertAdjacentHTML('beforeend', '<span class="sp-cnt">' + pg.n + '/' + pg.all + '</span>');
+          }
           b._pv = [t, pl[0]];
           map.appendChild(b);
         });
@@ -19171,6 +19340,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         pet.style.left = lk[0] + '%'; pet.style.top = (lk[1] - 4) + '%';
         map.appendChild(pet);
         anchor.parentNode.insertBefore(map, anchor);
+        map.parentNode.insertBefore(progEl(t, T, prog), map); map.previousSibling.className += ' pv pv-' + t;
         if(tk.children.length){ tk.insertAdjacentHTML('afterbegin', '<p class="tk-head">島の そとへ おでかけ(べつの ページが ひらくよ)</p>'); anchor.parentNode.insertBefore(tk, anchor); }
       });
       panel.classList.add('has-pv');
@@ -19771,7 +19941,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       { k:'note', n:'音符の 長さ', p:'音符の 森', i:'🎶', d:'はたと 連こう・付点・長さの けいさん', x:22, y:40, c:'#3F9B5A' },
       { k:'rest', n:'休符', p:'休符の いずみ', i:'💤', d:'休符の 形の ちがい・全休符・付点休符', x:76, y:50, c:'#2E9BB5' },
       { k:'beat', n:'拍子と 小節', p:'拍子の 時計台', i:'🥁', d:'上の 数字と 下の 数字・強い 拍・いろいろな 拍子', x:32, y:62, c:'#E07A12' },
-      { k:'sign', n:'いろいろな 記号', p:'記号の お城', i:'🏰', d:'スタッカート・速さの ことば・D.C.・くりかえし', x:74, y:71, c:'#8A5BD0' },
+      { k:'sign', n:'いろいろな 記号', p:'記号の お城', i:'🏰', d:'スタッカート・速さの ことば・D.C.・くりかえし', x:74, y:71, c:'#1E9DB0' },
       { k:'ear', n:'耳で きく', p:'耳の どうくつ', i:'👂', d:'ドを 聞いて 音あて・明るい ひびき・暗い ひびき', x:42, y:81, c:'#C9A10C' }
     ];
     /* 音楽の 道(はじめての 子は ここを 順番に)。くわしい 7分野は 道を おえると ひらく。OK_ALL は おためし版で ぜんぶ ひらく ため */
@@ -19819,7 +19989,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var notes = [[300, 60, 0], [330, 130, 1], [20, 250, 0], [326, 330, 1]].map(function(n){ return '<g transform="translate('+n[0]+' '+n[1]+')" fill="#fff" opacity=".75"><ellipse cx="0" cy="14" rx="6" ry="4.4" transform="rotate(-22 0 14)"/><rect x="4.6" y="-10" width="1.8" height="24"/>' + (n[2] ? '<path d="M6.4 -10 C7 -2 16 0 13 10 C14 2 10 0 6.4 -1Z"/>' : '') + '</g>'; }).join('');
       var roads = 'M180 450 ' + STEPS.map(function(t){ return 'L'+(t.x * W)+' '+(t.y * H); }).join(' ');
       return '<svg class="isle-bg" viewBox="0 0 360 470" preserveAspectRatio="none" aria-hidden="true">' +
-        '<defs><linearGradient id="isSeaN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9a8f2"/><stop offset="1" stop-color="#6d5bc7"/></linearGradient></defs>' +
+        '<defs><linearGradient id="isSeaN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9a8f2"/><stop offset="1" stop-color="#17808f"/></linearGradient></defs>' +
         '<rect width="360" height="470" fill="url(#isSeaN)"/>' +
         '<g class="waves" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.5" stroke-linecap="round"><path d="M250 30 q8 -6 16 0 t16 0"/><path d="M14 150 q8 -6 16 0 t16 0"/><path d="M300 250 q8 -6 16 0 t16 0"/><path d="M10 420 q8 -6 16 0 t16 0"/><path d="M200 455 q8 -6 16 0 t16 0"/></g>' +
         /* 五線の 虹(海の 上を わたる 5本の 線) */
@@ -19831,7 +20001,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<g fill="#3d8f45">' + [[110, 95], [124, 84], [136, 98], [56, 104]].map(function(t){ return '<circle cx="'+t[0]+'" cy="'+t[1]+'" r="11"/>'; }).join('') + '</g>' +
         '<ellipse cx="274" cy="248" rx="30" ry="15" fill="#7fd0f0"/><ellipse cx="270" cy="244" rx="12" ry="4" fill="#fff" opacity=".6"/>' +
         '<path d="M150 170 Q200 108 250 172 Z" fill="#78b85a"/>' +
-        '<path d="M236 330 v-26 h10 v8 h8 v-8 h10 v8 h8 v-8 h10 v26 z" fill="#d8cfe8" stroke="#8a7ab0" stroke-width="1.5"/><path d="M246 304 l9 -12 l9 12z" fill="#8A5BD0"/>' +
+        '<path d="M236 330 v-26 h10 v8 h8 v-8 h10 v8 h8 v-8 h10 v26 z" fill="#d8cfe8" stroke="#8a7ab0" stroke-width="1.5"/><path d="M246 304 l9 -12 l9 12z" fill="#1E9DB0"/>' +
         '<rect x="104" y="270" width="18" height="34" fill="#e8c69a" stroke="#a0723f" stroke-width="1.5"/><circle cx="113" cy="278" r="6" fill="#fff" stroke="#a0723f" stroke-width="1.5"/>' +
         '<path d="M130 384 Q150 350 172 384 Z" fill="#7a6f66"/><path d="M142 384 Q151 368 160 384Z" fill="#3b3540"/>' +
         '<path d="M44 82 h26 v6 h-26z" fill="#a0723f"/>' +
@@ -19846,7 +20016,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       STEPS.forEach(function(t, i){
         var b = document.createElement('button'); b.type = 'button';
         b.className = 'spot ok-stop small' + (i < u ? ' done' : i === u ? ' today' : ' lock');
-        b.style.left = t.x + '%'; b.style.top = t.y + '%'; b.style.setProperty('--sp', i <= u ? '#8A5BD0' : '#9a96a3');
+        b.style.left = t.x + '%'; b.style.top = t.y + '%'; b.style.setProperty('--sp', i <= u ? '#1E9DB0' : '#9a96a3');
         b.innerHTML = '<span class="sp-ico">'+t.i+'<em>'+(i + 1)+'</em></span>' + (i === u || home ? '' : '') + '<span class="sp-name">'+t.s+'</span>';
         b.setAttribute('aria-label', (i + 1) + 'ばん ' + plain(t.n) + (i < u ? '(クリア)' : i === u ? '(いまの 場所)' : '(まだ ひらいて いない)'));
         b.setAttribute('data-ok', t.k);
@@ -19908,7 +20078,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function step(i){
       STEP = i; CUR = null; var t = STEPS[i], u = ur();
       $('okTitle').textContent = (i + 1) + 'ばん ' + plain(t.n);
-      var h = '<div class="ok-head" style="--sp:#8A5BD0"><span class="ok-hico">'+t.i+'</span><span><b>'+(i + 1)+'ばん '+ruby(t.n)+'</b><small>'+(i < u ? 'クリア ずみ 🚩 なんかい やっても いいよ' : 'よく 見て、きいてから やって みよう')+'</small></span></div>';
+      var h = '<div class="ok-head" style="--sp:#1E9DB0"><span class="ok-hico">'+t.i+'</span><span><b>'+(i + 1)+'ばん '+ruby(t.n)+'</b><small>'+(i < u ? 'クリア ずみ 🚩 なんかい やっても いいよ' : 'よく 見て、きいてから やって みよう')+'</small></span></div>';
       t.teach.forEach(function(l, j){ h += '<section class="ok-ls"><div class="ok-fig">'+l[0]+'</div><p class="ok-big-p">'+ruby(l[1])+'</p>' + (l[2] ? '<button class="ok-play big" data-ti="'+j+'">▶ きく</button>' : '') + '</section>'; });
       h += '<button class="btn btn-primary ok-go" data-road="1">やって みよう!</button>';
       $('okTopic').innerHTML = h;
@@ -20040,7 +20210,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       show('okPiano');
     }
     function drawP(d, acc){
-      $('okPStaff').innerHTML = d == null ? D.staff([['sp', 40]], { w:150 }) : D.staff([['n', d, 'q', acc ? { acc:1, col:'#8A5BD0' } : { col:'#8A5BD0' }]], { w:150 });
+      $('okPStaff').innerHTML = d == null ? D.staff([['sp', 40]], { w:150 }) : D.staff([['n', d, 'q', acc ? { acc:1, col:'#1E9DB0' } : { col:'#1E9DB0' }]], { w:150 });
       if(d != null) $('okPName').textContent = acc ? D.nm(d) + '♯ (' + D.nm(d + 1) + '♭)' : D.nm(d) + (d === 7 ? '(上の ド)' : d > 7 ? '(上の ' + D.nm(d) + ')' : '');
     }
     function glow(){
