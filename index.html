@@ -12361,12 +12361,37 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         g.gain.setValueAtTime(.55, t); g.gain.exponentialRampToValueAtTime(.001, t + .28);
         o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + .3); }catch(_){}
     }
-    function shake(len, hp){
-      try{ var a = aud(), t = a.currentTime, n = (a.sampleRate * len) | 0, buf = a.createBuffer(1, n, a.sampleRate), d = buf.getChannelData(0);
-        for(var k = 0; k < n; k++) d[k] = (Math.random() * 2 - 1) * Math.pow(1 - k / n, 2);
-        var src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
-        src.buffer = buf; f.type = 'highpass'; f.frequency.value = hp; g.gain.value = .3;
-        src.connect(f); f.connect(g); g.connect(a.destination); src.start(t); }catch(_){}
+    var noiseB = null;
+    function noise(a){
+      if(!noiseB){ var n = a.sampleRate | 0, d; noiseB = a.createBuffer(1, n, a.sampleRate); d = noiseB.getChannelData(0); for(var k = 0; k < n; k++) d[k] = Math.random() * 2 - 1; }
+      var s = a.createBufferSource(); s.buffer = noiseB; return s;
+    }
+    function grain(a, t, ty, fr, q, peak, atk, len, off){
+      var src = noise(a), f = a.createBiquadFilter(), g = a.createGain();
+      f.type = ty; f.frequency.value = fr; f.Q.value = q;
+      g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(peak, t + atk); g.gain.exponentialRampToValueAtTime(.0001, t + len);
+      src.connect(f); f.connect(g); g.connect(a.destination); src.start(t, off || 0); src.stop(t + len + .02);
+    }
+    /* マラカス: 粒が ざっと 流れる「シャッ・カッ」(やわらかい立ち上がりの 高いノイズ 2つ) */
+    function maracas(){
+      try{ var a = aud(), t = a.currentTime;
+        grain(a, t, 'bandpass', 5200, .8, .55, .035, .11, Math.random() * .5);
+        grain(a, t + .13, 'bandpass', 6400, 1.1, .38, .012, .07, Math.random() * .5); }catch(_){}
+    }
+    /* タンバリン: 手で「タン タン!」とたたく(皮の打音+すずが ほんの少し)。ピッチのある音は入れない */
+    function tjing(a, t, len, n, vol, hp){
+      for(var k = 0; k < n; k++){
+        var u = k / n, tk = t + u * len + Math.random() * .008, v = vol * Math.pow(1 - u, 1.2);
+        grain(a, tk, 'bandpass', hp + Math.random() * 5000, 2.5, (.8 + Math.random() * .5) * v, .001, .04 + Math.random() * .04, Math.random() * .5);
+      }
+    }
+    function thead(a, t, vol){
+      grain(a, t, 'bandpass', 800, .6, .5 * vol, .002, .07);
+      grain(a, t, 'bandpass', 2200, .8, .35 * vol, .002, .04);
+    }
+    function tamb(){
+      try{ var a = aud(), t = a.currentTime;
+        [0, .2].forEach(function(o, q){ thead(a, t + o, q ? .85 : 1); tjing(a, t + o + .004, .09, 8, .9, 5500); }); }catch(_){}
     }
     function horn(fr){
       try{ var a = aud(), t = a.currentTime, o = a.createOscillator(), f = a.createBiquadFilter(), g = a.createGain();
@@ -12456,10 +12481,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }, song[1].length * BEAT + 300));
     }
     var INST = [
-      { n:'タンバリン', svg:'<circle cx="20" cy="20" r="14" fill="#FFE9C2" stroke="#E8A33D" stroke-width="5"/><g fill="#FFD24C" stroke="#C9973A" stroke-width="1"><circle cx="20" cy="4" r="3.4"/><circle cx="36" cy="20" r="3.4"/><circle cx="20" cy="36" r="3.4"/><circle cx="4" cy="20" r="3.4"/></g>', play:function(){ shake(.16, 5000); setTimeout(function(){ chime(2093); }, 10); } },
+      { n:'タンバリン', svg:'<circle cx="20" cy="20" r="14" fill="#FFE9C2" stroke="#E8A33D" stroke-width="5"/><g fill="#FFD24C" stroke="#C9973A" stroke-width="1"><circle cx="20" cy="4" r="3.4"/><circle cx="36" cy="20" r="3.4"/><circle cx="20" cy="36" r="3.4"/><circle cx="4" cy="20" r="3.4"/></g>', play:tamb },
       { n:'たいこ', svg:'<path d="M8,4 L17,13 M32,4 L23,13" stroke="#A77A45" stroke-width="3" stroke-linecap="round"/><rect x="5" y="15" width="30" height="21" rx="5" fill="#E5484D"/><path d="M5,22 L35,32 M5,32 L35,22" stroke="#FFD24C" stroke-width="2.4"/><ellipse cx="20" cy="15" rx="15" ry="5" fill="#FFF6E8" stroke="#C9973A" stroke-width="1.5"/>', play:drum },
       { n:'ラッパ', svg:'<path d="M3,17 H22 L37,8 V32 L22,23 H3 Z" fill="#FFD24C" stroke="#C9973A" stroke-width="1.5" stroke-linejoin="round"/><g fill="#C9973A"><rect x="9" y="11" width="3" height="6" rx="1"/><rect x="14" y="11" width="3" height="6" rx="1"/></g><ellipse cx="37" cy="20" rx="2.5" ry="12" fill="#FFE58A"/>', play:function(f){ horn((f || 523) / 2); } },
-      { n:'マラカス', svg:'<rect x="9" y="19" width="4" height="18" rx="2" fill="#A77A45"/><ellipse cx="11" cy="13" rx="8" ry="9.5" fill="#FF8FB1"/><circle cx="8.5" cy="9.5" r="2.2" fill="#fff" opacity=".8"/><rect x="26" y="21" width="4" height="17" rx="2" fill="#A77A45"/><ellipse cx="28" cy="15" rx="8" ry="9.5" fill="#9BD66B"/><circle cx="25.5" cy="11.5" r="2.2" fill="#fff" opacity=".8"/>', play:function(){ shake(.1, 2500); } },
+      { n:'マラカス', svg:'<rect x="9" y="19" width="4" height="18" rx="2" fill="#A77A45"/><ellipse cx="11" cy="13" rx="8" ry="9.5" fill="#FF8FB1"/><circle cx="8.5" cy="9.5" r="2.2" fill="#fff" opacity=".8"/><rect x="26" y="21" width="4" height="17" rx="2" fill="#A77A45"/><ellipse cx="28" cy="15" rx="8" ry="9.5" fill="#9BD66B"/><circle cx="25.5" cy="11.5" r="2.2" fill="#fff" opacity=".8"/>', play:maracas },
       { n:'トライアングル', svg:'<path d="M20,4 L36,33 H5 L18,8" fill="none" stroke="#B9C6D2" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M27,12 L39,31" stroke="#A77A45" stroke-width="2.2" stroke-linecap="round"/>', play:function(){ chime(2637); } },
       { n:'もっきん', svg:'<rect x="2" y="27" width="36" height="4" rx="2" fill="#A77A45"/><rect x="3" y="10" width="5" height="20" rx="1.5" fill="#E5484D"/><rect x="10" y="12" width="5" height="17" rx="1.5" fill="#FF9E6B"/><rect x="17" y="14" width="5" height="14" rx="1.5" fill="#FFD24C"/><rect x="24" y="16" width="5" height="11" rx="1.5" fill="#9BD66B"/><rect x="31" y="18" width="5" height="8" rx="1.5" fill="#7FB8F0"/><path d="M30,2 L22,13" stroke="#C99A62" stroke-width="2" stroke-linecap="round"/><circle cx="22" cy="13" r="2.4" fill="#FF8FB1"/>', play:function(f){ chime((f || 784) * 2); } }
     ];
