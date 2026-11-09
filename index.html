@@ -2649,7 +2649,10 @@
   .chip{ background:var(--surface-2, #fff); border-color:var(--line, #E3D6C0); }
   .chip.on{ background:var(--c); border-color:var(--c); }
   .today .g3btn{ background:var(--surface-2, #fff); color:var(--ink); }
-  .today.asg .today-label, .today.asg .today-main, .today.asg .sheets-d{ display:none; }
+  .today.asg .today-label, .today.asg .today-main{ display:none; }
+  button.chip{ font:inherit; cursor:pointer; touch-action:manipulation; }
+  button.chip:disabled{ cursor:default; }
+  button.chip.now small{ color:var(--c); }
   .gset{ display:block; margin:6px auto 0; padding:2px 8px; border:none; background:none; color:var(--ink-soft); font:inherit; font-size:11px; font-weight:800; text-decoration:underline; cursor:pointer; }
   .g3btn{ display:block; width:100%; margin-top:8px; padding:8px 12px; border-radius:14px; border:2.5px solid var(--op-mul); background:#fff; color:var(--ink); font-weight:900; font-size:14px; text-align:center; }
   .g3btn small{ display:block; font-size:11px; font-weight:800; color:var(--ink-soft); margin-top:2px; }
@@ -5704,7 +5707,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(e.target.closest && e.target.closest('#gSet')) openGradeSet();
   });
   function assignedMode(){ return sheetsToday() < DAILY_SHEETS; }
-  function nextSheetOp(){ return sheetPlan()[Math.min(sheetsToday(), DAILY_SHEETS - 1)]; }
+  /* 5枚は すきな 順で えらべる: どの枠(0〜4)が 終わったかを keisan_slots{d,done[]} に。枠が ない 記録(復習・前の 版)は 小さい 番号から うめる */
+  function slotsDone(){
+    var rec = safeGet('keisan_slots'), done = (rec && rec.d === todayKey() && rec.done) ? rec.done.slice() : [];
+    var extra = sheetsToday() - done.length;
+    for(var i = 0; i < DAILY_SHEETS && extra > 0; i++) if(done.indexOf(i) < 0){ done.push(i); extra--; }
+    return done;
+  }
+  function nextSlot(){ var d = slotsDone(); for(var i = 0; i < DAILY_SHEETS; i++) if(d.indexOf(i) < 0) return i; return DAILY_SHEETS - 1; }
+  function nextSheetOp(){ return sheetPlan()[nextSlot()]; }
   function printTarget(op, n, rv){
     var lv = op==='mix' ? 2 : (rv!=null ? rv : currentLevelIndex(op));
     return Math.round(TARGET_SEC[Math.min(lv, TARGET_SEC.length-1)] * n / 10);
@@ -5738,9 +5749,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     for(var k = ops.length - 1; k > 0; k--){ var r = pick(0, k), x = ops[k]; ops[k] = ops[r]; ops[r] = x; }
     return ops;
   }
-  function startPrint(op, n, kind, lv){
+  function startPrint(op, n, kind, lv, slot){
     state.op = op;
-    state.print = { n:n, kind:kind, lv:(kind==='review' ? lv : null) };
+    state.print = { n:n, kind:kind, lv:(kind==='review' ? lv : null), slot:(kind==='daily' && slot != null ? slot : null) };
     setLive(op==='mix' ? 'add' : op);
     var qs = [];
     var seenQ = {};
@@ -6282,15 +6293,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('todayBtn').innerHTML = asg ? 'プリント '+(sheetsToday() + 1)+'枚目'+(rec === 'mix' ? '(ミックス)' : '')+' スタート' : (rec==='mix' ? '混ぜて' : meta.label+'の') + 'プリントを始める';
     renderPrintInfo(rec);
     var sn = sheetsToday(), sd = '';
-    var plan = sheetPlan();
+    var plan = sheetPlan(), dnS = slotsDone(), nxS = nextSlot();
     for(var k = 0; k < DAILY_SHEETS; k++){
       if(sn < DAILY_SHEETS){
-        var po = plan[k];
-        sd += '<b class="chip'+(k < sn ? ' on' : (k === sn ? ' now' : ''))+'" style="--c:var('+OP_META[po].color+')"><span class="cs">'+OP_META[po].symbol+'</span>'+(k < sn ? '<small>✓</small>' : '')+'</b>';
+        var po = plan[k], isDn = dnS.indexOf(k) >= 0;
+        sd += '<button type="button" class="chip'+(isDn ? ' on' : (k === nxS ? ' now' : ''))+'" data-slot="'+k+'"'+(isDn ? ' disabled' : '')+' style="--c:var('+OP_META[po].color+')" aria-label="'+(isDn ? OP_META[po].label+' おわった' : OP_META[po].label+'の プリントを はじめる')+'"><span class="cs">'+OP_META[po].symbol+'</span><small>'+(isDn ? '✓' : (k === nxS ? 'おすすめ' : 'やる'))+'</small></button>';
       }else sd += '<i class="on"></i>';
     }
     $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">今日の プリント</span><span class="sheets-say">'+sheetsSay(sn)+'</span><span class="sheets-d'+(sn < DAILY_SHEETS ? ' wide' : '')+'">'+sd+'</span></div>' +
-      '<span class="sz-next">1枚 '+SHEET_N+'問。'+(sn >= DAILY_SHEETS ? '5枚 できたよ!もっと やっても OK' : 'あと <b>'+(DAILY_SHEETS - sn)+'枚</b>で 今日の プリントが クリア!')+'</span>' +
+      '<span class="sz-next">1枚 '+SHEET_N+'問。'+(sn >= DAILY_SHEETS ? '5枚 できたよ!もっと やっても OK' : 'すきな 順で OK!おした プリントが すぐ はじまるよ。あと <b>'+(DAILY_SHEETS - sn)+'枚</b>で クリア!')+'</span>' +
       '<button type="button" class="gset" id="gSet">⚙ おうちの人の 設定(学年: 小' + pgrade() + ')</button>';
     renderWeekend(rec);
     if(rec === 'mix'){
@@ -6450,9 +6461,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   $('todayBtn').addEventListener('click', function(){
     var op = state.homeOp || 'add', rv = reviewLv(op);
     if(rv != null) startPrint(op, printSize(), 'review', rv);
-    else startPrint(op, printSize(), 'daily');
+    else startPrint(op, printSize(), 'daily', null, assignedMode() ? nextSlot() : null);
   });
   $('sizeNote').addEventListener('click', function(e){
+    var ch = e.target.closest('button.chip[data-slot]');
+    if(ch && !ch.disabled && assignedMode()){
+      var k = +ch.getAttribute('data-slot'), op = sheetPlan()[k];
+      state.homeOp = op; state.review = null;
+      startPrint(op, printSize(), 'daily', null, k);
+      return;
+    }
     var b = e.target.closest('button[data-size]');
     if(!b) return;
     safeSet('keisan_print_pick', +b.getAttribute('data-size'));
@@ -9008,6 +9026,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(isReview) entry.rv = pr.lv;
       var volBefore = todayVolume();
       log.push(entry);
+      if(pr.kind === 'daily' && pr.slot != null){
+        var sr = safeGet('keisan_slots'), dn = (sr && sr.d === todayKey() && sr.done) ? sr.done.slice() : [];
+        if(dn.indexOf(pr.slot) < 0) dn.push(pr.slot);
+        safeSet('keisan_slots', { d:todayKey(), done:dn });
+      }
       safeSet('keisan_print_log', log.slice(-200));
       var volAfter = volBefore + N;
       volumeBonuses(volBefore, volAfter, bonuses, banners);
@@ -9337,7 +9360,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var no = nextSheetOp(), nm = OP_META[no];
       $('retryBtn').className = 'btn btn-primary';
       $('retryBtn').textContent = '次の プリント('+(sheetsToday() + 1)+'枚目)';
-      $('retryBtn').onclick = function(){ state.homeOp = no; startPrint(no, printSize(), 'daily'); };
+      $('retryBtn').onclick = function(){ state.homeOp = no; startPrint(no, printSize(), 'daily', null, nextSlot()); };
       note.innerHTML = '<b class="num">'+sheetsToday()+'</b>枚 おわったよ!この 調子で 次の プリントも やろう!';
       note.hidden = false; ops.hidden = true;
       return;
