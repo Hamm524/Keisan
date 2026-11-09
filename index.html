@@ -3458,7 +3458,6 @@
         <div class="hs-btns">
           <button class="hs-switch" id="hsSwitch" hidden></button>
           <button class="hs-switch" id="hsCarrySw" hidden></button>
-          <button class="hs-switch" id="hsAuto" hidden>おまかせに もどす</button>
         </div>
       </div>
       <div class="feedback-flag" id="feedbackFlag"></div>
@@ -5752,6 +5751,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return ops;
   }
   function startPrint(op, n, kind, lv, slot){
+    hsSess = {};
     state.op = op;
     state.print = { n:n, kind:kind, lv:(kind==='review' ? lv : null), slot:(kind==='daily' && slot != null ? slot : null) };
     setLive(op==='mix' ? 'add' : op);
@@ -8707,11 +8707,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     hsPrefSet(state.current.op, state.current.hs ? 'hs' : 'mn');   /* えらんだ ほうを おぼえる */
     renderProblem();
   });
-  $('hsAuto').addEventListener('click', function(){
-    if(busy || !state.current) return;
-    hsPrefSet(state.current.op, null); state.current.hs = useHissan(state.current);
-    renderProblem();
-  });
+
   /* かけ算の 筆算に くり上がりを 小さく 書く マスを 出すか(さいしょは 出さない) */
   function carryOn(){ var v = safeGet('keisan_hsmemo'); return !!(v && v.on); }
   function hasCarry(q){ return q.op==='mul' && q.b < 10 && q.a >= 10; }
@@ -8723,15 +8719,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(keep && state.hsCells && keep.length === state.hsCells.length){ state.hsCells = keep; state.hsSel = sel; updateAnswerBox(); }
   });
   /* むずかしい計算は 筆算か 暗算か えらべる(えらぶと その計算は つぎからも そのまま) */
-  function hsPref(op){ var v = safeGet('keisan_hspref'); return (v && v[op]) || null; }
-  function hsPrefSet(op, m){ var v = safeGet('keisan_hspref'), o = {}; if(v) for(var k in v) if(k!=='t') o[k] = v[k]; if(m) o[op] = m; else delete o[op]; o.t = Date.now(); safeSet('keisan_hspref', o); }
+  var hsSess = {};   /* えらんだ ほうは この プリントの あいだだけ おぼえる(つぎの プリントは また 暗算から) */
+  function hsPref(op){ return hsSess[op] || null; }
+  function hsPrefSet(op, m){ if(m) hsSess[op] = m; else delete hsSess[op]; }
   function useHissan(q){
     var pf = canHissan(q) ? hsPref(q.op) : null;
-    if(pf) return pf === 'hs';
-    if(q.op==='add' || q.op==='sub') return q.b >= 10 || q.a >= 100;
-    if(q.op==='mul') return q.a >= 10;
-    if(q.op==='div') return canHissan(q) && q.answer >= 10;
-    return false;
+    /* さいしょは 暗算の 画面。筆算は 自分で ボタンを おして えらぶ(えらぶと おぼえる) */
+    return pf === 'hs';
   }
   function hsCells(str, w){
     var h = '';
@@ -8785,7 +8779,6 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var csw = $('hsCarrySw');
     csw.hidden = !(state.hissan && hasCarry(q));
     csw.textContent = carryOn() ? 'くり上がりの マスを かくす' : 'くり上がりの マスを 出す';
-    $('hsAuto').hidden = q.word || !canHissan(q) || !hsPref(q.op);
     updateAnswerBox();
     $('okKey').disabled = true;
   }
