@@ -8725,7 +8725,11 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function useHissan(q){
     var pf = canHissan(q) ? hsPref(q.op) : null;
     /* さいしょは 暗算の 画面。筆算は 自分で ボタンを おして えらぶ(えらぶと おぼえる) */
-    return pf === 'hs';
+    if(pf) return pf === 'hs';
+    /* 3けた同士・2けた×2けたのような 難しい 問題は さいしょから 筆算(「暗算でとく」で かえられる) */
+    if(q.op==='add' || q.op==='sub') return q.a >= 100 && q.b >= 100;
+    if(q.op==='mul') return q.a >= 10 && q.b >= 10;
+    return false;
   }
   function hsCells(str, w){
     var h = '';
