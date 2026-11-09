@@ -18760,7 +18760,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
             qs:[
                  { q:'ホンダを 作った 人は?', a:'本田宗一郎《ほんだそういちろう》', bad:['松下幸之助《まつしたこうのすけ》', '池田勇人《いけだはやと》', '手塚治虫《てづかおさむ》'], pg:0 },
                  { q:'国連《こくれん》の 難民高等弁務官《なんみんこうとうべんむかん》として、ふるさとを 失《うしな》った 人びとを まもった 日本人は?', a:'緒方貞子《おがたさだこ》', bad:['三浦環《みうらたまき》', '津田梅子《つだうめこ》', '杉原千畝《すぎはらちうね》'], pg:1 } ] } ] },
-        sekai:{ title:'社会「歴史の 流れ」', sub:'o:sekai', free:true, nen:true, hello:'世界と 日本の 歴史《れきし》を、つなげて 見て いこう! 絵と 地図で 流れを つかんで、「覚える セット」を 問題で たしかめよう。お話を さいごまで 見たら、問題に ちょうせん!', stories:[
+        sekai:{ title:'社会「歴史の 流れ」', sub:'o:sekai', free:true, nen:true, tipTop:true, hello:'世界と 日本の 歴史《れきし》を、つなげて 見て いこう! 絵と 地図で 流れを つかんで、「覚える セット」を 問題で たしかめよう。お話を さいごまで 見たら、問題に ちょうせん!', stories:[
           /*RK-S*/
           { id:'rk0', t:'古代《こだい》の 大きな 流《なが》れ(世界《せかい》と 日本《にほん》)', ico:'⏳', pages:[
             { w:'①文明《ぶんめい》が 生《う》まれる(約《やく》1万年前《まんねんまえ》〜紀元前《きげんぜん》)', say:'世界《せかい》では 農耕《のうこう》が はじまり、大きな 川の ほとりで 文明《ぶんめい》が 生まれたよ。そのころ 日本《にほん》は 縄文《じょうもん》時代《じだい》だったんだ。',
@@ -18954,7 +18954,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(Array.isArray(p.exp)){ if(!p.exp.some(function(c){ return c[0] === X.x.g; })) X.x.g = p.exp[0][0]; exp = p.exp.map(function(c){ return '<button class="st-exp'+(X.x.g === c[0] ? ' on' : '')+'" data-sx="g:'+c[0]+'">'+ruby(c[1])+'</button>'; }).join(''); }
         if(p.exp === 'flip') exp = '<button class="st-exp" data-sx="flip">🔄 電池の 向きを かえる</button>';
         $('gkQ').innerHTML = '<div class="st-card"><div class="st-top">お話 '+(X.pg+1)+' / '+n+' ・ '+ruby(st.t)+'</div><div class="st-say">'+ava(p.who)+'<div class="st-bub">'+ruby(p.say)+'</div></div>' +
-          '<div class="st-pic">'+p.pic(X.x)+'</div>' + (exp ? '<div class="st-exps">'+exp+'</div>' : '') + '<h2 class="st-w">'+ruby(p.w)+'</h2><div class="kw-tip">💡 '+ruby(p.tip)+'</div></div>';
+          (T().tipTop ? '<h2 class="st-w">'+ruby(p.w)+'</h2><div class="kw-tip">💡 '+ruby(p.tip)+'</div>' : '') + '<div class="st-pic">'+p.pic(X.x)+'</div>' + (exp ? '<div class="st-exps">'+exp+'</div>' : '') + (T().tipTop ? '' : '<h2 class="st-w">'+ruby(p.w)+'</h2><div class="kw-tip">💡 '+ruby(p.tip)+'</div>') + '</div>';
         $('gkCh').innerHTML = ''; $('gkFb').textContent = ''; $('gkFb').className = 'gk-fb';
         $('gkNextBox').innerHTML = (X.pg > 0 ? '<button class="btn btn-ghost" data-spg="-1">← まえ</button> ' : '') + (last ? '<button class="btn btn-primary" data-squiz="'+st.id+'">お話 おしまい! 問題に ちょうせん</button>' : '<button class="btn btn-primary" data-spg="1">つぎへ →</button>');
         $('gkTitle').textContent = T().title; show('play');
@@ -19244,8 +19244,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
       o: { title:'🗾 社会の 島', icons:{ '地図と':'🧭', '都道府県':'🗾', '日本の':'⛰️', '農業':'🌾', 'くらし':'🏪', '安全':'🚒', '昔':'🏯', '偉人':'📜', '世界':'🌍', '大年':'🗺️' },
         pick:function(){ return list(':scope > .gk-sub[data-sub^="o:"], :scope > a.gk-sub[href^="map"]'); },
-        places:[['地図と', 22, 33, '#3D7BE0', '', '地図と 方位'], ['都道府県', 80, 18, '#D9446A'], ['日本の', 60, 31, '#3F9B5A', '', '国土と 環境'], ['農業', 70, 46, '#C9A10C', '', '農業・工業'],
-          ['くらし', 52, 56, '#E07A12', '', 'くらしと 仕事'], ['安全', 38, 67, '#E0503C', '', '安全と 災害'], ['昔', 22, 80, '#8A5A3C', '', '昔と 歴史'], ['偉人', 12, 63, '#7A4FB5', '', '偉人ずかん'], ['世界', 15, 47, '#1F8A9E', '', '世界と 日本の 歴史'], ['大年', 36, 45, '#B8620B', '', '大年表'],
+        places:[['地図と', 20, 26, '#3D7BE0', '', '地図と 方位'], ['都道府県', 80, 18, '#D9446A'], ['日本の', 60, 31, '#3F9B5A', '', '国土と 環境'], ['農業', 70, 46, '#C9A10C', '', '農業・工業'],
+          ['くらし', 52, 56, '#E07A12', '', 'くらしと 仕事'], ['安全', 43, 66, '#E0503C', '', '安全と 災害'], ['昔', 24, 72, '#8A5A3C', '', '昔と 歴史'], ['偉人', 12, 60, '#7A4FB5', '', '偉人ずかん'], ['世界', 17, 48, '#1F8A9E', '', '世界と 日本の 歴史'], ['大年', 38, 43, '#B8620B', '', '大年表'],
           ['地図で', 0, 0, '#3D7BE0', '⛵', '地図で 遊ぼう', 'go', 'ふねで 行く', 'べつの ページ']],
         roads:[['偉人','世界'], ['世界','大年'], ['昔','偉人'], ['昔','安全'], ['安全','くらし'], ['くらし','農業'], ['農業','日本の'], ['日本の','都道府県'], ['くらし','日本の'], ['地図と','安全']],
         roadColor:'#ffe7b0',
@@ -19260,11 +19260,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           '<path d="M294 112 Q306 144 282 186 Q256 228 206 260 Q158 292 118 332 Q86 366 62 408 Q48 424 42 410 Q46 378 78 344 Q118 302 164 270 Q216 232 240 186 Q262 146 282 112Z" fill="#9fd07a"/>' +
           '<path d="M90 430 Q120 418 140 432 Q140 452 110 454 Q86 450 90 430Z" fill="#f2deb0"/><path d="M96 432 Q120 424 134 434 Q132 448 112 448 Q94 446 96 432Z" fill="#9fd07a"/>' +
           '<path d="M40 140 Q80 122 112 142 Q120 170 94 184 Q60 192 42 172 Q32 154 40 140Z" fill="#f2deb0"/><path d="M48 144 Q80 130 106 146 Q112 168 92 178 Q64 184 48 168 Q40 154 48 144Z" fill="#9fd07a"/>' +
+          /* 歴史の島(昔・偉人・世界・大年表) */
+          '<path d="M16 250 Q4 215 40 198 Q96 184 138 210 Q152 250 138 290 Q128 322 106 346 Q64 372 30 340 Q10 300 16 250Z" fill="#f2deb0"/><path d="M28 252 Q18 224 48 210 Q96 198 128 220 Q140 250 128 286 Q118 316 100 334 Q66 358 38 332 Q22 300 28 252Z" fill="#b7c98a"/>' +
+          '<path d="M22 262 L38 234 L54 262Z" fill="#e8c77a" stroke="#c9a24a" stroke-width="1.5"/><path d="M34 262 L38 252 L42 262Z" fill="#c9a24a"/><path d="M112 262 h18 v-8 h-4 v-7 h-10 v7 h-4z" fill="#fff" stroke="#5a4636" stroke-width="1.5"/>' + trees([[100,214,9],[64,252,9],[70,338,9],[124,300,8]], '#3d8f45') +
+          '<text x="34" y="378" text-anchor="middle" font-size="13" font-weight="900" fill="#fff" stroke="#6b4a2a" stroke-width="3" paint-order="stroke">歴史の 島</text>' +
           /* ふじ山・田んぼ・町・お城 */
           '<path d="M196 162 L218 124 L240 162Z" fill="#7d8aa0"/><path d="M210 138 L218 124 L226 138 Q218 142 210 138Z" fill="#fff"/>' +
           '<g fill="#e3d36a" stroke="#b9ab45" stroke-width="1">' + [0,1,2,3].map(function(i){ return '<rect x="'+(232+i%2*16)+'" y="'+(196+Math.floor(i/2)*12)+'" width="14" height="10"/>'; }).join('') + '</g>' +
           [[176,250],[190,244],[160,262]].map(function(h){ return '<rect x="'+h[0]+'" y="'+h[1]+'" width="12" height="9" fill="#fff"/><path d="M'+(h[0]-2)+' '+h[1]+' L'+(h[0]+6)+' '+(h[1]-7)+' L'+(h[0]+14)+' '+h[1]+'Z" fill="#e0503c"/>'; }).join('') +
-          '<path d="M56 404 h18 v-8 h-4 v-7 h-10 v7 h-4z" fill="#fff" stroke="#5a4636" stroke-width="1.5"/>' +
           road(T) + '</svg>'; } },
 
       j: { title:'📖 ことばの 島', hideParents:true,
