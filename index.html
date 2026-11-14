@@ -277,7 +277,16 @@
   @media (prefers-reduced-motion: reduce){ .hl-c.pop, .hl-c.shake, .hl-c.in.cur{ animation:none; } }
   /* ---- 相棒の おへや ---- */
   .rm-stage{ position:relative; width:100%; aspect-ratio:4/3; border-radius:22px; overflow:hidden; box-shadow:var(--shadow); background:#FFF6E8; touch-action:none; user-select:none; -webkit-user-select:none; container-type:inline-size; }
-  #view-room .rm-stage{ max-width:720px; margin:0 auto 10px; }
+  .rm-wrap{ position:relative; width:100%; max-width:720px; margin:0 auto 10px; border-radius:22px; overflow:hidden; box-shadow:var(--shadow); background:#E9DFCF; container-type:inline-size; isolation:isolate; }
+  .rm-scroll{ overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; scrollbar-width:none; }
+  .rm-scroll::-webkit-scrollbar{ display:none; }
+  #view-room .rm-stage{ margin:0 auto; border-radius:0; box-shadow:none; container-type:normal; touch-action:pan-x; }
+  #view-room .rm-stage.editing{ touch-action:none; }
+  .rm-pan{ position:absolute; top:50%; transform:translateY(-50%); z-index:9800; width:34px; height:52px; border:none; border-radius:14px; background:rgba(255,255,255,.88); color:#6B6478; font-size:16px; box-shadow:0 2px 8px rgba(0,0,0,.15); cursor:pointer; transition:opacity .25s; }
+  .rm-pan.l{ left:6px; } .rm-pan.r{ right:6px; }
+  .rm-wrap:not(.wide) .rm-pan, .rm-wrap.atL .rm-pan.l, .rm-wrap.atR .rm-pan.r{ opacity:0; pointer-events:none; }
+  .rm-wbar{ position:absolute; left:50%; bottom:6px; transform:translateX(-50%); width:30%; height:5px; border-radius:3px; background:rgba(46,42,61,.15); z-index:9800; pointer-events:none; }
+  .rm-wrap:not(.wide) .rm-wbar{ display:none; } .rm-wbar i{ position:absolute; top:0; bottom:0; border-radius:3px; background:rgba(46,42,61,.45); }
   .rm-stage{ isolation:isolate; }   /* 手前の かぐが まどや おしらせより 上に でない ように */
   .rm-wall, .rm-floor{ position:absolute; left:0; right:0; }
   .rm-wall{ top:0; } .rm-floor{ bottom:0; }
@@ -405,10 +414,10 @@
   .rm-ebar span{ flex:1; font-size:12px; font-weight:800; color:var(--ink-soft); line-height:1.4; } .rm-ebar span b{ display:block; font-size:14px; color:var(--ink); }
   .rm-ebar button{ flex:none; border:none; border-radius:16px; padding:13px 20px; background:var(--good); color:#fff; font:inherit; font-size:17px; font-weight:900; box-shadow:0 4px 0 rgba(0,0,0,.18); cursor:pointer; }
   .rm-ebar button:active{ transform:translateY(3px); box-shadow:none; }
-  #view-room.ed .rm-stage::after, #view-room.pvon .rm-stage::after{ content:'🔨 模様がえ中'; position:absolute; left:10px; top:10px; z-index:9700; background:rgba(255,255,255,.93); border-radius:100px; padding:5px 12px; font-size:12px; font-weight:900; color:#2E2A3D; pointer-events:none; box-shadow:0 2px 6px rgba(0,0,0,.18); }
-  #view-room.pvon .rm-stage::after{ content:'👀 お試し中(まだ 買って ないよ)'; background:#EAF4FF; border:2px solid #7FB8F0; padding:3px 10px; }
+  #view-room.ed .rm-wrap::after, #view-room.pvon .rm-wrap::after{ content:'🔨 模様がえ中'; position:absolute; left:10px; top:10px; z-index:9700; background:rgba(255,255,255,.93); border-radius:100px; padding:5px 12px; font-size:12px; font-weight:900; color:#2E2A3D; pointer-events:none; box-shadow:0 2px 6px rgba(0,0,0,.18); }
+  #view-room.pvon .rm-wrap::after{ content:'👀 お試し中(まだ 買って ないよ)'; background:#EAF4FF; border:2px solid #7FB8F0; padding:3px 10px; }
   @media (max-width:640px){
-    #view-room.ed .rm-stage, #view-room.pvon .rm-stage{ position:sticky; top:8px; z-index:12; box-shadow:0 10px 22px -10px rgba(46,42,61,.5); }
+    #view-room.ed .rm-wrap, #view-room.pvon .rm-wrap{ position:sticky; top:8px; z-index:12; box-shadow:0 10px 22px -10px rgba(46,42,61,.5); }
   }
   @keyframes rm-fpop{ 0%{ opacity:0; transform:translate(-50%, -30%) scale(.4); } 100%{ opacity:1; transform:translateX(-50%) scale(1); } }
   .rm-tv{ animation:rm-tv 9s ease-in-out infinite; }
@@ -3246,7 +3255,7 @@
     </div>
     <div class="rm-house" id="rmHouse"></div>
     <div class="rm-tabs" id="rmRooms"></div>
-    <section class="rm-stage" id="rmStage"></section>
+    <div class="rm-wrap" id="rmWrap"><div class="rm-scroll" id="rmScroll"><section class="rm-stage" id="rmStage"></section></div><button type="button" class="rm-pan l" data-pan="-1" aria-label="左を 見る">◀</button><button type="button" class="rm-pan r" data-pan="1" aria-label="右を 見る">▶</button></div>
     <div class="rm-act" id="rmAct"><button class="rm-edit" id="rmEdit">🔨 模様がえ</button><div class="rm-play" id="rmPlay"></div></div>
     <div class="rm-dock" id="rmDock">
     <div class="rm-pv" id="rmPv" hidden>
@@ -12019,7 +12028,27 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---- 絵 ---- */
     var uid = 0;
     function depth(y){ return y > 100 ? 1 + (y - 100) * .03 : .72 + .28 * Math.max(0, (y - WALL) / (100 - WALL)); }
-    var SZK = [1.22, 1, .82, .68], SZN = ['せまい', 'ふつう', '広い', 'とても 広い'], SZP = [0, 0, 200, 400], SK = 1;
+    var WKS = [.8, 1, 1.35, 1.7], SA = 1, SZN = ['せまい', 'ふつう', '広い', 'とても 広い'], SZP = [0, 0, 200, 400], SK = 1;
+    var wideKey = '';
+    function wideStage(stage, WK){
+      stage.style.width = (WK * 100) + '%'; stage.style.aspectRatio = (4 * WK) + ' / 3';
+      var wr = $('rmWrap'), sc = $('rmScroll'); if(!wr || !sc) return;
+      wr.classList.toggle('wide', WK > 1);
+      if(!wr.querySelector('.rm-wbar')){ var wb = document.createElement('div'); wb.className = 'rm-wbar'; wb.innerHTML = '<i></i>'; wr.appendChild(wb); }
+      var key = RI + ':' + WK;
+      if(key !== wideKey){ wideKey = key; requestAnimationFrame(function(){ sc.scrollLeft = (sc.scrollWidth - sc.clientWidth) / 2; panMark(); }); }
+      else requestAnimationFrame(panMark);
+    }
+    function panMark(){
+      var wr = $('rmWrap'), sc = $('rmScroll'); if(!wr || !sc) return;
+      var mx = sc.scrollWidth - sc.clientWidth;
+      wr.classList.toggle('atL', sc.scrollLeft < 4); wr.classList.toggle('atR', sc.scrollLeft > mx - 4);
+      var bar = wr.querySelector('.rm-wbar i'); if(bar && sc.scrollWidth){ bar.style.left = (sc.scrollLeft / sc.scrollWidth * 100) + '%'; bar.style.width = (sc.clientWidth / sc.scrollWidth * 100) + '%'; }
+    }
+    if($('rmScroll')){
+      $('rmScroll').addEventListener('scroll', panMark, { passive:true });
+      $('rmWrap').addEventListener('click', function(e){ var b = e.target.closest('.rm-pan'); if(!b) return; var sc = $('rmScroll'); sc.scrollBy({ left:+b.getAttribute('data-pan') * sc.clientWidth * .6, behavior:'smooth' }); });
+    }
     function szOf(r){ var z = r && r.sz != null ? +r.sz : 1; return z >= 0 && z <= 3 ? z : 1; }
     var SIDE = .62, SIZES = [.5, .6, .7, .8, .9, 1, 1.15, 1.3, 1.5, 1.75, 2], FRONT = 114, LIFT = 50;
     function skyNow(){ var h = new Date().getHours(); return h >= 19 || h < 5 ? 'night' : h >= 16 ? 'eve' : 'day'; }
@@ -12101,7 +12130,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     /* 家具の 大きさ・いち(すべて ステージに たいする %) */
     function geo(it){
-      var d = BY[it.k], s = (d.z === 'wall' ? 1 : depth(it.y)) * (+it.s || 1), w = d.w * s * SK, h = w * d.vb[1] / d.vb[0] * 4 / 3;
+      var d = BY[it.k], s = (d.z === 'wall' ? 1 : depth(it.y)) * (+it.s || 1), w = d.w * s * SK, h = w * d.vb[1] / d.vb[0] * 4 / 3 * SA;
       var fl = d.z === 'floor', o = fl ? it.o | 0 : 0, lift = fl ? +it.h || 0 : 0;
       /* 上に のせた ものは、下の 家具より 前に かく */
       var z = d.z === 'wall' ? 2 : d.z === 'rug' ? 3 + Math.round(Math.min(it.y, 100)) : 100 + Math.round((it.y + (lift ? 6 : 0)) * 10) + (lift ? 4 : 0);
@@ -12126,8 +12155,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
     /* ステージを つくる(card のときは さわれない 小さい 見本) */
     function build(stage, mini, at){
-      var r = getRoom(mini ? at || 0 : RI);
-      SK = SZK[szOf(r)];
+      var r = getRoom(mini ? at || 0 : RI), WK = WKS[szOf(r)], keepK = [SK, SA];
+      SK = 1 / WK; SA = mini ? 1 : WK;   /* 広い 部屋は ステージが 横に 長く なる(家具の 大きさ・高さは 同じ) */
+      if(!mini) wideStage(stage, WK);
       if(!mini && pv){
         if(pv.it) r.items.push(pv.it);
         else if(pv.d.bg) setSurf(r, pv.d.id);
@@ -12172,6 +12202,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           stage.appendChild(p);
         });
         if(isNight()){ var dk2 = document.createElement('div'); dk2.className = 'rm-dark'; stage.appendChild(dk2); }
+        SK = keepK[0]; SA = keepK[1];
       }
       return { r:r, els:els };
     }
@@ -12179,8 +12210,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* あそぶ 画面の はいけい: W×H(px)の 中に かべ(上)と ゆか(下 FL px)を しき、家具を 同じ ならびで おく。
        家具の 大きさは おへやと 同じ「相棒との くらべっこ」に なるよう、手前の 相棒の はば PW(px) から きめる */
     function backdrop(box, W, H, FL, PW){
-      var r = getRoom(toyIdx()), WL = H - FL, RW = PW / PET_W * 100, X0 = 0;
-      SK = SZK[szOf(r)];
+      var r = getRoom(toyIdx()), WL = H - FL, RW = PW / PET_W * 100, WK = WKS[szOf(r)], X0 = -(WK - 1) / 2 * W, keepK = [SK, SA];
+      SK = 1; SA = 1;   /* 広い 部屋は まん中を 見せる */
       box.innerHTML = '';
       function add(cls, css, html){ var e = document.createElement('div'); e.className = cls; e.style.cssText = css; e.innerHTML = html; box.appendChild(e); return e; }
       add('rm-wall', 'height:' + WL + 'px', surfSvg(BY[r.wall]));
@@ -12192,11 +12223,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var pos = d.z === 'wall'
           ? 'top:' + Math.max(4, Math.min(WL - h - 6, it.y / WALL * WL - h / 2)) + 'px'
           : 'bottom:' + ((100 - it.y) / (100 - WALL) * FL + g.lift / 100 * RW * .75) + 'px';
-        var css = 'left:' + (X0 + it.x / 100 * W) + 'px;width:' + w + 'px;' + pos + ';z-index:';
+        var css = 'left:' + (X0 + it.x / 100 * W * WK) + 'px;width:' + w + 'px;' + pos + ';z-index:';
         var cl = (it.f ? ' flip' : '') + (g.o === 1 ? ' sideR' : g.o === 3 ? ' sideL' : '');
         add('rm-it' + cl, css + (z + (g.o === 2 ? 3 : 0)), itemSvg(d, null, it));
         if(d.f && g.o !== 2) add('rm-it rm-front' + cl, css + (z + 2), itemSvg(d, 'f', it));
       });
+      SK = keepK[0]; SA = keepK[1];
     }
 
     /* ---- おへやの 画面 ---- */
@@ -12513,7 +12545,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       S.ball = B;
       function later(ms, fn){ T.push(setTimeout(function(){ if(S === S0 && S0.ball === B && live()) fn(); }, ms)); }
       if(sayB){ sayB.remove(); sayB = null; } cancelAnimationFrame(sayRaf); clearTimeout(sayT);
-      var hud = document.createElement('div'); hud.className = 'rm-hud'; stage.appendChild(hud);
+      var hud = document.createElement('div'); hud.className = 'rm-hud'; ($('rmWrap') || stage).appendChild(hud);
       hud.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
       function hudSet(msg){
         hud.innerHTML = '<span>⚽ ' + (n > 1 ? 'パス ' : 'けった ') + cnt + '回</span><button type="button">やめる</button>' + (msg ? '<em>' + msg + '</em>' : '');
@@ -12814,7 +12846,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<polygon class="rm-spot" points="18,0 24,0 46,75 4,75" fill="url(#rmSpotG)"/><polygon class="rm-spot b2" points="76,0 82,0 96,75 54,75" fill="url(#rmSpotG)"/><ellipse cx="50" cy="69" rx="44" ry="7" fill="#FFF6C8" opacity=".22"/></svg>' +
         '<svg class="rm-maku" viewBox="0 0 100 16" preserveAspectRatio="none" aria-hidden="true"><path d="' + sc + 'Z" fill="#D9364A"/><rect width="100" height="3" fill="#FFD24C"/></svg>';
       stage.appendChild(cv);
-      var hud = document.createElement('div'); hud.className = 'rm-hud'; stage.appendChild(hud);
+      var hud = document.createElement('div'); hud.className = 'rm-hud'; ($('rmWrap') || stage).appendChild(hud);
       hud.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
       function hudSet(msg){
         hud.innerHTML = '<span>🎵 「' + song[0] + '」</span><button type="button">やめる</button>' + (msg ? '<em>' + msg + '</em>' : '');
@@ -12913,8 +12945,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       });
       var cover = document.createElement('div'); cover.className = 'rm-hcover';
       cover.innerHTML = '<b>もういいかい?</b><i>5</i><small>目を つぶって かぞえてね</small>';
-      stage.appendChild(cover);
-      var hud = document.createElement('div'); hud.className = 'rm-hud'; stage.appendChild(hud);
+      ($('rmWrap') || stage).appendChild(cover);
+      var hud = document.createElement('div'); hud.className = 'rm-hud'; ($('rmWrap') || stage).appendChild(hud);
       hud.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
       function hudSet(msg){
         hud.innerHTML = '<span>🙈 見つけた <b>' + H.found + '</b> / ' + H.list.length + '</span><button type="button">やめる</button>' + (msg ? '<em>' + msg + '</em>' : '');
@@ -13191,6 +13223,9 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     $('rmStage').addEventListener('pointermove', function(e){
       if(!drag || e.pointerId !== drag.id) return;
       var it = S.r.items[drag.i], d = BY[it.k], p = stagePt(e);
+      var sc = $('rmScroll'), sr = sc.getBoundingClientRect();
+      if(e.clientX < sr.left + 36) sc.scrollLeft -= 10; else if(e.clientX > sr.right - 36) sc.scrollLeft += 10;
+      p = stagePt(e);
       it.x = p.x + drag.dx; it.y = p.y + drag.dy; clampIt(it, d); drag.moved = true;
       var g = geo(it), e2 = S.els[drag.i];
       place(e2.el, it, g, d.z === 'wall' ? 2 : 900 + (d.z === 'rug' ? 0 : 1)); if(e2.fe) place(e2.fe, it, g, 901);
@@ -13230,7 +13265,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(pv) endPreview();
       setEdit(false);
       if(d) say(d.name + 'は 買わずに もどしたよ。気に入ったら また ショップで 「お試し」して 買ってね');
-      var sr = $('rmStage').getBoundingClientRect(); if(sr.top < 0 || sr.bottom > window.innerHeight) $('rmStage').scrollIntoView({ block:'center', behavior:'smooth' });   /* できあがりの 部屋を 見せる */
+      var sr = $('rmStage').getBoundingClientRect(); if(sr.top < 0 || sr.bottom > window.innerHeight) $('rmWrap').scrollIntoView({ block:'center', behavior:'smooth' });   /* できあがりの 部屋を 見せる */
     });
 
     /* ふりがなを span に(Safari は rt を 自由に おけない) */
@@ -13301,7 +13336,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(pv.it) selectIt(S.r.items.indexOf(pv.it));
       renderPv();
       say('');
-      if(window.innerWidth > 640) $('rmStage').scrollIntoView({ block:'nearest', behavior:'smooth' });   /* スマホは 部屋を 上に ピン止め するので うごかさない */
+      if(window.innerWidth > 640) $('rmWrap').scrollIntoView({ block:'nearest', behavior:'smooth' });   /* スマホは 部屋を 上に ピン止め するので うごかさない */
     }
     function endPreview(){
       var d = pv && pv.d; pv = null; sel = -1;
@@ -13348,7 +13383,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(!edit) setEdit(true);
       render(); selectIt(r.items.length - 1);
       say(d.name + 'を 置いたよ!指で 好きな 所に 動かしてね');
-      $('rmStage').scrollIntoView({ block:'nearest', behavior:'smooth' });
+      $('rmWrap').scrollIntoView({ block:'nearest', behavior:'smooth' });
     }
     /* ---- おうちの そと見(へやの 数で そだつ) ---- */
     var HOUSE = ['', '小さな 家', 'はなれの ある 家', '2階建ての 家', 'となりの 部屋も ある 家', 'とうの ある 大きな 家'];
@@ -13752,7 +13787,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     function szPic(k){ var w = 40 * [.6, .75, .88, 1][k]; return '<svg viewBox="0 0 44 28"><rect x="' + (22 - w / 2) + '" y="4" width="' + w + '" height="20" rx="3" fill="#FFF1E0" stroke="#C99A62" stroke-width="2"/><rect x="' + (22 - w / 2) + '" y="15" width="' + w + '" height="9" rx="2" fill="#E8C597"/></svg>'; }
     function renderSize(){
-      var r = S ? S.r : getRoom(), z = szOf(r), own = Math.max(1, +r.szOwn || 1), h = '<p>広く すると 家具も 仲間も 小さく 見えて、たくさん 置けるよ(部屋ごとに 選べる)</p><div class="rm-szs">';
+      var r = S ? S.r : getRoom(), z = szOf(r), own = Math.max(1, +r.szOwn || 1), h = '<p>広く すると 部屋が 横に 広がって、家具を たくさん 置けるよ。◀ ▶ や 指で 横に 動かして 見てね(部屋ごとに 選べる)</p><div class="rm-szs">';
       SZN.forEach(function(nm, k){ h += '<button class="rm-sz' + (k === z ? ' on' : '') + '" data-sz="' + k + '">' + szPic(k) + nm + (k > own ? '<small><span class="coin"></span>' + SZP[k] + '</small>' : '') + '</button>'; });
       $('rmSizeBox').innerHTML = h + '</div>';
     }
