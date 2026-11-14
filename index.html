@@ -2654,6 +2654,8 @@
   button.chip{ font:inherit; cursor:pointer; touch-action:manipulation; }
   button.chip:disabled{ cursor:default; }
   button.chip.now small{ color:var(--c); }
+  .pin-in, .pin-hint{ display:block; width:100%; box-sizing:border-box; margin:8px 0 0; padding:10px 12px; border:2px solid var(--line); border-radius:12px; font:inherit; font-size:20px; font-weight:800; text-align:center; background:var(--surface); color:var(--ink); } .pin-in{ letter-spacing:.4em; } .pin-hint{ font-size:14px; letter-spacing:0; }
+  .pin-msg{ min-height:1.4em; margin-top:6px; font-size:12px; font-weight:800; color:var(--ink-soft); text-align:center; }
   .gset{ display:block; margin:6px auto 0; padding:2px 8px; border:none; background:none; color:var(--ink-soft); font:inherit; font-size:11px; font-weight:800; text-decoration:underline; cursor:pointer; }
   .g3btn{ display:block; width:100%; margin-top:8px; padding:8px 12px; border-radius:14px; border:2.5px solid var(--op-mul); background:#fff; color:var(--ink); font-weight:900; font-size:14px; text-align:center; }
   .g3btn small{ display:block; font-size:11px; font-weight:800; color:var(--ink-soft); margin-top:2px; }
@@ -5675,6 +5677,41 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     closeBk();
     refreshHome();
   }
+  /* おうちの人の 設定の 鍵(4けたの 数字)。さいしょに 自分で 決める。{p, h(ヒント), t} */
+  function pinGet(){ var v = safeGet('keisan_pin'); return v && v.p ? v : null; }
+  function pinSet(p, h){ safeSet('keisan_pin', { p:p || '', h:h || '', t:Date.now() }); }
+  function openParent(){
+    var pin = pinGet();
+    if(!pin){ openPinSet(false); return; }
+    openBk('<div class="bk-title">おうちの人の 設定</div>' +
+      '<div class="bk-body">4けたの 数字を 入れてね。</div>' +
+      '<input class="pin-in" id="pinIn" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" aria-label="4けたの 数字">' +
+      '<div class="pin-msg" id="pinMsg" aria-live="polite"></div>',
+      [{ label:'ひらく', primary:true, onClick:function(){
+          var v = $('pinIn').value;
+          if(v === pin.p){ openGradeSet(); return; }
+          $('pinMsg').textContent = '数字が ちがうよ'; $('pinIn').value = ''; $('pinIn').focus();
+        } },
+       { label:'ヒントを 見る', onClick:function(){ $('pinMsg').textContent = pin.h ? 'ヒント: ' + pin.h : 'ヒントは 決めて いないよ'; } },
+       { label:'やめる', onClick:closeBk }]);
+    var inp = $('pinIn');
+    inp.addEventListener('keydown', function(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); var b = $('bkBtns').querySelector('.btn-primary'); if(b) b.click(); } });
+    setTimeout(function(){ inp.focus(); }, 50);
+  }
+  function openPinSet(inside){
+    openBk('<div class="bk-title">' + (inside ? '鍵(4けたの 数字)を かえる' : 'おうちの人の 鍵を 決めよう') + '</div>' +
+      '<div class="bk-body">この 設定を 子どもが 開かない ように、4けたの 数字を 決めます。<br>わすれた ときの ヒントも 書けるよ(子どもに 見えるので 数字そのものは 書かないでね)。</div>' +
+      '<input class="pin-in" id="pinNew" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="4けた" aria-label="新しい 4けたの 数字">' +
+      '<input class="pin-hint" id="pinHint" type="text" maxlength="30" autocomplete="off" placeholder="ヒント(れい: ちちの たんじょう日)" aria-label="ヒント">' +
+      '<div class="pin-msg" id="pinMsg" aria-live="polite"></div>',
+      [{ label:'きめる', primary:true, onClick:function(){
+          var v = $('pinNew').value;
+          if(!/^\d{4}$/.test(v)){ $('pinMsg').textContent = '数字 4つで 入れてね'; return; }
+          pinSet(v, $('pinHint').value.trim()); openGradeSet();
+        } },
+       { label:'やめる', onClick:function(){ if(inside) openGradeSet(); else closeBk(); } }]);
+    setTimeout(function(){ $('pinNew').focus(); }, 50);
+  }
   function openGradeSet(){
     var on = pbarOn();
     var gb = [1, 2, 3, 4].map(function(g){ return '<button type="button" class="btn ' + (g === pgrade() ? 'btn-primary' : 'btn-ghost') + '" data-g="' + g + '">小' + g + '</button>'; }).join('');
@@ -5684,8 +5721,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       '<div class="pset-btns" id="psetG">' + gb + '</div></div>' +
       '<div class="pset"><b class="pset-h">② プリント中の「●●●」(今 何問目かの しるし)</b>' +
       '<div class="bk-body">問題の 上に 並ぶ ●で、何問 とけたかが 見えるよ。</div>' +
-      '<div class="pset-btns" id="psetP"><button type="button" class="btn ' + (on ? 'btn-primary' : 'btn-ghost') + '" data-pb="1">出す</button><button type="button" class="btn ' + (on ? 'btn-ghost' : 'btn-primary') + '" data-pb="0">かくす</button></div></div>',
+      '<div class="pset-btns" id="psetP"><button type="button" class="btn ' + (on ? 'btn-primary' : 'btn-ghost') + '" data-pb="1">出す</button><button type="button" class="btn ' + (on ? 'btn-ghost' : 'btn-primary') + '" data-pb="0">かくす</button></div></div>' +
+      '<div class="pset"><b class="pset-h">③ この 設定の 鍵</b>' +
+      '<div class="bk-body">4けたの 数字で 守って います。</div>' +
+      '<div class="pset-btns"><button type="button" class="btn btn-ghost" id="pinChg">鍵を かえる</button><button type="button" class="btn btn-ghost" id="pinOff">鍵を やめる</button></div></div>',
       [{ label:'閉じる', onClick:closeBk }]);
+    $('pinChg').onclick = function(){ openPinSet(true); };
+    $('pinOff').onclick = function(){ pinSet('', ''); openGradeSet(); };
     $('psetG').onclick = function(e){ var b = e.target.closest('[data-g]'); if(b) setGrade(+b.getAttribute('data-g')); };
     $('psetP').onclick = function(e){ var b = e.target.closest('[data-pb]'); if(!b) return; setPbar(b.getAttribute('data-pb') === '1'); refreshHome(); openGradeSet(); };
   }
@@ -5705,7 +5747,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(!silent) refreshHome();
   }
   document.addEventListener('click', function(e){
-    if(e.target.closest && e.target.closest('#gSet')) openGradeSet();
+    if(e.target.closest && e.target.closest('#gSet')) openParent();
   });
   function assignedMode(){ return sheetsToday() < DAILY_SHEETS; }
   /* 5枚は すきな 順で えらべる: どの枠(0〜4)が 終わったかを keisan_slots{d,done[]} に。枠が ない 記録(復習・前の 版)は 小さい 番号から うめる */
