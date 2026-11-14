@@ -354,6 +354,14 @@
   .rm-ev .ev-pc.gone{ transition:opacity .4s; opacity:0; pointer-events:none; }
   .rm-ev .ev-pc.ready.hot{ animation:ev-hot .45s ease-in-out infinite; }
   @keyframes ev-hot{ 0%,100%{ filter:drop-shadow(0 0 5px #FF5A3C); transform:translate(-50%, -50%) rotate(-3deg); } 50%{ filter:drop-shadow(0 0 9px #FF5A3C); transform:translate(-50%, -50%) rotate(3deg); } }
+  .rm-ev.tea .ev-pc.ready{ animation:none; } .rm-ev.tea .ev-pc .sm{ display:none; }
+  .rm-ev .ev-tpot{ position:absolute; z-index:5; right:1.5%; top:52%; width:15%; cursor:pointer; animation:ev-glow 1.4s ease-in-out infinite; -webkit-tap-highlight-color:transparent; }
+  .rm-ev .ev-tpot svg{ display:block; width:100%; } .rm-ev .ev-tpot.off{ animation:none; }
+  .rm-ev .ev-tpot.pour{ animation:ev-pour .9s ease-in-out; }
+  @keyframes ev-pour{ 30%,70%{ transform:rotate(-22deg) translateX(-6px); } }
+  .rm-ev .ev-cup{ position:absolute; z-index:5; width:8.5%; transform:translateX(-50%); pointer-events:none; }
+  .rm-ev .ev-cup svg{ display:block; width:100%; } .rm-ev .ev-cup .tl{ opacity:0; transition:opacity .5s; } .rm-ev .ev-cup .gy{ opacity:0; }
+  .rm-ev .ev-cup.full .tl{ opacity:1; } .rm-ev .ev-cup.full .gy{ opacity:.9; animation:ev-steam 1.6s ease-out infinite; }
   @keyframes ev-glow{ 50%{ filter:drop-shadow(0 0 5px #FFE27A) drop-shadow(0 0 2px #fff) brightness(1.08); } }
   @keyframes ev-steam{ 0%{ transform:translateY(4px); opacity:0; } 40%{ opacity:1; } 100%{ transform:translateY(-6px); opacity:0; } }
   @keyframes ev-pop{ 0%{ transform:translate(-50%, -50%) scale(.3); } 70%{ transform:translate(-50%, -50%) scale(1.12); } }
@@ -12611,6 +12619,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---- 食べ物イベント(バーベキュー・焼肉) ----
        焼けて キラキラ → タップで うらがえす → もう1回 キラキラ → タップで 仲間に あげる。こげたら タップで すてる */
     var EVB = ['#3A2E28', '#2A221E'];
+    function foodG(id){ var f = FOODS.filter(function(x){ return x.id === id; })[0]; return f ? '<g transform="translate(2,-6) scale(.9)">' + f.svg + '</g>' : ''; }
     var EVP = {
       kushi:{ n:'お肉の くし', raw:['#E88A8A', '#6DBB6B'], ck:['#9C5A34', '#4E8A3A'], st:'<path d="M1,17 L39,13" stroke="#C99A62" stroke-width="1.8" stroke-linecap="round"/>',
         d:function(c){ return '<rect x="5" y="10" width="8" height="10" rx="2" fill="'+c[0]+'"/><rect x="14" y="9.5" width="6" height="9" rx="1.6" fill="'+c[1]+'"/><rect x="21" y="9" width="8" height="10" rx="2" fill="'+c[0]+'"/><rect x="30" y="8.5" width="6" height="9" rx="1.6" fill="'+c[1]+'"/>'; } },
@@ -12634,16 +12643,19 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         d:function(c){ return '<path d="M6,17 Q8,8 20,7 Q33,8 35,17 Q33,25 20,25 Q8,25 6,17 Z" fill="'+c[0]+'"/><path d="M12,9 Q15,17 12,24 M19,8 Q22,17 19,25 M26,9 Q29,17 26,24" stroke="'+c[1]+'" stroke-width="1.6" fill="none"/><path d="M8,14 Q12,12 15,13" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/>'; } },
       scone:{ n:'スコーン', raw:['#E8BE80', '#F6D9A8'], ck:['#E8BE80', '#F6D9A8'], st:'',
         d:function(c){ return '<path d="M5,22 Q4,9 20,8 Q36,9 35,22 Z" fill="'+c[0]+'"/><path d="M9,14 Q20,9 31,14" stroke="'+c[1]+'" stroke-width="2.4" fill="none" stroke-linecap="round"/><ellipse cx="20" cy="13" rx="7" ry="2.6" fill="#FFFDF5"/><circle cx="20" cy="11" r="2.6" fill="#D8344A"/><g fill="#B8844A"><circle cx="11" cy="18" r=".9"/><circle cx="28" cy="17" r=".9"/><circle cx="20" cy="19.4" r=".9"/></g>'; } },
-      sand:{ n:'サンドイッチ', raw:['#FFF3D8', '#6DBB6B'], ck:['#FFF3D8', '#6DBB6B'], st:'',
-        d:function(c){ return '<path d="M5,21 L18,8 L35,13 L35,22 Z" fill="'+c[0]+'" stroke="#E8D6A8" stroke-width="1"/><path d="M5,21 H35" stroke="#E8D6A8" stroke-width="1"/><path d="M5,21 L18,18 L35,22 L35,25 L18,28 L5,24 Z" fill="'+c[1]+'"/><path d="M5,24 L18,21 L35,25 V27 L18,30 L5,26 Z" fill="#FFB0B0"/><path d="M5,26 L18,23 L35,27 L18,32 L5,28 Z" fill="'+c[0]+'" stroke="#E8D6A8" stroke-width="1"/>'; } },
-      macaron:{ n:'マカロン', raw:['#FFB6C8', '#FFFDF5'], ck:['#FFB6C8', '#FFFDF5'], st:'',
-        d:function(c){ return '<ellipse cx="20" cy="9" rx="13" ry="5.4" fill="'+c[0]+'"/><path d="M8,11 q2,3 4,0 q2,3 4,0 q2,3 4,0 q2,3 4,0 q2,3 4,0" fill="'+c[1]+'"/><ellipse cx="20" cy="18" rx="13" ry="5.4" fill="'+c[0]+'"/><ellipse cx="14" cy="7" rx="4" ry="1.4" fill="#fff" opacity=".6"/>'; } },
+      sand:{ n:'サンドイッチ', raw:['#F6DDA6', '#E8C27A'], ck:['#F6DDA6', '#E8C27A'], st:'',
+        d:function(c){ return '<rect x="5" y="19" width="30" height="6" rx="3" fill="'+c[0]+'"/><path d="M6,19 Q9,15.4 12,19 Q15,15.4 18,19 Q21,15.4 24,19 Q27,15.4 30,19 Q32,16.6 34,19" fill="#6DBB6B"/><rect x="6" y="15.6" width="28" height="3.2" rx="1.2" fill="#F2A0A8"/><rect x="6" y="13" width="28" height="2.8" rx="1" fill="#FFD24C"/><path d="M6,12.6 Q20,11 34,12.6 L34,10 Q34,7.6 31,7.6 H9 Q6,7.6 6,10 Z" fill="'+c[0]+'"/><path d="M10,9.6 H30" stroke="'+c[1]+'" stroke-width="1.2" stroke-linecap="round"/><path d="M20,1 V12" stroke="#C99A62" stroke-width="1.2"/><path d="M20,1 L26,2.8 L20,4.6 Z" fill="#E5484D"/>'; } },
+      macaron:{ n:'マカロン', raw:['#FFA9C0', '#FFFDF5'], ck:['#FFA9C0', '#FFFDF5'], st:'',
+        d:function(c){ return '<path d="M7,14 Q7,5 20,5 Q33,5 33,14 Z" fill="'+c[0]+'"/><path d="M9,13 Q9,8 14,6.4" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".6"/><rect x="5" y="13.4" width="30" height="4.2" rx="2.1" fill="'+c[1]+'"/><path d="M7,17.4 Q7,26 20,26 Q33,26 33,17.4 Z" fill="'+c[0]+'"/><path d="M8,14.6 H32" stroke="#F58BAA" stroke-width=".9" opacity=".7"/>'; } },
       tart:{ n:'いちごタルト', raw:['#E8B46A', '#FFF3B0'], ck:['#E8B46A', '#FFF3B0'], st:'',
-        d:function(c){ return '<path d="M6,14 H34 L31,25 H9 Z" fill="'+c[0]+'"/><path d="M6,14 H34" stroke="#C98A44" stroke-width="1.4"/><path d="M8,14 Q20,10 32,14 L31,17 Q20,14 9,17 Z" fill="'+c[1]+'"/><path d="M12,13 q3,-8 6,0 z M22,13 q3,-8 6,0 z" fill="#E5484D"/><path d="M15,6 l-1,-2 M25,6 l1,-2" stroke="#5DAA5B" stroke-width="1.4" stroke-linecap="round"/>'; } },
+        d:function(c){ var b = function(x, y){ return '<circle cx="'+x+'" cy="'+y+'" r="3.8" fill="#E5484D"/><path d="M'+(x-2.4)+','+(y-3)+' l2.4,-1.8 2.4,1.8 -2.4,.8 Z" fill="#4E9A4A"/><g fill="#FFE0B0"><circle cx="'+(x-1.2)+'" cy="'+y+'" r=".5"/><circle cx="'+(x+1.2)+'" cy="'+(y+1)+'" r=".5"/></g>'; }; return '<path d="M5,16 H35 L32,27 H8 Z" fill="'+c[0]+'"/><path d="M8,22 H32" stroke="#C98A44" stroke-width=".8" opacity=".6"/><path d="M6,16.4 Q20,9.6 34,16.4 Z" fill="'+c[1]+'"/>' + b(13.4, 12.8) + b(26.6, 12.8) + b(20, 10.2); } },
       tea:{ n:'こうちゃ', raw:['#C0662D', '#FFFFFF'], ck:['#C0662D', '#FFFFFF'], st:'',
         d:function(c){ return '<path d="M8,10 H30 Q30,24 19,24 Q8,24 8,10 Z" fill="'+c[1]+'" stroke="#E2D6C3" stroke-width="1"/><path d="M30,12 Q37,12 36,17 Q35,21 29,20" stroke="#E2D6C3" stroke-width="2" fill="none"/><ellipse cx="19" cy="10" rx="11" ry="2.6" fill="'+c[0]+'"/><ellipse cx="19" cy="26" rx="14" ry="2.6" fill="#fff" stroke="#E2D6C3" stroke-width="1"/><path d="M14,16 q2,2 4,0" stroke="#FF8FB1" stroke-width="1.4" fill="none" stroke-linecap="round"/>'; } },
       lemontea:{ n:'レモンティー', raw:['#E2A24A', '#FFFFFF'], ck:['#E2A24A', '#FFFFFF'], st:'',
         d:function(c){ return '<path d="M8,10 H30 Q30,24 19,24 Q8,24 8,10 Z" fill="'+c[1]+'" stroke="#E2D6C3" stroke-width="1"/><path d="M30,12 Q37,12 36,17 Q35,21 29,20" stroke="#E2D6C3" stroke-width="2" fill="none"/><ellipse cx="19" cy="10" rx="11" ry="2.6" fill="'+c[0]+'"/><circle cx="26" cy="8" r="5" fill="#FFE55A"/><circle cx="26" cy="8" r="3.4" fill="#FFF3A0"/><path d="M26,5 V11 M23,8 H29" stroke="#FFE55A" stroke-width=".8"/><ellipse cx="19" cy="26" rx="14" ry="2.6" fill="#fff" stroke="#E2D6C3" stroke-width="1"/>'; } },
+      cake:{ n:'ショートケーキ', raw:[], ck:[], st:'', d:function(){ return foodG('cake'); } },
+      chococake:{ n:'チョコケーキ', raw:[], ck:[], st:'', d:function(){ return foodG('chococake'); } },
+      cheese:{ n:'チーズケーキ', raw:[], ck:[], st:'', d:function(){ return foodG('cheese'); } },
       karubi:{ n:'カルビ', raw:['#E07A80', '#F7D0D0'], ck:['#8A4A2A', '#C98A5A'], st:'',
         d:function(c){ return '<path d="M3,12 Q10,6 18,10 Q26,14 37,8 L37,20 Q28,25 20,21 Q11,17 3,22 Z" fill="'+c[0]+'"/><path d="M6,15 Q12,11 18,14 Q25,17 34,13 M8,19 Q14,16 20,18" stroke="'+c[1]+'" stroke-width="1.6" fill="none" stroke-linecap="round"/>'; } },
       tan:{ n:'タン', raw:['#F2A6B0', '#FFD6DC'], ck:['#B8805A', '#E0B48A'], st:'',
@@ -12689,16 +12701,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var EV_TEA_FRONT = '<svg viewBox="0 0 200 104" preserveAspectRatio="none" aria-hidden="true">' +
       '<path d="M0,10 H200 V104 H0 Z" fill="#FFF8F0"/><g fill="#FFD6E2" opacity=".75">' + (function(){ var g = ''; for(var y = 10; y < 104; y += 16) for(var x = (y / 16 % 2 ? 0 : 16); x < 200; x += 32) g += '<rect x="' + x + '" y="' + y + '" width="16" height="16"/>'; return g; })() + '</g>' +
       '<path d="M0,10 H200" stroke="#E8C597" stroke-width="3"/>' +
-      [[27, 34], [50, 30], [73, 34], [27, 68], [50, 72], [73, 68]].map(function(q){ return '<ellipse cx="' + q[0] * 2 + '" cy="' + (q[1] + 8) + '" rx="30" ry="12" fill="#fff" stroke="#E2D6C3" stroke-width="1.6"/><ellipse cx="' + q[0] * 2 + '" cy="' + (q[1] + 7) + '" rx="22" ry="8" fill="#F6F1E8"/>'; }).join('') +
-      '<g class="rm-stm"><path d="M186,12 q-3,-5 0,-9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/></g>' +
-      '<path d="M170,34 Q166,18 182,18 Q198,18 194,34 Z" fill="#F7B7C8"/><rect x="170" y="32" width="24" height="5" rx="2" fill="#E89AAE"/><path d="M194,26 Q202,26 200,32" stroke="#E89AAE" stroke-width="3" fill="none"/><circle cx="182" cy="15" r="3" fill="#FFD24C"/></svg>';
+      [[27, 32], [50, 28], [73, 32], [27, 66], [50, 70], [73, 66]].map(function(q){ var cy = q[1] * 1.04 + 5; return '<ellipse cx="' + q[0] * 2 + '" cy="' + (cy + 2) + '" rx="21" ry="9" fill="#000" opacity=".08"/><ellipse cx="' + q[0] * 2 + '" cy="' + cy + '" rx="21" ry="9" fill="#fff" stroke="#E2D6C3" stroke-width="1.4"/><ellipse cx="' + q[0] * 2 + '" cy="' + (cy - .6) + '" rx="15" ry="6" fill="#F6F1E8"/>'; }).join('') + '</svg>';
     var EV_YAKI_BG = '<svg viewBox="0 0 100 75" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="75" fill="#FFF1DC"/>' +
       '<path d="M0,0 H100 V5 H0 Z" fill="#E8C597"/><g fill="#FFE5BE"><rect x="0" y="5" width="2" height="70"/><rect x="25" y="5" width="2" height="70"/><rect x="50" y="5" width="2" height="70"/><rect x="75" y="5" width="2" height="70"/></g>' +
       '<rect x="36" y="8" width="28" height="18" rx="2" fill="#BFE6FF" stroke="#fff" stroke-width="1.6"/><path d="M50,8 V26 M36,17 H64" stroke="#fff" stroke-width="1"/>' +
       '<g><path d="M14,4 V12" stroke="#8A8296" stroke-width=".6"/><path d="M8,16 Q14,9 20,16 Z" fill="#FFD24C"/><path d="M86,4 V12" stroke="#8A8296" stroke-width=".6"/><path d="M80,16 Q86,9 92,16 Z" fill="#FFD24C"/></g></svg>';
     /* お皿の 場所(front の 中: よこ 0〜100%、たて 0=front の 上) */
     var EVSLOT = { bbq:[[29, 22], [50, 20], [71, 22], [29, 58], [50, 62], [71, 58]], yaki:[[27, 26], [50, 26], [73, 26], [27, 64], [50, 64], [73, 64]], nabe:[[33, 40], [50, 36], [67, 40], [33, 64], [50, 68], [67, 64]], tea:[[27, 32], [50, 28], [73, 32], [27, 66], [50, 70], [73, 66]] };
-    var EVKIND = { bbq:['kushi', 'corn', 'sausage', 'ebi', 'piman'], yaki:['karubi', 'tan', 'wiener', 'kabocha', 'tamanegi', 'shiitake'], nabe:['hakusai', 'tofu', 'shiitake', 'negi', 'buta', 'tara'], tea:['scone', 'sand', 'macaron', 'tart', 'tea', 'lemontea'] };
+    var EVKIND = { bbq:['kushi', 'corn', 'sausage', 'ebi', 'piman'], yaki:['karubi', 'tan', 'wiener', 'kabocha', 'tamanegi', 'shiitake'], nabe:['hakusai', 'tofu', 'shiitake', 'negi', 'buta', 'tara'], tea:['cake', 'chococake', 'cheese', 'scone', 'sand', 'macaron', 'tart'] };
     function sizzle(big){
       try{ var a = aud(), t = a.currentTime, n = a.sampleRate * (big ? .5 : .22), b = a.createBuffer(1, n, a.sampleRate), d = b.getChannelData(0);
         for(var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2);
@@ -12708,10 +12718,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     function foodEvent(kind){
       if(!S || !S.pets.length) return;
-      var S0 = S, wrap = $('rmWrap') || $('rmStage'), GOAL = 10, COOK = kind === 'tea' ? 900 : 4500, BURN = kind === 'nabe' ? 14000 : kind === 'tea' ? 99999999 : 10000;
+      var S0 = S, wrap = $('rmWrap') || $('rmStage'), GOAL = 10, COOK = kind === 'tea' ? 250 : 4500, BURN = kind === 'nabe' ? 14000 : kind === 'tea' ? 99999999 : 10000;
       var who = S.pets.slice(0, 5), T = [], cnt = 0, over = false, lastNo = 0;
       who.forEach(function(P){ leave(P); clearTimeout(P.t); });
-      var ev = document.createElement('div'); ev.className = 'rm-ev';
+      var ev = document.createElement('div'); ev.className = 'rm-ev' + (kind === 'tea' ? ' tea' : '');
       ev.innerHTML = '<div class="ev-bg">' + (kind === 'bbq' ? OUT_SVG : EV_YAKI_BG) + '</div><div class="ev-front">' + (kind === 'bbq' ? EV_BBQ_FRONT : kind === 'nabe' ? EV_NABE_FRONT : kind === 'tea' ? EV_TEA_FRONT : EV_YAKI_FRONT) + '</div><div class="ev-msg"></div>';
       wrap.appendChild(ev); wrap.classList.add('evon');
       var front = ev.querySelector('.ev-front'), msgEl = ev.querySelector('.ev-msg');
@@ -12806,7 +12816,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           fx(pt.x, 34, match ? '⭐ これ 食べたかったの!' : 'もぐもぐ', match ? '#E8A21A' : null);
           if(match){ setWant(pt); } else if(pt.req && Math.random() < .3){ setWant(pt); }
         }, 560);
-        cnt++; hudSet(); msg(petName(pt.P.sp) + '「' + (match ? EVP[pc.k].n + '、ありがとう!' : any(['おいしい!', 'あつあつ!', 'もっと 食べたいな!', 'いい におい〜'])) + '」');
+        cnt++; hudSet(); teaSweet(); msg(petName(pt.P.sp) + '「' + (match ? EVP[pc.k].n + '、ありがとう!' : any(kind === 'tea' ? ['おいしい!', 'あまくて おいしい!', 'もっと 食べたいな!', 'すてきな おやつ〜'] : ['おいしい!', 'あつあつ!', 'もっと 食べたいな!', 'いい におい〜'])) + '」');
         free(pc, 900);
         if(cnt >= GOAL) finish();
       }
@@ -12831,10 +12841,32 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }
       S0.ev = { stop:function(){ over = true; clearInterval(tick); T.forEach(clearTimeout); ev.remove(); hud.remove(); wrap.classList.remove('evon'); } };
       msg(petName(lead().sp) + (kind === 'bbq' ? '「お庭で バーベキュー だよ!」' : kind === 'nabe' ? '「あったかい お鍋 だよ!」' : kind === 'tea' ? '「アフタヌーンティー の じかん だよ!」' : '「焼肉 パーティー だよ!」'));
-      later(1600, function(){ msg(kind === 'tea' ? 'キラキラ した おかしや お茶を タップで 仲間に あげてね' : kind === 'nabe' ? 'ぐつぐつ して キラキラ したら タップで 仲間に よそってあげてね' : 'キラキラ したら タップで うらがえして、もう1回 キラキラ したら 仲間に あげてね'); });
+      later(1600, function(){ msg(kind === 'tea' ? '仲間の ふきだしの おかしを タップで あげてね' : kind === 'nabe' ? 'ぐつぐつ して キラキラ したら タップで 仲間に よそってあげてね' : 'キラキラ したら タップで うらがえして、もう1回 キラキラ したら 仲間に あげてね'); });
       [0, 1, 2, 3].forEach(function(i, k){ later(900 + k * 700, function(){ put(i); }); });
       later(4200, function(){ put(4); }); later(5200, function(){ put(5); });
       pets.forEach(function(pt, k){ later(1400 + k * 600, function(){ setWant(pt); }); });
+      /* 紅茶(ポットを タップで みんなの カップに 注ぐ) */
+      var teaSweets = 0;
+      function teaSweet(){
+        if(kind !== 'tea') return;
+        if(++teaSweets % 3 === 0 && !over){ cups.forEach(function(c){ c.classList.remove('full'); }); tpot.classList.remove('off'); msg('カップが からっぽ。ポットを タップして お茶を いれてあげてね'); }
+      }
+      var cups = [], tpot = null;
+      if(kind === 'tea'){
+        var CUP = '<svg viewBox="0 0 30 24" aria-hidden="true"><ellipse cx="14" cy="21" rx="13" ry="2.6" fill="#fff" stroke="#E2D6C3" stroke-width="1"/><path d="M4,6 H24 Q24,19 14,19 Q4,19 4,6 Z" fill="#fff" stroke="#E2D6C3" stroke-width="1"/><path d="M24,8 Q30,8 29,12.6 Q28,16 23,15.4" stroke="#E2D6C3" stroke-width="1.8" fill="none"/><ellipse class="tl" cx="14" cy="6.4" rx="10" ry="2.2" fill="#C0662D"/><g class="gy" fill="none" stroke="#C9C3D6" stroke-width="1.4" stroke-linecap="round"><path d="M10,3 q-2,-2 0,-4"/><path d="M17,3 q-2,-2 0,-4"/></g></svg>';
+        pets.forEach(function(pt){ var c = document.createElement('div'); c.className = 'ev-cup'; c.innerHTML = CUP; c.style.left = pt.x + '%'; c.style.top = '53%'; ev.appendChild(c); cups.push(c); });
+        tpot = document.createElement('div'); tpot.className = 'ev-tpot';
+        tpot.innerHTML = '<svg viewBox="0 0 50 40" aria-hidden="true"><ellipse cx="22" cy="37" rx="19" ry="2.4" fill="#000" opacity=".1"/><path d="M6,18 Q4,6 22,6 Q40,6 38,18 Q38,34 22,34 Q6,34 6,18 Z" fill="#F7B7C8"/><path d="M38,14 Q50,10 47,24" stroke="#F7B7C8" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M6,16 Q-2,16 2,26" stroke="#F7B7C8" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M8,22 H36" stroke="#fff" stroke-width="1.4" opacity=".7"/><ellipse cx="22" cy="6" rx="12" ry="3" fill="#E89AAE"/><circle cx="22" cy="2.6" r="2.4" fill="#FFD24C"/><circle cx="14" cy="26" r="2" fill="#fff" opacity=".7"/></svg>';
+        ev.appendChild(tpot);
+        tpot.addEventListener('click', function(){
+          if(over) return;
+          if(cups.every(function(c){ return c.classList.contains('full'); })){ msg('お茶は まだ たっぷり あるよ'); return; }
+          tpot.classList.remove('pour'); void tpot.offsetWidth; tpot.classList.add('pour', 'off');
+          sizzleOff(); setTimeout(function(){ if(over) return; cups.forEach(function(c){ c.classList.add('full'); }); pets.forEach(function(pt){ Pet.tap(pt.el); }); chime(880); msg('お茶が はいったよ。いい かおり〜'); }, 450);
+        });
+        later(2200, function(){ msg('おかしを あげたら、ポットの お茶も いれてあげてね'); });
+      }
+      function sizzleOff(){ try{ chime(660); }catch(_){} }
     }
     var GROUP = { tea:function(){ foodEvent('tea'); }, nabe:function(){ foodEvent('nabe'); }, bbq:function(){ foodEvent('bbq'); }, yaki:function(){ foodEvent('yaki'); }, meal:meal, hide:function(){ hideGame(); }, music:function(){ concertGame(); }, ball:function(){ ballGame(); } };
     /* ---- ボール遊び ---- */
