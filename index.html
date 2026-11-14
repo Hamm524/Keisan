@@ -352,6 +352,8 @@
   .rm-ev .ev-pc.no{ animation:ev-no .35s; }
   .rm-ev .ev-pc.fly{ transition:left .55s ease-in, top .55s cubic-bezier(.3,-.6,.7,1), opacity .55s, width .55s; opacity:.2; width:8%; pointer-events:none; }
   .rm-ev .ev-pc.gone{ transition:opacity .4s; opacity:0; pointer-events:none; }
+  .rm-ev .ev-pc.ready.hot{ animation:ev-hot .45s ease-in-out infinite; }
+  @keyframes ev-hot{ 0%,100%{ filter:drop-shadow(0 0 5px #FF5A3C); transform:translate(-50%, -50%) rotate(-3deg); } 50%{ filter:drop-shadow(0 0 9px #FF5A3C); transform:translate(-50%, -50%) rotate(3deg); } }
   @keyframes ev-glow{ 50%{ filter:drop-shadow(0 0 5px #FFE27A) drop-shadow(0 0 2px #fff) brightness(1.08); } }
   @keyframes ev-steam{ 0%{ transform:translateY(4px); opacity:0; } 40%{ opacity:1; } 100%{ transform:translateY(-6px); opacity:0; } }
   @keyframes ev-pop{ 0%{ transform:translate(-50%, -50%) scale(.3); } 70%{ transform:translate(-50%, -50%) scale(1.12); } }
@@ -12626,7 +12628,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
     function foodEvent(kind){
       if(!S || !S.pets.length) return;
-      var S0 = S, wrap = $('rmWrap') || $('rmStage'), GOAL = 10, COOK = 2600, BURN = 4800;
+      var S0 = S, wrap = $('rmWrap') || $('rmStage'), GOAL = 10, COOK = 4500, BURN = 10000;
       var who = S.pets.slice(0, 5), T = [], cnt = 0, over = false, lastNo = 0;
       who.forEach(function(P){ leave(P); clearTimeout(P.t); });
       var ev = document.createElement('div'); ev.className = 'rm-ev';
@@ -12689,6 +12691,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           pc.el.querySelector('.ck').style.opacity = pc.side ? 1 : Math.min(1, e / COOK);
           if(pc.side) pc.el.querySelector('.mk').style.opacity = .85;
           pc.el.classList.toggle('ready', st === 'ready'); pc.el.classList.toggle('burnt', st === 'burnt');
+          var hot = st === 'ready' && e > COOK + BURN - 3000; pc.el.classList.toggle('hot', hot);
+          if(hot && !pc.warned){ pc.warned = 1; if(Date.now() - lastNo > 2500){ lastNo = Date.now(); msg('あっ、こげそう!はやく タップ!'); } }
         });
       }, 150);
       function free(pc, ms){ slots[pc.i] = null; later(ms, function(){ put(pc.i); }); }
@@ -12705,7 +12709,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           msg('こげる 前に タップしてね'); free(pc, 900); return;
         }
         if(pc.side === 0){   /* うらがえす */
-          pc.side = 1; pc.t0 = Date.now(); pc.el.classList.remove('ready', 'flip'); void pc.el.offsetWidth; pc.el.classList.add('flip', 'flipped');
+          pc.side = 1; pc.t0 = Date.now(); pc.warned = 0; pc.el.classList.remove('ready', 'flip'); void pc.el.offsetWidth; pc.el.classList.add('flip', 'flipped');
           sizzle(true); fx(pos.x, pos.y - 6, 'ジュ〜!', '#E07B2A');
           msg('うらも 焼こう。また キラキラ したら みんなに あげてね'); return;
         }
