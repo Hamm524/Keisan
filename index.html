@@ -359,7 +359,7 @@
   @keyframes ev-pop{ 0%{ transform:translate(-50%, -50%) scale(.3); } 70%{ transform:translate(-50%, -50%) scale(1.12); } }
   @keyframes ev-flip{ 0%{ transform:translate(-50%, -50%); } 50%{ transform:translate(-50%, -110%) scaleY(-.15); } 100%{ transform:translate(-50%, -50%); } }
   @keyframes ev-no{ 25%{ transform:translate(-56%, -50%); } 75%{ transform:translate(-44%, -50%); } }
-  .rm-ev .ev-msg{ position:absolute; left:50%; bottom:3%; transform:translateX(-50%); z-index:7; background:rgba(255,255,255,.95); color:#2E2A3D; border-radius:14px; padding:5px 12px; font-size:max(12px, 2.6cqw); font-weight:900; max-width:86%; text-align:center; box-shadow:0 3px 10px -6px rgba(0,0,0,.45); pointer-events:none; }
+  .rm-ev .ev-msg{ position:absolute; left:50%; bottom:3%; transform:translateX(-50%); z-index:7; background:rgba(255,255,255,.95); color:#2E2A3D; border-radius:14px; padding:5px 12px; font-size:max(12px, 2.6cqw); font-weight:900; max-width:86%; text-align:center; box-shadow:0 3px 10px -6px rgba(0,0,0,.45); pointer-events:none; transition:opacity .4s; }
   .rm-ev .ev-fx{ position:absolute; z-index:8; transform:translate(-50%, -50%); font-size:max(16px, 3.6cqw); font-weight:900; color:#E5484D; text-shadow:0 0 4px #fff, 0 0 8px #fff; pointer-events:none; animation:ev-fx 1.1s ease-out forwards; white-space:nowrap; }
   @keyframes ev-fx{ 0%{ opacity:0; transform:translate(-50%, -20%) scale(.6); } 20%{ opacity:1; transform:translate(-50%, -60%) scale(1.1); } 100%{ opacity:0; transform:translate(-50%, -160%); } }
   .rm-wrap.evon .rm-pan, .rm-wrap.evon .rm-wbar{ display:none; }
@@ -12600,12 +12600,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<path class="mk" d="M12,9 L17,22 M20,8 L25,21 M28,9 L32,19" stroke="#4A2E1E" stroke-width="1.8" stroke-linecap="round"/>' +
         '<g class="sm" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M15,4 q-3,-3 0,-7"/><path d="M25,4 q-3,-3 0,-7"/></g></svg>';
     }
-    var EV_BBQ_FRONT = '<svg viewBox="-20 0 240 104" preserveAspectRatio="xMidYMax meet" aria-hidden="true">' +
-      '<path d="M44,60 L30,102 M156,60 L170,102 M100,66 V102" stroke="#3E3A4A" stroke-width="5" stroke-linecap="round"/><circle cx="30" cy="100" r="4" fill="#2E2A3D"/><circle cx="170" cy="100" r="4" fill="#2E2A3D"/>' +
-      '<path d="M14,24 H186 Q182,66 100,70 Q18,66 14,24 Z" fill="#2E2A3D"/><path d="M22,30 H178 Q172,60 100,63 Q28,60 22,30 Z" fill="#4A4558"/>' +
-      '<path d="M26,28 H174 Q170,40 100,42 Q30,40 26,28 Z" fill="#FF7A3C" opacity=".55"/><g fill="#FFB347" opacity=".8"><circle cx="60" cy="33" r="3"/><circle cx="100" cy="35" r="3.4"/><circle cx="140" cy="33" r="3"/><circle cx="80" cy="31" r="2"/><circle cx="122" cy="31" r="2"/></g>' +
-      '<rect x="8" y="18" width="184" height="9" rx="4.5" fill="#5A5468"/><g stroke="#8A8296" stroke-width="1.6">' + (function(){ var g = ''; for(var x = 22; x < 182; x += 10) g += '<path d="M' + x + ',4 V24"/>'; return g; })() + '</g>' +
-      '<rect x="10" y="2" width="180" height="4" rx="2" fill="#8A8296"/><rect x="10" y="20" width="180" height="4" rx="2" fill="#8A8296"/></svg>';
+    var EV_BBQ_FRONT = '<svg viewBox="0 0 240 94" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><defs><clipPath id="evGr"><ellipse cx="120" cy="40" rx="104" ry="31"/></clipPath></defs>' +
+      '<path d="M60,70 L48,93 M180,70 L192,93 M120,76 V93" stroke="#3E3A4A" stroke-width="5" stroke-linecap="round"/>' +
+      '<path d="M10,40 Q14,84 120,84 Q226,84 230,40 Z" fill="#2E2A3D"/><ellipse cx="120" cy="40" rx="112" ry="36" fill="#3E3A4A"/><ellipse cx="120" cy="40" rx="104" ry="31" fill="#4A4558"/>' +
+      '<g clip-path="url(#evGr)"><ellipse cx="120" cy="44" rx="96" ry="26" fill="#FF7A3C" opacity=".5"/><g fill="#FFB347" opacity=".85"><circle cx="70" cy="40" r="5"/><circle cx="100" cy="50" r="6"/><circle cx="140" cy="38" r="5"/><circle cx="170" cy="50" r="5"/><circle cx="120" cy="58" r="4"/><circle cx="90" cy="28" r="4"/><circle cx="155" cy="24" r="4"/></g>' +
+      '<g stroke="#9A93A8" stroke-width="2">' + (function(){ var g = ''; for(var x = 24; x < 220; x += 12) g += '<path d="M' + x + ',0 V94"/>'; return g; })() + '</g><path d="M0,40 H240" stroke="#9A93A8" stroke-width="2.4"/></g>' +
+      '<ellipse cx="120" cy="40" rx="104" ry="31" fill="none" stroke="#8A8296" stroke-width="3"/></svg>';
     var EV_YAKI_FRONT = '<svg viewBox="0 0 200 104" preserveAspectRatio="none" aria-hidden="true">' +
       '<path d="M0,10 H200 V104 H0 Z" fill="#B57A45"/><path d="M0,10 H200 V16 H0 Z" fill="#D29A5E"/><path d="M0,30 H200 M0,58 H200 M0,86 H200" stroke="#A06A3A" stroke-width="1" opacity=".6"/>' +
       '<rect x="10" y="20" width="180" height="62" rx="12" fill="#3E3A4A"/><rect x="16" y="24" width="168" height="52" rx="8" fill="#5A4A40"/>' +
@@ -12617,7 +12617,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       '<rect x="36" y="8" width="28" height="18" rx="2" fill="#BFE6FF" stroke="#fff" stroke-width="1.6"/><path d="M50,8 V26 M36,17 H64" stroke="#fff" stroke-width="1"/>' +
       '<g><path d="M14,4 V12" stroke="#8A8296" stroke-width=".6"/><path d="M8,16 Q14,9 20,16 Z" fill="#FFD24C"/><path d="M86,4 V12" stroke="#8A8296" stroke-width=".6"/><path d="M80,16 Q86,9 92,16 Z" fill="#FFD24C"/></g></svg>';
     /* お皿の 場所(front の 中: よこ 0〜100%、たて 0=front の 上) */
-    var EVSLOT = { bbq:[[30, 6], [50, 6], [70, 6], [31, 24], [50, 24], [69, 24]], yaki:[[27, 30], [50, 30], [73, 30], [27, 56], [50, 56], [73, 56]] };
+    var EVSLOT = { bbq:[[29, 22], [50, 20], [71, 22], [29, 58], [50, 62], [71, 58]], yaki:[[27, 26], [50, 26], [73, 26], [27, 64], [50, 64], [73, 64]] };
     var EVKIND = { bbq:['kushi', 'corn', 'sausage', 'ebi', 'piman'], yaki:['karubi', 'tan', 'wiener', 'kabocha', 'tamanegi', 'shiitake'] };
     function sizzle(big){
       try{ var a = aud(), t = a.currentTime, n = a.sampleRate * (big ? .5 : .22), b = a.createBuffer(1, n, a.sampleRate), d = b.getChannelData(0);
@@ -12635,7 +12635,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       ev.innerHTML = '<div class="ev-bg">' + (kind === 'bbq' ? OUT_SVG : EV_YAKI_BG) + '</div><div class="ev-front">' + (kind === 'bbq' ? EV_BBQ_FRONT : EV_YAKI_FRONT) + '</div><div class="ev-msg"></div>';
       wrap.appendChild(ev); wrap.classList.add('evon');
       var front = ev.querySelector('.ev-front'), msgEl = ev.querySelector('.ev-msg');
-      function msg(t){ msgEl.textContent = t; msgEl.style.display = t ? '' : 'none'; }
+      var msgT = 0;
+      function msg(t){ msgEl.textContent = t; msgEl.style.opacity = t ? 1 : 0; clearTimeout(msgT); if(t && !over) msgT = setTimeout(function(){ msgEl.style.opacity = 0; }, 1500 + t.length * 90); }
       function later(ms, fn){ var id = setTimeout(function(){ if(S === S0 && !over) fn(); }, ms); T.push(id); return id; }
       /* 仲間(グリルの 向こう) */
       var n = who.length, A = activePet();
@@ -12665,8 +12666,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       function fr(){ return front.getBoundingClientRect(); }
       function slotPos(i){   /* ev の 中の % */
         var e = ev.getBoundingClientRect(), f = fr(), s2 = EVSLOT[kind][i];
-        var fw = kind === 'bbq' ? Math.min(f.width, f.height * 240 / 104) : f.width, fx0 = f.left + (f.width - fw) / 2;
-        var fh = kind === 'bbq' ? fw * 104 / 240 : f.height, fy0 = f.bottom - fh;
+        var fw = kind === 'bbq' ? Math.min(f.width, f.height * 240 / 94) : f.width, fx0 = f.left + (f.width - fw) / 2;
+        var fh = kind === 'bbq' ? fw * 94 / 240 : f.height, fy0 = f.bottom - fh;
         return { x:(fx0 + fw * s2[0] / 100 - e.left) / e.width * 100, y:(fy0 + fh * s2[1] / 100 - e.top) / e.height * 100 };
       }
       function put(i){
