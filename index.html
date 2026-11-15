@@ -13039,16 +13039,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ②焼肉: お店やさん */
     function yakiShop(){
       var K = evKit({ bg:EV_YAKI_BG, front:evCounter('#F2D3A0', '#FFE3B8', '#FFF6E4'), icon:'🥩', pb:43 }); if(!K) return;
-      var ING = ['karubi', 'tan', 'wiener', 'kabocha', 'tamanegi', 'shiitake'], GOAL = 6, round = 0, order = null, plate = [], cur = null, busy = true, bub = null, shown = [];
-      var pl = document.createElement('div'); pl.className = 'ev-plate'; K.ev.appendChild(pl);
+      var ING = ['karubi', 'tan', 'wiener', 'kabocha', 'tamanegi', 'shiitake'], GOAL = 6, round = 0, order = null, plate = [], cur = null, busy = true, bub = null, shown = [], ui = [pl0()], COOK = 3500, tickY = 0, gf = null;
+      function pl0(){ return null; }
+      var pl = document.createElement('div'); pl.className = 'ev-plate'; K.ev.appendChild(pl); ui = [pl];
       function hud(){ K.hud('おきゃくさん <b>' + K.cnt + '</b> / ' + GOAL); } hud();
-      ING.forEach(function(k, i){ var x = 10 + i * 16, b = K.add(evPc(k), 'ev-pc ev-tr', x, 66, 13); K.add(EVP[k].n, 'ev-lb', x, 75.5); b.addEventListener('click', function(){ add(k, b); }); });
-      var go = K.add('🍽 どうぞ', 'ev-btn', 84, 84.5); go.style.width = 'auto';
-      var clr = K.add('やりなおし', 'ev-btn sub', 84, 94); clr.style.width = 'auto';
+      ING.forEach(function(k, i){ var x = 10 + i * 16, b = K.add(evPc(k), 'ev-pc ev-tr', x, 66, 13); ui.push(b, K.add(EVP[k].n, 'ev-lb', x, 75.5)); b.addEventListener('click', function(){ add(k, b); }); });
+      var go = K.add('🍽 どうぞ', 'ev-btn', 84, 84.5); go.style.width = 'auto'; ui.push(go);
+      var clr = K.add('やりなおし', 'ev-btn sub', 84, 94); clr.style.width = 'auto'; ui.push(clr);
       go.addEventListener('click', serve); clr.addEventListener('click', function(){ if(busy || K.over) return; plate = []; draw(); });
       function draw(){
         shown.forEach(function(e){ e.remove(); }); shown = [];
-        plate.forEach(function(k, i){ var e = K.add(evPc(k, 'ck'), 'ev-pc', 18 + i * 8, 87, 9); e.style.zIndex = 5; e.addEventListener('click', function(){ if(busy || K.over) return; plate.splice(i, 1); draw(); }); shown.push(e); });
+        plate.forEach(function(k, i){ var e = K.add(evPc(k), 'ev-pc', 18 + i * 8, 87, 9); e.style.zIndex = 5; e.addEventListener('click', function(){ if(busy || K.over) return; plate.splice(i, 1); draw(); }); shown.push(e); });
       }
       function add(k, b){
         if(K.over || busy) return;
@@ -13067,15 +13068,35 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           K.msg(miss.length ? miss.join('、') + ' たりないよ' : 'ちゅうもんに ない もの が あるよ。タップで とれるよ');
           return;
         }
-        busy = true; sizzle(true); chime(1047);
-        shown.forEach(function(e){ e.classList.add('fly'); e.style.left = cur.x + '%'; e.style.top = '44%'; });
-        K.later(620, function(){
-          shown.forEach(function(e){ e.remove(); }); shown = []; plate = [];
-          Pet.cheer(cur.el); K.fx(cur.x, 34, '⭐ ありがとう!', '#E8A21A'); K.cnt++; hud();
-          K.msg(petName(cur.P.sp) + '「' + any(['おいしそう!', 'ちゅうもん どおり!', 'ありがとう!']) + '」');
-          if(bub){ bub.remove(); bub = null; }
-          if(K.cnt >= GOAL) K.finish('みんな「ごちそうさまでした!」'); else K.later(1200, nextOrder);
+        busy = true; chime(1047); K.msg('ちゅうもん どおり! ホットプレートで やこう');
+        shown.forEach(function(e){ e.remove(); }); shown = []; var ks = plate.slice(); plate = [];
+        ui.forEach(function(e){ e.style.display = 'none'; }); if(bub) bub.style.display = 'none';
+        gf = document.createElement('div'); gf.className = 'ev-front'; gf.style.zIndex = 4; gf.innerHTML = EV_YAKI_FRONT; K.ev.appendChild(gf);
+        var gs = [], left = ks.length;
+        function pos(i){ var e = K.ev.getBoundingClientRect(), f = gf.getBoundingClientRect(), s2 = EVSLOT.yaki[i]; return { x:(f.left + f.width * s2[0] / 100 - e.left) / e.width * 100, y:(f.top + f.height * s2[1] / 100 - e.top) / e.height * 100 }; }
+        ks.forEach(function(k, i){
+          var q = pos(i), el = K.add(evPc(k), 'ev-pc pop', q.x, q.y, 14), g = { el:el, t0:Date.now() + 300 + i * 250, done:false }; gs.push(g);
+          K.later(300 + i * 250, function(){ sizzle(false); });
+          el.addEventListener('click', function(){
+            if(K.over || g.done) return;
+            if(Date.now() - g.t0 < COOK){ el.classList.remove('no'); void el.offsetWidth; el.classList.add('no'); K.msg('まだ やけて ないよ。キラキラ するまで まってね'); return; }
+            g.done = true; el.classList.remove('ready'); el.classList.add('fly'); el.style.left = cur.x + '%'; el.style.top = '44%'; chime(1047);
+            K.later(600, function(){
+              el.remove(); if(--left > 0) return;
+              clearInterval(tickY); gf.remove(); gf = null; ui.forEach(function(e){ e.style.display = ''; });
+              Pet.cheer(cur.el); K.fx(cur.x, 34, '⭐ ありがとう!', '#E8A21A'); K.cnt++; hud();
+              K.msg(petName(cur.P.sp) + '「' + any(['おいしい!', 'やきたて!', 'ありがとう!']) + '」');
+              if(bub){ bub.remove(); bub = null; }
+              if(K.cnt >= GOAL) K.finish('みんな「ごちそうさまでした!」'); else K.later(1200, nextOrder);
+            });
+          });
         });
+        tickY = setInterval(function(){
+          if(K.over) return;
+          gs.forEach(function(g){ if(g.done) return; var e = Date.now() - g.t0; if(e < 0) return; g.el.querySelector('.ck').style.opacity = Math.min(1, e / COOK); g.el.classList.toggle('ready', e >= COOK); });
+        }, 150);
+        K.cl.push(function(){ clearInterval(tickY); });
+        K.later(2200, function(){ K.msg('キラキラ したら タップで おきゃくさんに あげてね'); });
       }
       function nextOrder(){
         if(K.over) return;
