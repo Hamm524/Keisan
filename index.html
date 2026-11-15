@@ -459,6 +459,9 @@
   .rm-ebar span{ flex:1; font-size:12px; font-weight:800; color:var(--ink-soft); line-height:1.4; } .rm-ebar span b{ display:block; font-size:14px; color:var(--ink); }
   .rm-ebar button{ flex:none; border:none; border-radius:16px; padding:13px 20px; background:var(--good); color:#fff; font:inherit; font-size:17px; font-weight:900; box-shadow:0 4px 0 rgba(0,0,0,.18); cursor:pointer; }
   .rm-ebar button:active{ transform:translateY(3px); box-shadow:none; }
+  .rm-ebar #rmCancel{ background:#fff; color:#E5484D; border:2px solid #E5484D; box-shadow:0 3px 0 rgba(229,72,77,.35); padding:10px 12px; font-size:14px; }
+  .rm-ebar #rmCancel.ask{ background:#E5484D; color:#fff; }
+  #view-room.ed .rm-dock, #view-room.pvon .rm-dock{ z-index:25; }
   #view-room.ed .rm-wrap::after, #view-room.pvon .rm-wrap::after{ content:'🔨 模様がえ中'; position:absolute; left:10px; top:10px; z-index:9700; background:rgba(255,255,255,.93); border-radius:100px; padding:5px 12px; font-size:12px; font-weight:900; color:#2E2A3D; pointer-events:none; box-shadow:0 2px 6px rgba(0,0,0,.18); }
   #view-room.pvon .rm-wrap::after{ content:'👀 お試し中(まだ 買って ないよ)'; background:#EAF4FF; border:2px solid #7FB8F0; padding:3px 10px; }
   @media (max-width:640px){
@@ -3318,7 +3321,7 @@
       <div class="rm-trow" id="rmLiftRow"><span>高さ</span><button class="rm-tb" id="rmDown">⬇ 下げる</button><i id="rmLiftVal"></i><button class="rm-tb" id="rmUp">⬆ 上げる</button></div>
       <div class="rm-trow" id="rmPhotoRow"><span>写真</span><div class="rm-phs" id="rmPhotos"></div></div>
     </div>
-    <div class="rm-ebar"><span><b>🔨 模様がえ中</b>家具は 指で 動かせるよ。下に 引っぱると 手前に 来るよ</span><button type="button" id="rmDone">✓ できた</button></div>
+    <div class="rm-ebar"><span><b>🔨 模様がえ中</b>家具は 指で 動かせるよ。下に 引っぱると 手前に 来るよ</span><button type="button" id="rmCancel">↩ やめて もどす</button><button type="button" id="rmDone">✓ できた</button></div>
     </div>
     <p class="food-say rm-say" id="rmSay"></p>
     <div class="rm-rtools"><button class="rm-tb" id="rmMates">🐾 仲間</button><button class="rm-tb" id="rmToy">🎮 遊ぶ画面に する</button><button class="rm-tb" id="rmSize">📐 広さ</button></div>
@@ -13481,10 +13484,13 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     }
 
     /* ---- もようがえ(ドラッグで うごかす) ---- */
+    var editSnaps = null, cancelT = 0;
     function setEdit(on){
       if(on && S && S.concert && S.concert.stop) S.concert.stop();
       if(on && S && S.ball && S.ball.stop) S.ball.stop();
       if(on && S && S.hide && S.hide.stop){ S.hide.stop(); S.pets.forEach(function(P){ P.el.classList.remove('peek'); }); }
+      if(on && !edit){ editSnaps = {}; for(var q = 0; q < roomN(); q++) editSnaps[q] = JSON.stringify(getRoom(q)); }
+      if(!on){ editSnaps = null; }
       edit = on; sel = -1;
       $('rmStage').classList.toggle('editing', on);
       $('rmEdit').textContent = on ? '✓ できた' : '🔨 模様がえ';
@@ -13627,6 +13633,20 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       v.style.paddingBottom = on ? (d.offsetHeight + 18) + 'px' : '';
     }
     if(window.ResizeObserver) new ResizeObserver(dockFit).observe($('rmDock'));
+    $('rmCancel').addEventListener('click', function(){
+      var b = $('rmCancel');
+      if(!b.classList.contains('ask')){
+        b.classList.add('ask'); b.textContent = '本当に もどす?';
+        clearTimeout(cancelT); cancelT = setTimeout(function(){ b.classList.remove('ask'); b.textContent = '↩ やめて もどす'; }, 3500);
+        return;
+      }
+      clearTimeout(cancelT); b.classList.remove('ask'); b.textContent = '↩ やめて もどす';
+      if(pv) endPreview();
+      var sn = editSnaps;
+      if(sn) Object.keys(sn).forEach(function(q){ var r = JSON.parse(sn[q]); r.t = Date.now(); safeSet(rkey(+q), r); });
+      sel = -1; render(); setEdit(false);
+      say('模様がえを やめて もとに もどしたよ');
+    });
     $('rmDone').addEventListener('click', function(){
       var d = pv && pv.d;
       if(pv) endPreview();
