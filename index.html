@@ -372,6 +372,24 @@
   .rm-ev .ev-fx{ position:absolute; z-index:8; transform:translate(-50%, -50%); font-size:max(16px, 3.6cqw); font-weight:900; color:#E5484D; text-shadow:0 0 4px #fff, 0 0 8px #fff; pointer-events:none; animation:ev-fx 1.1s ease-out forwards; white-space:nowrap; }
   @keyframes ev-fx{ 0%{ opacity:0; transform:translate(-50%, -20%) scale(.6); } 20%{ opacity:1; transform:translate(-50%, -60%) scale(1.1); } 100%{ opacity:0; transform:translate(-50%, -160%); } }
   .rm-wrap.evon .rm-pan, .rm-wrap.evon .rm-wbar{ display:none; }
+  .rm-ev .ev-lb{ position:absolute; z-index:5; transform:translateX(-50%); font-size:max(10px, 2.3cqw); font-weight:900; color:#5A3A1A; text-shadow:0 0 3px #fff, 0 0 6px #fff; pointer-events:none; white-space:nowrap; }
+  .rm-ev .ev-tr{ animation:none !important; } .rm-ev .ev-tr:active{ transform:translate(-50%, -46%) scale(.94); }
+  .rm-ev .ev-ord{ position:absolute; z-index:6; transform:translateX(-50%); background:#fff; border-radius:14px; padding:4px 9px 4px 11px; display:flex; gap:5px; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,.18); pointer-events:none; }
+  .rm-ev .ev-ord::after{ content:''; position:absolute; left:50%; bottom:-5px; margin-left:-5px; border:5px solid transparent; border-bottom:none; border-top-color:#fff; }
+  .rm-ev .ev-o{ position:relative; display:flex; align-items:center; gap:2px; width:min(9vw, 40px); flex:none; transition:opacity .3s; } .rm-ev .ev-o svg{ display:block; width:100%; }
+  .rm-ev .ev-o.dn{ opacity:.28; }
+  .rm-ev .ev-o i{ position:absolute; left:-4px; top:-6px; font-style:normal; font-size:10px; font-weight:900; background:#FF8A3C; color:#fff; border-radius:50%; width:14px; height:14px; display:flex; align-items:center; justify-content:center; z-index:1; }
+  .rm-ev .ev-o b{ font-size:max(11px, 2.5cqw); font-weight:900; color:#2E2A3D; white-space:nowrap; margin-left:1px; }
+  .rm-ev .ev-ord.sm .ev-o{ width:min(4.4vw, 19px); } .rm-ev .ev-ord.sm .ev-o b{ font-size:10px; } .rm-ev .ev-ord.sm{ padding:3px 6px; gap:3px; }
+  .rm-ev .ev-sk{ position:absolute; inset:0; z-index:4; pointer-events:none; }
+  .rm-ev .ev-skw{ position:absolute; left:12%; width:76%; top:86.5%; height:1.4%; background:linear-gradient(#E3B77A, #B98B58); border-radius:99px; transform:translateY(-50%); box-shadow:0 2px 3px rgba(0,0,0,.25); }
+  .rm-ev .ev-plate{ position:absolute; left:8%; top:77%; width:60%; height:20%; border-radius:50%; background:#fff; border:3px solid #E2D6C3; box-shadow:0 3px 6px rgba(0,0,0,.18), inset 0 0 0 5px #F6F1E8; z-index:4; pointer-events:none; }
+  .rm-ev .ev-plate.no{ animation:ev-pl 0.35s; } @keyframes ev-pl{ 25%{ transform:translateX(-2%); } 75%{ transform:translateX(2%); } }
+  .rm-ev .ev-btn{ position:absolute; z-index:6; transform:translate(-50%, -50%); border:none; border-radius:16px; padding:9px 14px; background:#2FB36B; color:#fff; font:inherit; font-size:max(13px, 3cqw); font-weight:900; box-shadow:0 3px 0 #1B6E43; cursor:pointer; white-space:nowrap; }
+  .rm-ev .ev-btn.sub{ background:#fff; color:#6B6478; box-shadow:0 3px 0 #D8D0E4; font-size:max(11px, 2.4cqw); padding:6px 12px; } .rm-ev .ev-btn:active{ transform:translate(-50%, -46%); }
+  .rm-ev .ev-bar{ position:absolute; left:3%; top:81%; width:94%; height:18%; background:rgba(255,255,255,.9); border-radius:18px; z-index:4; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.15); }
+  @keyframes ev-boil{ 0%, 100%{ transform:translate(-50%, -50%); } 50%{ transform:translate(-50%, -62%); } }
+  .rm-ev .ev-pc.boil{ animation:ev-boil .45s ease-in-out infinite; }
   @media (prefers-reduced-motion: reduce){ .rm-ev *{ animation:none !important; } }
   .rm-hud b{ color:#E5484D; }
   .rm-hud button{ border:none; background:#2E2A3D; color:#fff; border-radius:100px; padding:7px 12px; font:inherit; font-size:12px; font-weight:900; cursor:pointer; }
@@ -12876,7 +12894,214 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }
       function sizzleOff(){ try{ chime(660); }catch(_){} }
     }
-    var GROUP = { tea:function(){ foodEvent('tea'); }, nabe:function(){ foodEvent('nabe'); }, bbq:function(){ foodEvent('bbq'); }, yaki:function(){ foodEvent('yaki'); }, meal:meal, hide:function(){ hideGame(); }, music:function(){ concertGame(); }, ball:function(){ ballGame(); } };
+    /* ---- 食べ物の あそび 3つ(くしさし・焼肉やさん・お鍋づくり) ---- */
+    function evCounter(base, edge, tray){ return '<svg viewBox="0 0 200 104" preserveAspectRatio="none" aria-hidden="true"><path d="M0,10 H200 V104 H0 Z" fill="' + base + '"/><path d="M0,10 H200" stroke="' + edge + '" stroke-width="3"/><g stroke="' + edge + '" stroke-width="1" opacity=".5"><path d="M0,36 H200 M0,64 H200 M0,92 H200"/></g><rect x="8" y="22" width="184" height="34" rx="8" fill="' + tray + '" opacity=".92"/><rect x="8" y="62" width="184" height="36" rx="8" fill="' + tray + '" opacity=".55"/></svg>'; }
+    function evKit(o){
+      if(!S || !S.pets.length) return null;
+      var S0 = S, wrap = $('rmWrap') || $('rmStage'), who = S.pets.slice(0, 5), T = [], K = { over:false, cnt:0 };
+      who.forEach(function(P){ leave(P); clearTimeout(P.t); });
+      var ev = document.createElement('div'); ev.className = 'rm-ev';
+      ev.innerHTML = '<div class="ev-bg">' + o.bg + '</div><div class="ev-front">' + o.front + '</div><div class="ev-msg"></div>';
+      wrap.appendChild(ev); wrap.classList.add('evon');
+      var msgEl = ev.querySelector('.ev-msg'), msgT = 0, hud = document.createElement('div'); hud.className = 'rm-hud'; wrap.appendChild(hud);
+      hud.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+      K.ev = ev; K.front = ev.querySelector('.ev-front');
+      K.msg = function(t){ msgEl.textContent = t; msgEl.style.opacity = t ? 1 : 0; clearTimeout(msgT); if(t && !K.over) msgT = setTimeout(function(){ msgEl.style.opacity = 0; }, 1800 + t.length * 90); };
+      K.later = function(ms, fn){ var id = setTimeout(function(){ if(S === S0 && !K.over) fn(); }, ms); T.push(id); return id; };
+      K.fx = function(x, y, t, col){ var f = document.createElement('div'); f.className = 'ev-fx'; f.textContent = t; f.style.left = x + '%'; f.style.top = y + '%'; if(col) f.style.color = col; ev.appendChild(f); setTimeout(function(){ f.remove(); }, 1200); };
+      K.hud = function(h){ hud.innerHTML = '<span>' + o.icon + ' ' + h + '</span><button type="button">やめる</button>'; hud.querySelector('button').onclick = function(){ K.end(true); }; };
+      K.add = function(html, cls, x, y, w){ var d = document.createElement('div'); d.className = cls; d.innerHTML = html; d.style.left = x + '%'; d.style.top = y + '%'; if(w) d.style.width = w + '%'; ev.appendChild(d); return d; };
+      var n = who.length, A = activePet();
+      K.pets = who.map(function(P, k){
+        var x = n === 1 ? 50 : 14 + 72 * k / (n - 1), el = document.createElement('div');
+        el.className = 'ev-pet'; el.innerHTML = Pet.svg(P.sp, P.sp === A.sp ? A.lv : petLv(P.sp) || 0);
+        el.style.left = x + '%'; el.style.bottom = o.pb + '%'; ev.appendChild(el);
+        return { P:P, el:el, x:x };
+      });
+      K.end = function(quit){
+        K.over = true; T.forEach(clearTimeout);
+        ev.classList.add('bye'); hud.classList.add('bye'); wrap.classList.remove('evon');
+        setTimeout(function(){ ev.remove(); hud.remove(); }, 500);
+        if(S0.ev) S0.ev = null;
+        if(S === S0) who.forEach(function(P, k){ next(P, 600 + k * 400); });
+        if(quit && S === S0) say('また 遊ぼうね');
+      };
+      K.finish = function(text){
+        K.over = true;
+        T.push(setTimeout(function(){ if(S !== S0) return;
+          K.pets.forEach(function(pt){ Pet.cheer(pt.el); K.fx(pt.x, 40, '♥', '#FF6F91'); });
+          ev.querySelectorAll('.ev-pc, .ev-ord').forEach(function(e){ e.style.opacity = 0; });
+          chime(784); setTimeout(function(){ chime(1047); }, 160); setTimeout(function(){ chime(1319); }, 320);
+          msgEl.textContent = text; msgEl.style.opacity = 1; }, 700));
+        T.push(setTimeout(function(){ if(S === S0) K.end(false); }, 3600));
+      };
+      S0.ev = { stop:function(){ K.over = true; T.forEach(clearTimeout); ev.remove(); hud.remove(); wrap.classList.remove('evon'); } };
+      return K;
+    }
+    function evOrdAt(K, pt, html, bottom, cls){
+      var b = K.add(html, 'ev-ord' + (cls ? ' ' + cls : ''), Math.max(26, Math.min(74, pt.x)), 0);
+      b.style.top = ''; b.style.bottom = bottom + '%'; return b;
+    }
+    /* ①バーベキュー: くしさし */
+    function kushiGame(){
+      var K = evKit({ bg:OUT_SVG, front:evCounter('#D9A96B', '#EDC590', '#F6E7CF'), icon:'🍢', pb:47 }); if(!K) return;
+      var ING = ['corn', 'sausage', 'ebi', 'piman'], GOAL = 5, round = 0, need = [], got = [], busy = true, bub = null, cur = null;
+      var sk = document.createElement('div'); sk.className = 'ev-sk'; K.ev.appendChild(sk);
+      var bar = document.createElement('div'); bar.className = 'ev-skw'; sk.appendChild(bar);
+      function hud(){ K.hud('くし <b>' + K.cnt + '</b> / ' + GOAL); } hud();
+      ING.forEach(function(k, i){
+        var x = 20 + i * 20, b = K.add(evPc(k), 'ev-pc ev-tr', x, 69, 13); K.add(EVP[k].n, 'ev-lb', x, 78);
+        b.addEventListener('click', function(){ pick(k, b); });
+      });
+      function pick(k, b){
+        if(K.over || busy || !need.length) return;
+        if(k !== need[got.length]){ b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); K.msg('ちがうよ。つぎは ' + EVP[need[got.length]].n + ' だよ'); return; }
+        var xs = need.length === 3 ? [32, 50, 68] : [26, 42, 58, 74], i = got.length;
+        got.push(k); chime(660 + i * 120);
+        var it = K.add(evPc(k), 'ev-pc pop', xs[i], 86, 12); it.style.zIndex = 5; sk.appendChild(it);
+        bub.querySelectorAll('.ev-o')[i].classList.add('dn');
+        if(got.length === need.length) serve();
+      }
+      function serve(){
+        busy = true; sizzle(true); K.msg('ジュ〜! やけた!');
+        sk.querySelectorAll('.ev-pc').forEach(function(e, i){ e.innerHTML = evPc(got[i], 'ck'); });
+        K.later(1000, function(){
+          var e0 = K.ev.getBoundingClientRect(), pt = cur;
+          sk.style.transformOrigin = '50% 86%'; sk.style.transition = 'transform .6s ease-in, opacity .6s';
+          sk.style.transform = 'translate(' + ((pt.x - 50) / 100 * e0.width) + 'px,' + (-44 / 100 * e0.height) + 'px) scale(.5)'; sk.style.opacity = .2; chime(1047);
+          K.later(640, function(){
+            Pet.cheer(pt.el); K.fx(pt.x, 34, '⭐ おいしい!', '#E8A21A'); K.cnt++; hud();
+            K.msg(petName(pt.P.sp) + '「' + any(['おいしい!', 'あつあつ!', 'ありがとう!']) + '」');
+            sk.querySelectorAll('.ev-pc').forEach(function(e){ e.remove(); }); sk.style.transition = ''; sk.style.transform = ''; sk.style.opacity = '';
+            if(bub){ bub.remove(); bub = null; }
+            if(K.cnt >= GOAL) K.finish('みんな「ごちそうさまでした!」'); else K.later(1100, nextOrder);
+          });
+        });
+      }
+      function nextOrder(){
+        if(K.over) return;
+        var len = round < 2 ? 3 : 4; need = []; got = [];
+        for(var i = 0; i < len; i++) need.push(any(ING));
+        cur = K.pets[round % K.pets.length]; round++;
+        bub = evOrdAt(K, cur, need.map(function(k, i){ return '<span class="ev-o"><i>' + (i + 1) + '</i>' + evPc(k, 'ck') + '</span>'; }).join(''), 70);
+        busy = false;
+        K.msg(petName(cur.P.sp) + '「この じゅんばんで くしに さして!」');
+      }
+      K.msg(petName(lead().sp) + '「お庭で バーベキュー! くしを つくろう」');
+      K.later(2000, nextOrder);
+    }
+    /* ②焼肉: お店やさん */
+    function yakiShop(){
+      var K = evKit({ bg:EV_YAKI_BG, front:evCounter('#F2D3A0', '#FFE3B8', '#FFF6E4'), icon:'🥩', pb:43 }); if(!K) return;
+      var ING = ['karubi', 'tan', 'wiener', 'kabocha', 'tamanegi', 'shiitake'], GOAL = 6, round = 0, order = null, plate = [], cur = null, busy = true, bub = null, shown = [];
+      var pl = document.createElement('div'); pl.className = 'ev-plate'; K.ev.appendChild(pl);
+      function hud(){ K.hud('おきゃくさん <b>' + K.cnt + '</b> / ' + GOAL); } hud();
+      ING.forEach(function(k, i){ var x = 10 + i * 16, b = K.add(evPc(k), 'ev-pc ev-tr', x, 66, 13); K.add(EVP[k].n, 'ev-lb', x, 75.5); b.addEventListener('click', function(){ add(k, b); }); });
+      var go = K.add('🍽 どうぞ', 'ev-btn', 84, 84.5); go.style.width = 'auto';
+      var clr = K.add('やりなおし', 'ev-btn sub', 84, 94); clr.style.width = 'auto';
+      go.addEventListener('click', serve); clr.addEventListener('click', function(){ if(busy || K.over) return; plate = []; draw(); });
+      function draw(){
+        shown.forEach(function(e){ e.remove(); }); shown = [];
+        plate.forEach(function(k, i){ var e = K.add(evPc(k, 'ck'), 'ev-pc', 18 + i * 8, 87, 9); e.style.zIndex = 5; e.addEventListener('click', function(){ if(busy || K.over) return; plate.splice(i, 1); draw(); }); shown.push(e); });
+      }
+      function add(k, b){
+        if(K.over || busy) return;
+        if(plate.length >= 6){ K.msg('おさらが いっぱい! タップで とれるよ'); return; }
+        plate.push(k); draw(); chime(700 + plate.length * 60); shown[shown.length - 1].classList.add('pop');
+      }
+      function serve(){
+        if(K.over || busy) return;
+        if(!plate.length){ K.msg('おさらに おにくを のせてね'); return; }
+        var cnt = {}, miss = [], extra = false;
+        plate.forEach(function(k){ cnt[k] = (cnt[k] || 0) + 1; });
+        Object.keys(order).forEach(function(k){ var d = order[k] - (cnt[k] || 0); if(d > 0) miss.push(EVP[k].n + 'が あと ' + d + 'こ'); });
+        Object.keys(cnt).forEach(function(k){ if(cnt[k] > (order[k] || 0)) extra = true; });
+        if(miss.length || extra){
+          pl.classList.remove('no'); void pl.offsetWidth; pl.classList.add('no');
+          K.msg(miss.length ? miss.join('、') + ' たりないよ' : 'ちゅうもんに ない もの が あるよ。タップで とれるよ');
+          return;
+        }
+        busy = true; sizzle(true); chime(1047);
+        shown.forEach(function(e){ e.classList.add('fly'); e.style.left = cur.x + '%'; e.style.top = '44%'; });
+        K.later(620, function(){
+          shown.forEach(function(e){ e.remove(); }); shown = []; plate = [];
+          Pet.cheer(cur.el); K.fx(cur.x, 34, '⭐ ありがとう!', '#E8A21A'); K.cnt++; hud();
+          K.msg(petName(cur.P.sp) + '「' + any(['おいしそう!', 'ちゅうもん どおり!', 'ありがとう!']) + '」');
+          if(bub){ bub.remove(); bub = null; }
+          if(K.cnt >= GOAL) K.finish('みんな「ごちそうさまでした!」'); else K.later(1200, nextOrder);
+        });
+      }
+      function nextOrder(){
+        if(K.over) return;
+        var nk = round < 2 ? 1 : round < 4 ? 2 : 3, ks = ING.slice().sort(function(){ return Math.random() - .5; }).slice(0, nk);
+        order = {}; ks.forEach(function(k){ order[k] = 1 + (Math.random() < .5 ? 1 : 0); });
+        cur = K.pets[round % K.pets.length]; round++;
+        bub = evOrdAt(K, cur, Object.keys(order).map(function(k){ return '<span class="ev-o">' + evPc(k, 'ck') + '<b>×' + order[k] + '</b></span>'; }).join(''), 66);
+        busy = false;
+        K.msg(petName(cur.P.sp) + '「これを ください!」');
+      }
+      K.msg(petName(lead().sp) + '「焼肉やさんへ ようこそ! ちゅうもんを きいてね」');
+      K.later(2000, nextOrder);
+    }
+    /* ③お鍋: すききらい さがし */
+    function nabeGame(){
+      var K = evKit({ bg:EV_YAKI_BG, front:EV_NABE_FRONT, icon:'🍲', pb:43 }); if(!K) return;
+      var ING = EVKIND.nabe.slice(), POTS = 3, CAP = 4, pot = [], potNo = 0, busy = false, SP = [[34, 44], [66, 44], [34, 66], [66, 66]];
+      K.pets.forEach(function(pt){ var a = ING.slice().sort(function(){ return Math.random() - .5; }); pt.like = a.slice(0, 2); pt.hate = a[2]; pt.score = 0; pt.known = []; });
+      var bar = document.createElement('div'); bar.className = 'ev-bar'; K.ev.appendChild(bar);
+      function hud(){ K.hud('おなべ <b>' + potNo + '</b> / ' + POTS); } hud();
+      function slotPos(i){ var e = K.ev.getBoundingClientRect(), f = K.front.getBoundingClientRect(); return { x:(f.left + f.width * SP[i][0] / 100 - e.left) / e.width * 100, y:(f.top + f.height * SP[i][1] / 100 - e.top) / e.height * 100 }; }
+      ING.forEach(function(k, i){ var x = 12 + i * 15.2, b = K.add(evPc(k, 'ck'), 'ev-pc ev-tr', x, 88, 9); K.add(EVP[k].n, 'ev-lb', x, 93.5); b.addEventListener('click', function(){ addIng(k); }); });
+      function bubOf(pt){
+        if(pt.bub){ pt.bub.remove(); pt.bub = null; }
+        if(!pt.known.length) return;
+        pt.bub = evOrdAt(K, pt, pt.known.map(function(q){ return '<span class="ev-o">' + evPc(q.k, 'ck') + '<b>' + (q.r > 0 ? '💗' : '😖') + '</b></span>'; }).join(''), 69 + (K.pets.length > 3 && K.pets.indexOf(pt) % 2 ? 13 : 0), 'sm');
+        pt.bub.style.left = Math.max(12, Math.min(88, pt.x)) + '%';
+      }
+      function addIng(k){
+        if(K.over || busy) return;
+        if(pot.length >= CAP){ K.msg('おなべが いっぱい! 具を タップで とりだせるよ'); return; }
+        var used = pot.map(function(q){ return q.slot; }), slot = 0; while(used.indexOf(slot) >= 0) slot++;
+        var pos = slotPos(slot), el = K.add(evPc(k, 'ck'), 'ev-pc pop', pos.x, pos.y, 12), q = { k:k, slot:slot, el:el, rs:[] };
+        pot.push(q); chime(600 + pot.length * 80); sizzle(false);
+        K.pets.forEach(function(pt, i){
+          var r = pt.like.indexOf(k) >= 0 ? 2 : pt.hate === k ? -2 : 1; pt.score += r; q.rs.push(r);
+          K.later(i * 140, function(){ K.fx(pt.x, 36, r > 1 ? '💗' : r < 0 ? '😖' : '🙂', r > 1 ? '#FF6F91' : r < 0 ? '#5B7FD9' : '#E8A21A'); });
+          if(r !== 1 && !pt.known.some(function(z){ return z.k === k; })){ pt.known.push({ k:k, r:r }); bubOf(pt); }
+        });
+        el.addEventListener('click', function(){
+          if(K.over || busy) return;
+          var j = pot.indexOf(q); if(j < 0) return; pot.splice(j, 1); el.remove();
+          K.pets.forEach(function(pt, i){ pt.score -= q.rs[i]; });
+        });
+        if(pot.length === CAP) K.later(700, cook);
+      }
+      function cook(){
+        if(K.over || busy || pot.length < CAP) return;
+        busy = true; K.msg('ぐつぐつ…'); sizzle(true);
+        pot.forEach(function(q){ q.el.classList.add('boil'); });
+        K.later(2300, function(){
+          pot.forEach(function(q, i){ var pt = K.pets[i % K.pets.length]; q.el.classList.remove('boil'); q.el.classList.add('fly'); q.el.style.left = pt.x + '%'; q.el.style.top = '44%'; });
+          chime(1047);
+          K.later(650, function(){
+            pot.forEach(function(q){ q.el.remove(); }); pot = [];
+            var good = 0;
+            K.pets.forEach(function(pt, i){
+              var ok = pt.score >= 4, so = pt.score >= 2; if(so) good++;
+              if(so) Pet.cheer(pt.el);
+              K.later(i * 150, function(){ K.fx(pt.x, 34, ok ? '💗 だいすき!' : so ? 'おいしい!' : 'うーん…', ok ? '#FF6F91' : so ? '#E8A21A' : '#5B7FD9'); });
+              pt.score = 0;
+            });
+            potNo++; hud();
+            K.msg(good === K.pets.length ? 'みんな まんぞく!' : good + '/' + K.pets.length + 'ひき まんぞくしたよ');
+            if(potNo >= POTS) K.finish('みんな「ごちそうさまでした!」'); else K.later(2200, function(){ busy = false; K.msg('つぎの おなべ! 吹き出しの すききらいを ヒントに えらんでね'); });
+          });
+        });
+      }
+      K.msg(petName(lead().sp) + '「みんなの すきな 具を さがそう!」');
+      K.later(2200, function(){ K.msg('具を 4つ いれると ぐつぐつ。入れると みんなが 反応するよ'); });
+    }
+    var GROUP = { tea:function(){ foodEvent('tea'); }, nabe:function(){ nabeGame(); }, bbq:function(){ kushiGame(); }, yaki:function(){ yakiShop(); }, meal:meal, hide:function(){ hideGame(); }, music:function(){ concertGame(); }, ball:function(){ ballGame(); } };
     /* ---- ボール遊び ---- */
     function kickSnd(){
       try{ var a = aud(), t = a.currentTime, o = a.createOscillator(), g = a.createGain();
@@ -13404,10 +13629,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ---- みんなで あそぶ ボタン ---- */
     function firstOf(k){ var i = -1; S.r.items.forEach(function(it, n){ if(i < 0 && it.k === k && !(pv && pv.it === it)) i = n; }); return i; }
     var PLAYS = [ { g:'meal', icon:'🍚', name:'みんなで ごはん', sub:'テーブルで いただきます', need:'ダイニングテーブルが いるよ', needSay:'ダイニングテーブルを 置くと、みんなで ごはんが できるよ。下の ショップの 家具に あるよ', find:function(){ return firstOf('dining'); } },
-      { g:'bbq', icon:'🍖', name:'バーベキュー', sub:'お庭で 焼いて あげよう', need:'', needSay:'', find:function(){ return 0; } },
+      { g:'bbq', icon:'🍢', name:'バーベキュー', sub:'じゅんばんに くしを さそう', need:'', needSay:'', find:function(){ return 0; } },
       { g:'tea', icon:'🫖', name:'アフタヌーンティー', sub:'おかしと お茶を あげよう', need:'', needSay:'', find:function(){ return 0; } },
-      { g:'nabe', icon:'🍲', name:'お鍋', sub:'ぐつぐつ 煮て よそおう', need:'', needSay:'', find:function(){ return 0; } },
-      { g:'yaki', icon:'🥩', name:'焼肉', sub:'ホットプレートで ジュ〜', need:'', needSay:'', find:function(){ return 0; } },
+      { g:'nabe', icon:'🍲', name:'お鍋', sub:'みんなの すきな 具を さがそう', need:'', needSay:'', find:function(){ return 0; } },
+      { g:'yaki', icon:'🥩', name:'焼肉', sub:'お店やさん ごっこ', need:'', needSay:'', find:function(){ return 0; } },
       { g:'hide', icon:'🙈', name:'かくれんぼ', sub:'どこに かくれたかな?', need:'ソファや 本だなが いるよ', needSay:'ソファ・ベッド・本だな・れいぞう庫 みたいな 大きな 家具が あると、後ろに かくれて かくれんぼが できるよ', find:function(){ return hideSpots().length ? 0 : -1; } },
       { g:'music', icon:'🎵', name:'音楽会', sub:'楽器で えんそう', need:'', needSay:'', find:function(){ return 0; } },
       { g:'ball', icon:'⚽', name:'ボール遊び', sub:'パスで つなごう', need:'', needSay:'', find:function(){ return 0; } } ];
