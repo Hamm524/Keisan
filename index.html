@@ -12868,7 +12868,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           if(cups.every(function(c){ return c.classList.contains('full'); })){ msg('お茶は まだ たっぷり あるよ'); return; }
           tpot.classList.remove('pour'); void tpot.offsetWidth; tpot.classList.add('pour', 'off');
           sizzleOff(); setTimeout(function(){ if(over) return; cups.forEach(function(c){ c.classList.add('full'); }); chime(880); msg('お茶が はいったよ。みんなに くばるね');
-          setTimeout(function(){ if(over) return; cups.forEach(function(c, k){ var G = { 1:[50], 2:[26, 74], 3:[26, 50, 74], 4:[5, 26, 74, 95], 5:[5, 26, 50, 74, 95] }[cups.length] || [50]; c.style.left = (G[k] || 50) + '%'; c.style.top = '45%'; }); }, 700);
+          setTimeout(function(){ if(over) return; cups.forEach(function(c, k){ var G = { 1:[50], 2:[26, 74], 3:[26, 50, 74], 4:[5, 26, 74, 95], 5:[5, 26, 50, 74, 95] }[cups.length] || [50]; c.style.left = (G[k] || 50) + '%'; c.style.top = '49.5%'; }); }, 700);
           setTimeout(function(){ if(over) return; pets.forEach(function(pt){ Pet.tap(pt.el); fx(pt.x, 36, 'ごくごく ♪', '#C0662D'); }); msg('みんな「あったかくて おいしい!」'); }, 1800); }, 450);
         });
         later(2200, function(){ msg('おかしを あげたら、ポットの お茶も いれてあげてね'); });
