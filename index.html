@@ -12950,15 +12950,20 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ①バーベキュー: くしを つくって ためる → グリルで やく → みんなに あげる */
     function kushiGame(){
       var K = evKit({ bg:OUT_SVG, front:evCounter('#D9A96B', '#EDC590', '#F6E7CF'), icon:'🍢', pb:47 }); if(!K) return;
-      var ING = ['corn', 'sausage', 'ebi', 'piman'], N = Math.min(5, Math.max(3, K.pets.length)), round = 0, need = [], got = [], busy = true, bub = null, cur = null, phase = 0, made = [], served = 0, COOK = 3500, tick = 0;
-      var sk = document.createElement('div'); sk.className = 'ev-sk'; K.ev.appendChild(sk);
-      var bar = document.createElement('div'); bar.className = 'ev-skw'; sk.appendChild(bar);
-      var tray = [];
-      function hud(){ K.hud(phase === 0 ? 'くしを つくる <b>' + made.length + '</b> / ' + N : 'やけた くし <b>' + served + '</b> / ' + N); } hud();
-      ING.forEach(function(k, i){
-        var x = 20 + i * 20, b = K.add(evPc(k), 'ev-pc ev-tr', x, 69, 13), l = K.add(EVP[k].n, 'ev-lb', x, 78); tray.push(b, l);
-        b.addEventListener('click', function(){ pick(k, b); });
-      });
+      var ING = ['corn', 'sausage', 'ebi', 'piman'], TOT = K.pets.length * 2, bs = 0, gf = null, round = 0, need = [], got = [], busy = true, bub = null, cur = null, phase = 0, made = [], served = 0, COOK = 3500, tick = 0;
+      var sk = null, tray = [];
+      function hud(){ K.hud(phase === 0 ? 'くしを つくる <b>' + round + '</b> / ' + TOT : 'やけた くし <b>' + served + '</b> / ' + TOT); } hud();
+      function startBatch(){
+        phase = 0; made = []; K.minis = []; var rem = TOT - round; bs = rem > 6 ? Math.ceil(rem / 2) : rem;
+        sk = document.createElement('div'); sk.className = 'ev-sk'; K.ev.appendChild(sk);
+        var bar = document.createElement('div'); bar.className = 'ev-skw'; sk.appendChild(bar); tray = [];
+        ING.forEach(function(k, i){
+          var x = 20 + i * 20, b = K.add(evPc(k), 'ev-pc ev-tr', x, 69, 13), l = K.add(EVP[k].n, 'ev-lb', x, 78); tray.push(b, l);
+          b.addEventListener('click', function(){ pick(k, b); });
+        });
+        hud();
+      }
+      startBatch();
       function pick(k, b){
         if(K.over || busy || !need.length) return;
         if(k !== need[got.length]){ b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); K.msg('ちがうよ。つぎは ' + EVP[need[got.length]].n + ' だよ'); return; }
@@ -12974,17 +12979,17 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var e0 = K.ev.getBoundingClientRect(), idx = made.length - 1, c = sk.cloneNode(true); c.className = 'ev-sk'; c.style.zIndex = 5; K.ev.appendChild(c);
         sk.querySelectorAll('.ev-pc').forEach(function(e){ e.remove(); });
         c.style.transformOrigin = '50% 86%'; c.style.transition = 'transform .6s ease-in-out'; void c.offsetWidth;
-        c.style.transform = 'translate(' + (41 / 100 * e0.width) + 'px,' + ((60 + idx * 7 - 86) / 100 * e0.height) + 'px) scale(.2)';
+        c.style.transform = 'translate(' + (41 / 100 * e0.width) + 'px,' + ((60 + idx * 6.5 - 86) / 100 * e0.height) + 'px) scale(.2)';
         K.minis = (K.minis || []); K.minis.push(c);
         K.msg(petName(cur.P.sp) + 'の くしが できた! とっておくね');
         if(bub){ bub.remove(); bub = null; }
-        if(made.length >= N) K.later(1400, grill); else K.later(1300, nextOrder);
+        if(made.length >= bs) K.later(1400, grill); else K.later(1300, nextOrder);
       }
       function nextOrder(){
         if(K.over) return;
         var len = round < 2 ? 3 : 4; need = []; got = [];
         for(var i = 0; i < len; i++) need.push(any(ING));
-        cur = K.pets[round % K.pets.length]; round++;
+        cur = K.pets[Math.floor(round / 2) % K.pets.length]; round++; hud();
         bub = evOrdAt(K, cur, need.map(function(k, i){ return '<span class="ev-o"><i>' + (i + 1) + '</i>' + evPc(k, 'ck') + '</span>'; }).join(''), 70);
         busy = false;
         K.msg(petName(cur.P.sp) + '「この じゅんばんで くしに さして!」');
@@ -12994,7 +12999,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(K.over) return;
         phase = 1; hud(); K.msg('ぜんぶ できた! グリルで やこう');
         tray.forEach(function(e){ e.remove(); }); (K.minis || []).forEach(function(e){ e.remove(); }); sk.remove();
-        var gf = document.createElement('div'); gf.className = 'ev-front'; gf.style.zIndex = 4; gf.innerHTML = EV_BBQ_FRONT; K.ev.appendChild(gf);
+        gf = document.createElement('div'); gf.className = 'ev-front'; gf.style.zIndex = 4; gf.innerHTML = EV_BBQ_FRONT; K.ev.appendChild(gf);
         function pos(i){
           var e = K.ev.getBoundingClientRect(), f = gf.getBoundingClientRect(), s2 = EVSLOT.bbq[i];
           var fw = Math.min(f.width, f.height * 240 / 94), fx0 = f.left + (f.width - fw) / 2, fh = fw * 94 / 240, fy0 = f.bottom - fh;
@@ -13002,7 +13007,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         }
         var gs = [], idxs = [0, 2, 3, 5, 1, 4];
         made.forEach(function(m, i){
-          var q = pos(idxs[i]), el = K.add(m.ks.map(function(k){ return evPc(k); }).join(''), 'ev-pc ev-gs pop', q.x, q.y, 25), lb = K.add(petName(m.pet.P.sp), 'ev-lb', q.x, q.y + 6);
+          var q = pos(idxs[i]), el = K.add(m.ks.map(function(k){ return evPc(k); }).join(''), 'ev-pc ev-gs pop', q.x, q.y, made.length > 4 ? 19 : 25), lb = K.add(petName(m.pet.P.sp), 'ev-lb', q.x, q.y + 6);
           var g = { el:el, lb:lb, m:m, t0:Date.now() + 400 + i * 300, done:false }; gs.push(g); K.later(400 + i * 300, function(){ sizzle(false); });
           el.addEventListener('click', function(){ tap(g); });
         });
@@ -13024,7 +13029,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           K.later(600, function(){
             g.el.remove(); Pet.cheer(pt.el); K.fx(pt.x, 34, '⭐ おいしい!', '#E8A21A'); served++; hud();
             K.msg(petName(pt.P.sp) + '「' + any(['おいしい!', 'あつあつ!', 'ありがとう!']) + '」');
-            if(served >= N) K.finish('みんな「ごちそうさまでした!」');
+            if(served >= TOT) K.finish('みんな「ごちそうさまでした!」'); else if(gs.every(function(q){ return q.done; })) K.later(1000, function(){ gf.remove(); K.msg('つぎの くしを つくろう!'); startBatch(); nextOrder(); });
           });
         }
       }
