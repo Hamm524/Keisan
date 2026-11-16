@@ -387,7 +387,7 @@
   .rm-ev .ev-plate.no{ animation:ev-pl 0.35s; } @keyframes ev-pl{ 25%{ transform:translateX(-2%); } 75%{ transform:translateX(2%); } }
   .rm-ev .ev-btn{ position:absolute; z-index:6; transform:translate(-50%, -50%); border:none; border-radius:16px; padding:9px 14px; background:#2FB36B; color:#fff; font:inherit; font-size:max(13px, 3cqw); font-weight:900; box-shadow:0 3px 0 #1B6E43; cursor:pointer; white-space:nowrap; }
   .rm-ev .ev-btn.sub{ background:#fff; color:#6B6478; box-shadow:0 3px 0 #D8D0E4; font-size:max(11px, 2.4cqw); padding:6px 12px; } .rm-ev .ev-btn:active{ transform:translate(-50%, -46%); }
-  .rm-ev .ev-bar{ position:absolute; left:3%; top:81%; width:94%; height:18%; background:rgba(255,255,255,.9); border-radius:18px; z-index:4; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.15); }
+  .rm-ev .ev-bar{ position:absolute; left:3%; top:82%; width:94%; height:17%; background:rgba(255,255,255,.9); border-radius:18px; z-index:4; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.15); }
   .rm-ev .ev-gs{ display:flex; align-items:center; width:25%; } .rm-ev .ev-gs::before{ content:''; position:absolute; left:-4%; right:-4%; top:50%; height:4px; margin-top:-2px; background:#B98B58; border-radius:4px; }
   .rm-ev .ev-gs svg{ width:25%; flex:none; position:relative; }
   .rm-ev .ev-gs.fly{ width:10%; }
@@ -13113,7 +13113,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ③お鍋: すききらい さがし */
     function nabeGame(){
       var K = evKit({ bg:EV_YAKI_BG, front:EV_NABE_FRONT, icon:'🍲', pb:43 }); if(!K) return;
-      var ING = EVKIND.nabe.slice(), POTS = 3, CAP = 4, pot = [], potNo = 0, busy = false, SP = [[34, 44], [66, 44], [34, 66], [66, 66]];
+      var ING = EVKIND.nabe.slice(), POTS = 3, CAP = 4, pot = [], potNo = 0, busy = false, SP = [[32, 36], [68, 36], [32, 52], [68, 52]];
       K.pets.forEach(function(pt){ var a = ING.slice().sort(function(){ return Math.random() - .5; }); pt.like = a.slice(0, 2); pt.hate = a[2]; pt.score = 0; pt.known = []; });
       var bar = document.createElement('div'); bar.className = 'ev-bar'; K.ev.appendChild(bar);
       function hud(){ K.hud('おなべ <b>' + potNo + '</b> / ' + POTS); } hud();
@@ -13129,7 +13129,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(K.over || busy) return;
         if(pot.length >= CAP){ K.msg('おなべが いっぱい! 具を タップで とりだせるよ'); return; }
         var used = pot.map(function(q){ return q.slot; }), slot = 0; while(used.indexOf(slot) >= 0) slot++;
-        var pos = slotPos(slot), el = K.add(evPc(k, 'ck'), 'ev-pc pop', pos.x, pos.y, 12), q = { k:k, slot:slot, el:el, rs:[] };
+        var pos = slotPos(slot), el = K.add(evPc(k, 'ck'), 'ev-pc pop', pos.x, pos.y, 10), q = { k:k, slot:slot, el:el, rs:[] };
         pot.push(q); chime(600 + pot.length * 80); sizzle(false);
         K.pets.forEach(function(pt, i){
           var r = pt.like.indexOf(k) >= 0 ? 2 : pt.hate === k ? -2 : 1; pt.score += r; q.rs.push(r);
