@@ -494,7 +494,7 @@
   #view-room.ed .rm-wrap::after, #view-room.pvon .rm-wrap::after{ content:'🔨 模様がえ中'; position:absolute; left:10px; top:10px; z-index:9700; background:rgba(255,255,255,.93); border-radius:100px; padding:5px 12px; font-size:12px; font-weight:900; color:#2E2A3D; pointer-events:none; box-shadow:0 2px 6px rgba(0,0,0,.18); }
   #view-room.pvon .rm-wrap::after{ content:'👀 お試し中(まだ 買って ないよ)'; background:#EAF4FF; border:2px solid #7FB8F0; padding:3px 10px; }
   @media (max-width:640px){
-    #view-room.ed .rm-wrap, #view-room.pvon .rm-wrap{ position:sticky; top:8px; z-index:12; box-shadow:0 10px 22px -10px rgba(46,42,61,.5); }
+    #view-room.ed .rm-wrap, #view-room.pvon .rm-wrap{ position:sticky; top:0; border-radius:0 0 22px 22px; z-index:12; box-shadow:0 10px 22px -10px rgba(46,42,61,.5); }
   }
   @keyframes rm-fpop{ 0%{ opacity:0; transform:translate(-50%, -30%) scale(.4); } 100%{ opacity:1; transform:translateX(-50%) scale(1); } }
   .rm-tv{ animation:rm-tv 9s ease-in-out infinite; }
@@ -13801,6 +13801,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       if(on && !edit){ editSnaps = {}; for(var q = 0; q < roomN(); q++) editSnaps[q] = JSON.stringify(getRoom(q)); }
       if(!on){ editSnaps = null; }
       edit = on; sel = -1;
+      if(on){ var rw = $('rmWrap'); setTimeout(function(){ if(edit && rw && rw.scrollIntoView) rw.scrollIntoView({ block:'start', behavior:'smooth' }); }, 60); }
       $('rmStage').classList.toggle('editing', on);
       $('rmEdit').textContent = on ? '✓ できた' : '🔨 模様がえ';
       $('rmEdit').classList.toggle('on', on);
