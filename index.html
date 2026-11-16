@@ -337,7 +337,7 @@
   .rm-ev .ev-pet{ position:absolute; z-index:2; width:19%; transform:translateX(-50%); }
   .rm-ev .ev-pet .pet{ transition:transform .3s; }
   .rm-ev .ev-req{ position:absolute; z-index:6; transform:translate(-50%, 0); background:#fff; border-radius:12px; padding:2px 5px; box-shadow:0 2px 8px rgba(0,0,0,.18); width:9%; pointer-events:none; animation:rm-cin .3s ease-out; }
-  .rm-ev .ev-req::after{ content:''; position:absolute; left:20%; bottom:-5px; margin-left:-5px; border:5px solid transparent; border-bottom:none; border-top-color:#fff; }
+  .rm-ev .ev-req::after{ content:''; position:absolute; left:50%; bottom:-5px; margin-left:-5px; border:5px solid transparent; border-bottom:none; border-top-color:#fff; }
   .rm-ev .ev-req svg{ display:block; width:100%; }
   .rm-ev .ev-pc{ position:absolute; z-index:4; width:16.5%; transform:translate(-50%, -50%); cursor:pointer; -webkit-tap-highlight-color:transparent; }
   .rm-ev .ev-pc svg{ display:block; width:100%; overflow:visible; }
@@ -356,7 +356,7 @@
   @keyframes ev-hot{ 0%,100%{ filter:drop-shadow(0 0 5px #FF5A3C); transform:translate(-50%, -50%) rotate(-3deg); } 50%{ filter:drop-shadow(0 0 9px #FF5A3C); transform:translate(-50%, -50%) rotate(3deg); } }
   .rm-ev.tea .ev-pc{ width:14%; } .rm-ev.tea .ev-pc.fly{ width:8%; margin-top:0; }
   .rm-ev.tea .ev-pc.ready{ animation:none; } .rm-ev.tea .ev-pc .sm{ display:none; }
-  .rm-ev .ev-tpot{ position:absolute; z-index:5; right:1.5%; top:50%; width:15%; cursor:pointer; animation:ev-glow 1.4s ease-in-out infinite; -webkit-tap-highlight-color:transparent; }
+  .rm-ev .ev-tpot{ position:absolute; z-index:5; right:1.5%; top:54%; width:15%; cursor:pointer; animation:ev-glow 1.4s ease-in-out infinite; -webkit-tap-highlight-color:transparent; }
   .rm-ev .ev-tpot svg{ display:block; width:100%; } .rm-ev .ev-tpot.off{ animation:none; }
   .rm-ev .ev-tpot.pour{ animation:ev-pour .9s ease-in-out; }
   @keyframes ev-pour{ 30%,70%{ transform:rotate(-22deg) translateX(-6px); } }
@@ -383,10 +383,10 @@
   .rm-ev .ev-ord.sm .ev-o{ width:min(4.4vw, 19px); } .rm-ev .ev-ord.sm .ev-o b{ font-size:10px; } .rm-ev .ev-ord.sm{ padding:3px 6px; gap:3px; }
   .rm-ev .ev-sk{ position:absolute; inset:0; z-index:4; pointer-events:none; }
   .rm-ev .ev-skw{ position:absolute; left:12%; width:76%; top:86.5%; height:1.4%; background:linear-gradient(#E3B77A, #B98B58); border-radius:99px; transform:translateY(-50%); box-shadow:0 2px 3px rgba(0,0,0,.25); }
-  .rm-ev .ev-plate{ position:absolute; left:8%; top:80.5%; width:60%; height:17%; border-radius:50%; background:#fff; border:3px solid #E2D6C3; box-shadow:0 3px 6px rgba(0,0,0,.18), inset 0 0 0 5px #F6F1E8; z-index:4; pointer-events:none; }
+  .rm-ev .ev-plate{ position:absolute; left:8%; top:80.5%; width:44%; height:17%; border-radius:50%; background:#fff; border:3px solid #E2D6C3; box-shadow:0 3px 6px rgba(0,0,0,.18), inset 0 0 0 5px #F6F1E8; z-index:4; pointer-events:none; }
   .rm-ev .ev-plate.no{ animation:ev-pl 0.35s; } @keyframes ev-pl{ 25%{ transform:translateX(-2%); } 75%{ transform:translateX(2%); } }
   .rm-ev .ev-btn{ position:absolute; z-index:6; transform:translate(-50%, -50%); border:none; border-radius:16px; padding:7px 12px; background:#2FB36B; color:#fff; font:inherit; font-size:max(12px, 3cqw); font-weight:900; box-shadow:0 3px 0 #1B6E43; cursor:pointer; white-space:nowrap; }
-  .rm-ev .ev-btn.sub{ background:#fff; color:#6B6478; box-shadow:0 3px 0 #D8D0E4; font-size:max(11px, 2.4cqw); padding:5px 10px; } .rm-ev .ev-btn:active{ transform:translate(-50%, -46%); }
+  .rm-ev .ev-btn.sub{ background:#fff; color:#6B6478; box-shadow:0 3px 0 #D8D0E4; font-size:11px; padding:4px 10px; } .rm-ev .ev-btn:active{ transform:translate(-50%, -46%); }
   .rm-ev .ev-bar{ position:absolute; left:3%; top:82%; width:94%; height:17%; background:rgba(255,255,255,.9); border-radius:18px; z-index:4; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.15); }
   .rm-ev .ev-gs{ display:flex; align-items:center; width:25%; } .rm-ev .ev-gs::before{ content:''; position:absolute; left:-4%; right:-4%; top:50%; height:4px; margin-top:-2px; background:#B98B58; border-radius:4px; }
   .rm-ev .ev-gs svg{ width:25%; flex:none; position:relative; }
@@ -394,6 +394,10 @@
   .rm-ev .ev-gs.ready{ animation:ev-glow .9s ease-in-out infinite; }
   @keyframes ev-boil{ 0%, 100%{ transform:translate(-50%, -50%); } 50%{ transform:translate(-50%, -62%); } }
   .rm-ev .ev-pc.boil{ animation:ev-boil .45s ease-in-out infinite; }
+  .rm-ev.k3 .ev-pet{ width:15%; }
+  .evon > .rm-hud span{ font-size:12px; padding:3px 10px; } .evon > .rm-hud button{ padding:5px 10px; }
+  .rm-ev .ev-msg{ font-size:11.5px; padding:3px 10px; line-height:1.3; }
+  .rm-ev .ev-o{ width:min(7.5vw, 34px); }
   @media (prefers-reduced-motion: reduce){ .rm-ev *{ animation:none !important; } }
   .rm-hud b{ color:#E5484D; }
   .rm-hud button{ border:none; background:#2E2A3D; color:#fff; border-radius:100px; padding:7px 12px; font:inherit; font-size:12px; font-weight:900; cursor:pointer; }
@@ -12748,12 +12752,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var S0 = S, wrap = $('rmWrap') || $('rmStage'), GOAL = 10, COOK = kind === 'tea' ? 250 : 4500, BURN = kind === 'nabe' ? 14000 : kind === 'tea' ? 99999999 : 10000;
       var who = S.pets.slice(0, 5), T = [], cnt = 0, over = false, lastNo = 0;
       who.forEach(function(P){ leave(P); clearTimeout(P.t); });
-      var ev = document.createElement('div'); ev.className = 'rm-ev' + (kind === 'tea' ? ' tea' : '');
+      var ev = document.createElement('div'); ev.className = 'rm-ev k3' + (kind === 'tea' ? ' tea' : '');
       ev.innerHTML = '<div class="ev-bg">' + (kind === 'bbq' ? OUT_SVG : EV_YAKI_BG) + '</div><div class="ev-front">' + (kind === 'bbq' ? EV_BBQ_FRONT : kind === 'nabe' ? EV_NABE_FRONT : kind === 'tea' ? EV_TEA_FRONT : EV_YAKI_FRONT) + '</div><div class="ev-msg"></div>';
       wrap.appendChild(ev); wrap.classList.add('evon');
       var front = ev.querySelector('.ev-front'), msgEl = ev.querySelector('.ev-msg');
       var msgT = 0;
-      function msg(t){ msgEl.textContent = t; msgEl.style.opacity = t ? 1 : 0; clearTimeout(msgT); if(t && !over) msgT = setTimeout(function(){ msgEl.style.opacity = 0; }, 1500 + t.length * 90); }
+      function msg(t){ msgEl.textContent = t; evFitMsg(hud, ev, msgEl); msgEl.style.opacity = t ? 1 : 0; clearTimeout(msgT); if(t && !over) msgT = setTimeout(function(){ msgEl.style.opacity = 0; }, 1500 + t.length * 90); }
       function later(ms, fn){ var id = setTimeout(function(){ if(S === S0 && !over) fn(); }, ms); T.push(id); return id; }
       /* 仲間(グリルの 向こう) */
       var n = who.length, A = activePet();
@@ -12769,14 +12773,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(over) return;
         var ks = EVKIND[kind]; pt.want = ks[(Math.random() * ks.length) | 0];
         var r = document.createElement('div'); r.className = 'ev-req'; r.innerHTML = evPc(pt.want, 'ck');
-        r.style.left = Math.min(pt.x + 9, 93) + '%'; r.style.bottom = (kind === 'bbq' ? 64 : 60) + '%';
+        r.style.left = Math.max(8, Math.min(pt.x, 92)) + '%'; r.style.bottom = '69%';
         ev.appendChild(r); pt.req = r;
       }
       function fx(x, y, t, col){ var f = document.createElement('div'); f.className = 'ev-fx'; f.textContent = t; f.style.left = x + '%'; f.style.top = y + '%'; if(col) f.style.color = col; ev.appendChild(f); setTimeout(function(){ f.remove(); }, 1200); }
       /* hud */
       var hud = document.createElement('div'); hud.className = 'rm-hud'; wrap.appendChild(hud);
       hud.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
-      function hudSet(){ hud.innerHTML = '<span>' + (kind === 'bbq' ? '🍖' : kind === 'nabe' ? '🍲' : kind === 'tea' ? '🫖' : '🥩') + ' あげた <b>' + cnt + '</b> / ' + GOAL + '</span><button type="button">やめる</button>'; hud.querySelector('button').onclick = function(){ end(true); }; }
+      function hudSet(){ hud.innerHTML = '<span>' + (kind === 'bbq' ? '🍖' : kind === 'nabe' ? '🍲' : kind === 'tea' ? '🫖' : '🥩') + ' あげた <b>' + cnt + '</b> / ' + GOAL + '</span><button type="button">やめる</button>'; hud.querySelector('button').onclick = function(){ end(true); }; evFitMsg(hud, ev, msgEl); }
       hudSet();
       /* 焼く ものを おく */
       var slots = EVSLOT[kind].map(function(){ return null; });
@@ -12891,29 +12895,37 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           if(cups.every(function(c){ return c.classList.contains('full'); })){ msg('お茶は まだ たっぷり あるよ'); return; }
           tpot.classList.remove('pour'); void tpot.offsetWidth; tpot.classList.add('pour', 'off');
           sizzleOff(); setTimeout(function(){ if(over) return; cups.forEach(function(c){ c.classList.add('full'); }); chime(880); msg('お茶が はいったよ。みんなに くばるね');
-          setTimeout(function(){ if(over) return; cups.forEach(function(c, k){ var G = { 1:[50], 2:[26, 74], 3:[26, 50, 74], 4:[5, 26, 74, 95], 5:[5, 26, 50, 74, 95] }[cups.length] || [50]; c.style.left = (G[k] || 50) + '%'; c.style.top = '49.5%'; }); }, 700);
-          setTimeout(function(){ if(over) return; pets.forEach(function(pt){ Pet.tap(pt.el); fx(pt.x, 36, 'ごくごく ♪', '#C0662D'); }); msg('みんな「あったかくて おいしい!」'); }, 1800); }, 450);
+          setTimeout(function(){ if(over) return; cups.forEach(function(c, k){ var G = { 1:[[50, 49.5]], 2:[[26, 49.5], [74, 49.5]], 3:[[26, 49.5], [50, 49.5], [74, 49.5]], 4:[[26, 49.5], [50, 49.5], [74, 49.5], [26, 72]], 5:[[26, 49.5], [50, 49.5], [74, 49.5], [26, 72], [50, 72]] }[cups.length] || [[50, 49.5]]; var g = G[k] || [50, 49.5]; c.style.left = g[0] + '%'; c.style.top = g[1] + '%'; }); }, 700);
+          setTimeout(function(){ if(over) return; pets.forEach(function(pt){ Pet.tap(pt.el); fx(pt.x, 36, 'ごくごく ♪', '#C0662D'); }); msg('みんな「おいしい!」'); }, 1800); }, 450);
         });
         later(2200, function(){ msg('おかしを あげたら、ポットの お茶も いれてあげてね'); });
       }
       function sizzleOff(){ try{ chime(660); }catch(_){} }
     }
     /* ---- 食べ物の あそび 3つ(くしさし・焼肉やさん・お鍋づくり) ---- */
+    function evFitMsg(hud, ev, msgEl){
+      if(!hud || !hud.firstChild || !ev || !msgEl) return;
+      var h = hud.getBoundingClientRect(), e = ev.getBoundingClientRect(); if(!e.width) return;
+      msgEl.style.maxWidth = 'none';
+      if(h.height > 46){ msgEl.style.top = (h.bottom - e.top + 6) + 'px'; msgEl.style.left = ''; msgEl.style.maxWidth = '60%'; }
+      else { msgEl.style.top = ''; msgEl.style.left = Math.max(0, h.right - e.left + 8) + 'px'; }
+    }
     function evCounter(base, edge, tray){ return '<svg viewBox="0 0 200 104" preserveAspectRatio="none" aria-hidden="true"><path d="M0,10 H200 V104 H0 Z" fill="' + base + '"/><path d="M0,10 H200" stroke="' + edge + '" stroke-width="3"/><g stroke="' + edge + '" stroke-width="1" opacity=".5"><path d="M0,36 H200 M0,64 H200 M0,92 H200"/></g><rect x="8" y="22" width="184" height="34" rx="8" fill="' + tray + '" opacity=".92"/><rect x="8" y="62" width="184" height="36" rx="8" fill="' + tray + '" opacity=".55"/></svg>'; }
     function evKit(o){
       if(!S || !S.pets.length) return null;
       var S0 = S, wrap = $('rmWrap') || $('rmStage'), who = S.pets.slice(0, 5), T = [], K = { over:false, cnt:0 };
       who.forEach(function(P){ leave(P); clearTimeout(P.t); });
-      var ev = document.createElement('div'); ev.className = 'rm-ev';
+      var ev = document.createElement('div'); ev.className = 'rm-ev k3';
       ev.innerHTML = '<div class="ev-bg">' + o.bg + '</div><div class="ev-front">' + o.front + '</div><div class="ev-msg"></div>';
       wrap.appendChild(ev); wrap.classList.add('evon');
       var msgEl = ev.querySelector('.ev-msg'), msgT = 0, hud = document.createElement('div'); hud.className = 'rm-hud'; wrap.appendChild(hud);
       hud.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
       K.ev = ev; K.front = ev.querySelector('.ev-front');
-      K.msg = function(t){ msgEl.textContent = t; msgEl.style.opacity = t ? 1 : 0; clearTimeout(msgT); if(t && !K.over) msgT = setTimeout(function(){ msgEl.style.opacity = 0; }, 1800 + t.length * 90); };
+      K.fit = function(){ evFitMsg(hud, ev, msgEl); };
+      K.msg = function(t){ msgEl.textContent = t; K.fit(); msgEl.style.opacity = t ? 1 : 0; clearTimeout(msgT); if(t && !K.over) msgT = setTimeout(function(){ msgEl.style.opacity = 0; }, 1800 + t.length * 90); };
       K.later = function(ms, fn){ var id = setTimeout(function(){ if(S === S0 && !K.over) fn(); }, ms); T.push(id); return id; };
       K.fx = function(x, y, t, col){ var f = document.createElement('div'); f.className = 'ev-fx'; f.textContent = t; f.style.left = x + '%'; f.style.top = y + '%'; if(col) f.style.color = col; ev.appendChild(f); setTimeout(function(){ f.remove(); }, 1200); };
-      K.hud = function(h){ hud.innerHTML = '<span>' + o.icon + ' ' + h + '</span><button type="button">やめる</button>'; hud.querySelector('button').onclick = function(){ K.end(true); }; };
+      K.hud = function(h){ hud.innerHTML = '<span>' + o.icon + ' ' + h + '</span><button type="button">やめる</button>'; hud.querySelector('button').onclick = function(){ K.end(true); }; K.fit(); };
       K.add = function(html, cls, x, y, w){ var d = document.createElement('div'); d.className = cls; d.innerHTML = html; d.style.left = x + '%'; d.style.top = y + '%'; if(w) d.style.width = w + '%'; ev.appendChild(d); return d; };
       var n = who.length, A = activePet();
       K.pets = who.map(function(P, k){
@@ -12952,7 +12964,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var K = evKit({ bg:OUT_SVG, front:evCounter('#D9A96B', '#EDC590', '#F6E7CF'), icon:'🍢', pb:47 }); if(!K) return;
       var ING = ['corn', 'sausage', 'ebi', 'piman'], TOT = K.pets.length * 2, bs = 0, gf = null, round = 0, need = [], got = [], busy = true, bub = null, cur = null, phase = 0, made = [], served = 0, COOK = 3500, tick = 0;
       var sk = null, tray = [];
-      function hud(){ K.hud(phase === 0 ? 'くしを つくる <b>' + round + '</b> / ' + TOT : 'やけた くし <b>' + served + '</b> / ' + TOT); } hud();
+      function hud(){ K.hud(phase === 0 ? 'くし <b>' + round + '</b>/' + TOT : 'やけた <b>' + served + '</b>/' + TOT); } hud();
       function startBatch(){
         phase = 0; made = []; K.minis = []; var rem = TOT - round; bs = rem > 6 ? Math.ceil(rem / 2) : rem;
         sk = document.createElement('div'); sk.className = 'ev-sk'; K.ev.appendChild(sk);
@@ -13042,14 +13054,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var ING = ['karubi', 'tan', 'wiener', 'kabocha', 'tamanegi', 'shiitake'], GOAL = 6, round = 0, order = null, plate = [], cur = null, busy = true, bub = null, shown = [], ui = [pl0()], COOK = 3500, tickY = 0, gf = null;
       function pl0(){ return null; }
       var pl = document.createElement('div'); pl.className = 'ev-plate'; K.ev.appendChild(pl); ui = [pl];
-      function hud(){ K.hud('おきゃくさん <b>' + K.cnt + '</b> / ' + GOAL); } hud();
+      function hud(){ K.hud('おきゃく <b>' + K.cnt + '</b>/' + GOAL); } hud();
       ING.forEach(function(k, i){ var x = 10 + i * 16, b = K.add(evPc(k), 'ev-pc ev-tr', x, 61.5, 12); ui.push(b, K.add(EVP[k].n, 'ev-lb', x, 69.5)); b.addEventListener('click', function(){ add(k, b); }); });
-      var go = K.add('🍽 どうぞ', 'ev-btn', 84, 86); go.style.width = 'auto'; ui.push(go);
-      var clr = K.add('やりなおし', 'ev-btn sub', 84, 95); clr.style.width = 'auto'; ui.push(clr);
+      var go = K.add('🍽 どうぞ', 'ev-btn', 67, 89); go.style.width = 'auto'; ui.push(go);
+      var clr = K.add('もどす', 'ev-btn sub', 91, 89); clr.style.width = 'auto'; ui.push(clr);
       go.addEventListener('click', serve); clr.addEventListener('click', function(){ if(busy || K.over) return; plate = []; draw(); });
       function draw(){
         shown.forEach(function(e){ e.remove(); }); shown = [];
-        plate.forEach(function(k, i){ var e = K.add(evPc(k), 'ev-pc', 18 + i * 8, 89, 8.5); e.style.zIndex = 5; e.addEventListener('click', function(){ if(busy || K.over) return; plate.splice(i, 1); draw(); }); shown.push(e); });
+        plate.forEach(function(k, i){ var e = K.add(evPc(k), 'ev-pc', 15 + i * 6.4, 89, 7.5); e.style.zIndex = 5; e.addEventListener('click', function(){ if(busy || K.over) return; plate.splice(i, 1); draw(); }); shown.push(e); });
       }
       function add(k, b){
         if(K.over || busy) return;
@@ -13113,16 +13125,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* ③お鍋: すききらい さがし */
     function nabeGame(){
       var K = evKit({ bg:EV_YAKI_BG, front:EV_NABE_FRONT, icon:'🍲', pb:43 }); if(!K) return;
-      var ING = EVKIND.nabe.slice(), POTS = 3, CAP = 4, pot = [], potNo = 0, busy = false, SP = [[32, 36], [68, 36], [32, 52], [68, 52]];
+      var ING = EVKIND.nabe.slice(), POTS = 3, CAP = 4, pot = [], potNo = 0, busy = false, SP = [[32, 30], [68, 30], [32, 54], [68, 54]];
       K.pets.forEach(function(pt){ var a = ING.slice().sort(function(){ return Math.random() - .5; }); pt.like = a.slice(0, 2); pt.hate = a[2]; pt.score = 0; pt.known = []; });
       var bar = document.createElement('div'); bar.className = 'ev-bar'; K.ev.appendChild(bar);
-      function hud(){ K.hud('おなべ <b>' + potNo + '</b> / ' + POTS); } hud();
+      function hud(){ K.hud('おなべ <b>' + potNo + '</b>/' + POTS); } hud();
       function slotPos(i){ var e = K.ev.getBoundingClientRect(), f = K.front.getBoundingClientRect(); return { x:(f.left + f.width * SP[i][0] / 100 - e.left) / e.width * 100, y:(f.top + f.height * SP[i][1] / 100 - e.top) / e.height * 100 }; }
       ING.forEach(function(k, i){ var x = 12 + i * 15.2, b = K.add(evPc(k, 'ck'), 'ev-pc ev-tr', x, 88, 9); K.add(EVP[k].n, 'ev-lb', x, 93.5); b.addEventListener('click', function(){ addIng(k); }); });
       function bubOf(pt){
         if(pt.bub){ pt.bub.remove(); pt.bub = null; }
         if(!pt.known.length) return;
-        pt.bub = evOrdAt(K, pt, pt.known.map(function(q){ return '<span class="ev-o">' + evPc(q.k, 'ck') + '<b>' + (q.r > 0 ? '💗' : '😖') + '</b></span>'; }).join(''), 69 + (K.pets.length > 3 && K.pets.indexOf(pt) % 2 ? 13 : 0), 'sm');
+        pt.bub = evOrdAt(K, pt, pt.known.map(function(q){ return '<span class="ev-o">' + evPc(q.k, 'ck') + '<b>' + (q.r > 0 ? '💗' : '😖') + '</b></span>'; }).join(''), 69, 'sm');
         pt.bub.style.left = Math.max(12, Math.min(88, pt.x)) + '%';
       }
       function addIng(k){
