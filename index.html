@@ -2744,6 +2744,7 @@
   button.chip{ font:inherit; cursor:pointer; touch-action:manipulation; }
   button.chip:disabled{ cursor:default; }
   button.chip.now small{ color:var(--c); }
+  .pset-col{ flex-direction:column; align-items:stretch; } .pset-col .btn{ text-align:left; }
   .pin-in, .pin-hint{ display:block; width:100%; box-sizing:border-box; margin:8px 0 0; padding:10px 12px; border:2px solid var(--line); border-radius:12px; font:inherit; font-size:20px; font-weight:800; text-align:center; background:var(--surface); color:var(--ink); } .pin-in{ letter-spacing:.4em; } .pin-hint{ font-size:14px; letter-spacing:0; }
   .pin-msg{ min-height:1.4em; margin-top:6px; font-size:12px; font-weight:800; color:var(--ink-soft); text-align:center; }
   .gset{ display:block; margin:6px auto 0; padding:2px 8px; border:none; background:none; color:var(--ink-soft); font:inherit; font-size:11px; font-weight:800; text-decoration:underline; cursor:pointer; }
@@ -5778,13 +5779,29 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   /* ---------- 今日の 5枚は アプリが 決める(自分の 進み具合に 合わせて) ---------- */
   function progressOf(op){ var lv = currentLevelIndex(op); return lv * 3 + Math.min(3, clearsAtLevel(op, lv)); }
+  /* 5枚の くみあわせ(おうちの人が えらぶ): auto=おまかせ / md=×と÷だけ(a=×3枚÷2枚, b=×2枚÷3枚) / one=1しゅるい5枚 */
+  function mixGet(){ var v = safeGet('keisan_mix5'); return (v && v.m) ? v : { m:'auto' }; }
+  function mixSet(m, op){ safeSet('keisan_mix5', { m:m, op:op || '', t:Date.now() }); safeSet('keisan_plan', null); }
+  function mixKey(){ var v = mixGet(); return v.m === 'one' ? 'one:' + (v.op || 'mul') : v.m; }
+  function mixOps(){
+    var v = mixGet();
+    if(v.m === 'mda') return ['mul', 'div', 'mul', 'div', 'mul'];
+    if(v.m === 'mdb') return ['div', 'mul', 'div', 'mul', 'div'];
+    if(v.m === 'one'){ var o = SINGLE_OPS.indexOf(v.op) >= 0 ? v.op : 'mul'; return [o, o, o, o, o]; }
+    return null;
+  }
   function sheetPlan(){
-    var t = todayKey(), rec = safeGet('keisan_plan');
-    if(rec && rec.d === t && rec.ops && rec.ops.length === DAILY_SHEETS && rec.ops[DAILY_SHEETS - 1] === 'mix') return rec.ops;
+    var t = todayKey(), rec = safeGet('keisan_plan'), mo = mixOps(), key = mixKey();
+    if(mo){
+      if(rec && rec.d === t && rec.key === key && rec.ops && rec.ops.length === DAILY_SHEETS) return rec.ops;
+      safeSet('keisan_plan', { d:t, ops:mo, key:key });
+      return mo;
+    }
+    if(rec && rec.d === t && (rec.key == null || rec.key === 'auto') && rec.ops && rec.ops.length === DAILY_SHEETS && rec.ops[DAILY_SHEETS - 1] === 'mix') return rec.ops;
     /* 5枚目は ふりかえりの ミックス(今日 まちがいが 多かった 計算を 多めに。同じ 計算を もう1枚だと「さっき やった」に なるため) */
     var off = Math.max(0, SINGLE_OPS.indexOf('mul')), ops = SINGLE_OPS.slice(off).concat(SINGLE_OPS.slice(0, off));
     ops.push('mix');
-    safeSet('keisan_plan', { d:t, ops:ops });
+    safeSet('keisan_plan', { d:t, ops:ops, key:'auto' });
     return ops;
   }
   var G3_START = { add:3, sub:3, mul:2, div:2 };
@@ -5836,6 +5853,10 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   function openGradeSet(){
     var on = pbarOn();
+    var mg = mixGet(), mk = mixKey();
+    function mbtn(key, lab, m, op){ return '<button type="button" class="btn ' + (mk === key ? 'btn-primary' : 'btn-ghost') + '" data-mm="' + m + '" data-mo="' + (op || '') + '">' + lab + '</button>'; }
+    var mb = mbtn('auto', 'おまかせ(× ÷ ＋ － ミックス)', 'auto') + mbtn('mda', '×と÷だけ(× 3枚・÷ 2枚)', 'mda') + mbtn('mdb', '×と÷だけ(× 2枚・÷ 3枚)', 'mdb') +
+      SINGLE_OPS.map(function(o){ return mbtn('one:' + o, OP_META[o].symbol + ' だけ 5枚', 'one', o); }).join('');
     var gb = [1, 2, 3, 4].map(function(g){ return '<button type="button" class="btn ' + (g === pgrade() ? 'btn-primary' : 'btn-ghost') + '" data-g="' + g + '">小' + g + '</button>'; }).join('');
     openBk('<div class="bk-title">おうちの人の 設定</div>' +
       '<div class="pset"><b class="pset-h">① プリントを 始める 学年</b>' +
@@ -5844,10 +5865,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       '<div class="pset"><b class="pset-h">② プリント中の「●●●」(今 何問目かの しるし)</b>' +
       '<div class="bk-body">問題の 上に 並ぶ ●で、何問 とけたかが 見えるよ。</div>' +
       '<div class="pset-btns" id="psetP"><button type="button" class="btn ' + (on ? 'btn-primary' : 'btn-ghost') + '" data-pb="1">出す</button><button type="button" class="btn ' + (on ? 'btn-ghost' : 'btn-primary') + '" data-pb="0">かくす</button></div></div>' +
-      '<div class="pset"><b class="pset-h">③ この 設定の 鍵</b>' +
+      '<div class="pset"><b class="pset-h">③ 今日の 5枚の くみあわせ</b>' +
+      '<div class="bk-body">プリントの 5枚を なにで 出すか 決めるよ。えらぶと その日から かわるよ(今日 やった 分は そのまま)。</div>' +
+      '<div class="pset-btns pset-col" id="psetM">' + mb + '</div></div>' +
+      '<div class="pset"><b class="pset-h">④ この 設定の 鍵</b>' +
       '<div class="bk-body">4けたの 数字で 守って います。</div>' +
       '<div class="pset-btns"><button type="button" class="btn btn-ghost" id="pinChg">鍵を かえる</button><button type="button" class="btn btn-ghost" id="pinOff">鍵を やめる</button></div></div>',
       [{ label:'閉じる', onClick:closeBk }]);
+    $('psetM').onclick = function(e){ var b = e.target.closest('[data-mm]'); if(!b) return; mixSet(b.getAttribute('data-mm'), b.getAttribute('data-mo')); refreshHome(); openGradeSet(); };
     $('pinChg').onclick = function(){ openPinSet(true); };
     $('pinOff').onclick = function(){ pinSet('', ''); openGradeSet(); };
     $('psetG').onclick = function(e){ var b = e.target.closest('[data-g]'); if(b) setGrade(+b.getAttribute('data-g')); };
