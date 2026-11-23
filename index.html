@@ -1943,7 +1943,7 @@
   .card-wrap{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; min-height:150px; position:relative; }
   .problem-card{
     width:100%; background:var(--surface); border-radius:26px; box-shadow:var(--shadow);
-    padding:26px 18px; display:flex; flex-direction:column; align-items:center; gap:14px;
+    padding:26px 18px; display:flex; flex-direction:column; align-items:center; gap:14px; position:relative;
     border:3px solid transparent; transition:border-color .12s ease, transform .12s ease;
   }
   .problem-card.flash-good{ border-color:var(--good); }
@@ -2744,6 +2744,7 @@
   button.chip{ font:inherit; cursor:pointer; touch-action:manipulation; }
   button.chip:disabled{ cursor:default; }
   button.chip.now small{ color:var(--c); }
+  .qt-ring{ position:absolute; left:-3px; top:-3px; pointer-events:none; overflow:visible; } .qt-ring rect{ fill:none; stroke:var(--good); stroke-width:5; stroke-linecap:round; transition:stroke .3s; } .qt-ring rect.warm{ stroke:#f0a020; } .qt-ring rect.hot{ stroke:var(--bad); }
   .pset-col{ flex-direction:column; align-items:stretch; } .pset-col .btn{ text-align:left; }
   .pin-in, .pin-hint{ display:block; width:100%; box-sizing:border-box; margin:8px 0 0; padding:10px 12px; border:2px solid var(--line); border-radius:12px; font:inherit; font-size:20px; font-weight:800; text-align:center; background:var(--surface); color:var(--ink); } .pin-in{ letter-spacing:.4em; } .pin-hint{ font-size:14px; letter-spacing:0; }
   .pin-msg{ min-height:1.4em; margin-top:6px; font-size:12px; font-weight:800; color:var(--ink-soft); text-align:center; }
@@ -5857,6 +5858,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     function mbtn(key, lab, m, op){ return '<button type="button" class="btn ' + (mk === key ? 'btn-primary' : 'btn-ghost') + '" data-mm="' + m + '" data-mo="' + (op || '') + '">' + lab + '</button>'; }
     var mb = mbtn('auto', 'おまかせ(× ÷ ＋ － ミックス)', 'auto') + mbtn('mda', '×と÷だけ(× 3枚・÷ 2枚)', 'mda') + mbtn('mdb', '×と÷だけ(× 2枚・÷ 3枚)', 'mdb') +
       SINGLE_OPS.map(function(o){ return mbtn('one:' + o, OP_META[o].symbol + ' だけ 5枚', 'one', o); }).join('');
+    var qs0 = qtSec();
+    var qb = [[0, 'なし'], [15, '15秒'], [30, '30秒'], [60, '60秒']].map(function(a){ return '<button type="button" class="btn ' + (qs0 === a[0] ? 'btn-primary' : 'btn-ghost') + '" data-qt="' + a[0] + '">' + a[1] + '</button>'; }).join('');
     var gb = [1, 2, 3, 4].map(function(g){ return '<button type="button" class="btn ' + (g === pgrade() ? 'btn-primary' : 'btn-ghost') + '" data-g="' + g + '">小' + g + '</button>'; }).join('');
     openBk('<div class="bk-title">おうちの人の 設定</div>' +
       '<div class="pset"><b class="pset-h">① プリントを 始める 学年</b>' +
@@ -5868,11 +5871,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       '<div class="pset"><b class="pset-h">③ 今日の 5枚の くみあわせ</b>' +
       '<div class="bk-body">プリントの 5枚を なにで 出すか 決めるよ。えらぶと その日から かわるよ(今日 やった 分は そのまま)。</div>' +
       '<div class="pset-btns pset-col" id="psetM">' + mb + '</div></div>' +
-      '<div class="pset"><b class="pset-h">④ この 設定の 鍵</b>' +
+      '<div class="pset"><b class="pset-h">④ 1問の 制限時間</b>' +
+      '<div class="bk-body">問題の わくが くるっと 回って、時間が へっていくよ。時間が きれたら まちがい あつかいで つぎへ(あとで もう1回 出るよ)。筆算の 問題は 2ばいの 時間。文章題には つかないよ。</div>' +
+      '<div class="pset-btns" id="psetQ">' + qb + '</div></div>' +
+      '<div class="pset"><b class="pset-h">⑤ この 設定の 鍵</b>' +
       '<div class="bk-body">4けたの 数字で 守って います。</div>' +
       '<div class="pset-btns"><button type="button" class="btn btn-ghost" id="pinChg">鍵を かえる</button><button type="button" class="btn btn-ghost" id="pinOff">鍵を やめる</button></div></div>',
       [{ label:'閉じる', onClick:closeBk }]);
     $('psetM').onclick = function(e){ var b = e.target.closest('[data-mm]'); if(!b) return; mixSet(b.getAttribute('data-mm'), b.getAttribute('data-mo')); refreshHome(); openGradeSet(); };
+    $('psetQ').onclick = function(e){ var b = e.target.closest('[data-qt]'); if(!b) return; safeSet('keisan_qtimer', { s:+b.getAttribute('data-qt'), t:Date.now() }); openGradeSet(); };
     $('pinChg').onclick = function(){ openPinSet(true); };
     $('pinOff').onclick = function(){ pinSet('', ''); openGradeSet(); };
     $('psetG').onclick = function(e){ var b = e.target.closest('[data-g]'); if(b) setGrade(+b.getAttribute('data-g')); };
@@ -8930,6 +8937,46 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     return h;
   }
   function canHissan(q){ if(q.op==='div') return !q.word && q.a >= 10 && q.b >= 2 && q.b <= 9 && q.a % q.b === 0; return (q.op==='add' || q.op==='sub' || q.op==='mul') && Math.max(q.a, q.b) >= 10; }
+  /* 1問ごとの 制限時間(おうちの人が 設定で えらぶ。問題カードの わくが くるっと 回って へる) */
+  var QT = { raf:0, el:null, q:null };
+  function qtSec(){ var v = safeGet('keisan_qtimer'); return v && v.s ? +v.s : 0; }
+  function qtStop(){ if(QT.raf) cancelAnimationFrame(QT.raf); QT.raf = 0; if(QT.el && QT.el.parentNode) QT.el.parentNode.removeChild(QT.el); QT.el = null; QT.q = null; }
+  function qtStart(q){
+    qtStop();
+    var sec = qtSec();
+    if(!sec || state.mode !== 'accuracy' || q.word || wpNeedsOp(q)) return;
+    var card = $('problemCard'), w = card.offsetWidth, h = card.offsetHeight;
+    if(!w || !h) return;
+    var rad = parseFloat(getComputedStyle(card).borderTopLeftRadius) || 26, ns = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(ns, 'svg'); svg.setAttribute('class', 'qt-ring'); svg.setAttribute('width', w); svg.setAttribute('height', h); svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    var r = document.createElementNS(ns, 'rect');
+    r.setAttribute('x', 2); r.setAttribute('y', 2); r.setAttribute('width', w - 4); r.setAttribute('height', h - 4); r.setAttribute('rx', Math.max(2, rad - 2)); r.setAttribute('pathLength', 100);
+    r.setAttribute('stroke-dasharray', '100'); r.setAttribute('stroke-dashoffset', '0');
+    svg.appendChild(r); card.appendChild(svg);
+    QT.el = svg; QT.q = q;
+    if(q._qtEl == null) q._qtEl = 0;
+    var last = performance.now();
+    function tick(now){
+      if(QT.q !== q || state.current !== q || views.play.hidden){ qtStop(); return; }
+      var dt = Math.min(200, now - last); last = now;
+      if(!document.hidden && $('bkModal').hidden && !busy) q._qtEl += dt;
+      var limit = sec * (q.hs ? 2 : 1) * 1000, f = Math.min(1, q._qtEl / limit);
+      r.setAttribute('stroke-dashoffset', String(f * 100));
+      r.setAttribute('class', f > .75 ? 'hot' : f > .5 ? 'warm' : '');
+      if(f >= 1 && !busy){ qtStop(); qtTimeout(q); return; }
+      QT.raf = requestAnimationFrame(tick);
+    }
+    QT.raf = requestAnimationFrame(tick);
+  }
+  function qtTimeout(q){
+    busy = true;
+    q.mistakes++;
+    flashFeedback(false, q.answer);
+    say('じかんぎれ! つぎは がんばろう');
+    state.queue.push(q.id);
+    $('okKey').disabled = true;
+    setTimeout(function(){ busy = false; nextAccuracyProblem(); }, 1050);
+  }
   function renderProblem(){
     if(state.print && state.print.kind==='challenge') updateLevelTag();
     state.inputBuf = ''; state.hsCells = null; state.hsSel = 0; state.hsCarry = null; state.hsCSel = -1; state.dv = null;
@@ -8977,6 +9024,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     csw.textContent = carryOn() ? 'くり上がりの マスを かくす' : 'くり上がりの マスを 出す';
     updateAnswerBox();
     $('okKey').disabled = true;
+    qtStart(q);
   }
 
   /* わり算の 筆算(たてる → かける → ひく → おろす)。こたえは 上の 「たてた 数」で 決まる */
