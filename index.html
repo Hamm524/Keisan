@@ -2707,6 +2707,7 @@
   .lm-pet{ position:absolute; bottom:14px; width:30px; height:30px; display:block; }
   .lm-pet svg{ width:100%; height:100%; display:block; }
   .lm-btn{ flex:none; border:2px solid var(--line); background:var(--surface); border-radius:12px; padding:6px 8px; font:inherit; font-size:12px; font-weight:900; color:var(--ink-soft); cursor:pointer; }
+  .lm-btns{ display:flex; flex-direction:column; gap:4px; } .lm-btn.chk{ border-color:var(--live); color:var(--live); }
   .lm-btn.ask{ border-color:var(--gold-deep); color:var(--gold-deep); background:color-mix(in srgb, var(--gold) 16%, var(--surface)); }
   .lt{ position:fixed; inset:0; z-index:99990; background:var(--bg, #faf5ea); display:flex; flex-direction:column; align-items:center; padding:14px 16px 24px; overflow:auto; }
   .lt-top{ width:100%; max-width:420px; display:flex; align-items:center; gap:10px; font-size:15px; }
@@ -5943,7 +5944,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var cur = currentLevelIndex(op), def = LEVELS[op][cur], isPl = placed(op);
         h += '<div class="lm-row" style="--c:var('+OP_META[op].color+')"><i class="lm-sym">'+OP_META[op].symbol+'</i>' +
           '<div class="lm-body"><b>Lv.'+(cur+1)+' '+def.name+'</b><small>'+def.desc+'</small><div class="lm-steps">'+steps(op)+'</div></div>' +
-          '<button class="lm-btn'+(isPl ? '' : ' ask')+'" data-lm="'+op+'">'+(isPl ? 'しらべなおす' : 'しらべる')+'</button></div>';
+          '<div class="lm-btns"><button class="lm-btn'+(isPl ? '' : ' ask')+'" data-lm="'+op+'">'+(isPl ? 'しらべなおす' : 'しらべる')+'</button>' +
+          (cur < LEVELS[op].length - 1 ? '<button class="lm-btn chk" data-lc="'+op+'">かくにんテスト</button>' : '') + '</div></div>';
       });
       c.innerHTML = h + '</details>';
       $('lmDet').addEventListener('toggle', function(){ state.lvOpen = this.open; });
@@ -5951,7 +5953,81 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     document.addEventListener('click', function(e){
       var b = e.target.closest && e.target.closest('[data-lm]');
       if(b) openTest(b.getAttribute('data-lm'));
+      var c = e.target.closest && e.target.closest('[data-lc]');
+      if(c) openCheck(c.getAttribute('data-lc'));
     });
+    /* かくにんテスト: 今の レベルで 25問、22問 以上 正解 + めあての 時間 以内で 合格 → 次の レベルへ */
+    var CK_N = 25, CK_PASS = 22;
+    function openCheck(op){
+      var old = $('lvTest'); if(old) old.remove();
+      var cur = currentLevelIndex(op); if(cur >= LEVELS[op].length - 1) return;
+      var goal = printTarget(op, CK_N, cur);
+      var T = { i:0, ok:0, ans:'', q:null, done:false, t0:0, seen:{} };
+      var ov = document.createElement('div'); ov.id = 'lvTest'; ov.className = 'lt'; ov.style.setProperty('--c', 'var('+OP_META[op].color+')');
+      document.body.appendChild(ov);
+      var label = OP_META[op].label.replace('練習', '');
+      function close(){ document.removeEventListener('keydown', onKey); ov.remove(); }
+      function next(){
+        for(var k = 0; k < 20; k++){ T.q = LEVELS[op][cur].gen(); if(!T.seen[T.q.a + '|' + T.q.b]) break; }
+        T.seen[T.q.a + '|' + T.q.b] = 1; T.ans = ''; if(!T.t0) T.t0 = Date.now(); draw();
+      }
+      function vertOn(){ return op !== 'div' && (T.vert != null ? T.vert : (Math.max(T.q.a, T.q.b) >= 100 || (op === 'mul' && T.q.a >= 10))); }
+      function qHTML(){
+        var q = T.q, sym = OP_META[op].symbol, a = '<span class="lt-a">'+(T.ans === '' ? '?' : T.ans)+'</span>';
+        if(!vertOn()) return '<div class="lt-q num">'+q.a+' '+sym+' '+q.b+' = '+a+'</div>';
+        return '<div class="lt-q lt-v num"><div class="r">'+q.a+'</div><div class="r"><i>'+sym+'</i>'+q.b+'</div><div class="ln"></div><div class="r">'+a+'</div></div>';
+      }
+      function draw(){
+        ov.innerHTML = '<div class="lt-top"><button class="lt-x" data-lt="x" aria-label="やめる">✕</button><b>'+label+'の かくにんテスト</b></div>' +
+          '<div class="lt-bar"><i style="width:'+Math.round(T.i / CK_N * 100)+'%"></i></div>' +
+          '<div class="lt-hint">'+(T.i + 1)+' / '+CK_N+'問め。'+CK_PASS+'問 以上 正解、'+fmtSec(goal)+' 以内で 合格!</div>' +
+          qHTML() + (op === 'div' ? '' : '<button class="lt-tg" data-lt="vt">'+(vertOn() ? 'よこ書きで 見る' : '筆算(たて書き)で 見る')+'</button>') +
+          '<div class="lt-pad">'+[1,2,3,4,5,6,7,8,9].map(function(d){ return '<button data-lt="'+d+'">'+d+'</button>'; }).join('')+'<button data-lt="b">⌫</button><button data-lt="0">0</button><button class="ok" data-lt="ok">✓</button></div>';
+      }
+      function submit(){
+        if(T.ans !== '' && +T.ans === T.q.answer) T.ok++;
+        T.i++; T.vert = null;
+        if(T.i >= CK_N) return result();
+        next();
+      }
+      function result(){
+        T.done = true;
+        var sec = Math.round((Date.now() - T.t0) / 1000), okAcc = T.ok >= CK_PASS, okTime = sec <= goal, pass = okAcc && okTime;
+        var nd = LEVELS[op][cur + 1];
+        var why = pass ? '' : '<div class="lt-sub">'+(!okAcc ? '正解が '+CK_PASS+'問 に とどかなかったよ。' : '')+(!okTime ? 'めあて '+fmtSec(goal)+' より おそかったよ。' : '')+'<br>だいじょうぶ、また ちょうせん できるよ!</div>';
+        ov.innerHTML = '<div class="lt-top"><b>'+label+'の かくにんテスト</b></div>' +
+          '<div class="lt-res"><div class="lt-big">'+(pass ? '合格!' : 'もう ちょっと!')+'</div>' +
+          '<div class="lt-sub">正解 <b>'+T.ok+' / '+CK_N+'</b> ・ じかん <b>'+fmtSec(sec)+'</b>(めあて '+fmtSec(goal)+')</div>' + why +
+          (pass ? '<div class="lt-sub">つぎは <b>Lv.'+(cur + 2)+'「'+nd.name+'」</b>('+nd.desc+')!</div><button class="lt-go" data-lt="up">つぎの レベルへ</button>' : '<button class="lt-go" data-lt="again">もういちど</button>') +
+          '<button class="lt-no" data-lt="x">'+(pass ? 'あとで' : 'おわり')+'</button></div>';
+      }
+      function onKey(e){
+        if(T.done) return;
+        if(/^[0-9]$/.test(e.key)) press(e.key); else if(e.key === 'Backspace') press('b'); else if(e.key === 'Enter') press('ok');
+      }
+      function press(k){
+        if(k === 'ok') return submit();
+        if(k === 'b') T.ans = T.ans.slice(0, -1); else if(T.ans.length < 6) T.ans += k;
+        var a = ov.querySelector('.lt-a'); if(a) a.textContent = T.ans === '' ? '?' : T.ans;
+      }
+      ov.addEventListener('click', function(e){
+        var b = e.target.closest('[data-lt]'); if(!b) return;
+        var k = b.getAttribute('data-lt');
+        if(k === 'x') return close();
+        if(k === 'vt'){ T.vert = !vertOn(); return draw(); }
+        if(k === 'again'){ T.i = 0; T.ok = 0; T.t0 = 0; T.seen = {}; T.done = false; T.vert = null; return next(); }
+        if(k === 'up'){
+          if(currentLevelIndex(op) === cur){
+            safeSet('keisan_level_' + op, cur + 1); safeSet('keisan_clears_' + op + '_' + (cur + 1), 0); safeSet('keisan_plan', null);
+            setCoins(getCoins() + LEVELUP_BONUS);
+          }
+          close(); refreshHome(); return;
+        }
+        press(k);
+      });
+      document.addEventListener('keydown', onKey);
+      next();
+    }
 
     function openTest(op){
       var old = $('lvTest'); if(old) old.remove();
@@ -6023,7 +6099,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       document.addEventListener('keydown', onKey);
       next();
     }
-    return { render:render, openTest:openTest };
+    return { render:render, openTest:openTest, openCheck:openCheck };
   })();
   function assignedMode(){ return sheetsToday() < DAILY_SHEETS; }
   /* 5枚は すきな 順で えらべる: どの枠(0〜4)が 終わったかを keisan_slots{d,done[]} に。枠が ない 記録(復習・前の 版)は 小さい 番号から うめる */
