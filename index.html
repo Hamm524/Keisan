@@ -2432,6 +2432,7 @@
   .pset-h{ display:block; font-size:14px; font-weight:900; margin-bottom:2px; }
   .pset-btns{ display:flex; gap:6px; margin-top:6px; }
   .pset-btns .btn{ flex:1; padding:9px 4px; font-size:14px; }
+  .bk-btns.col{ flex-direction:column; }
   .bk-btns .btn{ flex:1; padding:12px; font-size:14px; }
 
   /* ---- food / hunger ---- */
@@ -5944,11 +5945,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var cur = currentLevelIndex(op), def = LEVELS[op][cur], isPl = placed(op);
         h += '<div class="lm-row" style="--c:var('+OP_META[op].color+')"><i class="lm-sym">'+OP_META[op].symbol+'</i>' +
           '<div class="lm-body"><b>Lv.'+(cur+1)+' '+def.name+'</b><small>'+def.desc+'</small><div class="lm-steps">'+steps(op)+'</div></div>' +
-          '<div class="lm-btns"><button class="lm-btn'+(isPl ? '' : ' ask')+'" data-lm="'+op+'">'+(isPl ? 'しらべなおす' : 'しらべる')+'</button>' +
+          '<div class="lm-btns">'+(isPl ? '' : '<button class="lm-btn ask" data-lm="'+op+'">しらべる</button>') +
           (cur < LEVELS[op].length - 1 ? '<button class="lm-btn chk" data-lc="'+op+'">かくにんテスト</button>' : '') + '</div></div>';
       });
       c.innerHTML = h + '</details>';
       $('lmDet').addEventListener('toggle', function(){ state.lvOpen = this.open; });
+      if(unp.length && !safeGet('keisan_lvask')) setTimeout(askFirst, 700);   /* 1回だけ(askFirst 内で 印を つける) */
     }
     document.addEventListener('click', function(e){
       var b = e.target.closest && e.target.closest('[data-lm]');
@@ -5956,6 +5958,21 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var c = e.target.closest && e.target.closest('[data-lc]');
       if(c) openCheck(c.getAttribute('data-lc'));
     });
+    /* さいしょの 1回だけ ダイアログで「今の レベルを しらべよう」と 出す */
+    function askFirst(tries){
+      tries = tries | 0;
+      if(safeGet('keisan_lvask') || tries > 40) return;
+      var home = $('road') && $('road').offsetParent;   /* ホームが 見えている ときだけ */
+      /* ログインボーナスなど ほかの ダイアログが 出ている ときは 閉じるまで まつ */
+      if(!home || document.querySelector('.modal:not([hidden])') || $('lvTest')){ if(home !== null) setTimeout(function(){ askFirst(tries + 1); }, 1000); return; }
+      var unp = SINGLE_OPS.filter(function(o){ return !placed(o); });
+      if(!unp.length) return;
+      safeSet('keisan_lvask', 1);
+      var btns = unp.map(function(o){ return { label:OP_META[o].symbol + ' ' + OP_META[o].label.replace('練習', '') + 'を しらべる', primary:true, onClick:function(){ closeBk(); openTest(o); } }; });
+      btns.push({ label:'あとで(レベルの 地図から できるよ)', onClick:closeBk });
+      openBk('<div class="bk-title">まず 今の レベルを しらべよう!</div><div class="bk-body">やさしい 問題から だんだん むずかしく なるよ。1つの 計算で 約3分。わからない ときは そのまま ✓ で OK!<br>結果で、ちょうど いい レベルから はじめられるよ。</div>', btns);
+      $('bkBtns').classList.add('col');
+    }
     /* かくにんテスト: 今の レベルで 25問、22問 以上 正解 + めあての 時間 以内で 合格 → 次の レベルへ */
     var CK_N = 25, CK_PASS = 22;
     function openCheck(op){
@@ -22983,7 +23000,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
 
   function openBk(bodyHtml, buttons){
     $('bkBody').innerHTML = bodyHtml;
-    var box = $('bkBtns'); box.innerHTML = ''; box.classList.remove('buy');
+    var box = $('bkBtns'); box.innerHTML = ''; box.classList.remove('buy'); box.classList.remove('col');
     buttons.forEach(function(b){
       var el = document.createElement('button');
       el.className = 'btn ' + (b.primary ? 'btn-primary' : 'btn-ghost');
