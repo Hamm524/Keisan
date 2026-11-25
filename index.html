@@ -5994,12 +5994,16 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         T.done = true;
         var sec = Math.round((Date.now() - T.t0) / 1000), okAcc = T.ok >= CK_PASS, okTime = sec <= goal, pass = okAcc && okTime;
         var nd = LEVELS[op][cur + 1];
+        /* 合格したら その場で レベルアップ(「あとで」には できない) */
+        if(pass && currentLevelIndex(op) === cur){
+          safeSet('keisan_level_' + op, cur + 1); safeSet('keisan_clears_' + op + '_' + (cur + 1), 0); safeSet('keisan_plan', null);
+          setCoins(getCoins() + LEVELUP_BONUS);
+        }
         var why = pass ? '' : '<div class="lt-sub">'+(!okAcc ? '正解が '+CK_PASS+'問 に とどかなかったよ。' : '')+(!okTime ? 'めあて '+fmtSec(goal)+' より おそかったよ。' : '')+'<br>だいじょうぶ、また ちょうせん できるよ!</div>';
         ov.innerHTML = '<div class="lt-top"><b>'+label+'の かくにんテスト</b></div>' +
           '<div class="lt-res"><div class="lt-big">'+(pass ? '合格!' : 'もう ちょっと!')+'</div>' +
           '<div class="lt-sub">正解 <b>'+T.ok+' / '+CK_N+'</b> ・ じかん <b>'+fmtSec(sec)+'</b>(めあて '+fmtSec(goal)+')</div>' + why +
-          (pass ? '<div class="lt-sub">つぎは <b>Lv.'+(cur + 2)+'「'+nd.name+'」</b>('+nd.desc+')!</div><button class="lt-go" data-lt="up">つぎの レベルへ</button>' : '<button class="lt-go" data-lt="again">もういちど</button>') +
-          '<button class="lt-no" data-lt="x">'+(pass ? 'あとで' : 'おわり')+'</button></div>';
+          (pass ? '<div class="lt-sub">レベルが あがったよ! 今から <b>Lv.'+(cur + 2)+'「'+nd.name+'」</b>('+nd.desc+')!<br>コイン +'+LEVELUP_BONUS+'</div><button class="lt-go" data-lt="up">やったね!</button>' : '<button class="lt-go" data-lt="again">もういちど</button><button class="lt-no" data-lt="x">おわり</button>') + '</div>';
       }
       function onKey(e){
         if(T.done) return;
@@ -6016,13 +6020,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(k === 'x') return close();
         if(k === 'vt'){ T.vert = !vertOn(); return draw(); }
         if(k === 'again'){ T.i = 0; T.ok = 0; T.t0 = 0; T.seen = {}; T.done = false; T.vert = null; return next(); }
-        if(k === 'up'){
-          if(currentLevelIndex(op) === cur){
-            safeSet('keisan_level_' + op, cur + 1); safeSet('keisan_clears_' + op + '_' + (cur + 1), 0); safeSet('keisan_plan', null);
-            setCoins(getCoins() + LEVELUP_BONUS);
-          }
-          close(); refreshHome(); return;
-        }
+        if(k === 'up'){ close(); refreshHome(); return; }
         press(k);
       });
       document.addEventListener('keydown', onKey);
