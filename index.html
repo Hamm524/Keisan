@@ -9609,9 +9609,29 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       passed: passed,
       medal: medalGot
     });
+    if(pr && pr.kind === 'daily' && state.op !== 'mix') ckOffer(state.op, accuracy, elapsed / 1000, target);
     if(pr && pr.kind==='weekend'){ $('retryBtn').textContent = 'もう1回 100問'; $('retryBtn').onclick = function(){ startPrint(state.op, WEEKEND_N, 'weekend'); }; }
   }
 
+  /* 正解95%以上・めあて以内の プリントが 2回 つづいたら「かくにんテストに ちょうせん!」と 出す(1日1回まで) */
+  var CK_OFFER_ACC = 95, CK_OFFER_N = 2;
+  function ckOffer(op, acc, sec, target){
+    var lv = currentLevelIndex(op);
+    if(lv >= LEVELS[op].length - 1) return;
+    var k = 'keisan_ckprog_' + op, rec = safeGet(k), n = (rec && rec.lv === lv) ? (rec.n | 0) : 0;
+    n = (acc >= CK_OFFER_ACC && sec <= target) ? n + 1 : 0;
+    safeSet(k, { lv:lv, n:n, t:Date.now() });
+    if(n < CK_OFFER_N || safeGet('keisan_ckask_' + op) === todayKey()) return;
+    safeSet('keisan_ckask_' + op, todayKey());
+    setTimeout(function(){
+      if($('bkModal') && !$('bkModal').hidden) return;
+      openBk('<div class="bk-title">かくにんテストに ちょうせん!</div>' +
+        '<div class="bk-body">'+OP_META[op].label.replace('練習','')+'が はやく 正確に できて いるよ!<br>25問を 22問 以上 正解、'+fmtSec(printTarget(op, CK_N_PUB, lv))+' 以内で 合格すると、すぐに 次の レベルへ すすめるよ。</div>',
+        [{ label:'ちょうせん する', primary:true, onClick:function(){ closeBk(); Lv.openCheck(op); } },
+         { label:'あとで', onClick:closeBk }]);
+    }, 700);
+  }
+  var CK_N_PUB = 25;
   function finishJump(){
     var ok = state.questions.filter(function(q){ return q.solved; }).length;
     var elapsed = Date.now() - state.startTime;
