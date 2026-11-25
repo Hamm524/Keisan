@@ -2778,6 +2778,7 @@
   .sheets-d.wide{ width:100%; justify-content:space-between; gap:4px; }
   .chip{ display:inline-flex; flex-direction:column; align-items:center; flex:1 1 0; min-width:0; padding:4px 2px; border-radius:12px; border:2.5px solid #E3D6C0; background:#fff; color:var(--ink-soft); font-weight:900; }
   .chip .cs{ font-size:18px; line-height:1.15; color:var(--c); }
+  .chip small.clv{ font-size:11px; font-weight:900; color:var(--ink); }
   .chip small{ font-size:10px; font-weight:800; white-space:nowrap; }
   .chip.on{ background:var(--c); border-color:var(--c); color:#fff; }
   .chip.on .cs{ color:#fff; }
@@ -6708,7 +6709,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     for(var k = 0; k < DAILY_SHEETS; k++){
       if(sn < DAILY_SHEETS){
         var po = plan[k], isDn = dnS.indexOf(k) >= 0;
-        sd += '<button type="button" class="chip'+(isDn ? ' on' : (k === nxS ? ' now' : ''))+'" data-slot="'+k+'"'+(isDn ? ' disabled' : '')+' style="--c:var('+OP_META[po].color+')" aria-label="'+(isDn ? OP_META[po].label+' おわった' : OP_META[po].label+'の プリントを はじめる')+'"><span class="cs">'+OP_META[po].symbol+'</span><small>'+(isDn ? '✓' : (k === nxS ? 'おすすめ' : 'やる'))+'</small></button>';
+        sd += '<button type="button" class="chip'+(isDn ? ' on' : (k === nxS ? ' now' : ''))+'" data-slot="'+k+'"'+(isDn ? ' disabled' : '')+' style="--c:var('+OP_META[po].color+')" aria-label="'+(isDn ? OP_META[po].label+' おわった' : OP_META[po].label+'の プリントを はじめる')+'"><span class="cs">'+OP_META[po].symbol+'</span>'+(po === 'mix' || isDn ? '' : '<small class="clv">Lv.'+(currentLevelIndex(po)+1)+'</small>')+'<small>'+(isDn ? '✓' : (k === nxS ? 'おすすめ' : 'やる'))+'</small></button>';
       }else sd += '<i class="on"></i>';
     }
     $('sizeNote').innerHTML = '<div class="sheets"><span class="sheets-t">今日の プリント</span><span class="sheets-say">'+sheetsSay(sn)+'</span><span class="sheets-d'+(sn < DAILY_SHEETS ? ' wide' : '')+'">'+sd+'</span></div>' +
