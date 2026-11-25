@@ -5792,6 +5792,12 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     if(v.m === 'one'){ var o = SINGLE_OPS.indexOf(v.op) >= 0 ? v.op : 'mul'; return [o, o, o, o, o]; }
     return null;
   }
+  /* ホームに 出す 計算: おまかせ=ぜんぶ+ミックス / ×÷だけ=× ÷ / 1しゅるい=その1つ(ミックスは おまかせの ときだけ) */
+  function shownOps(withMix){
+    var v = mixGet(), ops = v.m === 'auto' ? SINGLE_OPS.slice() : v.m === 'one' ? [SINGLE_OPS.indexOf(v.op) >= 0 ? v.op : 'mul'] : ['mul', 'div'];
+    if(withMix && v.m === 'auto') ops.push('mix');
+    return ops;
+  }
   function sheetPlan(){
     var t = todayKey(), rec = safeGet('keisan_plan'), mo = mixOps(), key = mixKey();
     if(mo){
@@ -6200,7 +6206,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   function opName100(o){ return o === 'mix' ? 'ミックス' : OP_META[o].label; }
   function rec100Op(){
     var best = null, bd = null;
-    (mixOpen() ? ['mix','div','sub','add','mul'] : ['div','sub','add','mul']).forEach(function(o){
+    var okOps = shownOps(true);
+    (mixOpen() ? ['mix','div','sub','add','mul'] : ['div','sub','add','mul']).filter(function(o){ return okOps.indexOf(o) >= 0; }).forEach(function(o){
       var l = log100(o), d = l.length ? l[l.length-1].d : '';
       if(bd === null || d < bd){ bd = d; best = o; }
     });
@@ -6238,7 +6245,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     h += '</ul><div class="cp100-note">'+(P.again ? '今日の 1回目の コインは もう もらったよ。2回目からは メダルや 自己ベストで コインを 増やそう!' : '2回目からは「100問 解けたら」が 10分の1に なるよ。メダルの コインは 1日'+Medal.RUN_MAX+'回まで 毎回 もらえるよ。')+'</div></div>';
     return h;
   }
-  function op100(){ return state.w100Op || rec100Op(); }   /* さいしょは いつも おすすめ(コインを もらった あとも、つぎに ひさしぶりの 計算) */
+  function op100(){ return (state.w100Op && shownOps(true).indexOf(state.w100Op) >= 0) ? state.w100Op : rec100Op(); }   /* さいしょは いつも おすすめ(コインを もらった あとも、つぎに ひさしぶりの 計算) */
   /* 「ミックスへの道」: × ÷ それぞれの 目標(正解 MIX100_ACC% 以上・MIX100_MS 以内) */
   function mixPathHTML(){
     var row = function(o){
@@ -6255,7 +6262,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     var name = opName100(op);
     var best = best100(op), hist = log100(op).slice(-7), h = '';
     var ro = rec100Op(), shelf = '<div class="md-shelf" role="radiogroup" aria-label="100問の しゅるい">';
-    SINGLE_OPS.concat(['mix']).forEach(function(o){
+    shownOps(true).forEach(function(o){
       var tp = Medal.topOf(o), lock = o === 'mix' && !mixOpen();
       shelf += '<button class="md-shelf-c'+(o===op ? ' on' : '')+(tp ? ' has' : '')+(lock ? ' lock' : '')+'" data-op100="'+o+'" role="radio" aria-checked="'+(o===op)+'"'+(lock ? ' aria-disabled="true"' : '')+'>' + (o===ro ? '<em>おすすめ</em>' : '') +
         Medal.svg(lock ? 0 : tp) + '<b>'+(lock ? '🔒' : Medal.sym(o))+'</b></button>';
@@ -6472,7 +6479,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   function renderTabs(sel, rec){
     var h = '';
-    SINGLE_OPS.concat(['mix']).forEach(function(op){
+    shownOps(true).forEach(function(op){
       var meta = OP_META[op];
       var sub = op==='mix' ? '混ぜる' : 'Lv'+(currentLevelIndex(op)+1);
       h += '<button class="op-tab'+(op==='mix'?' mix':'')+'" role="tab" data-op="'+op+'" aria-selected="'+(op===sel)+'" style="--c:var('+meta.color+')">' +
@@ -6550,7 +6557,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
   }
   function renderOpList(rec){
     var h = '';
-    SINGLE_OPS.forEach(function(op){
+    shownOps(false).forEach(function(op){
       var meta = OP_META[op], info = levelInfoText(op);
       var pct = Math.round(roadProgress(op)*100);
       h += '<button class="op-row" data-op="'+op+'" style="--c:var('+meta.color+')">' +
@@ -6561,7 +6568,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         '<span class="stars-mini">'+miniStars(op)+'</span></button>';
     });
     var mb = bestAccuracy('mix');
-    h += '<button class="op-row mix" data-op="mix"><span class="sym num">MIX</span><span class="mid"><span class="nm">混ぜて 練習</span><span class="meta">'+(mb>0?'自己ベスト '+mb+'%':'＋－×÷ が まざって でるよ')+'</span></span><span class="care-go" style="color:#fff">›</span></button>';
+    if(shownOps(true).indexOf('mix') >= 0) h += '<button class="op-row mix" data-op="mix"><span class="sym num">MIX</span><span class="mid"><span class="nm">混ぜて 練習</span><span class="meta">'+(mb>0?'自己ベスト '+mb+'%':'＋－×÷ が まざって でるよ')+'</span></span><span class="care-go" style="color:#fff">›</span></button>';
     $('opList').innerHTML = h;
   }
   function renderCollection(){
