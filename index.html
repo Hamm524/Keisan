@@ -2687,6 +2687,8 @@
   .mp-i.ok i{ background:var(--good); color:#fff; }
 
   .lvmap{ background:var(--surface); border-radius:22px; padding:12px 14px; margin-bottom:14px; box-shadow:var(--shadow); }
+  .lm-open{ width:100%; border:none; background:none; font:inherit; cursor:pointer; display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:16px; padding:0; color:var(--ink); text-align:left; } .lm-open i{ margin-left:auto; font-style:normal; color:var(--ink-soft); font-size:20px; }
+  .lm-modal{ text-align:left; }
   .lm-det summary{ cursor:pointer; list-style:none; display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:16px; }
   .lm-det summary::-webkit-details-marker{ display:none; }
   .lm-det summary::after{ content:'▾'; margin-left:auto; color:var(--ink-soft); }
@@ -5937,10 +5939,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var c = $('lvMap'); if(!c) return;
       c.hidden = false;
       var unp = SINGLE_OPS.filter(function(o){ return !placed(o); });
-      var open = state.lvOpen == null ? unp.length > 0 : state.lvOpen;
       var sum = SINGLE_OPS.map(function(o){ return '<span style="--c:var('+OP_META[o].color+')">'+OP_META[o].symbol+'<b>Lv.'+(currentLevelIndex(o)+1)+'</b></span>'; }).join('');
-      var h = '<details class="lm-det" id="lmDet"'+(open ? ' open' : '')+'><summary><b>レベルの 地図</b><span class="lm-sum">'+sum+'</span></summary>' +
-        '<div class="lm-h"><small>今の 自分の いち。相棒が 立っている ところが 今の レベルだよ</small></div>';
+      var h = '<div class="lm-h"><small>今の 自分の いち。相棒が 立っている ところが 今の レベルだよ</small></div>';
       if(unp.length) h += '<div class="lm-ask">🧭 まず 今の レベルを しらべよう!(1つの 計算で 約3分・わからなくても だいじょうぶ)</div>';
       SINGLE_OPS.forEach(function(op){
         var cur = currentLevelIndex(op), def = LEVELS[op][cur], isPl = placed(op);
@@ -5949,15 +5949,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           '<div class="lm-btns">'+(isPl ? '' : '<button class="lm-btn ask" data-lm="'+op+'">しらべる</button>') +
           (cur < LEVELS[op].length - 1 ? '<button class="lm-btn chk" data-lc="'+op+'">かくにんテスト</button>' : '') + '</div></div>';
       });
-      c.innerHTML = h + '</details>';
-      $('lmDet').addEventListener('toggle', function(){ state.lvOpen = this.open; });
+      c.innerHTML = '<button type="button" class="lm-open" id="lmOpen"><b>レベルの 地図</b><span class="lm-sum">'+sum+'</span><i>›</i></button>';
+      $('lmOpen').onclick = function(){ openBk('<div class="bk-title">レベルの 地図</div><div class="lm-modal">'+h+'</div>', [{ label:'閉じる', onClick:closeBk }]); };
       if(unp.length && safeGet('keisan_lvask') !== todayKey() && !state.lvAsked) setTimeout(askFirst, 700);   /* しらべ終わるまで 1日1回 */
     }
     document.addEventListener('click', function(e){
       var b = e.target.closest && e.target.closest('[data-lm]');
-      if(b) openTest(b.getAttribute('data-lm'));
+      if(b){ closeBk(); QUEUE = []; openTest(b.getAttribute('data-lm')); }
       var c = e.target.closest && e.target.closest('[data-lc]');
-      if(c) openCheck(c.getAttribute('data-lc'));
+      if(c){ closeBk(); openCheck(c.getAttribute('data-lc')); }
     });
     /* さいしょの 1回だけ ダイアログで「今の レベルを しらべよう」と 出す */
     function askFirst(tries){
