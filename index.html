@@ -5951,7 +5951,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       });
       c.innerHTML = h + '</details>';
       $('lmDet').addEventListener('toggle', function(){ state.lvOpen = this.open; });
-      if(unp.length && !safeGet('keisan_lvask')) setTimeout(askFirst, 700);   /* 1回だけ(askFirst 内で 印を つける) */
+      if(unp.length && safeGet('keisan_lvask') !== todayKey() && !state.lvAsked) setTimeout(askFirst, 700);   /* しらべ終わるまで 1日1回 */
     }
     document.addEventListener('click', function(e){
       var b = e.target.closest && e.target.closest('[data-lm]');
@@ -5962,20 +5962,22 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
     /* さいしょの 1回だけ ダイアログで「今の レベルを しらべよう」と 出す */
     function askFirst(tries){
       tries = tries | 0;
-      if(safeGet('keisan_lvask') || tries > 40) return;
+      if(safeGet('keisan_lvask') === todayKey() || state.lvAsked || tries > 40) return;
       var home = $('road') && $('road').offsetParent;   /* ホームが 見えている ときだけ */
       /* ログインボーナスなど ほかの ダイアログが 出ている ときは 閉じるまで まつ */
       if(!home || document.querySelector('.modal:not([hidden])') || $('lvTest')){ if(home !== null) setTimeout(function(){ askFirst(tries + 1); }, 1000); return; }
       var unp = SINGLE_OPS.filter(function(o){ return !placed(o); });
       if(!unp.length) return;
-      safeSet('keisan_lvask', 1);
-      var btns = unp.map(function(o){ return { label:OP_META[o].symbol + ' ' + OP_META[o].label.replace('練習', '') + 'を しらべる', primary:true, onClick:function(){ closeBk(); openTest(o); } }; });
-      btns.push({ label:'あとで(レベルの 地図から できるよ)', onClick:closeBk });
-      openBk('<div class="bk-title">まず 今の レベルを しらべよう!</div><div class="bk-body">やさしい 問題から だんだん むずかしく なるよ。1つの 計算で 約3分。わからない ときは そのまま ✓ で OK!<br>結果で、ちょうど いい レベルから はじめられるよ。</div>', btns);
+      safeSet('keisan_lvask', todayKey()); state.lvAsked = true;
+      var btns = [{ label:'ぜんぶ しらべる(' + unp.length + 'つ)', primary:true, onClick:function(){ closeBk(); QUEUE = unp.slice(1); openTest(unp[0]); } }];
+      btns = btns.concat(unp.map(function(o){ return { label:OP_META[o].symbol + ' ' + OP_META[o].label.replace('練習', '') + 'を しらべる', primary:true, onClick:function(){ closeBk(); QUEUE = []; openTest(o); } }; }).map(function(b){ b.primary = false; return b; }));
+      btns.push({ label:'あとで(明日 また 出るよ)', onClick:closeBk });
+      openBk('<div class="bk-title">今の レベルが まだ わからないよ!</div><div class="bk-body"><b>今の レベルを しらべると、ちょうど いい 問題が 出るように なるよ。</b><br>やさしい 問題から だんだん むずかしく なるよ。1つの 計算で 約3分。わからない ときは そのまま ✓ で OK!</div>', btns);
       $('bkBtns').classList.add('col');
     }
     /* かくにんテスト: 今の レベルで 25問、22問 以上 正解 + めあての 時間 以内で 合格 → 次の レベルへ */
     var CK_N = 25, CK_PASS = 22;
+    var QUEUE = [];   /* 「ぜんぶ しらべる」の つぎの 計算 */
     function openCheck(op){
       var old = $('lvTest'); if(old) old.remove();
       var cur = currentLevelIndex(op); if(cur >= LEVELS[op].length - 1) return;
@@ -6103,12 +6105,14 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       ov.addEventListener('click', function(e){
         var b = e.target.closest('[data-lt]'); if(!b) return;
         var k = b.getAttribute('data-lt');
-        if(k === 'x') return close();
+        if(k === 'x'){ QUEUE = []; return close(); }
         if(k === 'vt'){ T.vert = !vertOn(); return draw(); }
         if(k === 'set'){
           var lv = +b.getAttribute('data-lv');
           safeSet('keisan_level_' + op, lv); safeSet('keisan_clears_' + op + '_' + lv, 0); safeSet('keisan_placed_' + op, 1); safeSet('keisan_plan', null);
-          close(); refreshHome(); return;
+          close(); refreshHome();
+          if(QUEUE.length) setTimeout(function(){ openTest(QUEUE.shift()); }, 300);
+          return;
         }
         press(k);
       });
