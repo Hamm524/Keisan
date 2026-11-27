@@ -5935,6 +5935,8 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       }
       return h;
     }
+    var openMap = null, fromMap = false;   /* 地図から 始めた テストが 終わったら 地図に もどる(ほかの 計算も 続けて 選べる) */
+    function backToMap(){ if(fromMap && openMap && !QUEUE.length){ fromMap = false; setTimeout(function(){ if($('lmOpen')) $('lmOpen').click(); }, 250); } else fromMap = false; }
     function render(){
       var c = $('lvMap'); if(!c) return;
       c.hidden = false;
@@ -5950,14 +5952,15 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
           (cur < LEVELS[op].length - 1 ? '<button class="lm-btn chk" data-lc="'+op+'">レベルアップ挑戦</button>' : '') + '</div></div>';
       });
       c.innerHTML = '<button type="button" class="lm-open" id="lmOpen"><b>レベルの 地図</b><span class="lm-sum">'+sum+'</span><i>›</i></button>';
-      $('lmOpen').onclick = function(){ openBk('<div class="bk-title">レベルの 地図</div><div class="lm-modal">'+h+'</div>', [{ label:'閉じる', onClick:closeBk }]); };
+      openMap = function(){ openBk('<div class="bk-title">レベルの 地図</div><div class="lm-modal">'+h+'</div>', [{ label:'閉じる', onClick:closeBk }]); };
+      $('lmOpen').onclick = openMap;
       if(unp.length && safeGet('keisan_lvask') !== todayKey() && !state.lvAsked) setTimeout(askFirst, 700);   /* しらべ終わるまで 1日1回 */
     }
     document.addEventListener('click', function(e){
       var b = e.target.closest && e.target.closest('[data-lm]');
-      if(b){ closeBk(); QUEUE = []; openTest(b.getAttribute('data-lm')); }
+      if(b){ closeBk(); QUEUE = []; fromMap = true; openTest(b.getAttribute('data-lm')); }
       var c = e.target.closest && e.target.closest('[data-lc]');
-      if(c){ closeBk(); openCheck(c.getAttribute('data-lc')); }
+      if(c){ closeBk(); fromMap = true; openCheck(c.getAttribute('data-lc')); }
     });
     /* さいしょの 1回だけ ダイアログで「今の レベルを しらべよう」と 出す */
     function askFirst(tries){
@@ -5986,7 +5989,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var ov = document.createElement('div'); ov.id = 'lvTest'; ov.className = 'lt'; ov.style.setProperty('--c', 'var('+OP_META[op].color+')');
       document.body.appendChild(ov);
       var label = OP_META[op].label.replace('練習', '');
-      function close(){ document.removeEventListener('keydown', onKey); ov.remove(); }
+      function close(){ document.removeEventListener('keydown', onKey); ov.remove(); backToMap(); }
       function next(){
         for(var k = 0; k < 20; k++){ T.q = LEVELS[op][cur].gen(); if(!T.seen[T.q.a + '|' + T.q.b]) break; }
         T.seen[T.q.a + '|' + T.q.b] = 1; T.ans = ''; if(!T.t0) T.t0 = Date.now(); draw();
@@ -6040,7 +6043,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(k === 'x') return close();
         if(k === 'vt'){ T.vert = !vertOn(); return draw(); }
         if(k === 'again'){ T.i = 0; T.ok = 0; T.t0 = 0; T.seen = {}; T.done = false; T.vert = null; return next(); }
-        if(k === 'up'){ close(); refreshHome(); return; }
+        if(k === 'up'){ refreshHome(); close(); return; }
         press(k);
       });
       document.addEventListener('keydown', onKey);
@@ -6052,7 +6055,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
       var n = LEVELS[op].length, T = { op:op, lv:0, i:0, ok:0, q:null, ans:'', done:false, vert:null };
       var ov = document.createElement('div'); ov.id = 'lvTest'; ov.className = 'lt'; ov.style.setProperty('--c', 'var('+OP_META[op].color+')');
       document.body.appendChild(ov);
-      function close(){ document.removeEventListener('keydown', onKey); ov.remove(); }
+      function close(){ document.removeEventListener('keydown', onKey); ov.remove(); backToMap(); }
       function next(){ T.q = LEVELS[op][T.lv].gen(); T.ans = ''; draw(); }
       /* 筆算で 見る: 3桁いじょう・かけ算の 2桁いじょうは はじめから 縦書き(ボタンで きりかえ。わり算は よこ書きのまま) */
       function vertOn(){
@@ -6110,7 +6113,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         if(k === 'set'){
           var lv = +b.getAttribute('data-lv');
           safeSet('keisan_level_' + op, lv); safeSet('keisan_clears_' + op + '_' + lv, 0); safeSet('keisan_placed_' + op, 1); safeSet('keisan_plan', null);
-          close(); refreshHome();
+          refreshHome(); close();
           if(QUEUE.length) setTimeout(function(){ openTest(QUEUE.shift()); }, 300);
           return;
         }
