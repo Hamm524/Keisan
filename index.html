@@ -2082,7 +2082,7 @@
   .modal-card{
     width:100%; max-width:340px; background:var(--surface); border-radius:26px; box-shadow:var(--shadow);
     padding:18px 18px 18px; text-align:center; display:flex; flex-direction:column; gap:8px;
-    animation:modal-in .3s ease;
+    animation:modal-in .3s ease; max-height:calc(100dvh - 32px); overflow-y:auto; -webkit-overflow-scrolling:touch;
   }
   @keyframes modal-in{ from{ transform:scale(.9); opacity:0; } to{ transform:scale(1); opacity:1; } }
   .modal-pic{ width:140px; margin:0 auto; cursor:pointer; }
@@ -5946,7 +5946,7 @@ tiger:{"name": "とら", "gem": "#E5484D", "gemAt": [100.0, 157.0], "clipAt": [1
         var cur = currentLevelIndex(op), def = LEVELS[op][cur], isPl = placed(op);
         h += '<div class="lm-row" style="--c:var('+OP_META[op].color+')"><i class="lm-sym">'+OP_META[op].symbol+'</i>' +
           '<div class="lm-body"><b>Lv.'+(cur+1)+' '+def.name+'</b><small>'+def.desc+'</small><div class="lm-steps">'+steps(op)+'</div></div>' +
-          '<div class="lm-btns">'+(isPl ? '' : '<button class="lm-btn ask" data-lm="'+op+'">調べる</button>') +
+          '<div class="lm-btns">'+'<button class="lm-btn'+(isPl ? '' : ' ask')+'" data-lm="'+op+'">'+(isPl ? '調べ直す' : '調べる')+'</button>' +
           (cur < LEVELS[op].length - 1 ? '<button class="lm-btn chk" data-lc="'+op+'">レベルアップ挑戦</button>' : '') + '</div></div>';
       });
       c.innerHTML = '<button type="button" class="lm-open" id="lmOpen"><b>レベルの 地図</b><span class="lm-sum">'+sum+'</span><i>›</i></button>';
